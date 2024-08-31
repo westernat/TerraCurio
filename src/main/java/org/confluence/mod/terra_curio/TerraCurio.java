@@ -1,16 +1,41 @@
 package org.confluence.mod.terra_curio;
 
 import com.mojang.logging.LogUtils;
+import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import org.confluence.mod.terra_curio.common.config.ModConfig;
+import org.confluence.mod.terra_curio.common.data.pack.CurioItemManager;
+import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
+import org.confluence.mod.terra_curio.common.init.ModItems;
 import org.slf4j.Logger;
 
 @Mod(TerraCurio.MOD_ID)
 public class TerraCurio {
     public static final String MOD_ID = "terra_curio";
-    private static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LogUtils.getLogger();
     public TerraCurio(IEventBus modEventBus, ModContainer modContainer) {
 //        NeoForge.EVENT_BUS.register(this);
+
+        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, ModConfig.SPEC);
+
+        NeoForge.EVENT_BUS.addListener(this::onDataPackLoad);
+
+        ModItems.ITEMS.register(modEventBus);
+        ModItems.Tab.CREATIVE_MODE_TAB.register(modEventBus);
+        ModDataComponentTypes.DATA_COMPONENT_TYPE.register(modEventBus);
+    }
+
+    public static ResourceLocation asResource(String path) {
+        return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
+    }
+
+    @SubscribeEvent
+    public void onDataPackLoad(AddReloadListenerEvent event) {
+        event.addListener(CurioItemManager.INSTANCE);
     }
 }
