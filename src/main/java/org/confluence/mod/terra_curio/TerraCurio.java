@@ -1,9 +1,7 @@
 package org.confluence.mod.terra_curio;
 
-import com.mojang.logging.LogUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
-import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
@@ -13,11 +11,12 @@ import org.confluence.mod.terra_curio.common.data.pack.CurioItemManager;
 import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
 import org.confluence.mod.terra_curio.common.init.ModItems;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @Mod(TerraCurio.MOD_ID)
 public class TerraCurio {
     public static final String MOD_ID = "terra_curio";
-    public static final Logger LOGGER = LogUtils.getLogger();
+    public static final Logger LOGGER = LoggerFactory.getLogger("Confluence");
     public TerraCurio(IEventBus modEventBus, ModContainer modContainer) {
 //        NeoForge.EVENT_BUS.register(this);
 
@@ -34,7 +33,6 @@ public class TerraCurio {
         return ResourceLocation.fromNamespaceAndPath(MOD_ID, path);
     }
 
-    @SubscribeEvent
     public void onDataPackLoad(AddReloadListenerEvent event) {
         event.addListener(CurioItemManager.INSTANCE);
     }
