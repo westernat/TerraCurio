@@ -11,11 +11,12 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.mod.terra_curio.TerraCurio;
-import org.confluence.mod.terra_curio.common.item.curio.AnkhShield;
+import org.confluence.mod.terra_curio.common.item.curio.compat.AnkhShield;
 import org.confluence.mod.terra_curio.common.item.curio.BaseCurioItem;
+import org.confluence.mod.terra_curio.common.item.curio.compat.AvengerEmblem;
+import org.confluence.mod.terra_curio.common.misc.ModRarity;
 
 import java.util.List;
 import java.util.function.Supplier;
@@ -42,18 +43,33 @@ public class ModItems {
     public static final Supplier<Item> ANKH_CHARM = simpleImmunityItem("ankh_charm", MobEffects.POISON,MobEffects.HUNGER,MobEffects.DIG_SLOWDOWN,
             MobEffects.WEAKNESS,MobEffects.LEVITATION,MobEffects.WITHER,MobEffects.DARKNESS,MobEffects.BLINDNESS,MobEffects.CONFUSION,MobEffects.MOVEMENT_SLOWDOWN);
     public static final Supplier<Item> ANKH_SHIELD = register("ankh_shield", AnkhShield::new);
+    public static final Supplier<Item> AVENGER_EMBLEM = register("avenger_emblem", AvengerEmblem::new);
+
 
 
     private static Supplier<Item> register(String name, Supplier<Item> supplier) {
         return ITEMS.register(name, supplier);
     }
+
+    //带有颜色的 displayName
+    @SafeVarargs
+    public static Supplier<Item> simpleImmunityItem(String name, ModRarity rarity, Holder<MobEffect>... effect) {
+        return simpleImmunityItem(name,2,rarity,effect);
+    }
+    @SafeVarargs
+    public static Supplier<Item> simpleImmunityItem(String name, int jeiInformationCount, ModRarity rarity, Holder<MobEffect>... effect) {
+        return ITEMS.register(name, () -> new BaseCurioItem(List.of(effect),jeiInformationCount,rarity));
+    }
+
+
+    //默认白色 displayName
     @SafeVarargs
     public static Supplier<Item> simpleImmunityItem(String name, Holder<MobEffect>... effect) {
         return simpleImmunityItem(name,2,effect);
     }
     @SafeVarargs
-    public static Supplier<Item> simpleImmunityItem(String name,int jeiInformationCount, Holder<MobEffect>... effect) {
-        return ITEMS.register(name, () -> new BaseCurioItem(List.of(effect),jeiInformationCount));
+    public static Supplier<Item> simpleImmunityItem(String name, int jeiInformationCount, Holder<MobEffect>... effect) {
+        return ITEMS.register(name, () -> new BaseCurioItem(List.of(effect),jeiInformationCount,ModRarity.WHITE));
     }
 
 
