@@ -5,8 +5,8 @@ import net.minecraft.core.registries.Registries;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.mod.terra_curio.TerraCurio;
-import org.confluence.mod.terra_curio.client.component.EffectImmunities;
-import org.confluence.mod.terra_curio.common.misc.ModRarity;
+import org.confluence.mod.terra_curio.common.component.EffectImmunities;
+import org.confluence.mod.terra_curio.common.component.ModRarity;
 
 public class ModDataComponentTypes {
     public static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPE = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, TerraCurio.MOD_ID);

@@ -1,4 +1,4 @@
-package org.confluence.mod.terra_curio.client.component;
+package org.confluence.mod.terra_curio.common.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;

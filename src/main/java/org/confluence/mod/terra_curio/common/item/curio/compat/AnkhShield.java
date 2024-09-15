@@ -12,7 +12,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.confluence.mod.terra_curio.TerraCurio;
-import org.confluence.mod.terra_curio.client.component.EffectImmunities;
+import org.confluence.mod.terra_curio.common.component.EffectImmunities;
 import org.confluence.mod.terra_curio.common.config.ModConfig;
 import org.confluence.mod.terra_curio.common.item.curio.BaseCurioItem;
 import top.theillusivec4.curios.api.SlotContext;
@@ -22,9 +22,9 @@ import java.util.List;
 public class AnkhShield extends BaseCurioItem {
 
     public AnkhShield() {
-        super(EffectImmunities.of(List.of(MobEffects.POISON, MobEffects.HUNGER, MobEffects.DIG_SLOWDOWN, MobEffects.WEAKNESS,
+        super(builder -> builder.effectImmunities(MobEffects.POISON, MobEffects.HUNGER, MobEffects.DIG_SLOWDOWN, MobEffects.WEAKNESS,
             MobEffects.LEVITATION, MobEffects.WITHER, MobEffects.DARKNESS, MobEffects.BLINDNESS,
-            MobEffects.CONFUSION, MobEffects.MOVEMENT_SLOWDOWN)), 2);
+            MobEffects.CONFUSION, MobEffects.MOVEMENT_SLOWDOWN).build());
     }
 
     @Override

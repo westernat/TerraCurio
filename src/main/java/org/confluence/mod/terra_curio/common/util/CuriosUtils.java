@@ -5,7 +5,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.apache.commons.compress.utils.Lists;
-import org.confluence.mod.terra_curio.client.component.EffectImmunities;
+import org.confluence.mod.terra_curio.common.component.EffectImmunities;
 import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;

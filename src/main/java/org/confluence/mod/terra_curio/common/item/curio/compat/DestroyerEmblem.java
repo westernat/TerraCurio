@@ -11,10 +11,10 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.confluence.mod.terra_curio.TerraCurio;
+import org.confluence.mod.terra_curio.common.component.ModRarity;
 import org.confluence.mod.terra_curio.common.config.ModConfig;
 import org.confluence.mod.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.mod.terra_curio.common.misc.ModAttributes;
-import org.confluence.mod.terra_curio.common.misc.ModRarity;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
@@ -22,7 +22,7 @@ import java.util.List;
 public class DestroyerEmblem extends BaseCurioItem {
 
     public DestroyerEmblem() {
-        super(ModRarity.LIME);
+        super(builder -> builder.rarity(ModRarity.LIME).build());
     }
 
     @Override

@@ -6,8 +6,8 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import org.confluence.mod.terra_curio.common.component.ModRarity;
 import org.confluence.mod.terra_curio.common.item.curio.BaseCurioItem;
-import org.confluence.mod.terra_curio.common.misc.ModRarity;
 
 import java.util.List;
 
@@ -16,7 +16,7 @@ public class AvengerEmblem extends BaseCurioItem {
     private static ImmutableMultimap<Attribute, AttributeModifier> ATTRIBUTES;
 
     public AvengerEmblem() {
-        super(ModRarity.PINK);
+        super(builder -> builder.rarity(ModRarity.PINK).build());
     }
 
     //todo ModConfigs

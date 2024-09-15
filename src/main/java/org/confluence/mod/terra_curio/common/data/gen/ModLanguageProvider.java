@@ -31,7 +31,7 @@ public class ModLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         addItem(ModItems.BEZOAR,"bezoar","牛黄");
-        addTooltips(ModItems.BEZOAR,"Immunity to Poison","对中毒免疫\nssss");
+        addTooltips(ModItems.BEZOAR,"Immunity to Poison","对中毒免疫");
         addJeiTooltips(ModItems.BEZOAR, new String[]{"The Bezoar is an immunity accessory that grants the player immunity to the Poisoned debuff",
                         "It have a Chance to be dropped from Cave Spider."},
                 new String[]{"牛黄是一种免疫配饰，可赋予玩家对中毒减益的免疫力", "它有几率从洞穴蜘蛛中掉落"});
