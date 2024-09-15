@@ -10,6 +10,7 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import org.confluence.mod.terra_curio.common.config.ModConfig;
 import org.confluence.mod.terra_curio.common.data.pack.CurioItemManager;
 import org.confluence.mod.terra_curio.common.effect.ModEffects;
+import org.confluence.mod.terra_curio.common.entity.ModEntities;
 import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
 import org.confluence.mod.terra_curio.common.init.ModItems;
 import org.confluence.mod.terra_curio.common.misc.ModAttributes;
@@ -28,7 +29,8 @@ public class TerraCurio {
     public static ResourceLocation SPACE(String path) {return ResourceLocation.fromNamespaceAndPath(MOD_ID,path);}
 
     public TerraCurio(IEventBus modEventBus, ModContainer modContainer) {
-//        NeoForge.EVENT_BUS.register(this);
+//      NeoForge.EVENT_BUS.register(this);
+        //
 
         modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, ModConfig.SPEC);
 
@@ -37,10 +39,12 @@ public class TerraCurio {
         ModSoundEvents.SOUNDS.register(modEventBus);
         ModEffects.EFFECTS.register(modEventBus);
         ModAttributes.ATTRIBUTES.register(modEventBus);
+        ModEntities.ENTITIES.register(modEventBus);
+        ModDataComponentTypes.DATA_COMPONENT_TYPE.register(modEventBus);
 
         ModItems.ITEMS.register(modEventBus);
+
         ModItems.Tab.CREATIVE_MODE_TAB.register(modEventBus);
-        ModDataComponentTypes.DATA_COMPONENT_TYPE.register(modEventBus);
     }
 
     public static ResourceLocation asResource(String path) {

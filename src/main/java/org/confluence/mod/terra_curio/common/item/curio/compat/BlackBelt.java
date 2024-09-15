@@ -26,7 +26,7 @@ public class BlackBelt extends BaseCurioItem {
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
         return ImmutableMultimap.of(
-            ModAttributes.DODGE_CHANCE, new AttributeModifier(TerraCurio.asResource("BlackBelt_Dodge_Chance"), 0.1, AttributeModifier.Operation.ADD_VALUE)
+            ModAttributes.DODGE_CHANCE, new AttributeModifier(TerraCurio.asResource("blackbelt_dodge_chance"), 0.1, AttributeModifier.Operation.ADD_VALUE)
         );
     }
 

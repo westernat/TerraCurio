@@ -1,5 +1,6 @@
 package org.confluence.mod.terra_curio.common.event;
 
+import net.minecraft.core.component.DataComponentHolder;
 import net.minecraft.network.chat.MutableComponent;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -13,7 +14,9 @@ public class renderDisplayNameEventSubscriber {
     @SubscribeEvent
     public static void renderDisplayNameEvent(GatherComponents event){
         ModRarity rarity = event.getItemStack().getComponents().get(ModDataComponentTypes.MOD_RARITY.get());
+        System.out.println( event.getItemStack().getComponents());
         if(rarity==null ) return;
+
         event.getTooltipElements().getFirst().left().ifPresent(text->
                 ((MutableComponent)text).setStyle(rarity.style));
     }
