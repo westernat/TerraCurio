@@ -33,7 +33,7 @@ public class ModItems {
     public static final BiMap<ResourceLocation,Supplier<Item>> CURIO_ITEMS = HashBiMap.create();
 
     public static final Supplier<Item> BEZOAR = simpleImmunityItem("bezoar", MobEffects.POISON);
-    public static final Supplier<Item> BLACKBELT = register("blackbelt", BlackBelt::new);
+    public static final Supplier<Item> BLACKBELT = register("black_belt", BlackBelt::new);
     public static final Supplier<Item> COBALT_SHIELD = register("cobalt_shield", CobaltShield::new);
     public static final Supplier<Item> DESTROYER_EMBLEM = register("destroyer_emblem", DestroyerEmblem::new);
     public static final Supplier<Item> EYE_OF_THE_DESTROYER = register("eye_of_the_destroyer", EyeOfTheGolem::new);
@@ -51,8 +51,7 @@ public class ModItems {
     public static final Supplier<Item> HAND_DRILL = simpleImmunityItem("hand_drill", MobEffects.DIG_SLOWDOWN);
     public static final Supplier<Item> SHOT_PUT = simpleImmunityItem("shot_put", MobEffects.LEVITATION);
     public static final Supplier<Item> EXPLORERS_EQUIPMENT = simpleImmunityItem("explorers_equipment", MobEffects.DIG_SLOWDOWN,MobEffects.LEVITATION);
-    public static final Supplier<Item> ANKH_CHARM = simpleImmunityItem("ankh_charm", MobEffects.POISON,MobEffects.HUNGER,MobEffects.DIG_SLOWDOWN,
-            MobEffects.WEAKNESS,MobEffects.LEVITATION,MobEffects.WITHER,MobEffects.DARKNESS,MobEffects.BLINDNESS,MobEffects.CONFUSION,MobEffects.MOVEMENT_SLOWDOWN);
+    public static final Supplier<Item> ANKH_CHARM = register("ankh_charm", AnkhCharm::new);
     public static final Supplier<Item> ANKH_SHIELD = register("ankh_shield", AnkhShield::new);
 
     //public static final Supplier<Item> AVENGER_EMBLEM = register("avenger_emblem", ModRarity.BLUE);
