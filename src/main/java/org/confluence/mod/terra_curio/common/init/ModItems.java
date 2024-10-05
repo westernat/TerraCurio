@@ -2,14 +2,15 @@ package org.confluence.mod.terra_curio.common.init;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableMultimap;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
@@ -18,7 +19,9 @@ import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.common.component.ModRarity;
 import org.confluence.mod.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.mod.terra_curio.common.item.curio.compat.AnkhShield;
+import org.confluence.mod.terra_curio.common.misc.ModAttributes;
 
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 public class ModItems {
@@ -48,29 +51,30 @@ public class ModItems {
             MobEffects.WEAKNESS,MobEffects.LEVITATION,MobEffects.WITHER,MobEffects.DARKNESS,MobEffects.BLINDNESS,MobEffects.CONFUSION,MobEffects.MOVEMENT_SLOWDOWN);
     public static final Supplier<Item> ANKH_SHIELD = register("ankh_shield", AnkhShield::new);
 
-    //public static final Supplier<Item> AVENGER_EMBLEM = register("avenger_emblem", ModRarity.BLUE);
-
-    public static final Supplier<Item> AVENGER_EMBLEM = register("avenger_emblem", new Item.Properties()
-            /*
-            .component(ModDataComponentTypes.EFFECT_IMMUNITIES,EffectImmunities.of(List.of(MobEffects.POISON)))
-            .component(ModDataComponentTypes.MOD_RARITY,ModRarity.BLUE)
-            */
-            .component(DataComponents.FOOD,new FoodProperties.Builder().nutrition(5).saturationModifier(0.6F).build())
+        /** example 通用注册模式 **/
+    public static final Supplier<Item> AVENGER_EMBLEM = register("avenger_emblem",builder-> builder
+                .rarity(ModRarity.MASTER)
+                .effectImmunities(MobEffects.FIRE_RESISTANCE,MobEffects.SLOW_FALLING,MobEffects.HARM,MobEffects.POISON)
+                .addAttr(ModAttributes.MAGIC_DAMAGE,"magic_damage",1.2f, AttributeModifier.Operation.ADD_VALUE)
+                .armor(10f, AttributeModifier.Operation.ADD_VALUE)
+                .damage(5,AttributeModifier.Operation.ADD_VALUE)
+                .tip("test1")
+                .tip("test2")
+                .build()
     );
 
 
-    private static Supplier<Item> register(String name, ModRarity rarity) {
-        return ITEMS.register(name, ()->new BaseCurioItem(builder -> builder.rarity(rarity).build()));
-    }
+
+
     private static Supplier<Item> register(String name, Supplier<Item> supplier) {
         return ITEMS.register(name, supplier);
     }
 
-    private static Supplier<Item> register(String name, Item.Properties properties) {
-        return ITEMS.register(name, () -> new BaseCurioItem(properties));
+    //通用注册格式
+    private static Supplier<Item> register(String name,Function<BaseCurioItem.Builder, BaseCurioItem.Builder> properties) {
+        return ITEMS.register(name, ()->new BaseCurioItem(name,properties));
     }
 
-    //带有颜色的 displayName
 
     @SafeVarargs
     public static Supplier<Item> simpleImmunityItem(String name, ModRarity rarity, Holder<MobEffect>... effect) {
@@ -78,19 +82,9 @@ public class ModItems {
     }
     @SafeVarargs
     public static Supplier<Item> simpleImmunityItem(String name, int jeiInformationCount, ModRarity rarity, Holder<MobEffect>... effect) {
-        return ITEMS.register(name, () -> new BaseCurioItem(builder -> builder.rarity(rarity).effectImmunities(effect).build()));
+        return ITEMS.register(name, () -> new BaseCurioItem(name,builder -> builder.rarity(rarity).effectImmunities(effect).build()));
     }
 
-
-    //默认白色 displayName
-    @SafeVarargs
-    public static Supplier<Item> simpleImmunityItem(String name, Holder<MobEffect>... effect) {
-        return simpleImmunityItem(name,2,effect);
-    }
-    @SafeVarargs
-    public static Supplier<Item> simpleImmunityItem(String name, int jeiInformationCount, Holder<MobEffect>... effect) {
-        return ITEMS.register(name, () -> new BaseCurioItem(builder -> builder.effectImmunities(effect).build()));
-    }
 
 
     public static class Tab {

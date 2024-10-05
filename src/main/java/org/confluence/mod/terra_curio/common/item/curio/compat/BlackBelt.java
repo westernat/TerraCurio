@@ -20,7 +20,7 @@ import java.util.List;
 public class BlackBelt extends BaseCurioItem {
 
     public BlackBelt() {
-        super(builder -> builder.rarity(ModRarity.LIME).build());
+        super("test1",builder -> builder.rarity(ModRarity.LIME).build());
     }
 
     @Override

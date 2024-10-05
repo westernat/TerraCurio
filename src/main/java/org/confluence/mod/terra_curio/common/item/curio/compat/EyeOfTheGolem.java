@@ -20,7 +20,7 @@ import java.util.List;
 
 public class EyeOfTheGolem extends BaseCurioItem {
     public EyeOfTheGolem() {
-        super(builder -> builder.rarity(ModRarity.LIME).build());
+        super("test5",builder -> builder.rarity(ModRarity.LIME).build());
     }
 
     @Override

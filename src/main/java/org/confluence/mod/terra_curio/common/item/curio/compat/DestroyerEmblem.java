@@ -22,7 +22,7 @@ import java.util.List;
 public class DestroyerEmblem extends BaseCurioItem {
 
     public DestroyerEmblem() {
-        super(builder -> builder.rarity(ModRarity.LIME).build());
+        super("test4",builder -> builder.rarity(ModRarity.LIME).build());
     }
 
     @Override

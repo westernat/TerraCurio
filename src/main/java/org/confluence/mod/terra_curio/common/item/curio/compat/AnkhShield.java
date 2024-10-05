@@ -22,18 +22,17 @@ import java.util.List;
 public class AnkhShield extends BaseCurioItem {
 
     public AnkhShield() {
-        super(builder -> builder.effectImmunities(MobEffects.POISON, MobEffects.HUNGER, MobEffects.DIG_SLOWDOWN, MobEffects.WEAKNESS,
-            MobEffects.LEVITATION, MobEffects.WITHER, MobEffects.DARKNESS, MobEffects.BLINDNESS,
-            MobEffects.CONFUSION, MobEffects.MOVEMENT_SLOWDOWN).build());
+        super("ankh_shield",builder -> builder
+                .effectImmunities(MobEffects.POISON, MobEffects.HUNGER, MobEffects.DIG_SLOWDOWN, MobEffects.WEAKNESS,
+                MobEffects.LEVITATION, MobEffects.WITHER, MobEffects.DARKNESS, MobEffects.BLINDNESS,
+                MobEffects.CONFUSION, MobEffects.MOVEMENT_SLOWDOWN)
+                //todo 添加config会报错
+                .addAttr(Attributes.KNOCKBACK_RESISTANCE,"knockback_resistance",1,AttributeModifier.Operation.ADD_VALUE)
+                .addAttr(Attributes.ARMOR,"armor",4,AttributeModifier.Operation.ADD_VALUE)
+
+                .build());
     }
 
-    @Override
-    public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
-        return ImmutableMultimap.of(
-            Attributes.KNOCKBACK_RESISTANCE, new AttributeModifier(TerraCurio.asResource("ankh_shield_knockback_resistance"), ModConfig.ANKH_SHIELD_RESISTANCE.get(), AttributeModifier.Operation.ADD_VALUE),
-            Attributes.ARMOR, new AttributeModifier(TerraCurio.asResource("ankh_shield_armor"), ModConfig.ANKH_SHIELD_ARMOR.get(), AttributeModifier.Operation.ADD_VALUE)
-        );
-    }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {

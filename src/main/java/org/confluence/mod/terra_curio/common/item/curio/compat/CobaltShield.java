@@ -21,7 +21,7 @@ import java.util.List;
 public class CobaltShield extends BaseCurioItem {
 
     public CobaltShield() {
-        super(builder -> builder.rarity(ModRarity.GREEN).build());
+        super("test3",builder -> builder.rarity(ModRarity.GREEN).build());
     }
 
     @Override

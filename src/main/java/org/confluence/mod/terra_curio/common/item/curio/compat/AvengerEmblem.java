@@ -16,7 +16,7 @@ public class AvengerEmblem extends BaseCurioItem {
     private static ImmutableMultimap<Attribute, AttributeModifier> ATTRIBUTES;
 
     public AvengerEmblem() {
-        super(builder -> builder.rarity(ModRarity.PINK).build());
+        super("test",builder -> builder.rarity(ModRarity.PINK).build());
     }
 
     //todo ModConfigs
