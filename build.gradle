@@ -97,11 +97,6 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 
 repositories {
     maven {
-        name = "OctoStudios"
-        url = uri("https://maven.octo-studios.com/releases")
-    }
-
-    maven {
         // location of the maven that hosts JEI files since January 2023
         name = "Jared's maven"
         url = "https://maven.blamejared.com/"
@@ -111,11 +106,13 @@ repositories {
         name = "ModMaven"
         url = "https://modmaven.dev"
     }
+    maven {
+        url = "https://www.cursemaven.com"
+    }
 }
 
 dependencies {
-    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
-
+    implementation "curse.maven:adorned-1036809:5740650"
 
     compileOnly("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
     compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
