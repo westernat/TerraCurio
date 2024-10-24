@@ -17,6 +17,7 @@ import net.minecraft.world.entity.ai.attributes.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.common.BooleanAttribute;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.common.integration.apothic.ApothicHelper;
@@ -44,6 +45,16 @@ public final class ModAttributes {
     public static final Holder<Attribute> MAGIC_DAMAGE = ATTRIBUTES.register("magic_damage", () -> new RangedAttribute("attribute.name.generic.magic_damage", 1.0, 0.0, 10.0).setSyncable(true)); // MULTIPLY_TOTAL
     public static final Holder<Attribute> ARMOR_PASS = ATTRIBUTES.register("armor_pass", () -> new RangedAttribute("attribute.name.generic.armor_pass", 0.0, 0.0, 10000).setSyncable(true)); // ADDITION
     public static final Holder<Attribute> PICKUP_RANGE = ATTRIBUTES.register("pickup_range", () -> new RangedAttribute("attribute.name.generic.pickup_range", 0.0, 0.0, 64.0).setSyncable(true)); // ADDITION
+
+    public static final Holder<Attribute> LAVA_IMMUNE_TIME = ATTRIBUTES.register("lava_immune_time", () -> new RangedAttribute("attribute.name.generic.lava_immune_time", 60, 0.0, 1000).setSyncable(true)); // ADDITION
+    public static final Holder<Attribute> LAVA_IMMUNE_TIME_REMAIN = ATTRIBUTES.register("lava_immune_time_remain", () -> new RangedAttribute("attribute.name.generic.lava_immune_time_remain", 0.0, 0.0, 1000).setSyncable(true)); // ADDITION
+
+    public static final Holder<Attribute> IMMUNE_TIME = ATTRIBUTES.register("immune_time", () -> new RangedAttribute("attribute.name.generic.immune_time", 20, 0.0, 100).setSyncable(true)); // ADDITION
+    public static final Holder<Attribute> IMMUNE_TIME_REMAIN = ATTRIBUTES.register("immune_time_remain", () -> new RangedAttribute("attribute.name.generic.immune_time_remain", 20, 0.0, 100).setSyncable(true)); // ADDITION
+
+
+    public static final Holder<Attribute> FIRE_IMMUNE = ATTRIBUTES.register("fire_immune", () -> new BooleanAttribute("attribute.name.generic.pickup_range", false).setSyncable(true)); // ADDITION
+
 
     public static Attribute getCriticalChance() {
         return getCustomAttribute(CRIT_CHANCE.value());

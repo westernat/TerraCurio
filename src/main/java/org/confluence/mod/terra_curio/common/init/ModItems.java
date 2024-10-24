@@ -56,13 +56,18 @@ public class ModItems {
                 .rarity(ModRarity.MASTER)
                 .effectImmunities(MobEffects.FIRE_RESISTANCE,MobEffects.SLOW_FALLING,MobEffects.HARM,MobEffects.POISON)
                 .addAttr(ModAttributes.MAGIC_DAMAGE,"magic_damage",1.2f, AttributeModifier.Operation.ADD_VALUE)
-                .armor(10f, AttributeModifier.Operation.ADD_VALUE)
+                .armor(10f)
                 .damage(5,AttributeModifier.Operation.ADD_VALUE)
                 .tip("test1")
                 .tip("test2")
+                .fireImmune()
+                .jumpStrength(1.5f)
+                .fallImmune(5, AttributeModifier.Operation.ADD_VALUE)
+                .lavaImmune(20)
                 .build()
     );
 
+    public static final Supplier<Item> ANKH_SHIELD2 = register("ankh_shield2", ()->new BaseCurioItem(new BaseCurioItem.CuriosProperties().rarity(ModRarity.MASTER)));
 
 
 
