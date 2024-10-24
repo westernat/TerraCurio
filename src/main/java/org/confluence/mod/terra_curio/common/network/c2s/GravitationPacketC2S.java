@@ -4,22 +4,16 @@ package org.confluence.mod.terra_curio.common.network.c2s;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.mod.terra_curio.TerraCurio;
 import org.jetbrains.annotations.NotNull;
-
-import java.nio.channels.NetworkChannel;
 
 public class GravitationPacketC2S implements CustomPacketPayload {
 
     public final boolean enable;
 
 
-    public static final Type<GravitationPacketC2S> TYPE = new Type<>(TerraCurio.SPACE("packet.gravity_reverse"));
+    public static final Type<GravitationPacketC2S> TYPE = new Type<>(TerraCurio.asResource("packet.gravity_reverse"));
     public static final StreamCodec<FriendlyByteBuf, GravitationPacketC2S> STREAM_CODEC =
             CustomPacketPayload.codec(GravitationPacketC2S::write, GravitationPacketC2S::new);
 

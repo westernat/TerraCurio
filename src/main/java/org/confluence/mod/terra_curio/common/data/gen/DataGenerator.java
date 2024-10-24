@@ -10,7 +10,7 @@ import org.confluence.mod.terra_curio.TerraCurio;
 
 import java.util.concurrent.CompletableFuture;
 
-@EventBusSubscriber(modid = TerraCurio.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = TerraCurio.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class DataGenerator {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {

@@ -34,7 +34,7 @@ public class ExpertColorAnimation extends ColorAnimation {
     }
 
     private void updateColorComponent(int deltaR, int deltaG, int deltaB, int targetValue, int nextStyle) {
-        color = color.updateColor(deltaR, deltaG, deltaB);
+        color.updateColor(deltaR, deltaG, deltaB);
         if ((deltaR != 0 && color.red() == targetValue) ||
                 (deltaG != 0 && color.green() == targetValue) ||
                 (deltaB != 0 && color.blue() == targetValue)) {

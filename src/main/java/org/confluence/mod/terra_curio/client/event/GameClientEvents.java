@@ -1,4 +1,4 @@
-package org.confluence.mod.terra_curio.common.event;
+package org.confluence.mod.terra_curio.client.event;
 
 
 import net.neoforged.api.distmarker.Dist;
@@ -9,12 +9,11 @@ import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.client.animate.ExpertColorAnimation;
 import org.confluence.mod.terra_curio.client.animate.MasterColorAnimation;
 
-@EventBusSubscriber(modid = TerraCurio.MOD_ID,value = Dist.CLIENT)
-public class ForgeClientEventSubscriber {
+@EventBusSubscriber(modid = TerraCurio.MODID,value = Dist.CLIENT)
+public final class GameClientEvents {
     @SubscribeEvent
-    public static void onClientTick(ClientTickEvent.Pre event) {
+    public static void clientTick$Post(ClientTickEvent.Pre event) {
         ExpertColorAnimation.INSTANCE.updateColor();
         MasterColorAnimation.INSTANCE.updateColor();
     }
-
 }

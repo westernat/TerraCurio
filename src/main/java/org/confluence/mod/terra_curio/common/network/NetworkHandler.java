@@ -9,11 +9,11 @@ import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.common.network.c2s.GravitationPacketC2S;
 import org.confluence.mod.terra_curio.common.network.s2c.BroadcastGravitationRotPacketS2C;
 
-@EventBusSubscriber(modid = TerraCurio.MOD_ID,bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = TerraCurio.MODID,bus = EventBusSubscriber.Bus.MOD)
 public class NetworkHandler {
     @SubscribeEvent
     public static void register(final RegisterPayloadHandlersEvent event) {
-        final PayloadRegistrar registrar = event.registrar(TerraCurio.MOD_ID);
+        final PayloadRegistrar registrar = event.registrar(TerraCurio.MODID);
 
 
         registrar.playBidirectional(

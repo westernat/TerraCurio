@@ -1,4 +1,4 @@
-package org.confluence.mod.terra_curio.common.integration.airhop;
+package org.confluence.mod.terra_curio.integration.airhop;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;

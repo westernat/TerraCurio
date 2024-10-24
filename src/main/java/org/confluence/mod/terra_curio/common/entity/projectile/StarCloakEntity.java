@@ -10,9 +10,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-
 import org.confluence.mod.terra_curio.common.entity.ModEntities;
-import org.confluence.mod.terra_curio.common.misc.ModDamageTypes;
+import org.confluence.mod.terra_curio.common.init.ModDamageTypes;
 import org.jetbrains.annotations.NotNull;
 
 public class StarCloakEntity extends Projectile {

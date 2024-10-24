@@ -1,4 +1,4 @@
-package org.confluence.mod.terra_curio.compat;
+package org.confluence.mod.terra_curio.integration.jei;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;

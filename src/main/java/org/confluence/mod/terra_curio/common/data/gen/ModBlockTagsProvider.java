@@ -14,7 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class ModBlockTagsProvider extends BlockTagsProvider {
     public ModBlockTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookup, @Nullable ExistingFileHelper helper) {
-        super(output, lookup, TerraCurio.MOD_ID, helper);
+        super(output, lookup, TerraCurio.MODID, helper);
     }
 
     @Override

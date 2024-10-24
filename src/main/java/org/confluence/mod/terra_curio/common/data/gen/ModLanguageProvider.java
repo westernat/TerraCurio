@@ -23,7 +23,7 @@ public class ModLanguageProvider extends LanguageProvider {
     private final String locale;
 
     public ModLanguageProvider(PackOutput output, String locale) {
-        super(output, TerraCurio.MOD_ID, locale);
+        super(output, TerraCurio.MODID, locale);
         this.output = output;
         this.locale = locale;
     }
@@ -41,7 +41,7 @@ public class ModLanguageProvider extends LanguageProvider {
     public @NotNull CompletableFuture<?> run(CachedOutput cache) {
         this.addTranslations();
         Path path = this.output.getOutputFolder(PackOutput.Target.RESOURCE_PACK)
-                .resolve(TerraCurio.MOD_ID).resolve("lang");
+                .resolve(TerraCurio.MODID).resolve("lang");
         if (this.locale.equals("en_us") && !this.enData.isEmpty()) {
             return this.save(this.enData, cache, path.resolve("en_us.json"));
         }
@@ -62,10 +62,10 @@ public class ModLanguageProvider extends LanguageProvider {
         this.add(key.get().getDescriptionId(), en, cn);
     }
 
-    private void addTooltips(Supplier<Item> key, String en, String cn) {
+    private void addTooltips(Supplier<? extends Item> key, String en, String cn) {
         this.add("tooltip." + key.get().getDescriptionId(), en, cn);
     }
-    private void addJeiTooltips(Supplier<Item> key, String[] en, String[] cn) {
+    private void addJeiTooltips(Supplier<? extends Item> key, String[] en, String[] cn) {
         if (en.length == cn.length){
             for (int i = 0; i < en.length; i++) {
                 String enLang = en[i];

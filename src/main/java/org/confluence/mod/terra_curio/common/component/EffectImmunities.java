@@ -13,8 +13,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 public record EffectImmunities(List<Holder<MobEffect>> immunities) implements DataComponentType<EffectImmunities> {
-    public static EffectImmunities EMPTY = new EffectImmunities(List.of());
-
+    public final static EffectImmunities EMPTY = new EffectImmunities(List.of());
 
     public static final Codec<EffectImmunities> CODEC = RecordCodecBuilder.create(ins -> ins.group(
             MobEffect.CODEC.listOf().fieldOf("immunities").forGetter(EffectImmunities::immunities)
@@ -22,7 +21,6 @@ public record EffectImmunities(List<Holder<MobEffect>> immunities) implements Da
 
 
     public static final StreamCodec<FriendlyByteBuf, EffectImmunities> STREAM_CODEC = new StreamCodec<>() {
-
         @Override
         public void encode(FriendlyByteBuf buffer, EffectImmunities value) {
             buffer.writeJsonWithCodec(CODEC, value);

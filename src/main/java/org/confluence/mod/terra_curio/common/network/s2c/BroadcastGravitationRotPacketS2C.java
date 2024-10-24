@@ -1,13 +1,9 @@
 package org.confluence.mod.terra_curio.common.network.s2c;
 
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.world.entity.Entity;
-import net.neoforged.api.distmarker.Dist;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.mod.terra_curio.TerraCurio;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +13,7 @@ public class BroadcastGravitationRotPacketS2C implements CustomPacketPayload {
     public final boolean enable;
 
 
-    public static final Type<BroadcastGravitationRotPacketS2C> TYPE = new Type<>(TerraCurio.SPACE("packet.broadcast_gravity"));
+    public static final Type<BroadcastGravitationRotPacketS2C> TYPE = new Type<>(TerraCurio.asResource("packet.broadcast_gravity"));
     public static final StreamCodec<FriendlyByteBuf, BroadcastGravitationRotPacketS2C> STREAM_CODEC =
             CustomPacketPayload.codec(BroadcastGravitationRotPacketS2C::write, BroadcastGravitationRotPacketS2C::new);
     //发射端序列化

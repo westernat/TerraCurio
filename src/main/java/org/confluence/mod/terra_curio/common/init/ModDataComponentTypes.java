@@ -2,20 +2,20 @@ package org.confluence.mod.terra_curio.common.init;
 
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.common.component.EffectImmunities;
 import org.confluence.mod.terra_curio.common.component.ModRarity;
+import org.confluence.mod.terra_curio.common.component.PrimitiveComponent;
 
-public class ModDataComponentTypes {
-    public static final DeferredRegister<DataComponentType<?>> DATA_COMPONENT_TYPE = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, TerraCurio.MOD_ID);
+import java.util.function.Supplier;
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<EffectImmunities>> EFFECT_IMMUNITIES = DATA_COMPONENT_TYPE.register("effect_immunities",
-            () -> DataComponentType.<EffectImmunities>builder().persistent(EffectImmunities.CODEC).networkSynchronized(EffectImmunities.STREAM_CODEC).cacheEncoding().build());
+public final class ModDataComponentTypes {
+    public static final DeferredRegister<DataComponentType<?>> TYPES = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, TerraCurio.MODID);
 
-    public static final DeferredHolder<DataComponentType<?>, DataComponentType<ModRarity>> MOD_RARITY = DATA_COMPONENT_TYPE.register("mod_rarity",
-            () -> DataComponentType.<ModRarity>builder().persistent(ModRarity.CODEC).networkSynchronized(ModRarity.STREAM_CODEC).cacheEncoding().build());
+    public static final Supplier<DataComponentType<EffectImmunities>> EFFECT_IMMUNITIES = TYPES.register("effect_immunities", () -> DataComponentType.<EffectImmunities>builder().persistent(EffectImmunities.CODEC).networkSynchronized(EffectImmunities.STREAM_CODEC).cacheEncoding().build());
 
+    public static final Supplier<DataComponentType<ModRarity>> MOD_RARITY = TYPES.register("mod_rarity", () -> DataComponentType.<ModRarity>builder().persistent(ModRarity.CODEC).networkSynchronized(ModRarity.STREAM_CODEC).cacheEncoding().build());
 
+    public static final Supplier<DataComponentType<PrimitiveComponent<?>>> PRIMITIVE = TYPES.register("primitive", () -> DataComponentType.<PrimitiveComponent<?>>builder().persistent(PrimitiveComponent.CODEC).networkSynchronized(PrimitiveComponent.STREAM_CODEC).cacheEncoding().build());
 }

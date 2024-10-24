@@ -1,9 +1,9 @@
 package org.confluence.mod.terra_curio.common.item.curio;
 
-import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
@@ -17,140 +17,134 @@ import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.common.component.EffectImmunities;
 import org.confluence.mod.terra_curio.common.component.ModRarity;
 import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
-import org.confluence.mod.terra_curio.common.misc.ModAttributes;
+import org.confluence.mod.terra_curio.common.util.CuriosUtils;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 public class BaseCurioItem extends Item implements ICurioItem {
+    protected static final Consumer<Builder> NO_BUILDER = builder -> {};
+    protected Builder builder;
 
-    private int JeiInformationCount;
-    Multimap<Holder<Attribute>, AttributeModifier> attrs = ImmutableMultimap.of();
-    List<String> additionTip = new ArrayList<>();
-
-    public BaseCurioItem(String name,Function<Builder,Builder> properties) {
-        super(properties.apply(new Builder(name)).properties);
-        Builder builder = properties.apply(new Builder(name));
-        attrs = builder.attrs;
-        additionTip = builder.additionTip;
+    protected BaseCurioItem(Builder builder) {
+        super(builder.properties);
+        this.builder = builder;
     }
 
-    public BaseCurioItem(Properties properties) {
+    protected BaseCurioItem(Properties properties) {
         super(properties);
     }
 
-
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
-        return attrs;
+        return builder == null ? ICurioItem.super.getAttributeModifiers(slotContext, id, stack) : builder.attributes;
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("tooltip." + stack.getDescriptionId()));
-        for (String s : additionTip) {
-            tooltipComponents.add(Component.translatable("tooltip." + s));
-        }
-
+        if (builder != null) tooltipComponents.addAll(builder.additionTip);
     }
 
     public int getJeiInformationCount() {
-        return this.JeiInformationCount;
+        return builder.jeiInformationCount;
     }
 
+    @Override
+    public void onEquip(SlotContext slotContext, ItemStack prevStack, ItemStack stack) {
+        // todo
+    }
+
+    @Override
+    public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
+        // todo
+    }
+
+    @Override
+    public boolean canEquipFromUse(SlotContext slotContext, ItemStack stack) {
+        return canEquip(slotContext, stack);
+    }
+
+    @Override
+    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
+        return CuriosUtils.noSameCurio(slotContext.entity(), this);
+    }
+
+    public static Builder builder(String name, Properties properties) {
+        return new Builder(name, properties);
+    }
+
+    public static Builder builder(String name) {
+        return new Builder(name, new Properties());
+    }
 
     public static class Builder {
-
-        private EffectImmunities effectImmunities;
-        private ModRarity rarity;
-        private final Multimap<Holder<Attribute>, AttributeModifier> attrs = ArrayListMultimap.create();
-
-        private final Properties properties = new Properties();
-        private final List<String> additionTip = new ArrayList<>();
-
         private final String name;
-        Builder(String name){this.name = name;}
+        private final Properties properties;
 
-        public Builder addAttr(Holder<Attribute> attribute, String path, float amount, AttributeModifier.Operation operation) {
-            this.attrs.put(attribute,new AttributeModifier(TerraCurio.asResource(name+"_"+path),amount,operation));
+        private final List<Component> additionTip = new ArrayList<>();
+        private transient ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> attributesBuilder = ImmutableMultimap.builder();
+        private ImmutableMultimap<Holder<Attribute>, AttributeModifier> attributes;
+        private EffectImmunities effectImmunities = EffectImmunities.EMPTY;
+        private ModRarity rarity = ModRarity.BLUE;
+        private int jeiInformationCount = 0;
+
+        Builder(String name, Properties properties) {
+            this.name = name;
+            this.properties = properties;
+        }
+
+        public <T> Builder component(Supplier<DataComponentType<T>> type, T value) {
+            properties.component(type, value);
             return this;
         }
 
-        public Builder armor(float amount){
-            this.attrs.put(Attributes.ARMOR,new AttributeModifier(TerraCurio.asResource(name+"_builtin_armor"),amount, AttributeModifier.Operation.ADD_VALUE));
+        public Builder attribute(Holder<Attribute> attribute, String path, float amount, AttributeModifier.Operation operation) {
+            attributesBuilder.put(attribute, new AttributeModifier(TerraCurio.asResource(name + "_" + path), amount, operation));
             return this;
         }
 
-        public Builder damage( float amount, AttributeModifier.Operation operation){
-            this.attrs.put(Attributes.ATTACK_DAMAGE,new AttributeModifier(TerraCurio.asResource(name+"_builtin_damage"),amount,operation));
+        public Builder armor(float amount, AttributeModifier.Operation operation) {
+            attributesBuilder.put(Attributes.ARMOR, new AttributeModifier(TerraCurio.asResource(name + "_builtin_armor"), amount, operation));
             return this;
         }
 
-        public Builder fallResistance( float amount, AttributeModifier.Operation operation){
-            this.attrs.put(Attributes.FALL_DAMAGE_MULTIPLIER,new AttributeModifier(TerraCurio.asResource(name+"_builtin_fall_resistance"),amount,operation));
+        public Builder damage(float amount, AttributeModifier.Operation operation) {
+            attributesBuilder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(TerraCurio.asResource(name + "_builtin_damage"), amount, operation));
             return this;
         }
-
-        public Builder fallImmune( float amount, AttributeModifier.Operation operation){
-            this.attrs.put(Attributes.SAFE_FALL_DISTANCE,new AttributeModifier(TerraCurio.asResource(name+"_builtin_fall_immune"),amount,operation));
-            return this;
-        }
-
-        public Builder jumpStrength( float amount){
-            this.attrs.put(Attributes.JUMP_STRENGTH,new AttributeModifier(TerraCurio.asResource(name+"_builtin_jump_strength"),amount, AttributeModifier.Operation.ADD_MULTIPLIED_BASE));
-            return this;
-        }
-
-        public Builder fireImmune(){
-            this.attrs.put(ModAttributes.FIRE_IMMUNE,new AttributeModifier(TerraCurio.asResource(name+"_fire_immune"),1, AttributeModifier.Operation.ADD_VALUE));
-            return this;
-        }
-
-        public Builder lavaImmune( float amount){
-            this.attrs.put(ModAttributes.LAVA_IMMUNE_TIME,new AttributeModifier(TerraCurio.asResource(name+"_lava_immune"),amount, AttributeModifier.Operation.ADD_VALUE));
-            return this;
-        }
-
-
 
         @SafeVarargs
         public final Builder effectImmunities(Holder<MobEffect>... effectImmunities) {
-            this.effectImmunities = EffectImmunities.of(List.of(effectImmunities));
+            this.effectImmunities = EffectImmunities.of(Set.of(effectImmunities).stream().toList());
             return this;
         }
-
 
         public Builder rarity(ModRarity rarity) {
             this.rarity = rarity;
             return this;
         }
 
-        public Builder tip(String str) {
-            this.additionTip.add(str);
+        public Builder tooltip(String str) {
+            additionTip.add(Component.translatable("tooltip." + str));
             return this;
         }
 
-
-        public Builder  build() {
-            properties.component(ModDataComponentTypes.MOD_RARITY,rarity)
-                    .component(ModDataComponentTypes.EFFECT_IMMUNITIES, effectImmunities)
-                    .stacksTo(1);
+        public Builder jeiInformationCount(int count) {
+            this.jeiInformationCount = count;
             return this;
+        }
+
+        public BaseCurioItem build() {
+            properties.stacksTo(1).component(ModDataComponentTypes.MOD_RARITY, rarity).component(ModDataComponentTypes.EFFECT_IMMUNITIES, effectImmunities);
+            this.attributes = attributesBuilder.build();
+            this.attributesBuilder = null;
+            return new BaseCurioItem(this);
         }
     }
-
-    public static class CuriosProperties extends Item.Properties {
-        public CuriosProperties() {
-            super();
-        }
-
-        public CuriosProperties rarity(ModRarity rarity) {
-            this.component(ModDataComponentTypes.MOD_RARITY, rarity);
-            return this;
-        }
-    }
-
 }

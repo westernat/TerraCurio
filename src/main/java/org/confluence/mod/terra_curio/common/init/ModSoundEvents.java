@@ -1,10 +1,9 @@
-package org.confluence.mod.terra_curio.common.misc;
+package org.confluence.mod.terra_curio.common.init;
 
 
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
-import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.mod.terra_curio.TerraCurio;
 
@@ -12,7 +11,7 @@ import java.util.function.Supplier;
 
 
 public final class ModSoundEvents {
-    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, TerraCurio.MOD_ID);
+    public static final DeferredRegister<SoundEvent> SOUNDS = DeferredRegister.create(BuiltInRegistries.SOUND_EVENT, TerraCurio.MODID);
 
     public static final Supplier<SoundEvent> TRANSMISSION = register("transmission");
     public static final Supplier<SoundEvent> WAVING = register("waving");
@@ -24,6 +23,6 @@ public final class ModSoundEvents {
     public static final Supplier<SoundEvent> ACHIEVEMENTS = register("achievements");
 
     private static Supplier<SoundEvent> register(String id) {
-        return SOUNDS.register(id, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(TerraCurio.MOD_ID, id)));
+        return SOUNDS.register(id, () -> SoundEvent.createVariableRangeEvent(ResourceLocation.fromNamespaceAndPath(TerraCurio.MODID, id)));
     }
 }

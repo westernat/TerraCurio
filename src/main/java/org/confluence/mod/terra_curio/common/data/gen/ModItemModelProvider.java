@@ -10,7 +10,7 @@ import org.confluence.mod.terra_curio.common.item.curio.BaseCurioItem;
 
 public class ModItemModelProvider extends ItemModelProvider {
     public ModItemModelProvider(PackOutput output, ExistingFileHelper existingFileHelper) {
-        super(output, TerraCurio.MOD_ID, existingFileHelper);
+        super(output, TerraCurio.MODID, existingFileHelper);
     }
 
     @Override

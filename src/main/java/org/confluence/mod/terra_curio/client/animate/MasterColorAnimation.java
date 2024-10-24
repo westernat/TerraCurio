@@ -10,6 +10,7 @@ public class MasterColorAnimation extends ColorAnimation {
     public MasterColorAnimation() {
         super(0);
     }
+
     @Override
     public void updateColor() {
         int textColor = color.color();
@@ -30,7 +31,7 @@ public class MasterColorAnimation extends ColorAnimation {
             colorIntensityDirection = 1;
         }
 
-        color = new ColorState(textColor);
+        color.setColor(textColor);
     }
 
     @Override

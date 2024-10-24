@@ -1,4 +1,4 @@
-package org.confluence.mod.terra_curio.common.misc;
+package org.confluence.mod.terra_curio.common.init;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -13,7 +13,7 @@ public final class ModDamageTypes {
     public static final ResourceKey<DamageType> STAR_CLOAK = register("star_cloak");
 
     private static ResourceKey<DamageType> register(String id) {
-        return ResourceKey.create(Registries.DAMAGE_TYPE,ResourceLocation.fromNamespaceAndPath(TerraCurio.MOD_ID, id));
+        return ResourceKey.create(Registries.DAMAGE_TYPE,ResourceLocation.fromNamespaceAndPath(TerraCurio.MODID, id));
     }
 
     public static DamageSource of(Level level, ResourceKey<DamageType> key) {

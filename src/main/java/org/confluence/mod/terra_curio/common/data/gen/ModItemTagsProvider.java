@@ -12,11 +12,12 @@ import org.confluence.mod.terra_curio.common.init.ModTags;
 import org.confluence.mod.terra_curio.common.item.curio.BaseCurioItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.concurrent.CompletableFuture;
 
 public class ModItemTagsProvider extends ItemTagsProvider {
     public ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, CompletableFuture<TagLookup<Block>> b, @Nullable ExistingFileHelper helper) {
-        super(output, provider, b, TerraCurio.MOD_ID, helper);
+        super(output, provider, b, TerraCurio.MODID, helper);
     }
 
     @Override
