@@ -11,7 +11,7 @@ import org.jetbrains.annotations.UnknownNullability;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class AccessoriesAbility implements INBTSerializable<CompoundTag> {
+public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
     private double jumpBoost;
     private int fallResistance;
     private int invulnerableTime;
@@ -20,7 +20,7 @@ public class AccessoriesAbility implements INBTSerializable<CompoundTag> {
     private transient int remainLavaImmuneTicks;
     private int airSupplyBonus;
 
-    public AccessoriesAbility() {
+    public AccessoriesAttachment() {
         this.jumpBoost = 1.0;
         this.fallResistance = 0;
         this.invulnerableTime = 10;

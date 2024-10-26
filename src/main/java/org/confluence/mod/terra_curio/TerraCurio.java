@@ -5,11 +5,8 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLPaths;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import org.confluence.mod.terra_curio.common.CommonConfigs;
 import org.confluence.mod.terra_curio.common.advancement.ModTriggers;
-import org.confluence.mod.terra_curio.common.data.pack.CurioItemManager;
 import org.confluence.mod.terra_curio.common.effect.ModEffects;
 import org.confluence.mod.terra_curio.common.entity.ModEntities;
 import org.confluence.mod.terra_curio.common.init.*;
@@ -23,6 +20,7 @@ public class TerraCurio {
     public static final String MODID = "terra_curio";
     public static final Logger LOGGER = LoggerFactory.getLogger("Terra Curio");
     public static final Path CONFIG_PATH = FMLPaths.CONFIGDIR.get().resolve("confluence");
+    private static Boolean isConfluenceLoaded;
 
     public TerraCurio(IEventBus modEventBus, ModContainer modContainer) {
         CommonConfigs.register(modContainer);
@@ -35,15 +33,16 @@ public class TerraCurio {
         ModTabs.TABS.register(modEventBus);
         ModAttachments.TYPES.register(modEventBus);
         ModTriggers.TYPES.register(modEventBus);
-
-        NeoForge.EVENT_BUS.addListener(this::onDataPackLoad);
     }
 
     public static ResourceLocation asResource(String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
 
-    public void onDataPackLoad(AddReloadListenerEvent event) {
-        event.addListener(CurioItemManager.INSTANCE);
+    public static boolean isConfluenceLoaded() {
+        if (isConfluenceLoaded == null) {
+            isConfluenceLoaded = true;
+        }
+        return isConfluenceLoaded;
     }
 }

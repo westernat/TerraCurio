@@ -11,6 +11,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
@@ -18,6 +19,7 @@ import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.common.advancement.ModTriggers;
+import org.confluence.mod.terra_curio.common.data.pack.CurioItemManager;
 import org.confluence.mod.terra_curio.common.init.ModAttributes;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
 
@@ -118,5 +120,10 @@ public final class GameEvents {
             ModAttributes.applyToArrow(living, arrow);
 //            MoltenQuiver.applyToArrow(living, arrow);
         }
+    }
+
+    @SubscribeEvent
+    public static void onDataPackLoad(AddReloadListenerEvent event) {
+        event.addListener(CurioItemManager.INSTANCE);
     }
 }

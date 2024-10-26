@@ -5,9 +5,12 @@
     "compatibilityLevel": "JAVA_8",
     "refmap": "terra_curio.refmap.json",
     "mixins": [
+        "EntityMixin",
+        "accessor.LivingEntityAccessor",
         "accessor.RangedAttributeAccessor"
     ],
     "client": [
+        "client.accessor.LocalPlayerAccessor"
     ],
     "injectors": {
         "defaultRequire": 1
