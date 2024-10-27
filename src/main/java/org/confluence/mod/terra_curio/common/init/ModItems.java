@@ -1,6 +1,7 @@
 package org.confluence.mod.terra_curio.common.init;
 
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.mod.terra_curio.TerraCurio;
@@ -28,7 +29,66 @@ public final class ModItems {
             SHOT_PUT = registerCurio("shot_put", builder -> builder.effectImmunities(MobEffects.LEVITATION)), // 铅球 漂浮
             EXPLORERS_EQUIPMENT = registerCurio("explorers_equipment", builder -> builder.effectImmunities(MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)), // 探险家宝具
             ANKH_CHARM = registerCurio("ankh_charm", builder -> builder.effectImmunities(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)), // 十字章护身符
-            ANKH_SHIELD = registerCurio("ankh_shield", builder -> builder.effectImmunities(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)); // 十字章护盾
+            ANKH_SHIELD = registerCurio("ankh_shield", builder -> builder.effectImmunities(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)), // 十字章护盾
+//            STAR_CLOAK = registerCurio("star_cloak", StarCloak::new), // 星星斗篷
+//            STAR_VEIL = registerCurio("star_veil", StarVeil::new), // 星星面纱
+//            BEE_CLOAK = registerCurio("bee_cloak", BeeCloak::new), // 蜜蜂斗篷
+            BLACK_BELT = registerCurio("black_belt", builder -> builder.attribute(ModAttributes.getDodgeChance(), "dodge", 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)); // 黑腰带
+//            /* 天界徽章 */
+//            /* 月光护身符 */
+//            SUN_STONE = registerCurio("sun_stone", SunStone::new), // 太阳石 (WIP)
+//            MOON_STONE = registerCurio("moon_stone", MoonStone::new), // 月亮石 (WIP)
+//            CELESTIAL_STONE = registerCurio("celestial_stone", CelestialStone::new), // 天界石
+//            /* 月亮贝壳 */
+//            /* 天界贝壳 */
+//            COBALT_SHIELD = registerCurio("cobalt_shield", CobaltShield::new), // 钴护盾
+//            CROSS_NECKLACE = registerCurio("cross_necklace", CrossNecklace::new), // 十字项链
+//            RANGER_EMBLEM = registerCurio("ranger_emblem", RangerEmblem::new), // 游侠徽章
+//            /* 召唤师徽章 */
+//            WARRIOR_EMBLEM = registerCurio("warrior_emblem", WarriorEmblem::new), // 战士徽章
+//            SORCERER_EMBLEM = registerCurio("sorcerer_emblem", SorcererEmblem::new), // 巫士徽章
+//            AVENGER_EMBLEM = registerCurio("avenger_emblem", AvengerEmblem::new), // 复仇者勋章
+//            EYE_OF_THE_GOLEM = registerCurio("eye_of_the_golem", EyeOfTheGolem::new), // 石巨人之眼
+//            DESTROYER_EMBLEM = registerCurio("destroyer_emblem", DestroyerEmblem::new), // 毁灭者勋章
+//            FERAL_CLAWS = registerCurio("feral_claws", FeralClaws::new), // 狂爪手套
+//            TITAN_GLOVE = registerCurio("titan_glove", TitanGlove::new), // 泰坦手套
+//            POWER_GLOVE = registerCurio("power_glove", PowerGlove::new), // 强力手套
+//            MECHANICAL_GLOVE = registerCurio("mechanical_glove", MechanicalGlove::new), // 机械手套
+//            FIRE_GAUNTLET = registerCurio("fire_gauntlet", FireGauntlet::new), // 烈火手套
+//            FLESH_KNUCKLES = registerCurio("flesh_knuckles", FleshKnuckles::new), // 血肉指虎
+//            BERSERKERS_GLOVE = registerCurio("berserkers_glove", BerserkersGlove::new), // 狂战士手套
+//            PALADINS_SHIELD = registerCurio("paladins_shield", PaladinsShield::new), // 圣骑士护盾
+//            HERO_SHIELD = registerCurio("hero_shield", HeroShield::new), // 英雄护盾
+//            FROZEN_TURTLE_SHELL = registerCurio("frozen_turtle_shell", FrozenTurtleShell::new), // 冰冻海龟壳
+//            FROZEN_SHIELD = registerCurio("frozen_shield", FrozenShield::new), // 冰冻护盾
+//            HONEY_COMB = registerCurio("honey_comb", HoneyComb::new), // 蜂窝
+//            SHARK_TOOTH_NECKLACE = registerCurio("shark_tooth_necklace", SharkToothNecklace::new), // 鲨牙项链
+//            STINGER_NECKLACE = registerCurio("stinger_necklace", StingerNecklace::new), // 毒刺项链
+//            PANIC_NECKLACE = registerCurio("panic_necklace", PanicNecklace::new), // 恐慌项链
+//            SWEETHEART_NECKLACE = registerCurio("sweetheart_necklace", SweetheartNecklace::new), // 甜心项链
+//            MAGIC_QUIVER = registerCurio("magic_quiver", MagicQuiver::new), // 魔法箭袋
+//            MOLTEN_QUIVER = registerCurio("molten_quiver", MoltenQuiver::new), // 熔火箭袋
+//            STALKERS_QUIVER = registerCurio("stalkers_quiver", StalkersQuiver::new), // 潜行者箭袋
+//            RIFLE_SCOPE = registerCurio("rifle_scope", RifleScope::new), // 步枪瞄准镜
+//            SNIPER_SCOPE = registerCurio("sniper_scope", SniperScope::new), // 狙击镜
+//            RECON_SCOPE = registerCurio("recon_scope", ReconScope::new), // 侦察镜
+//            MAGMA_STONE = registerCurio("magma_stone", MagmaStone::new), // 岩浆石
+//            OBSIDIAN_ROSE = registerCurio("obsidian_rose", ObsidianRose::new), // 黑曜石玫瑰
+//            OBSIDIAN_SHIELD = registerCurio("obsidian_shield", ObsidianShield::new), // 黑曜石护盾
+//            OBSIDIAN_SKULL = registerCurio("obsidian_skull", ObsidianSkull::new), // 黑曜石骷髅头
+//            MOLTEN_SKULL_ROSE = registerCurio("molten_skull_rose", MoltenSkullRose::new), // 熔火骷髅头玫瑰
+//            OBSIDIAN_SKULL_ROSE = registerCurio("obsidian_skull_rose", ObsidianSkullRose::new), // 黑曜石骷髅头玫瑰
+//            HAND_WARMER = registerCurio("hand_warmer", HandWarmer::new), // 暖手宝
+//            PUTRID_SCENT = registerCurio("putrid_scent", PutridScent::new), // 腐香囊
+//            SHACKLE = registerCurio("shackle", Shackle::new); // 脚镣
+//            /* 学徒围巾 */
+//            /* 侍卫护盾 */
+//            /* 女猎人圆盾 */
+//            /* 武僧腰带 */
+//            /* 大力士甲虫 */
+//            /* 死灵卷轴 */
+//            /* 甲虫莎草纸 */
+//            /* 矮人项链 */
 
     public static Supplier<Item> register(String name, Supplier<Item> supplier) {
         return ITEMS.register(name, supplier);

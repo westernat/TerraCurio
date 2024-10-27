@@ -8,7 +8,9 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.GsonHelper;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
@@ -116,11 +118,11 @@ public final class ModAttributes {
         }
     }
 
-    public static boolean applyDodge(LivingEntity living) {
+    public static boolean applyDodge(LivingEntity living, RandomSource random) {
         if (hasCustomAttribute(DODGE_CHANCE)) return false;
         AttributeInstance attributeInstance = living.getAttribute(DODGE_CHANCE);
         if (attributeInstance == null) return false;
-        return living.level().random.nextFloat() < attributeInstance.getValue();
+        return random.nextFloat() < attributeInstance.getValue();
     }
 
     public static float applyRangedDamage(LivingEntity living, DamageSource damageSource, float amount) {
@@ -129,6 +131,18 @@ public final class ModAttributes {
         AttributeInstance attributeInstance = living.getAttribute(RANGED_DAMAGE);
         if (attributeInstance == null) return amount;
         return amount * (float) attributeInstance.getValue();
+    }
+
+    public static float applyMagicDamage(DamageSource damageSource, float amount) {
+        if (TerraCurio.isConfluenceLoaded() || hasCustomAttribute(MAGIC_DAMAGE)) return amount;
+        if (damageSource.is(DamageTypes.MAGIC) || damageSource.is(DamageTypes.INDIRECT_MAGIC)) {
+            if (damageSource.getEntity() instanceof LivingEntity living) {
+                AttributeInstance attributeInstance = living.getAttribute(MAGIC_DAMAGE);
+                if (attributeInstance == null) return amount;
+                return amount * (float) attributeInstance.getValue();
+            }
+        }
+        return amount;
     }
 
     public static void applyPickupRange(LivingEntity living) {
@@ -179,14 +193,14 @@ public final class ModAttributes {
 
     public static void modifyAttributesUpperLimit() {
         if (!ModList.get().isLoaded("attributefix")) {
-            if (Attributes.ARMOR instanceof RangedAttribute rangedAttribute) {
+            if (Attributes.ARMOR.value() instanceof RangedAttribute rangedAttribute) {
                 ((RangedAttributeAccessor) rangedAttribute).setMaxValue(1024.0);
             }
-            if (Attributes.ARMOR_TOUGHNESS instanceof RangedAttribute rangedAttribute) {
+            if (Attributes.ARMOR_TOUGHNESS.value() instanceof RangedAttribute rangedAttribute) {
                 ((RangedAttributeAccessor) rangedAttribute).setMaxValue(1024.0);
             }
-            if (Attributes.MAX_HEALTH instanceof RangedAttribute rangedAttribute) {
-                ((RangedAttributeAccessor) rangedAttribute).setMaxValue(2147483647);
+            if (Attributes.MAX_HEALTH.value() instanceof RangedAttribute rangedAttribute) {
+                ((RangedAttributeAccessor) rangedAttribute).setMaxValue(8192.0);
             }
         }
     }

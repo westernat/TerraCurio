@@ -17,7 +17,7 @@ import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.common.component.EffectImmunities;
 import org.confluence.mod.terra_curio.common.component.ModRarity;
 import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
-import org.confluence.mod.terra_curio.common.util.CuriosUtils;
+import org.confluence.mod.terra_curio.util.CuriosUtils;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
@@ -104,17 +104,17 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
-        public Builder attribute(Holder<Attribute> attribute, String path, float amount, AttributeModifier.Operation operation) {
+        public Builder attribute(Holder<Attribute> attribute, String path, double amount, AttributeModifier.Operation operation) {
             attributesBuilder.put(attribute, new AttributeModifier(TerraCurio.asResource(name + "_" + path), amount, operation));
             return this;
         }
 
-        public Builder armor(float amount, AttributeModifier.Operation operation) {
+        public Builder armor(double amount, AttributeModifier.Operation operation) {
             attributesBuilder.put(Attributes.ARMOR, new AttributeModifier(TerraCurio.asResource(name + "_builtin_armor"), amount, operation));
             return this;
         }
 
-        public Builder damage(float amount, AttributeModifier.Operation operation) {
+        public Builder damage(double amount, AttributeModifier.Operation operation) {
             attributesBuilder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(TerraCurio.asResource(name + "_builtin_damage"), amount, operation));
             return this;
         }

@@ -16,6 +16,7 @@ public record CurioExistsPacketS2C(int item, boolean enable) implements CustomPa
     public static final int CTHULHU = 1;
     public static final int TABI = 2;
     public static final int SCOPE = 3;
+    public static final int GRAVITY_GLOBE = 4;
 
     public static final Type<CurioExistsPacketS2C> TYPE = new Type<>(TerraCurio.asResource("curio_exists"));
     public static final StreamCodec<ByteBuf, CurioExistsPacketS2C> STREAM_CODEC = StreamCodec.composite(

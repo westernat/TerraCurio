@@ -10,7 +10,8 @@
         "accessor.RangedAttributeAccessor"
     ],
     "client": [
-        "client.accessor.LocalPlayerAccessor"
+        "client.accessor.LocalPlayerAccessor",
+        "client.accessor.MinecraftAccessor"
     ],
     "injectors": {
         "defaultRequire": 1

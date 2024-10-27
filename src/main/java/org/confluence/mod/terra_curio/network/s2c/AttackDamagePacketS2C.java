@@ -5,6 +5,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.client.handler.InformationHandler;
@@ -31,5 +34,11 @@ public record AttackDamagePacketS2C(float amount) implements CustomPacketPayload
             context.disconnect(Component.translatable("neoforge.network.invalid_flow", e.getMessage()));
             return null;
         });
+    }
+
+    public static void sendToClient(float amount, Entity entity) {
+        if (entity instanceof ServerPlayer serverPlayer) {
+            PacketDistributor.sendToPlayer(serverPlayer, new AttackDamagePacketS2C(amount));
+        }
     }
 }

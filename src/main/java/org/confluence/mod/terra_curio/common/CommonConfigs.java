@@ -17,11 +17,21 @@ import java.util.function.Supplier;
 
 public class CommonConfigs {
     public static final Supplier<String> STRING_SUPPLIER = () -> null;
-    public static final Predicate<Object> ALWAYS_TRUE = o -> true;
+    public static final Predicate<Object> FILTER_CONFLUENCE = o -> {
+        if (o instanceof String s && s.startsWith("confluence:")) {
+            return TerraCurio.isConfluenceLoaded();
+        }
+        return true;
+    };
     private static ModConfigSpec.ConfigValue<List<? extends String>> RARE_BLOCKS;
     private static ModConfigSpec.ConfigValue<List<? extends String>> RARE_CREATURES;
     public static ArrayList<BlockState> rareBlocks = new ArrayList<>();
     public static ArrayList<EntityType<?>> rareCreatures = new ArrayList<>();
+
+    public static ModConfigSpec.BooleanValue RANDOM_ATTACK_DAMAGE;
+    public static ModConfigSpec.DoubleValue RANDOM_ATTACK_DAMAGE_MIN;
+    public static ModConfigSpec.DoubleValue RANDOM_ATTACK_DAMAGE_MAX;
+
 
     public static void onLoad() {
         RARE_BLOCKS.get().forEach(s -> {
@@ -78,7 +88,7 @@ public class CommonConfigs {
                 "confluence:deepslate_tin_ore",
                 "minecraft:copper_ore",
                 "minecraft:deepslate_copper_ore"
-        ), STRING_SUPPLIER, ALWAYS_TRUE);
+        ), STRING_SUPPLIER, FILTER_CONFLUENCE);
         RARE_CREATURES = BUILDER.comment(
                 "In order for the creature to be found by the Life Form Analyzer",
                 "You need to fill the list with string like 'modid:entity'",
@@ -90,7 +100,11 @@ public class CommonConfigs {
                 "minecraft:allay",
                 "minecraft:warden",
                 "minecraft:mooshroom",
-                "minecraft:panda"), STRING_SUPPLIER, ALWAYS_TRUE);
+                "minecraft:panda"
+        ), STRING_SUPPLIER, FILTER_CONFLUENCE);
+        RANDOM_ATTACK_DAMAGE = BUILDER.push("Random Attack Damage").define("enable", false);
+        RANDOM_ATTACK_DAMAGE_MIN = BUILDER.defineInRange("min", 0.8, 0.0, 1.0);
+        RANDOM_ATTACK_DAMAGE_MAX = BUILDER.defineInRange("max", 1.2, 1.0, 2.0);
         container.registerConfig(ModConfig.Type.COMMON, BUILDER.build());
     }
 }

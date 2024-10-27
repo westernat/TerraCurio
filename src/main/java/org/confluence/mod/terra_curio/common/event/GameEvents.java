@@ -1,8 +1,12 @@
 package org.confluence.mod.terra_curio.common.event;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.stats.Stats;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -17,10 +21,17 @@ import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
+import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.mod.terra_curio.TerraCurio;
+import org.confluence.mod.terra_curio.client.handler.GravitationHandler;
+import org.confluence.mod.terra_curio.common.CommonConfigs;
 import org.confluence.mod.terra_curio.common.advancement.ModTriggers;
 import org.confluence.mod.terra_curio.common.data.pack.CurioItemManager;
 import org.confluence.mod.terra_curio.common.init.ModAttributes;
+import org.confluence.mod.terra_curio.network.s2c.AttackDamagePacketS2C;
+import org.confluence.mod.terra_curio.network.s2c.EntityKilledPacketS2C;
+import org.confluence.mod.terra_curio.util.ModUtils;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = TerraCurio.MODID)
@@ -38,14 +49,19 @@ public final class GameEvents {
         if (living.level().isClientSide) return;
         DamageSource damageSource = event.getSource();
         if (damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || damageSource.is(DamageTypes.GENERIC_KILL)) return;
-//        RandomSource random = living.level().random;
+        RandomSource random = living.level().random;
+        if (ModAttributes.applyDodge(living, random)) {
+            event.setNewDamage(0.0F);
+            return;
+        }
+
         float amount = event.getNewDamage();
 
 //        IHoneycomb.apply(living, random);
 //        IStarCloak.apply(living, random);
 //        PanicNecklace.apply(living);
-//
-//        amount = ModAttributes.applyMagicDamage(damageSource, amount);
+
+        amount = ModAttributes.applyMagicDamage(damageSource, amount);
         amount = ModAttributes.applyRangedDamage(living, damageSource, amount);
 //        amount = PaladinsShield.apply(living, damageSource, amount);
 //        amount = FrozenTurtleShell.apply(living, amount);
@@ -54,29 +70,26 @@ public final class GameEvents {
 //        amount = WormScarf.apply(living, amount);
 //        amount = BrainOfConfusion.apply(living, random, amount);
 
-//        if (CommonConfigs.RANDOM_ATTACK_DAMAGE.get()) {
-//            amount *= ModUtils.nextFloat(random,
-//                    CommonConfigs.RANDOM_ATTACK_DAMAGE_MIN.get().floatValue(),
-//                    CommonConfigs.RANDOM_ATTACK_DAMAGE_MAX.get().floatValue()
-//            );
-//        }
-//        IDPSMeter.sendMsg(amount, damageSource.getEntity());
+        if (CommonConfigs.RANDOM_ATTACK_DAMAGE.get()) {
+            amount *= ModUtils.nextFloat(random,
+                    CommonConfigs.RANDOM_ATTACK_DAMAGE_MIN.get().floatValue(),
+                    CommonConfigs.RANDOM_ATTACK_DAMAGE_MAX.get().floatValue()
+            );
+        }
+        AttackDamagePacketS2C.sendToClient(amount, damageSource.getEntity());
         event.setNewDamage(amount);
     }
 
     @SubscribeEvent
     public static void livingDeath(LivingDeathEvent event) {
-//        LivingEntity living = event.getEntity();
-//        if (event.getSource().getEntity() instanceof ServerPlayer serverPlayer) {
-//            EntityType<?> entityType = living.getType();
-//            NetworkHandler.CHANNEL.send(
-//                    PacketDistributor.PLAYER.with(() -> serverPlayer),
-//                    new EntityKilledPacketS2C(
-//                            serverPlayer.getStats().getValue(Stats.ENTITY_KILLED.get(entityType)),
-//                            ForgeRegistries.ENTITY_TYPES.getKey(entityType)
-//                    )
-//            );
-//        }
+        LivingEntity living = event.getEntity();
+        if (event.getSource().getEntity() instanceof ServerPlayer serverPlayer) {
+            EntityType<?> entityType = living.getType();
+            PacketDistributor.sendToPlayer(serverPlayer, new EntityKilledPacketS2C(
+                    serverPlayer.getStats().getValue(Stats.ENTITY_KILLED.get(entityType)),
+                    BuiltInRegistries.ENTITY_TYPE.getKey(entityType)
+            ));
+        }
     }
 
     @SubscribeEvent
@@ -125,5 +138,12 @@ public final class GameEvents {
     @SubscribeEvent
     public static void onDataPackLoad(AddReloadListenerEvent event) {
         event.addListener(CurioItemManager.INSTANCE);
+    }
+
+    @SubscribeEvent
+    public static void playerTick$Pre(PlayerTickEvent.Pre event) {
+        if (event.getEntity().isLocalPlayer()) {
+            GravitationHandler.unCrouching(event.getEntity());
+        }
     }
 }

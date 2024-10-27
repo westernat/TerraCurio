@@ -16,7 +16,7 @@ import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.client.handler.InformationHandler;
 import org.confluence.mod.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
-import org.confluence.mod.terra_curio.common.util.CuriosUtils;
+import org.confluence.mod.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

@@ -11,7 +11,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
-import org.confluence.mod.terra_curio.common.util.CuriosUtils;
+import org.confluence.mod.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.NotNull;
 
 public record SpeedBootsNBTPacketC2S(int slot, int value) implements CustomPacketPayload {

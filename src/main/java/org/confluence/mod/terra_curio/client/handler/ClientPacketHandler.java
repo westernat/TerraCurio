@@ -45,14 +45,17 @@ public final class ClientPacketHandler {
             hasCthulhu = enable;
             hasTabi = enable;
             hasScope = enable;
+            GravitationHandler.setHasGlobe(enable);
         } else if (item == CurioExistsPacketS2C.AUTO_ATTACK) {
-            autoAttack = packet.enable();
+            autoAttack = enable;
         } else if (item == CurioExistsPacketS2C.CTHULHU) {
-            hasCthulhu = packet.enable();
+            hasCthulhu = enable;
         } else if (item == CurioExistsPacketS2C.TABI) {
-            hasTabi = packet.enable();
+            hasTabi = enable;
         } else if (item == CurioExistsPacketS2C.SCOPE) {
-            hasScope = packet.enable();
+            hasScope = enable;
+        } else if (item == CurioExistsPacketS2C.GRAVITY_GLOBE) {
+            GravitationHandler.setHasGlobe(enable);
         }
     }
 }

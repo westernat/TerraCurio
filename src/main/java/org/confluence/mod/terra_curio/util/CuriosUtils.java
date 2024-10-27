@@ -1,4 +1,4 @@
-package org.confluence.mod.terra_curio.common.util;
+package org.confluence.mod.terra_curio.util;
 
 import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.core.Holder;
