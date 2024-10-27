@@ -1,7 +1,17 @@
 package org.confluence.mod.terra_curio.client.handler;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.confluence.mod.terra_curio.integration.bettercombat.BetterCombatHelper;
+import org.confluence.mod.terra_curio.mixin.client.accessor.MinecraftAccessor;
 import org.confluence.mod.terra_curio.network.s2c.CurioExistsPacketS2C;
 import org.confluence.mod.terra_curio.network.s2c.RightClickSubtractorPacketS2C;
 
@@ -35,6 +45,31 @@ public final class ClientPacketHandler {
 
     public static void handleSubstractor(RightClickSubtractorPacketS2C packet) {
         rightClickSubtractor = packet.amount();
+    }
+
+    public static void applyAutoAttack(Minecraft minecraft, LocalPlayer localPlayer) {
+        if (minecraft.gameMode == null || minecraft.gameMode.isDestroying()) return;
+        if (BetterCombatHelper.isLoaded()) {
+            ItemStack itemStack = localPlayer.getItemInHand(InteractionHand.MAIN_HAND);
+            if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
+        }
+        if (ClientPacketHandler.couldAutoAttack() && minecraft.options.keyAttack.isDown()) {
+            if (localPlayer.getAttackStrengthScale(0.5F) < 1.0F) return;
+            MinecraftAccessor accessor = (MinecraftAccessor) minecraft;
+            if (accessor.getMissTime() > 0) accessor.setMissTime(0);
+            double reach = Math.max(localPlayer.entityInteractionRange(), localPlayer.blockInteractionRange());
+            Vec3 from = localPlayer.getEyePosition(1.0F);
+            Vec3 viewVector = localPlayer.getViewVector(1.0F);
+            Vec3 to = from.add(viewVector.x * reach, viewVector.y * reach, viewVector.z * reach);
+            EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(
+                    localPlayer, from, to, new AABB(from, to),
+                    entity -> !entity.isSpectator() && entity.isPickable(), reach);
+            if (entityhitresult != null && minecraft.gameMode != null) {
+                minecraft.gameMode.attack(localPlayer, entityhitresult.getEntity());
+            }
+            localPlayer.resetAttackStrengthTicker();
+            localPlayer.swing(InteractionHand.MAIN_HAND);
+        }
     }
 
     public static void handleCurioExists(CurioExistsPacketS2C packet) {

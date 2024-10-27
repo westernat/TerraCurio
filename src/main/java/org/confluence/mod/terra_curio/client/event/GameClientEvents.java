@@ -21,9 +21,11 @@ import org.confluence.mod.terra_curio.common.effect.ModEffects;
 public final class GameClientEvents {
     @SubscribeEvent
     public static void clientTick$Post(ClientTickEvent.Pre event) {
-        LocalPlayer localPlayer = Minecraft.getInstance().player;
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer localPlayer = minecraft.player;
         GravitationHandler.tick(localPlayer);
         if (localPlayer == null) return;
+        ClientPacketHandler.applyAutoAttack(minecraft, localPlayer);
         InformationHandler.handle(localPlayer);
 
         ExpertColorAnimation.INSTANCE.updateColor();
