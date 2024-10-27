@@ -1,7 +1,6 @@
 package org.confluence.mod.terra_curio.network.c2s;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -9,8 +8,9 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.mod.terra_curio.TerraCurio;
-import org.confluence.mod.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.mod.terra_curio.common.component.SpeedBootsComponent;
 import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
+import org.confluence.mod.terra_curio.common.item.curio.movement.BaseSpeedBoots;
 import org.confluence.mod.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -31,9 +31,8 @@ public record SpeedBootsNBTPacketC2S(int slot, int value) implements CustomPacke
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer serverPlayer) {
                 CuriosUtils.getSlot(serverPlayer, "accessory", slot).ifPresent(itemStack -> {
-                    AccessoriesComponent component = itemStack.get(ModDataComponentTypes.ACCESSORIES);
-                    if (component != null && component.types().contains(AccessoriesComponent.BASE_SPEED_BOOTS)) {
-                        itemStack.get(DataComponents.CUSTOM_DATA).getUnsafe().putInt("speed", value);
+                    if (itemStack.getItem() instanceof BaseSpeedBoots) {
+                        itemStack.set(ModDataComponentTypes.SPEED_BOOTS, new SpeedBootsComponent(value));
                     }
                 });
             }

@@ -2,12 +2,16 @@ package org.confluence.mod.terra_curio.util;
 
 import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.core.Holder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.apache.commons.compress.utils.Lists;
+import org.confluence.mod.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.mod.terra_curio.common.component.EffectImmunities;
 import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -30,30 +34,46 @@ import java.util.function.Predicate;
 public class CuriosUtils {
     public static boolean hasEffectImmunity(LivingEntity living, Holder<MobEffect> mobEffect) {
         ICuriosItemHandler curiosItemHandler = CuriosApi.getCuriosInventory(living).orElse(null);
-        if (curiosItemHandler != null) {
-            return curiosItemHandler.getCurios().values().stream()
-                    .map(ICurioStacksHandler::getStacks)
-                    .flatMap(iDynamicStackHandler -> {
-                        int slots = iDynamicStackHandler.getSlots();
-                        List<ItemStack> stacks = Lists.newArrayList();
-                        for (int i = 0; i < slots; i++) {
-                            stacks.add(iDynamicStackHandler.getStackInSlot(i));
-                        }
-                        return stacks.stream();
-                    })
-                    .anyMatch(stack -> {
-                        EffectImmunities effectImmunities = stack.get(ModDataComponentTypes.EFFECT_IMMUNITIES);
-                        if (effectImmunities != null) {
-                            return effectImmunities.contains(mobEffect);
-                        }
-                        return false;
-                    });
+        return curiosItemHandler != null && curiosItemHandler.getCurios().values().stream()
+                .map(ICurioStacksHandler::getStacks)
+                .flatMap(iDynamicStackHandler -> {
+                    int slots = iDynamicStackHandler.getSlots();
+                    List<ItemStack> stacks = Lists.newArrayList();
+                    for (int i = 0; i < slots; i++) {
+                        stacks.add(iDynamicStackHandler.getStackInSlot(i));
+                    }
+                    return stacks.stream();
+                })
+                .anyMatch(stack -> {
+                    EffectImmunities component = stack.get(ModDataComponentTypes.EFFECT_IMMUNITIES);
+                    return component != null && component.contains(mobEffect);
+                });
+    }
+
+    public static void applyFireAttack(Player player, Entity entity) {
+        if (CuriosUtils.hasCurio(player, AccessoriesComponent.FIRE_ATTACK)) {
+            float f = player.getRandom().nextFloat();
+            int time;
+            if (f < 0.25F) {
+                time = 120;
+            } else if (f < 0.375F) {
+                time = 80;
+            } else {
+                time = 40;
+            }
+            entity.igniteForTicks(time);
         }
-        return false;
     }
 
     public static boolean noSameCurio(LivingEntity living, Class<?> clazz) {
         return noSameCurio(living, (Predicate<ItemStack>) itemStack -> clazz.isInstance(itemStack.getItem()));
+    }
+
+    public static boolean noSameCurio(LivingEntity living, ResourceLocation type) {
+        return noSameCurio(living, (Predicate<ItemStack>) itemStack -> {
+            AccessoriesComponent component = itemStack.get(ModDataComponentTypes.ACCESSORIES);
+            return component == null || !component.types().contains(type);
+        });
     }
 
     public static boolean noSameCurio(LivingEntity living, Predicate<ItemStack> predicate) {
@@ -79,6 +99,10 @@ public class CuriosUtils {
 
     public static boolean hasCurio(LivingEntity living, Class<?> clazz) {
         return !noSameCurio(living, clazz);
+    }
+
+    public static boolean hasCurio(LivingEntity living, ResourceLocation type) {
+        return !noSameCurio(living, type);
     }
 
     public static boolean hasCurio(LivingEntity living, Predicate<ItemStack> predicate) {

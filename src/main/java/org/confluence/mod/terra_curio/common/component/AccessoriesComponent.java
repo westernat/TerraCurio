@@ -1,5 +1,6 @@
 package org.confluence.mod.terra_curio.common.component;
 
+import com.google.common.collect.Sets;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.FriendlyByteBuf;
@@ -20,7 +21,7 @@ public record AccessoriesComponent(Set<ResourceLocation> types) implements DataC
     );
     public static final StreamCodec<FriendlyByteBuf, AccessoriesComponent> STREAM_CODEC = new StreamCodec<>() {
         @Override
-        public void encode(FriendlyByteBuf buffer, AccessoriesComponent value) {
+        public void encode(FriendlyByteBuf buffer, @NotNull AccessoriesComponent value) {
             buffer.writeJsonWithCodec(CODEC, value);
         }
 
@@ -47,7 +48,16 @@ public record AccessoriesComponent(Set<ResourceLocation> types) implements DataC
             COMPASS = TerraCurio.asResource("compass"),
             DEPTH_METER = TerraCurio.asResource("depth_meter");
     public static final ResourceLocation STEP_STOOL = TerraCurio.asResource("step_stool");
-    public static final ResourceLocation BASE_SPEED_BOOTS = TerraCurio.asResource("base_speed_boots");
+    public static final ResourceLocation AUTO_ATTACK = TerraCurio.asResource("auto_attack"),
+            SHIELD_OF_CTHULHU = TerraCurio.asResource("shield_of_cthulhu"),
+            TABI = TerraCurio.asResource("tabi"),
+            SCOPE = TerraCurio.asResource("scope"),
+            GRAVITY_GLOBE = TerraCurio.asResource("gravity_globe");
+    public static final ResourceLocation FIRE_ATTACK = TerraCurio.asResource("fire_attack");
+
+    public AccessoriesComponent(ResourceLocation... types) {
+        this(Sets.newHashSet(types));
+    }
 
     @Override
     public @Nullable Codec<AccessoriesComponent> codec() {

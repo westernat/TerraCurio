@@ -28,6 +28,8 @@ import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class BaseCurioItem extends Item implements ICurioItem {
+    protected static final List<Component> EMPTY_TOOLTIP = List.of();
+    protected static final ImmutableMultimap<Attribute, AttributeModifier> EMPTY_ATTRIBUTE = ImmutableMultimap.of();
     protected static final Consumer<Builder> NO_BUILDER = builder -> {};
     protected Builder builder;
 
@@ -47,8 +49,11 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("tooltip." + stack.getDescriptionId()));
-        if (builder != null) tooltipComponents.addAll(builder.additionTip);
+        boolean b = builder == null;
+        if (b || builder.hasToolTip) {
+            tooltipComponents.add(Component.translatable("tooltip." + stack.getDescriptionId()));
+            if (!b) tooltipComponents.addAll(builder.additionTip);
+        }
     }
 
     public int getJeiInformationCount() {
@@ -88,6 +93,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         private final Properties properties;
 
         private final List<Component> additionTip = new ArrayList<>();
+        private boolean hasToolTip = true;
         private transient ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> attributesBuilder = ImmutableMultimap.builder();
         private ImmutableMultimap<Holder<Attribute>, AttributeModifier> attributes;
         private EffectImmunities effectImmunities = EffectImmunities.EMPTY;
@@ -127,10 +133,14 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         public Builder rarity(ModRarity rarity) {
             this.rarity = rarity;
+            if (rarity != ModRarity.GRAY && rarity != ModRarity.WHITE) {
+                properties.fireResistant();
+            }
             return this;
         }
 
         public Builder tooltip(String str) {
+            if (!hasToolTip) throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
             additionTip.add(Component.translatable("tooltip." + str));
             return this;
         }
@@ -140,11 +150,22 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
-        public BaseCurioItem build() {
-            properties.stacksTo(1).component(ModDataComponentTypes.MOD_RARITY, rarity).component(ModDataComponentTypes.EFFECT_IMMUNITIES, effectImmunities);
+        public Builder noTooltip() {
+            additionTip.clear();
+            this.hasToolTip = false;
+            return this;
+        }
+
+        public Builder initialize() {
+            properties.stacksTo(1).component(ModDataComponentTypes.MOD_RARITY, rarity)
+                    .component(ModDataComponentTypes.EFFECT_IMMUNITIES, effectImmunities);
             this.attributes = attributesBuilder.build();
             this.attributesBuilder = null;
-            return new BaseCurioItem(this);
+            return this;
+        }
+
+        public BaseCurioItem build() {
+            return new BaseCurioItem(initialize());
         }
     }
 }

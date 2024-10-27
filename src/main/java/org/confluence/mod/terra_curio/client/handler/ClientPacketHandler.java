@@ -15,6 +15,8 @@ import org.confluence.mod.terra_curio.mixin.client.accessor.MinecraftAccessor;
 import org.confluence.mod.terra_curio.network.s2c.CurioExistsPacketS2C;
 import org.confluence.mod.terra_curio.network.s2c.RightClickSubtractorPacketS2C;
 
+import static org.confluence.mod.terra_curio.network.s2c.CurioExistsPacketS2C.*;
+
 @OnlyIn(Dist.CLIENT)
 public final class ClientPacketHandler {
     private static boolean autoAttack = false;
@@ -74,23 +76,10 @@ public final class ClientPacketHandler {
 
     public static void handleCurioExists(CurioExistsPacketS2C packet) {
         int item = packet.item();
-        boolean enable = packet.enable();
-        if (item == CurioExistsPacketS2C.ALL) {
-            autoAttack = enable;
-            hasCthulhu = enable;
-            hasTabi = enable;
-            hasScope = enable;
-            GravitationHandler.setHasGlobe(enable);
-        } else if (item == CurioExistsPacketS2C.AUTO_ATTACK) {
-            autoAttack = enable;
-        } else if (item == CurioExistsPacketS2C.CTHULHU) {
-            hasCthulhu = enable;
-        } else if (item == CurioExistsPacketS2C.TABI) {
-            hasTabi = enable;
-        } else if (item == CurioExistsPacketS2C.SCOPE) {
-            hasScope = enable;
-        } else if (item == CurioExistsPacketS2C.GRAVITY_GLOBE) {
-            GravitationHandler.setHasGlobe(enable);
-        }
+        autoAttack = (item & AUTO_ATTACK) == AUTO_ATTACK;
+        hasCthulhu = (item & SHIELD_OF_CTHULHU) == SHIELD_OF_CTHULHU;
+        hasTabi = (item & TABI) == TABI;
+        hasScope = (item & SCOPE) == SCOPE;
+        GravitationHandler.setHasGlobe((item & GRAVITY_GLOBE) == GRAVITY_GLOBE);
     }
 }

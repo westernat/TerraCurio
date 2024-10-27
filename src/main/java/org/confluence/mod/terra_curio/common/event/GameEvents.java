@@ -20,6 +20,8 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
+import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -30,7 +32,10 @@ import org.confluence.mod.terra_curio.common.advancement.ModTriggers;
 import org.confluence.mod.terra_curio.common.data.pack.CurioItemManager;
 import org.confluence.mod.terra_curio.common.init.ModAttributes;
 import org.confluence.mod.terra_curio.network.s2c.AttackDamagePacketS2C;
+import org.confluence.mod.terra_curio.network.s2c.CurioExistsPacketS2C;
 import org.confluence.mod.terra_curio.network.s2c.EntityKilledPacketS2C;
+import org.confluence.mod.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
+import org.confluence.mod.terra_curio.util.CuriosUtils;
 import org.confluence.mod.terra_curio.util.ModUtils;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
 
@@ -39,6 +44,8 @@ public final class GameEvents {
     @SubscribeEvent
     public static void curios(CurioChangeEvent event) {
         if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            InfoCurioCheckPacketS2C.sendToPlayer(serverPlayer, serverPlayer.getInventory());
+            CurioExistsPacketS2C.sendToClient(serverPlayer);
             ModTriggers.CURIOS_EQUIPPED.get().trigger(serverPlayer, event.getTo());
         }
     }
@@ -144,6 +151,21 @@ public final class GameEvents {
     public static void playerTick$Pre(PlayerTickEvent.Pre event) {
         if (event.getEntity().isLocalPlayer()) {
             GravitationHandler.unCrouching(event.getEntity());
+        }
+    }
+
+    @SubscribeEvent
+    public static void effectApplicable(MobEffectEvent.Applicable event) {
+        if (CuriosUtils.hasEffectImmunity(event.getEntity(), event.getEffectInstance().getEffect())) {
+            event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+        }
+    }
+
+    @SubscribeEvent
+    public static void attackEntity(AttackEntityEvent event) {
+        Player player = event.getEntity();
+        if (ModUtils.isServerNotFake(player)) {
+            CuriosUtils.applyFireAttack(player, event.getTarget());
         }
     }
 }

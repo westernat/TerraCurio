@@ -1,14 +1,22 @@
 package org.confluence.mod.terra_curio.common.init;
 
 import net.minecraft.world.effect.MobEffects;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.mod.terra_curio.TerraCurio;
+import org.confluence.mod.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.mod.terra_curio.common.item.curio.BaseCurioItem;
+import org.confluence.mod.terra_curio.common.item.curio.combat.AnkhCharm;
+import org.confluence.mod.terra_curio.common.item.curio.combat.AnkhShield;
 
 import java.util.function.Consumer;
 import java.util.function.Supplier;
+
+import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
+import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE;
+import static org.confluence.mod.terra_curio.common.component.AccessoriesComponent.AUTO_ATTACK;
+import static org.confluence.mod.terra_curio.common.component.AccessoriesComponent.FIRE_ATTACK;
 
 public final class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(TerraCurio.MODID);
@@ -28,35 +36,69 @@ public final class ModItems {
             HAND_DRILL = registerCurio("hand_drill", builder -> builder.effectImmunities(MobEffects.DIG_SLOWDOWN)), // 手钻 挖掘疲劳
             SHOT_PUT = registerCurio("shot_put", builder -> builder.effectImmunities(MobEffects.LEVITATION)), // 铅球 漂浮
             EXPLORERS_EQUIPMENT = registerCurio("explorers_equipment", builder -> builder.effectImmunities(MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)), // 探险家宝具
-            ANKH_CHARM = registerCurio("ankh_charm", builder -> builder.effectImmunities(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)), // 十字章护身符
-            ANKH_SHIELD = registerCurio("ankh_shield", builder -> builder.effectImmunities(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)), // 十字章护盾
-//            STAR_CLOAK = registerCurio("star_cloak", StarCloak::new), // 星星斗篷
+            ANKH_CHARM = registerCurio("ankh_charm", AnkhCharm::new), // 十字章护身符
+            ANKH_SHIELD = registerCurio("ankh_shield", AnkhShield::new), // 十字章护盾
+    //            STAR_CLOAK = registerCurio("star_cloak", StarCloak::new), // 星星斗篷
 //            STAR_VEIL = registerCurio("star_veil", StarVeil::new), // 星星面纱
 //            BEE_CLOAK = registerCurio("bee_cloak", BeeCloak::new), // 蜜蜂斗篷
-            BLACK_BELT = registerCurio("black_belt", builder -> builder.attribute(ModAttributes.getDodgeChance(), "dodge", 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)); // 黑腰带
-//            /* 天界徽章 */
+    BLACK_BELT = registerCurio("black_belt", builder -> builder.attribute(ModAttributes.getDodgeChance(), "dodge", 0.1, ADD_VALUE)), // 黑腰带
+    //            /* 天界徽章 */
 //            /* 月光护身符 */
 //            SUN_STONE = registerCurio("sun_stone", SunStone::new), // 太阳石 (WIP)
 //            MOON_STONE = registerCurio("moon_stone", MoonStone::new), // 月亮石 (WIP)
 //            CELESTIAL_STONE = registerCurio("celestial_stone", CelestialStone::new), // 天界石
 //            /* 月亮贝壳 */
 //            /* 天界贝壳 */
-//            COBALT_SHIELD = registerCurio("cobalt_shield", CobaltShield::new), // 钴护盾
-//            CROSS_NECKLACE = registerCurio("cross_necklace", CrossNecklace::new), // 十字项链
-//            RANGER_EMBLEM = registerCurio("ranger_emblem", RangerEmblem::new), // 游侠徽章
-//            /* 召唤师徽章 */
-//            WARRIOR_EMBLEM = registerCurio("warrior_emblem", WarriorEmblem::new), // 战士徽章
-//            SORCERER_EMBLEM = registerCurio("sorcerer_emblem", SorcererEmblem::new), // 巫士徽章
-//            AVENGER_EMBLEM = registerCurio("avenger_emblem", AvengerEmblem::new), // 复仇者勋章
-//            EYE_OF_THE_GOLEM = registerCurio("eye_of_the_golem", EyeOfTheGolem::new), // 石巨人之眼
-//            DESTROYER_EMBLEM = registerCurio("destroyer_emblem", DestroyerEmblem::new), // 毁灭者勋章
-//            FERAL_CLAWS = registerCurio("feral_claws", FeralClaws::new), // 狂爪手套
-//            TITAN_GLOVE = registerCurio("titan_glove", TitanGlove::new), // 泰坦手套
-//            POWER_GLOVE = registerCurio("power_glove", PowerGlove::new), // 强力手套
-//            MECHANICAL_GLOVE = registerCurio("mechanical_glove", MechanicalGlove::new), // 机械手套
-//            FIRE_GAUNTLET = registerCurio("fire_gauntlet", FireGauntlet::new), // 烈火手套
-//            FLESH_KNUCKLES = registerCurio("flesh_knuckles", FleshKnuckles::new), // 血肉指虎
-//            BERSERKERS_GLOVE = registerCurio("berserkers_glove", BerserkersGlove::new), // 狂战士手套
+    COBALT_SHIELD = registerCurio("cobalt_shield", builder -> builder.attribute(Attributes.KNOCKBACK_RESISTANCE, "knockback_resistance", 1.0, ADD_VALUE).attribute(Attributes.ARMOR, "armor", 1.0, ADD_VALUE)), // 钴护盾
+    //            CROSS_NECKLACE = registerCurio("cross_necklace", CrossNecklace::new), // 十字项链
+    RANGER_EMBLEM = registerCurio("ranger_emblem", builder -> builder.noTooltip().attribute(ModAttributes.getRangedDamage(), "ranged_damage", 0.15, ADD_MULTIPLIED_TOTAL)), // 游侠徽章
+    //            /* 召唤师徽章 */
+    WARRIOR_EMBLEM = registerCurio("warrior_emblem", builder -> builder.noTooltip().attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.15, ADD_MULTIPLIED_TOTAL)), // 战士徽章
+            SORCERER_EMBLEM = registerCurio("sorcerer_emblem", builder -> builder.noTooltip().attribute(ModAttributes.getMagicDamage(), "magic_damage", 0.15, ADD_MULTIPLIED_TOTAL)), // 巫士徽章
+            AVENGER_EMBLEM = registerCurio("avenger_emblem", builder -> builder.noTooltip()
+                    .attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.12, ADD_MULTIPLIED_TOTAL)
+                    .attribute(ModAttributes.getRangedDamage(), "ranged_damage", 0.12, ADD_MULTIPLIED_TOTAL)
+                    .attribute(ModAttributes.getMagicDamage(), "magic_damage", 0.12, ADD_MULTIPLIED_TOTAL)), // 复仇者勋章
+            EYE_OF_THE_GOLEM = registerCurio("eye_of_the_golem", builder -> builder.noTooltip().attribute(ModAttributes.getCriticalChance(), "critical_chance", 0.1, ADD_VALUE)), // 石巨人之眼
+            DESTROYER_EMBLEM = registerCurio("destroyer_emblem", builder -> builder.noTooltip()
+                    .attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(ModAttributes.getRangedDamage(), "ranged_damage", 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(ModAttributes.getMagicDamage(), "magic_damage", 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(ModAttributes.getCriticalChance(), "critical_chance", 0.08, ADD_VALUE)), // 毁灭者勋章
+            FERAL_CLAWS = registerCurio("feral_claws", builder -> builder.noTooltip()
+                    .component(ModDataComponentTypes.ACCESSORIES, new AccessoriesComponent(AUTO_ATTACK))
+                    .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)), // 狂爪手套
+            TITAN_GLOVE = registerCurio("titan_glove", builder -> builder.noTooltip()
+                    .component(ModDataComponentTypes.ACCESSORIES, new AccessoriesComponent(AUTO_ATTACK))
+                    .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ENTITY_INTERACTION_RANGE, "entity_interaction_range", 0.1, ADD_MULTIPLIED_TOTAL)), // 泰坦手套
+            POWER_GLOVE = registerCurio("power_glove", builder -> builder.noTooltip()
+                    .component(ModDataComponentTypes.ACCESSORIES, new AccessoriesComponent(AUTO_ATTACK))
+                    .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ENTITY_INTERACTION_RANGE, "entity_interaction_range", 0.1, ADD_MULTIPLIED_TOTAL)), // 强力手套
+            MECHANICAL_GLOVE = registerCurio("mechanical_glove", builder -> builder.noTooltip()
+                    .component(ModDataComponentTypes.ACCESSORIES, new AccessoriesComponent(AUTO_ATTACK))
+                    .attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.12, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ENTITY_INTERACTION_RANGE, "entity_interaction_range", 0.1, ADD_MULTIPLIED_TOTAL)), // 机械手套
+            FIRE_GAUNTLET = registerCurio("fire_gauntlet", builder -> builder
+                    .component(ModDataComponentTypes.ACCESSORIES, new AccessoriesComponent(AUTO_ATTACK, FIRE_ATTACK))
+                    .attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.12, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ENTITY_INTERACTION_RANGE, "entity_interaction_range", 0.1, ADD_MULTIPLIED_TOTAL)), // 烈火手套
+            FLESH_KNUCKLES = registerCurio("flesh_knuckles", builder -> builder
+                    .attribute(Attributes.ARMOR, "armor", 8.0, ADD_VALUE)
+                    .attribute(ModAttributes.getAggro(), "aggro", 400, ADD_VALUE)), // 血肉指虎
+            BERSERKERS_GLOVE = registerCurio("berserkers_glove", builder -> builder
+                    .component(ModDataComponentTypes.ACCESSORIES, new AccessoriesComponent(AUTO_ATTACK))
+                    .attribute(Attributes.ARMOR, "armor", 8.0, ADD_VALUE)
+                    .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ENTITY_INTERACTION_RANGE, "entity_interaction_range", 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(ModAttributes.getAggro(), "aggro", 400, ADD_VALUE)); // 狂战士手套
 //            PALADINS_SHIELD = registerCurio("paladins_shield", PaladinsShield::new), // 圣骑士护盾
 //            HERO_SHIELD = registerCurio("hero_shield", HeroShield::new), // 英雄护盾
 //            FROZEN_TURTLE_SHELL = registerCurio("frozen_turtle_shell", FrozenTurtleShell::new), // 冰冻海龟壳
@@ -95,8 +137,14 @@ public final class ModItems {
     }
 
     public static Supplier<BaseCurioItem> registerCurio(String name, Consumer<BaseCurioItem.Builder> consumer) {
-        BaseCurioItem.Builder builder = BaseCurioItem.builder(name);
-        consumer.accept(builder);
-        return ITEMS.register(name, builder::build);
+        return ITEMS.register(name, () -> {
+            BaseCurioItem.Builder builder = BaseCurioItem.builder(name);
+            consumer.accept(builder);
+            return builder.build();
+        });
+    }
+
+    public static Supplier<BaseCurioItem> registerCurio(String name, Supplier<BaseCurioItem> supplier) {
+        return ITEMS.register(name, supplier);
     }
 }
