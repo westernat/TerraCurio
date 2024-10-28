@@ -14,6 +14,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.mod.terra_curio.TerraCurio;
+import org.confluence.mod.terra_curio.client.handler.ClientPacketHandler;
 import org.confluence.mod.terra_curio.common.component.ModRarity;
 import org.confluence.mod.terra_curio.common.component.SpeedBootsComponent;
 import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
@@ -21,7 +22,6 @@ import org.confluence.mod.terra_curio.common.init.ModSoundEvents;
 import org.confluence.mod.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.mod.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
 import org.confluence.mod.terra_curio.util.CuriosUtils;
-import org.joml.Vector3f;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
@@ -29,7 +29,7 @@ import java.util.List;
 public class BaseSpeedBoots extends BaseCurioItem {
     public static final ResourceLocation ID = TerraCurio.asResource("base_speed_boots");
     public static final Component TOOLTIP = Component.translatable("curios.tooltip.speed_boots");
-    private static final Vector3f COLOR = new Vector3f(1, 1, 1);
+//    private static final Vector3f COLOR = new Vector3f(1, 1, 1);
 
     public BaseSpeedBoots(ModRarity rarity) {
         super(new Properties().component(ModDataComponentTypes.MOD_RARITY, rarity).stacksTo(1).fireResistant());
@@ -62,6 +62,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
             int speed = component == null ? 0 : component.speed();
             if (player.zza > 0) {
                 if (player.onGround()) {
+                    if (ClientPacketHandler.isHasMagiluminescence()) addition *= 2;
                     int actually = Math.min(max - speed, addition);
                     if (actually > 0) {
                         PacketDistributor.sendToServer(new SpeedBootsNBTPacketC2S(slotContext.index(), speed + actually));
@@ -85,14 +86,14 @@ public class BaseSpeedBoots extends BaseCurioItem {
 //            level.addParticle(options, vec3.x + particleRandX, vec3.y + particleRandY, vec3.z + particleRandZ, 0, 0, 0);
 //        }
 //    }
-
-    public Vector3f getParticleColorStart() {
-        return COLOR;
-    }
-
-    public Vector3f getParticleColorEnd() {
-        return COLOR;
-    }
+//
+//    public Vector3f getParticleColorStart() {
+//        return COLOR;
+//    }
+//
+//    public Vector3f getParticleColorEnd() {
+//        return COLOR;
+//    }
 
     protected static AttributeModifier getSpeedModifier(ItemStack stack) {
         SpeedBootsComponent component = stack.get(ModDataComponentTypes.SPEED_BOOTS);

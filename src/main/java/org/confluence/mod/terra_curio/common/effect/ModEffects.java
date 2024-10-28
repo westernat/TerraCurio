@@ -15,10 +15,9 @@ import org.confluence.mod.terra_curio.common.effect.neutral.CerebralMindtrickEff
 
 public final class ModEffects {
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, TerraCurio.MODID);
-    public static final DeferredHolder<MobEffect, MobEffect> CONFUSEDN = EFFECTS.register("confused", ConfusedEffect::new);
+    public static final DeferredHolder<MobEffect, MobEffect> CONFUSED = EFFECTS.register("confused", ConfusedEffect::new);
 
     public static final DeferredHolder<MobEffect, MobEffect> GRAVITATION = EFFECTS.register("gravitation", GravitationEffect::new);
-
 
     public static final DeferredHolder<MobEffect, MobEffect> PALADINS_SHIELD = EFFECTS.register("paladins_shield", PaladinsShieldEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> CEREBRAL_MINDTRICK = EFFECTS.register("cerebral_mindtrick", CerebralMindtrickEffect::new);
@@ -30,5 +29,4 @@ public final class ModEffects {
             living.heal(amount);
         }
     }
-
 }

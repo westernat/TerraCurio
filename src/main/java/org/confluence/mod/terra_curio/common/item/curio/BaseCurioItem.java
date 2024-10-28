@@ -29,7 +29,7 @@ import java.util.function.Supplier;
 
 public class BaseCurioItem extends Item implements ICurioItem {
     protected static final List<Component> EMPTY_TOOLTIP = List.of();
-    protected static final ImmutableMultimap<Attribute, AttributeModifier> EMPTY_ATTRIBUTE = ImmutableMultimap.of();
+    protected static final ImmutableMultimap<Holder<Attribute>, AttributeModifier> EMPTY_ATTRIBUTE = ImmutableMultimap.of();
     protected static final Consumer<Builder> NO_BUILDER = builder -> {};
     protected Builder builder;
 
@@ -44,7 +44,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
-        return builder == null ? ICurioItem.super.getAttributeModifiers(slotContext, id, stack) : builder.attributes;
+        return builder == null ? EMPTY_ATTRIBUTE : builder.attributes;
     }
 
     @Override

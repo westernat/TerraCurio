@@ -23,7 +23,7 @@ public class ModJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipes(@NotNull IRecipeRegistration registration) {
         ModItems.ITEMS.getEntries().forEach(entry -> {
-            if (entry.get() instanceof BaseCurioItem curioItem){
+            if (entry.get() instanceof BaseCurioItem curioItem && curioItem.getJeiInformationCount() > 0){
                 Component[] information = new Component[curioItem.getJeiInformationCount()];
                 for (int i = 0; i < information.length; i++) {
                     information[i] = Component.translatable("jei.tooltips" + curioItem.getDescriptionId());

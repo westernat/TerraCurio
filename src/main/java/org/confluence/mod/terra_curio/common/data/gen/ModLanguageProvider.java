@@ -30,6 +30,7 @@ public class ModLanguageProvider extends LanguageProvider {
 
     @Override
     protected void addTranslations() {
+        add("creativetab.terra_curio", "Terra Curio", "泰拉饰品");
         add("curios.tooltip.speed_boots", "The wearer can run super fast", "穿戴者可飞速奔跑");
         add("curios.tooltip.may_fly", "Allows flight", "可飞行");
         add("curios.tooltip.jump_boost", "Increases jump height", "增加跳跃高度");

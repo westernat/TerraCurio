@@ -1,6 +1,9 @@
 package org.confluence.mod.terra_curio.network.s2c;
 
 import io.netty.buffer.ByteBuf;
+import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -20,11 +23,20 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Set;
 
 public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
-    public static final int AUTO_ATTACK = 0b00001;
-    public static final int SHIELD_OF_CTHULHU = 0b00010;
-    public static final int TABI = 0b00100;
-    public static final int SCOPE = 0b01000;
-    public static final int GRAVITY_GLOBE = 0b10000;
+    public static final int AUTO_ATTACK = 1;
+    public static final int SHIELD_OF_CTHULHU = 1 << 1;
+    public static final int TABI = 1 << 2;
+    public static final int SCOPE = 1 << 3;
+    public static final int GRAVITY_GLOBE = 1 << 4;
+    public static final int MAGILUMINESCENCE = 1 << 5;
+    public static final Object2IntMap<ResourceLocation> MAP = Util.make(new Object2IntArrayMap<>(), map -> {
+        map.put(AccessoriesComponent.AUTO_ATTACK, AUTO_ATTACK);
+        map.put(AccessoriesComponent.SHIELD_OF_CTHULHU, SHIELD_OF_CTHULHU);
+        map.put(AccessoriesComponent.TABI, TABI);
+        map.put(AccessoriesComponent.SCOPE, SCOPE);
+        map.put(AccessoriesComponent.GRAVITY_GLOBE, GRAVITY_GLOBE);
+        map.put(AccessoriesComponent.MAGILUMINESCENCE, MAGILUMINESCENCE);
+    });
 
     public static final Type<CurioExistsPacketS2C> TYPE = new Type<>(TerraCurio.asResource("curio_exists"));
     public static final StreamCodec<ByteBuf, CurioExistsPacketS2C> STREAM_CODEC = StreamCodec.composite(
@@ -49,25 +61,13 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     }
 
     public static void sendToClient(ServerPlayer player) {
-        int item = 0b00000;
+        int item = 0;
         for (ItemStack itemStack : CuriosUtils.getCurios(player)) {
             AccessoriesComponent component = itemStack.get(ModDataComponentTypes.ACCESSORIES);
             if (component != null) {
                 Set<ResourceLocation> types = component.types();
-                if (types.contains(AccessoriesComponent.AUTO_ATTACK)) {
-                    item |= AUTO_ATTACK;
-                }
-                if (types.contains(AccessoriesComponent.SHIELD_OF_CTHULHU)) {
-                    item |= SHIELD_OF_CTHULHU;
-                }
-                if (types.contains(AccessoriesComponent.TABI)) {
-                    item |= TABI;
-                }
-                if (types.contains(AccessoriesComponent.SCOPE)) {
-                    item |= SCOPE;
-                }
-                if (types.contains(AccessoriesComponent.GRAVITY_GLOBE)) {
-                    item |= GRAVITY_GLOBE;
+                for (Object2IntMap.Entry<ResourceLocation> entry : MAP.object2IntEntrySet()) {
+                    if (types.contains(entry.getKey())) item |= entry.getIntValue();
                 }
             }
         }

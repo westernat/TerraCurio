@@ -23,6 +23,7 @@ public final class ClientPacketHandler {
     private static boolean hasCthulhu = false;
     private static boolean hasTabi = false;
     private static boolean hasScope = false;
+    private static boolean hasMagiluminescence = false;
     private static int rightClickSubtractor = 0;
 
     public static boolean couldAutoAttack() {
@@ -39,6 +40,10 @@ public final class ClientPacketHandler {
 
     public static boolean isHasScope() {
         return hasScope;
+    }
+
+    public static boolean isHasMagiluminescence() {
+        return hasMagiluminescence;
     }
 
     public static int getRightClickSubtractor() {
@@ -81,5 +86,6 @@ public final class ClientPacketHandler {
         hasTabi = (item & TABI) == TABI;
         hasScope = (item & SCOPE) == SCOPE;
         GravitationHandler.setHasGlobe((item & GRAVITY_GLOBE) == GRAVITY_GLOBE);
+        hasMagiluminescence = (item & MAGILUMINESCENCE) == MAGILUMINESCENCE;
     }
 }

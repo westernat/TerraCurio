@@ -52,7 +52,8 @@ public record AccessoriesComponent(Set<ResourceLocation> types) implements DataC
             SHIELD_OF_CTHULHU = TerraCurio.asResource("shield_of_cthulhu"),
             TABI = TerraCurio.asResource("tabi"),
             SCOPE = TerraCurio.asResource("scope"),
-            GRAVITY_GLOBE = TerraCurio.asResource("gravity_globe");
+            GRAVITY_GLOBE = TerraCurio.asResource("gravity_globe"),
+            MAGILUMINESCENCE = TerraCurio.asResource("magiluminescence");
     public static final ResourceLocation FIRE_ATTACK = TerraCurio.asResource("fire_attack");
 
     public AccessoriesComponent(ResourceLocation... types) {
