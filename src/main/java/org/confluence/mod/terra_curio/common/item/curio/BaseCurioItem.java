@@ -7,6 +7,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -17,6 +18,7 @@ import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.mod.terra_curio.common.component.EffectImmunities;
 import org.confluence.mod.terra_curio.common.component.ModRarity;
+import org.confluence.mod.terra_curio.common.init.ModAttachments;
 import org.confluence.mod.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.mod.terra_curio.util.CuriosUtils;
 import top.theillusivec4.curios.api.SlotContext;
@@ -63,12 +65,14 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public void onEquip(SlotContext slotContext, ItemStack prevStack, ItemStack stack) {
-        // todo
+        LivingEntity living = slotContext.entity();
+        living.getData(ModAttachments.ACCESSORIES).flushAbility(living);
     }
 
     @Override
     public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
-        // todo
+        LivingEntity living = slotContext.entity();
+        living.getData(ModAttachments.ACCESSORIES).flushAbility(living);
     }
 
     @Override

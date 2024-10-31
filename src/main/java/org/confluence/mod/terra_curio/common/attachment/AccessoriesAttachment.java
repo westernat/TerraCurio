@@ -1,135 +1,76 @@
 package org.confluence.mod.terra_curio.common.attachment;
 
-import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.confluence.mod.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.mod.terra_curio.common.component.primitive.FloatValue;
+import org.confluence.mod.terra_curio.common.init.TCDataComponentTypes;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-import java.util.concurrent.atomic.AtomicInteger;
+import static org.confluence.mod.terra_curio.common.component.AccessoriesComponent.*;
 
 public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
-    private double jumpBoost;
-    private int fallResistance;
-    private int invulnerableTime;
-    private boolean fireImmune;
-    private int maxLavaImmuneTicks;
-    private transient int remainLavaImmuneTicks;
-    private int airSupplyBonus;
+    private boolean fireAttack;
+    private boolean brainOfConfusion;
+    private boolean hivePack;
+    private float fishingPower;
 
     public AccessoriesAttachment() {
-        this.jumpBoost = 1.0;
-        this.fallResistance = 0;
-        this.invulnerableTime = 10;
-        this.fireImmune = false;
-        this.maxLavaImmuneTicks = 0;
-        this.remainLavaImmuneTicks = 0;
-        this.airSupplyBonus = 0;
+        setToDefaultValue();
     }
 
-    public double getJumpBoost() {
-        return jumpBoost;
+    private void setToDefaultValue() {
+        this.fireAttack = false;
+        this.brainOfConfusion = false;
+        this.hivePack = false;
+        this.fishingPower = 0.0F;
     }
 
-    public int getFallResistance() {
-        return fallResistance;
-    }
-
-    public int getInvulnerableTime() {
-        return invulnerableTime;
-    }
-
-    public boolean isFireImmune() {
-        return fireImmune;
-    }
-
-    public int getMaxLavaImmuneTicks() {
-        return maxLavaImmuneTicks;
-    }
-
-    public int getRemainLavaImmuneTicks() {
-        return remainLavaImmuneTicks;
-    }
-
-    public int getAirSupplyBonus() {
-        return airSupplyBonus;
-    }
-
-    public void setAirSupplyBonus(int airSupplyBonus) {
-        this.airSupplyBonus = airSupplyBonus;
-    }
-
-    public void increaseLavaImmuneTicks() {
-        if (remainLavaImmuneTicks < maxLavaImmuneTicks) {
-            remainLavaImmuneTicks++;
-        }
-    }
-
-    public boolean decreaseLavaImmuneTicks() {
-        if (remainLavaImmuneTicks > 0) {
-            remainLavaImmuneTicks--;
-            return true;
-        }
-        return false;
-    }
-
-    // todo
     public void flushAbility(LivingEntity living) {
-        AtomicDouble jump = new AtomicDouble(1.0);
-        AtomicInteger fall = new AtomicInteger();
-        AtomicInteger invul = new AtomicInteger(10);
-        AtomicBoolean fire = new AtomicBoolean();
-        AtomicInteger lava = new AtomicInteger();
-//        CuriosApi.getCuriosInventory(living).ifPresent(handler -> {
-//            IItemHandlerModifiable itemHandlerModifiable = handler.getEquippedCurios();
-//            for (int i = 0; i < itemHandlerModifiable.getSlots(); i++) {
-//                ItemStack itemStack = itemHandlerModifiable.getStackInSlot(i);
-//                if (itemStack.isEmpty()) continue;
-//                Item item = itemStack.getItem();
-//                if (item instanceof IJumpBoost iJumpBoost) jump.set(Math.max(iJumpBoost.getBoost(), jump.get()));
-//                if (item instanceof IFallResistance iFallResistance && fall.get() != -1) {
-//                    int distance = iFallResistance.getFallResistance();
-//                    fall.set(distance < 0 ? -1 : Math.max(distance, fall.get()));
-//                }
-//                if (item instanceof IInvulnerableTime iInvulnerableTime) {
-//                    invul.set(Math.max(iInvulnerableTime.getTime(), invulnerableTime));
-//                }
-//                if (item instanceof IFireImmune) fire.set(true);
-//                if (item instanceof ILavaImmune iLavaImmune) {
-//                    lava.set(Math.max(iLavaImmune.getLavaImmuneTicks(), lava.get()));
-//                }
-//                if (item instanceof IFishingPower iFishingPower) fishing.addAndGet(iFishingPower.getFishingBonus());
-//                if (item instanceof IRangePickup.Star) star.set(true);
-//                if (item instanceof IRangePickup.Coin) coin.set(true);
-//            }
-//        });
-        this.jumpBoost = jump.get();
-        this.fallResistance = fall.get();
-        this.invulnerableTime = invul.get();
-        this.fireImmune = fire.get();
-        this.maxLavaImmuneTicks = lava.get();
+        CuriosApi.getCuriosInventory(living).ifPresent(handler -> {
+            setToDefaultValue();
+            float fishingPower = 0.0F;
+            for (ICurioStacksHandler curioStacksHandler : handler.getCurios().values()) {
+                IDynamicStackHandler stackHandler = curioStacksHandler.getStacks();
+                for (int i = 0; i < stackHandler.getSlots(); i++) {
+                    ItemStack stack = stackHandler.getStackInSlot(i);
+                    AccessoriesComponent component;
+                    if (stack.isEmpty() || (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
+                    if (component.contains(FIRE_ATTACK)) this.fireAttack = true;
+                    if (component.contains(BRAIN)) this.brainOfConfusion = true;
+                    if (component.contains(HIVE)) this.hivePack = true;
+                    FloatValue value;
+                    if ((value = component.get(FISHING_POWER)) != null) {
+                        fishingPower = value.combine(fishingPower, FISHING_POWER.rule());
+                    }
+                }
+            }
+            this.fishingPower = fishingPower;
+        });
     }
 
     @Override
     public @UnknownNullability CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
-        nbt.putDouble("jumpBoost", jumpBoost);
-        nbt.putInt("fallResistance", fallResistance);
-        nbt.putInt("invulnerableTime", invulnerableTime);
-        nbt.putBoolean("fireImmune", fireImmune);
-        nbt.putInt("maxLavaImmuneTicks", maxLavaImmuneTicks);
+        nbt.putBoolean("fireAttack", fireAttack);
+        nbt.putBoolean("brainOfConfusion", brainOfConfusion);
+        nbt.putBoolean("hivePack", hivePack);
+        nbt.putFloat("fishingPower", fishingPower);
         return nbt;
     }
 
     @Override
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        this.jumpBoost = nbt.getDouble("jumpBoost");
-        this.fallResistance = nbt.getInt("fallResistance");
-        this.invulnerableTime = nbt.getInt("invulnerableTime");
-        this.fireImmune = nbt.getBoolean("fireImmune");
-        this.maxLavaImmuneTicks = nbt.getInt("maxLavaImmuneTicks");
+        this.fireAttack = nbt.getBoolean("fireAttack");
+        this.brainOfConfusion = nbt.getBoolean("brainOfConfusion");
+        this.hivePack = nbt.getBoolean("hivePack");
+        this.fishingPower = nbt.getFloat("fishingPower");
     }
 }

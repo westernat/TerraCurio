@@ -8,6 +8,10 @@ public interface PrimitiveValue<T> {
     Codec<? extends PrimitiveValue<T>> codec();
 
     default <V extends PrimitiveValue<T>> T combine(PrimitiveValue<T> other, CombineRule<T, V> combineRule) {
-        return combineRule.combine(this, other);
+        return combineRule.combine(get(), other.get());
+    }
+
+    default <V extends PrimitiveValue<T>> T combine(T other, CombineRule<T, V> combineRule) {
+        return combineRule.combine(get(), other);
     }
 }
