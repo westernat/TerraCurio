@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.common.component.SpeedBootsComponent;
-import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
+import org.confluence.mod.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.mod.terra_curio.common.item.curio.movement.BaseSpeedBoots;
 import org.confluence.mod.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +32,7 @@ public record SpeedBootsNBTPacketC2S(int slot, int value) implements CustomPacke
             if (context.player() instanceof ServerPlayer serverPlayer) {
                 CuriosUtils.getSlot(serverPlayer, "accessory", slot).ifPresent(itemStack -> {
                     if (itemStack.getItem() instanceof BaseSpeedBoots) {
-                        itemStack.set(ModDataComponentTypes.SPEED_BOOTS, new SpeedBootsComponent(value));
+                        itemStack.set(TCDataComponentTypes.SPEED_BOOTS, new SpeedBootsComponent(value));
                     }
                 });
             }

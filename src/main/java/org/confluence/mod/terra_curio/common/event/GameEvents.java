@@ -29,16 +29,12 @@ import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.client.handler.GravitationHandler;
 import org.confluence.mod.terra_curio.common.CommonConfigs;
 import org.confluence.mod.terra_curio.common.advancement.ModTriggers;
-import org.confluence.mod.terra_curio.common.capability.strategy.AttackEntityStrategy;
-import org.confluence.mod.terra_curio.common.capability.strategy.DefenseStrategy;
 import org.confluence.mod.terra_curio.common.data.pack.CurioItemManager;
 import org.confluence.mod.terra_curio.common.init.ModAttributes;
-import org.confluence.mod.terra_curio.common.init.ModCapability;
 import org.confluence.mod.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.mod.terra_curio.network.s2c.CurioExistsPacketS2C;
 import org.confluence.mod.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.mod.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
-import org.confluence.mod.terra_curio.util.CuriosUtils;
 import org.confluence.mod.terra_curio.util.ModUtils;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
 
@@ -64,9 +60,6 @@ public final class GameEvents {
             event.setNewDamage(0.0F);
             return;
         }
-        if(living instanceof Player player && damageSource.getEntity() instanceof LivingEntity li)
-         DefenseStrategy.execute(player.getCapability(ModCapability.CURIOS_HANDLE).defenseAbility, player, li, event.getNewDamage());
-
 
         float amount = event.getNewDamage();
 
@@ -162,7 +155,7 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void effectApplicable(MobEffectEvent.Applicable event) {
-        if (CuriosUtils.hasEffectImmunity(event.getEntity(), event.getEffectInstance().getEffect())) {
+        if (ModUtils.hasEffectImmunity(event.getEntity(), event.getEffectInstance().getEffect())) {
             event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
         }
     }
@@ -171,9 +164,7 @@ public final class GameEvents {
     public static void attackEntity(AttackEntityEvent event) {
         Player player = event.getEntity();
         if (ModUtils.isServerNotFake(player)) {
-//            CuriosUtils.applyFireAttack(player, event.getTarget());
-            if(event.getTarget() instanceof LivingEntity target)
-                AttackEntityStrategy.execute(player.getCapability(ModCapability.CURIOS_HANDLE).attackAbility, player, target);
+            ModUtils.applyFireAttack(player, event.getTarget());
         }
     }
 }

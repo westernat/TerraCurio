@@ -29,7 +29,7 @@ public class TerraCurio {
         ModEffects.EFFECTS.register(modEventBus);
         ModAttributes.ATTRIBUTES.register(modEventBus);
         ModEntities.ENTITIES.register(modEventBus);
-        ModDataComponentTypes.TYPES.register(modEventBus);
+        TCDataComponentTypes.TYPES.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModTabs.TABS.register(modEventBus);
         ModAttachments.TYPES.register(modEventBus);

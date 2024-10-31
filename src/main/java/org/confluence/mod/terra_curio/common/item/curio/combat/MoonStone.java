@@ -16,7 +16,7 @@ import top.theillusivec4.curios.api.SlotContext;
 
 public class MoonStone extends BaseCurioItem {
     public MoonStone() {
-        super(getBuilder());
+        super(getBuilder().initialize());
     }
 
     private static Builder getBuilder() {

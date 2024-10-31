@@ -8,19 +8,21 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Unit;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.client.handler.ClientPacketHandler;
 import org.confluence.mod.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
+import org.confluence.mod.terra_curio.common.component.primitive.PrimitiveValue;
+import org.confluence.mod.terra_curio.common.component.primitive.UnitValue;
+import org.confluence.mod.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.mod.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Set;
+import java.util.Map;
 
 public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     public static final int AUTO_ATTACK = 1;
@@ -29,13 +31,12 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     public static final int SCOPE = 1 << 3;
     public static final int GRAVITY_GLOBE = 1 << 4;
     public static final int MAGILUMINESCENCE = 1 << 5;
-    public static final Object2IntMap<ResourceLocation> MAP = Util.make(new Object2IntArrayMap<>(), map -> {
+    public static final Object2IntMap<AccessoriesComponent.Type<Unit, UnitValue>> MAP = Util.make(new Object2IntArrayMap<>(), map -> {
         map.put(AccessoriesComponent.AUTO_ATTACK, AUTO_ATTACK);
-        map.put(AccessoriesComponent.SHIELD_OF_CTHULHU, SHIELD_OF_CTHULHU);
+        map.put(AccessoriesComponent.CTHULHU, SHIELD_OF_CTHULHU);
         map.put(AccessoriesComponent.TABI, TABI);
         map.put(AccessoriesComponent.SCOPE, SCOPE);
-        map.put(AccessoriesComponent.GRAVITY_GLOBE, GRAVITY_GLOBE);
-        map.put(AccessoriesComponent.MAGILUMINESCENCE, MAGILUMINESCENCE);
+        map.put(AccessoriesComponent.GRAVITY, GRAVITY_GLOBE);
     });
 
     public static final Type<CurioExistsPacketS2C> TYPE = new Type<>(TerraCurio.asResource("curio_exists"));
@@ -63,11 +64,11 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     public static void sendToClient(ServerPlayer player) {
         int item = 0;
         for (ItemStack itemStack : CuriosUtils.getCurios(player)) {
-            AccessoriesComponent component = itemStack.get(ModDataComponentTypes.ACCESSORIES);
+            AccessoriesComponent component = itemStack.get(TCDataComponentTypes.ACCESSORIES);
             if (component != null) {
-                Set<ResourceLocation> types = component.types();
-                for (Object2IntMap.Entry<ResourceLocation> entry : MAP.object2IntEntrySet()) {
-                    if (types.contains(entry.getKey())) item |= entry.getIntValue();
+                Map<AccessoriesComponent.Type<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> types = component.types();
+                for (Object2IntMap.Entry<AccessoriesComponent.Type<Unit, UnitValue>> entry : MAP.object2IntEntrySet()) {
+                    if (types.containsKey(entry.getKey())) item |= entry.getIntValue();
                 }
             }
         }

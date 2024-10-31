@@ -1,10 +1,14 @@
 package org.confluence.mod.terra_curio.common.init;
 
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.mod.terra_curio.common.component.ModRarity;
+import org.confluence.mod.terra_curio.common.component.primitive.EntityTypeValue;
+import org.confluence.mod.terra_curio.common.component.primitive.FloatValue;
 import org.confluence.mod.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.mod.terra_curio.common.item.curio.combat.*;
 
@@ -13,9 +17,9 @@ import java.util.function.Supplier;
 
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE;
-import static org.confluence.mod.terra_curio.common.component.AccessoriesComponent.AUTO_ATTACK;
-import static org.confluence.mod.terra_curio.common.component.AccessoriesComponent.FIRE_ATTACK;
+import static org.confluence.mod.terra_curio.common.component.AccessoriesComponent.*;
 
+@SuppressWarnings("all")
 public final class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(TerraCurio.MODID);
 
@@ -63,25 +67,25 @@ public final class ModItems {
                     .attribute(ModAttributes.getMagicDamage(), "magic_damage", 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(ModAttributes.getCriticalChance(), "critical_chance", 0.08, ADD_VALUE)), // 毁灭者勋章
             FERAL_CLAWS = registerCurio("feral_claws", builder -> builder.noTooltip()
-                    .component(ModDataComponentTypes.ACCESSORIES, new AccessoriesComponent(AUTO_ATTACK))
+                    .accessories(AccessoriesComponent.units(AUTO_ATTACK))
                     .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)), // 狂爪手套
             TITAN_GLOVE = registerCurio("titan_glove", builder -> builder.noTooltip()
-                    .component(ModDataComponentTypes.ACCESSORIES, new AccessoriesComponent(AUTO_ATTACK))
+                    .accessories(AccessoriesComponent.units(AUTO_ATTACK))
                     .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, "entity_interaction_range", 0.1, ADD_MULTIPLIED_TOTAL)), // 泰坦手套
             POWER_GLOVE = registerCurio("power_glove", builder -> builder.noTooltip()
-                    .component(ModDataComponentTypes.ACCESSORIES, new AccessoriesComponent(AUTO_ATTACK))
+                    .accessories(AccessoriesComponent.units(AUTO_ATTACK))
                     .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, "entity_interaction_range", 0.1, ADD_MULTIPLIED_TOTAL)), // 强力手套
             MECHANICAL_GLOVE = registerCurio("mechanical_glove", builder -> builder.noTooltip()
-                    .component(ModDataComponentTypes.ACCESSORIES, new AccessoriesComponent(AUTO_ATTACK))
+                    .accessories(AccessoriesComponent.units(AUTO_ATTACK))
                     .attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, "entity_interaction_range", 0.1, ADD_MULTIPLIED_TOTAL)), // 机械手套
             FIRE_GAUNTLET = registerCurio("fire_gauntlet", builder -> builder
-                    .component(ModDataComponentTypes.ACCESSORIES, new AccessoriesComponent(AUTO_ATTACK, FIRE_ATTACK))
+                    .accessories(AccessoriesComponent.units(AUTO_ATTACK, FIRE_ATTACK))
                     .attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
@@ -90,7 +94,7 @@ public final class ModItems {
                     .attribute(Attributes.ARMOR, "armor", 8.0, ADD_VALUE)
                     .attribute(ModAttributes.getAggro(), "aggro", 400, ADD_VALUE)), // 血肉指虎
             BERSERKERS_GLOVE = registerCurio("berserkers_glove", builder -> builder
-                    .component(ModDataComponentTypes.ACCESSORIES, new AccessoriesComponent(AUTO_ATTACK))
+                    .accessories(AccessoriesComponent.units(AUTO_ATTACK))
                     .attribute(Attributes.ARMOR, "armor", 8.0, ADD_VALUE)
                     .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
@@ -120,6 +124,19 @@ public final class ModItems {
 //            HAND_WARMER = registerCurio("hand_warmer", HandWarmer::new), // 暖手宝
 //            PUTRID_SCENT = registerCurio("putrid_scent", PutridScent::new), // 腐香囊
 //            SHACKLE = registerCurio("shackle", Shackle::new); // 脚镣
+
+    public static final Supplier<BaseCurioItem> ROYAL_GEL = registerCurio("royal_gel", builder -> builder.rarity(ModRarity.EXPERT).accessories(AccessoriesComponent.of(LIVING_IGNORE, new EntityTypeValue(EntityType.SLIME)))), // 皇家凝胶
+            SHIELD_OF_CTHULHU = registerCurio("shield_of_cthulhu", builder -> builder.rarity(ModRarity.EXPERT).accessories(AccessoriesComponent.units(CTHULHU))), // 克苏鲁护盾
+            WORM_SCARF = registerCurio("worm_scarf", builder -> builder.rarity(ModRarity.EXPERT).accessories(AccessoriesComponent.of(INJURY_FREE, new FloatValue(0.17F)))), // 蠕虫围巾
+            BRAIN_OF_CONFUSION = registerCurio("brain_of_confusion", builder -> builder.rarity(ModRarity.EXPERT).accessories(AccessoriesComponent.units(BRAIN))), // 混乱之脑
+            HIVE_PACK = registerCurio("hive_pack", builder -> builder.rarity(ModRarity.EXPERT).accessories(AccessoriesComponent.units(HIVE))), // 蜂巢背包
+    /* 骨头手套 */
+    /* 骸骨头盔 */
+    /* 挥发明胶 */
+    /* 孢子囊 */
+    /* 闪亮石 */
+    /* 翱翔徽章 */
+    GRAVITY_GLOBE = registerCurio("gravity_globe", builder -> builder.accessories(AccessoriesComponent.units(GRAVITY))); // 重力球
 
     public static Supplier<BaseCurioItem> registerCurio(String name, Consumer<BaseCurioItem.Builder> consumer) {
         return ITEMS.register(name, () -> {

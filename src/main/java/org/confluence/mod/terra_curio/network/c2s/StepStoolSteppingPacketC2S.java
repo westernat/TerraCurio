@@ -1,7 +1,6 @@
 package org.confluence.mod.terra_curio.network.c2s;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -11,9 +10,10 @@ import net.minecraft.world.entity.Entity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.mod.terra_curio.common.component.primitive.IntegerValue;
 import org.confluence.mod.terra_curio.common.entity.StepStoolEntity;
-import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
 import org.confluence.mod.terra_curio.util.CuriosUtils;
+import org.confluence.mod.terra_curio.util.ModUtils;
 import org.jetbrains.annotations.NotNull;
 
 public record StepStoolSteppingPacketC2S(int slot, int step, boolean increase) implements CustomPacketPayload {
@@ -39,16 +39,13 @@ public record StepStoolSteppingPacketC2S(int slot, int step, boolean increase) i
                     serverPlayer.level().addFreshEntity(pEntity);
                     serverPlayer.teleportRelative(0.0, 1.001, 0.0);
                     CuriosUtils.getSlot(serverPlayer, "accessory", slot).ifPresent(itemStack -> {
-                        AccessoriesComponent component = itemStack.get(ModDataComponentTypes.ACCESSORIES);
-                        if (component != null && component.types().contains(AccessoriesComponent.STEP_STOOL)) {
-                            itemStack.get(DataComponents.CUSTOM_DATA).getUnsafe().putInt("id", pEntity.getId());
-                        }
+                        ModUtils.putPrimitiveValue(itemStack, AccessoriesComponent.STOOL, new IntegerValue(pEntity.getId()));
                     });
                 } else {
                     CuriosUtils.getSlot(serverPlayer, "accessory", slot).ifPresent(itemStack -> {
-                        AccessoriesComponent component = itemStack.get(ModDataComponentTypes.ACCESSORIES);
-                        if (component != null && component.types().contains(AccessoriesComponent.STEP_STOOL)) {
-                            int id = itemStack.get(DataComponents.CUSTOM_DATA).getUnsafe().getInt("id");
+                        IntegerValue value = ModUtils.getPrimitiveValue(itemStack, AccessoriesComponent.STOOL);
+                        if (value != null) {
+                            int id = value.get();
                             Entity entity = serverPlayer.level().getEntity(id);
                             if (entity instanceof StepStoolEntity stepStool) {
                                 if (step == 0) {

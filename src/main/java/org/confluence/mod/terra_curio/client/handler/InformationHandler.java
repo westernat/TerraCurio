@@ -32,7 +32,6 @@ import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
 
-// todo
 @OnlyIn(Dist.CLIENT)
 public final class InformationHandler {
     public static final int WATCH = 0;

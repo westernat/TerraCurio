@@ -17,8 +17,8 @@ import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.client.handler.ClientPacketHandler;
 import org.confluence.mod.terra_curio.common.component.ModRarity;
 import org.confluence.mod.terra_curio.common.component.SpeedBootsComponent;
-import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
 import org.confluence.mod.terra_curio.common.init.ModSoundEvents;
+import org.confluence.mod.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.mod.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.mod.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
 import org.confluence.mod.terra_curio.util.CuriosUtils;
@@ -32,11 +32,11 @@ public class BaseSpeedBoots extends BaseCurioItem {
 //    private static final Vector3f COLOR = new Vector3f(1, 1, 1);
 
     public BaseSpeedBoots(ModRarity rarity) {
-        super(new Properties().component(ModDataComponentTypes.MOD_RARITY, rarity).stacksTo(1).fireResistant());
+        super(new Properties().component(TCDataComponentTypes.MOD_RARITY, rarity).stacksTo(1).fireResistant());
     }
 
     public BaseSpeedBoots() {
-        super(new Properties().component(ModDataComponentTypes.MOD_RARITY, ModRarity.BLUE).stacksTo(1).fireResistant());
+        super(new Properties().component(TCDataComponentTypes.MOD_RARITY, ModRarity.BLUE).stacksTo(1).fireResistant());
     }
 
     @Override
@@ -52,13 +52,13 @@ public class BaseSpeedBoots extends BaseCurioItem {
     @Override
     public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
         super.onUnequip(slotContext, newStack, stack);
-        stack.set(ModDataComponentTypes.SPEED_BOOTS, SpeedBootsComponent.ZERO);
+        stack.set(TCDataComponentTypes.SPEED_BOOTS, SpeedBootsComponent.ZERO);
     }
 
     protected void speedUp(SlotContext slotContext, ItemStack stack, int addition, int max) {
         LivingEntity living = slotContext.entity();
         if (living instanceof Player player && player.isLocalPlayer()) {
-            SpeedBootsComponent component = stack.get(ModDataComponentTypes.SPEED_BOOTS);
+            SpeedBootsComponent component = stack.get(TCDataComponentTypes.SPEED_BOOTS);
             int speed = component == null ? 0 : component.speed();
             if (player.zza > 0) {
                 if (player.onGround()) {
@@ -96,7 +96,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
 //    }
 
     protected static AttributeModifier getSpeedModifier(ItemStack stack) {
-        SpeedBootsComponent component = stack.get(ModDataComponentTypes.SPEED_BOOTS);
+        SpeedBootsComponent component = stack.get(TCDataComponentTypes.SPEED_BOOTS);
         int speed = component == null ? 0 : component.speed();
         return new AttributeModifier(ID, speed * 0.01, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }

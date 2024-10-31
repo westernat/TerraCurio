@@ -1,28 +1,20 @@
 package org.confluence.mod.terra_curio.util;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
-import org.apache.commons.compress.utils.Lists;
 import org.confluence.mod.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.mod.terra_curio.common.component.EffectImmunities;
-import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
+import org.confluence.mod.terra_curio.common.init.TCDataComponentTypes;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
-import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -32,47 +24,14 @@ import java.util.function.Predicate;
 
 
 public class CuriosUtils {
-    public static boolean hasEffectImmunity(LivingEntity living, Holder<MobEffect> mobEffect) {
-        ICuriosItemHandler curiosItemHandler = CuriosApi.getCuriosInventory(living).orElse(null);
-        return curiosItemHandler != null && curiosItemHandler.getCurios().values().stream()
-                .map(ICurioStacksHandler::getStacks)
-                .flatMap(iDynamicStackHandler -> {
-                    int slots = iDynamicStackHandler.getSlots();
-                    List<ItemStack> stacks = Lists.newArrayList();
-                    for (int i = 0; i < slots; i++) {
-                        stacks.add(iDynamicStackHandler.getStackInSlot(i));
-                    }
-                    return stacks.stream();
-                })
-                .anyMatch(stack -> {
-                    EffectImmunities component = stack.get(ModDataComponentTypes.EFFECT_IMMUNITIES);
-                    return component != null && component.contains(mobEffect);
-                });
-    }
-
-    public static void applyFireAttack(Player player, Entity entity) {
-        if (CuriosUtils.hasCurio(player, AccessoriesComponent.FIRE_ATTACK)) {
-            float f = player.getRandom().nextFloat();
-            int time;
-            if (f < 0.25F) {
-                time = 120;
-            } else if (f < 0.375F) {
-                time = 80;
-            } else {
-                time = 40;
-            }
-            entity.igniteForTicks(time);
-        }
-    }
-
     public static boolean noSameCurio(LivingEntity living, Class<?> clazz) {
         return noSameCurio(living, (Predicate<ItemStack>) itemStack -> clazz.isInstance(itemStack.getItem()));
     }
 
     public static boolean noSameCurio(LivingEntity living, ResourceLocation type) {
         return noSameCurio(living, (Predicate<ItemStack>) itemStack -> {
-            AccessoriesComponent component = itemStack.get(ModDataComponentTypes.ACCESSORIES);
-            return component == null || !component.types().contains(type);
+            AccessoriesComponent component = itemStack.get(TCDataComponentTypes.ACCESSORIES);
+            return component == null || !component.types().containsKey(type);
         });
     }
 

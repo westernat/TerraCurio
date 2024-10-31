@@ -16,7 +16,7 @@ import top.theillusivec4.curios.api.SlotContext;
 
 public class SunStone extends BaseCurioItem {
     public SunStone() {
-        super(getBuilder());
+        super(getBuilder().initialize());
     }
 
     private static Builder getBuilder() {

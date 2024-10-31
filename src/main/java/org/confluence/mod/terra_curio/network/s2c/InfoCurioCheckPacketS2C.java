@@ -5,7 +5,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -15,12 +14,11 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.mod.terra_curio.TerraCurio;
 import org.confluence.mod.terra_curio.client.handler.InformationHandler;
 import org.confluence.mod.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
+import org.confluence.mod.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.mod.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Set;
 
 import static org.confluence.mod.terra_curio.common.component.AccessoriesComponent.*;
 
@@ -67,28 +65,27 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         byte compass = 0;
         byte depthMeter = 0;
         for (ItemStack stack : itemStacks) {
-            AccessoriesComponent component = stack.get(ModDataComponentTypes.ACCESSORIES);
+            AccessoriesComponent component = stack.get(TCDataComponentTypes.ACCESSORIES);
             if (component == null) continue;
-            Set<ResourceLocation> types = component.types();
-            if (types.contains(FULL_INFORMATION)) {
+            if (component.contains(FULL_INFORMATION)) {
                 PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), FULL_MYSELF_ARRAY));
                 return;
             }
 
-            if (watch < 1 && types.contains(HOUR_WATCH)) watch = 1;
-            else if (watch < 2 && types.contains(HALF_HOUR_WATCH)) watch = 2;
-            else if (watch < 3 && types.contains(MINUTE_WATCH)) watch = 3;
-            if (types.contains(WEATHER_RADIO)) weatherRadio = 1;
-            if (types.contains(SEXTANT)) sextant = 1;
-            if (types.contains(FISHERMANS_POCKET_GUIDE)) fishermansPocketGuide = 1;
-            if (types.contains(METAL_DETECTOR)) metalDetector = 1;
-            if (types.contains(LIFE_FORM_ANALYZER)) lifeFormAnalyzer = 1;
-            if (types.contains(RADAR)) radar = 1;
-            if (types.contains(TALLY_COUNTER)) tallyCounter = 1;
-            if (types.contains(DPS_METER)) dpsMeter = 1;
-            if (types.contains(STOPWATCH)) stopwatch = 1;
-            if (types.contains(COMPASS)) compass = 1;
-            if (types.contains(DEPTH_METER)) depthMeter = 1;
+            if (watch < 1 && component.contains(HOUR_WATCH)) watch = 1;
+            else if (watch < 2 && component.contains(HALF_HOUR_WATCH)) watch = 2;
+            else if (watch < 3 && component.contains(MINUTE_WATCH)) watch = 3;
+            if (component.contains(WEATHER_RADIO)) weatherRadio = 1;
+            if (component.contains(SEXTANT)) sextant = 1;
+            if (component.contains(FISHERMANS_POCKET_GUIDE)) fishermansPocketGuide = 1;
+            if (component.contains(METAL_DETECTOR)) metalDetector = 1;
+            if (component.contains(LIFE_FORM_ANALYZER)) lifeFormAnalyzer = 1;
+            if (component.contains(RADAR)) radar = 1;
+            if (component.contains(TALLY_COUNTER)) tallyCounter = 1;
+            if (component.contains(DPS_METER)) dpsMeter = 1;
+            if (component.contains(STOPWATCH)) stopwatch = 1;
+            if (component.contains(COMPASS)) compass = 1;
+            if (component.contains(DEPTH_METER)) depthMeter = 1;
         }
         PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), new byte[]{
                 watch, weatherRadio, sextant, fishermansPocketGuide, metalDetector,
@@ -112,28 +109,27 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         byte compass = -128;
         byte depthMeter = -128;
         for (ItemStack stack : itemStacks) {
-            AccessoriesComponent component = stack.get(ModDataComponentTypes.ACCESSORIES);
+            AccessoriesComponent component = stack.get(TCDataComponentTypes.ACCESSORIES);
             if (component == null) continue;
-            Set<ResourceLocation> types = component.types();
-            if (types.contains(FULL_INFORMATION)) {
+            if (component.contains(FULL_INFORMATION)) {
                 PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), FULL_REMOTE_ARRAY));
                 return;
             }
 
-            if (watch > -126 && types.contains(HOUR_WATCH)) watch = -126;
-            else if (watch > -127 && types.contains(HALF_HOUR_WATCH)) watch = -127;
-            else if (watch > -128 && types.contains(MINUTE_WATCH)) watch = -128;
-            if (types.contains(WEATHER_RADIO)) weatherRadio = -1;
-            if (types.contains(SEXTANT)) sextant = -1;
-            if (types.contains(FISHERMANS_POCKET_GUIDE)) fishermansPocketGuide = -1;
-            if (types.contains(METAL_DETECTOR)) metalDetector = -1;
-            if (types.contains(LIFE_FORM_ANALYZER)) lifeFormAnalyzer = -1;
-            if (types.contains(RADAR)) radar = -1;
-            if (types.contains(TALLY_COUNTER)) tallyCounter = -1;
-            if (types.contains(DPS_METER)) dpsMeter = -1;
-            if (types.contains(STOPWATCH)) stopwatch = -1;
-            if (types.contains(COMPASS)) compass = -1;
-            if (types.contains(DEPTH_METER)) depthMeter = -1;
+            if (watch > -126 && component.contains(HOUR_WATCH)) watch = -126;
+            else if (watch > -127 && component.contains(HALF_HOUR_WATCH)) watch = -127;
+            else if (watch > -128 && component.contains(MINUTE_WATCH)) watch = -128;
+            if (component.contains(WEATHER_RADIO)) weatherRadio = -1;
+            if (component.contains(SEXTANT)) sextant = -1;
+            if (component.contains(FISHERMANS_POCKET_GUIDE)) fishermansPocketGuide = -1;
+            if (component.contains(METAL_DETECTOR)) metalDetector = -1;
+            if (component.contains(LIFE_FORM_ANALYZER)) lifeFormAnalyzer = -1;
+            if (component.contains(RADAR)) radar = -1;
+            if (component.contains(TALLY_COUNTER)) tallyCounter = -1;
+            if (component.contains(DPS_METER)) dpsMeter = -1;
+            if (component.contains(STOPWATCH)) stopwatch = -1;
+            if (component.contains(COMPASS)) compass = -1;
+            if (component.contains(DEPTH_METER)) depthMeter = -1;
         }
         boolean equals = watch == -125 && weatherRadio == -128 && sextant == -128 && fishermansPocketGuide == -128 && metalDetector == -128 &&
                 lifeFormAnalyzer == -128 && radar == -128 && tallyCounter == -128 && dpsMeter == -128 && stopwatch == -128 && compass == -128 && depthMeter == -128;

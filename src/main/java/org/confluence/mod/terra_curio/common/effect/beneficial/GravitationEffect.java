@@ -16,7 +16,6 @@ public class GravitationEffect extends MobEffect {
             Attributes.GRAVITY, new AttributeModifier(ID, -2.0, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
     );
 
-    //todo packet
     public GravitationEffect() {
         super(MobEffectCategory.BENEFICIAL,0xAA00AA);
     }

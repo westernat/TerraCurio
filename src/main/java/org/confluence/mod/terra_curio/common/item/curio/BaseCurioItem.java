@@ -14,12 +14,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.confluence.mod.terra_curio.TerraCurio;
-import org.confluence.mod.terra_curio.common.capability.strategy.AttackEntityStrategy;
-import org.confluence.mod.terra_curio.common.capability.strategy.DefenseStrategy;
+import org.confluence.mod.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.mod.terra_curio.common.component.EffectImmunities;
 import org.confluence.mod.terra_curio.common.component.ModRarity;
-import org.confluence.mod.terra_curio.common.init.ModCapability;
-import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
+import org.confluence.mod.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.mod.terra_curio.util.CuriosUtils;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
@@ -66,15 +64,11 @@ public class BaseCurioItem extends Item implements ICurioItem {
     @Override
     public void onEquip(SlotContext slotContext, ItemStack prevStack, ItemStack stack) {
         // todo
-        slotContext.entity().getCapability(ModCapability.CURIOS_HANDLE).attackAbility.add(AttackEntityStrategy.FIRE_ATTACK);
-        slotContext.entity().getCapability(ModCapability.CURIOS_HANDLE).attackAbility.add(AttackEntityStrategy.Test);
-        slotContext.entity().getCapability(ModCapability.CURIOS_HANDLE).defenseAbility.add(DefenseStrategy.DEFENSE_TEST);
     }
 
     @Override
     public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
         // todo
-        slotContext.entity().getCapability(ModCapability.CURIOS_HANDLE).attackAbility.clear();
     }
 
     @Override
@@ -103,7 +97,6 @@ public class BaseCurioItem extends Item implements ICurioItem {
         private boolean hasToolTip = true;
         private transient ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> attributesBuilder = ImmutableMultimap.builder();
         private ImmutableMultimap<Holder<Attribute>, AttributeModifier> attributes;
-        private EffectImmunities effectImmunities = EffectImmunities.EMPTY;
         private ModRarity rarity = ModRarity.BLUE;
         private int jeiInformationCount = 0;
 
@@ -134,7 +127,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         @SafeVarargs
         public final Builder effectImmunities(Holder<MobEffect>... effectImmunities) {
-            this.effectImmunities = EffectImmunities.of(Set.of(effectImmunities).stream().toList());
+            properties.component(TCDataComponentTypes.EFFECT_IMMUNITIES, EffectImmunities.of(Set.of(effectImmunities).stream().toList()));
             return this;
         }
 
@@ -143,6 +136,11 @@ public class BaseCurioItem extends Item implements ICurioItem {
             if (rarity != ModRarity.GRAY && rarity != ModRarity.WHITE) {
                 properties.fireResistant();
             }
+            return this;
+        }
+
+        public Builder accessories(AccessoriesComponent component) {
+            properties.component(TCDataComponentTypes.ACCESSORIES, component);
             return this;
         }
 
@@ -164,8 +162,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         }
 
         public Builder initialize() {
-            properties.stacksTo(1).component(ModDataComponentTypes.MOD_RARITY, rarity)
-                    .component(ModDataComponentTypes.EFFECT_IMMUNITIES, effectImmunities);
+            properties.stacksTo(1).component(TCDataComponentTypes.MOD_RARITY, rarity);
             this.attributes = attributesBuilder.build();
             this.attributesBuilder = null;
             return this;
