@@ -20,30 +20,30 @@ public record AccessoriesComponent(Map<Type<?, ? extends PrimitiveValue<?>>, Pri
     public static final Map<ResourceLocation, Codec<PrimitiveValue<?>>> CODECS = new Hashtable<>();
     public static final Map<ResourceLocation, Type<?, ? extends PrimitiveValue<?>>> ENTRIES = new Hashtable<>();
 
-    public static final Type<Unit, UnitValue> FULL_INFORMATION = unit("full_information"),
-            HOUR_WATCH = unit("hour_watch"),
-            HALF_HOUR_WATCH = unit("half_hour_watch"),
-            MINUTE_WATCH = unit("minute_watch"),
-            WEATHER_RADIO = unit("weather_radio"),
-            SEXTANT = unit("sextant"),
-            FISHERMANS_POCKET_GUIDE = unit("fishermans_pocket_guide"),
-            METAL_DETECTOR = unit("metal_detector"),
-            LIFE_FORM_ANALYZER = unit("life_form_analyzer"),
-            RADAR = unit("radar"),
-            TALLY_COUNTER = unit("tally_counter"),
-            DPS_METER = unit("dps_meter"),
-            STOPWATCH = unit("stopwatch"),
-            COMPASS = unit("compass"),
-            DEPTH_METER = unit("depth_meter"),
+    public static final Type<Unit, UnitValue> FULL_INFORMATION = ofUnit("full_information"),
+            HOUR_WATCH = ofUnit("hour_watch"),
+            HALF_HOUR_WATCH = ofUnit("half_hour_watch"),
+            MINUTE_WATCH = ofUnit("minute_watch"),
+            WEATHER_RADIO = ofUnit("weather_radio"),
+            SEXTANT = ofUnit("sextant"),
+            FISHERMANS_POCKET_GUIDE = ofUnit("fishermans_pocket_guide"),
+            METAL_DETECTOR = ofUnit("metal_detector"),
+            LIFE_FORM_ANALYZER = ofUnit("life_form_analyzer"),
+            RADAR = ofUnit("radar"),
+            TALLY_COUNTER = ofUnit("tally_counter"),
+            DPS_METER = ofUnit("dps_meter"),
+            STOPWATCH = ofUnit("stopwatch"),
+            COMPASS = ofUnit("compass"),
+            DEPTH_METER = ofUnit("depth_meter"),
 
-    AUTO_ATTACK = unit("auto_attack"),
-            CTHULHU = unit("shield_of_cthulhu"), // todo
-            TABI = unit("tabi"), // todo
-            SCOPE = unit("scope"), // todo
-            GRAVITY = unit("gravity_globe"), // todo
-            FIRE_ATTACK = unit("fire_attack"),
-            BRAIN = unit("brain_of_confusion"), // todo
-            HIVE = unit("hive_pack"); // todo
+    AUTO_ATTACK = ofUnit("auto_attack"),
+            CTHULHU = ofUnit("shield_of_cthulhu"), // todo
+            TABI = ofUnit("tabi"), // todo
+            SCOPE = ofUnit("scope"), // todo
+            GRAVITY = ofUnit("gravity_globe"), // todo
+            FIRE_ATTACK = ofUnit("fire_attack"),
+            BRAIN = ofUnit("brain_of_confusion"), // todo
+            HIVE = ofUnit("hive_pack"); // todo
     public static final Type<Integer, IntegerValue> STOOL = ofInteger("stool", CombineRule.INTEGER_ADDITION); // todo
     public static final Type<Float, FloatValue> FISHING_POWER = ofFloat("fishing_power", CombineRule.FLOAT_ADDITION), // todo
             INJURY_FREE = ofFloat("injury_free", CombineRule.FLOAT_ADDITION); // todo
@@ -108,40 +108,50 @@ public record AccessoriesComponent(Map<Type<?, ? extends PrimitiveValue<?>>, Pri
         return STREAM_CODEC;
     }
 
-    private static <T, V extends PrimitiveValue<T>> void safePut(ResourceLocation id, Codec<V> codec) {
+    private static <T, V extends PrimitiveValue<T>> void registerCodec(ResourceLocation id, Codec<V> codec) {
         if (codec instanceof Codec<? extends PrimitiveValue<?>> codec1) {
             CODECS.put(id, (Codec<PrimitiveValue<?>>) codec1);
         }
     }
 
-    public static <T> Map.Entry<ResourceLocation, PrimitiveValue<T>> create(String path, PrimitiveValue<T> value) {
+    public static <T, V extends PrimitiveValue<T>> Type<T, V> create(String path, CombineRule<T, V> combineRule, Codec<V> codec) {
         ResourceLocation id = TerraCurio.asResource(path);
-        safePut(id, value.codec());
-        return Map.entry(id, value);
+        registerCodec(id, codec);
+        Type<T, V> type = new Type<>(id, combineRule);
+        ENTRIES.put(id, type);
+        return type;
     }
 
-    public static Type<Unit, UnitValue> unit(String path) {
+    public static Type<Unit, UnitValue> ofUnit(String path) {
         ResourceLocation id = TerraCurio.asResource(path);
-        safePut(id, UnitValue.CODEC);
-        return new Type<>(id, CombineRule.UNIT_GET_SELF);
+        registerCodec(id, UnitValue.CODEC);
+        Type<Unit, UnitValue> type = new Type<>(id, CombineRule.UNIT_GET_SELF);
+        ENTRIES.put(id, type);
+        return type;
     }
 
     public static Type<Integer, IntegerValue> ofInteger(String path, CombineRule<Integer, IntegerValue> combineRule) {
         ResourceLocation id = TerraCurio.asResource(path);
-        safePut(id, IntegerValue.CODEC);
-        return new Type<>(id, combineRule);
+        registerCodec(id, IntegerValue.CODEC);
+        Type<Integer, IntegerValue> type = new Type<>(id, combineRule);
+        ENTRIES.put(id, type);
+        return type;
     }
 
     public static Type<Float, FloatValue> ofFloat(String path, CombineRule<Float, FloatValue> combineRule) {
         ResourceLocation id = TerraCurio.asResource(path);
-        safePut(id, FloatValue.CODEC);
-        return new Type<>(id, combineRule);
+        registerCodec(id, FloatValue.CODEC);
+        Type<Float, FloatValue> type = new Type<>(id, combineRule);
+        ENTRIES.put(id, type);
+        return type;
     }
 
     public static Type<EntityType<?>, EntityTypeValue> ofEntityType(String path) {
         ResourceLocation id = TerraCurio.asResource(path);
-        safePut(id, EntityTypeValue.CODEC);
-        return new Type<>(id, CombineRule.ENTITY_TYPE_GET_SELF);
+        registerCodec(id, EntityTypeValue.CODEC);
+        Type<EntityType<?>, EntityTypeValue> type = new Type<>(id, CombineRule.ENTITY_TYPE_GET_SELF);
+        ENTRIES.put(id, type);
+        return type;
     }
 
     public static class Type<T, V extends PrimitiveValue<T>> {
