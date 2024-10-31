@@ -14,8 +14,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.confluence.mod.terra_curio.TerraCurio;
+import org.confluence.mod.terra_curio.common.capability.strategy.AttackEntityStrategy;
+import org.confluence.mod.terra_curio.common.capability.strategy.DefenseStrategy;
 import org.confluence.mod.terra_curio.common.component.EffectImmunities;
 import org.confluence.mod.terra_curio.common.component.ModRarity;
+import org.confluence.mod.terra_curio.common.init.ModCapability;
 import org.confluence.mod.terra_curio.common.init.ModDataComponentTypes;
 import org.confluence.mod.terra_curio.util.CuriosUtils;
 import top.theillusivec4.curios.api.SlotContext;
@@ -63,11 +66,15 @@ public class BaseCurioItem extends Item implements ICurioItem {
     @Override
     public void onEquip(SlotContext slotContext, ItemStack prevStack, ItemStack stack) {
         // todo
+        slotContext.entity().getCapability(ModCapability.CURIOS_HANDLE).attackAbility.add(AttackEntityStrategy.FIRE_ATTACK);
+        slotContext.entity().getCapability(ModCapability.CURIOS_HANDLE).attackAbility.add(AttackEntityStrategy.Test);
+        slotContext.entity().getCapability(ModCapability.CURIOS_HANDLE).defenseAbility.add(DefenseStrategy.DEFENSE_TEST);
     }
 
     @Override
     public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
         // todo
+        slotContext.entity().getCapability(ModCapability.CURIOS_HANDLE).attackAbility.clear();
     }
 
     @Override
