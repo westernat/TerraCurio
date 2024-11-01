@@ -37,7 +37,7 @@ public final class GameClientEvents {
         LocalPlayer localPlayer = (LocalPlayer) event.getEntity();
         Input input = event.getInput();
         boolean jumping = input.jumping;
-        if (jumping && !localPlayer.mayFly() && NeoForge.EVENT_BUS.post(new PerformJumpingEvent(localPlayer)).isCanPerform()) {
+        if (jumping && !localPlayer.mayFly() && !NeoForge.EVENT_BUS.post(new PerformJumpingEvent(localPlayer)).isCanPerform()) {
             input.jumping = false;
         } else if (GravitationHandler.isHasGlobe() || localPlayer.hasEffect(ModEffects.GRAVITATION)) {
             GravitationHandler.handle(localPlayer, jumping);
