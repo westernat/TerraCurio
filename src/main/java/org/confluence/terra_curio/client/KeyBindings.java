@@ -1,0 +1,37 @@
+package org.confluence.terra_curio.client;
+
+import com.mojang.blaze3d.platform.InputConstants;
+import net.minecraft.client.KeyMapping;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
+import net.neoforged.neoforge.client.settings.KeyConflictContext;
+import net.neoforged.neoforge.common.util.Lazy;
+import org.confluence.terra_curio.TerraCurio;
+import org.lwjgl.glfw.GLFW;
+
+@EventBusSubscriber(modid = TerraCurio.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+public final class KeyBindings {
+    @SubscribeEvent
+    public static void keyBinding(RegisterKeyMappingsEvent event) {
+        event.register(METAL_DETECTOR.get());
+        event.register(STEP_STOOL.get());
+    }
+
+    public static final Lazy<KeyMapping> METAL_DETECTOR = Lazy.of(() -> new KeyMapping(
+        "key.terra_curio.metal_detector",
+        KeyConflictContext.IN_GAME,
+        InputConstants.Type.KEYSYM,
+        GLFW.GLFW_KEY_RIGHT_CONTROL,
+        "key.categories.misc"
+    ));
+
+    public static final Lazy<KeyMapping> STEP_STOOL = Lazy.of(() -> new KeyMapping(
+        "key.terra_curio.step_stool",
+        KeyConflictContext.IN_GAME,
+        InputConstants.Type.KEYSYM,
+        GLFW.GLFW_KEY_UP,
+        "key.categories.gameplay"
+    ));
+}

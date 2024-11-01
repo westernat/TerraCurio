@@ -1,7 +1,7 @@
 {
     "required": true,
     "minVersion": "0.8",
-    "package": "org.confluence.mod.terra_curio.mixin",
+    "package": "org.confluence.terra_curio.mixin",
     "compatibilityLevel": "JAVA_8",
     "refmap": "terra_curio.refmap.json",
     "mixins": [
