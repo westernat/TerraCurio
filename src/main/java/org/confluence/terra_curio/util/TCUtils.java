@@ -129,7 +129,7 @@ public final class TCUtils {
         }
     }
 
-    public static void applyMoltenQuiver(LivingEntity living, AbstractArrow arrow) {
+    public static void applyIgniteArrow(LivingEntity living, AbstractArrow arrow) {
         if (living.getData(TCAttachments.ACCESSORIES).isIgniteArrow()) {
             arrow.igniteForSeconds(100.0F);
         }

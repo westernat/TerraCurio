@@ -50,7 +50,8 @@ public record AccessoriesComponent(Map<Type<?, ? extends PrimitiveValue<?>>, Pri
             MAGIC$QUIVER = ofUnit("magic_quiver"),
             IGNITE$ARROW = ofUnit("ignite_arrow"),
             FROZEN$TURTLE$SHELL = ofUnit("frozen_turtle_shell"),
-            STEP$STOOL = ofUnit("step_stool");
+            STEP$STOOL = ofUnit("step_stool"),
+            OBSIDIAN$ROSE = ofUnit("obsidian_rose");
     public static final Type<Float, FloatValue> FISHING$POWER = ofFloat("fishing_power", CombineRule.FLOAT_ADDITION), // todo
             INJURY$FREE = ofFloat("injury_free", CombineRule.FLOAT_ADDITION),
             INVULNERABLE$TICKS$MULTIPLIER = ofFloat("invulnerable_ticks_multiplier", CombineRule.FLOAT_GET_MAX);

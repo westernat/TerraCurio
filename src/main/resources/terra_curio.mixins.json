@@ -9,6 +9,7 @@
         "EntityMixin",
         "LivingEntityMixin",
         "ProjectileWeaponItemMixin",
+        "ServerPlayerMixin",
         "TargetingConditionsMixin",
         "accessor.LivingEntityAccessor",
         "accessor.RangedAttributeAccessor"

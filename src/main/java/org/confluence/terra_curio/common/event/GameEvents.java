@@ -152,7 +152,7 @@ public final class GameEvents {
         if (event.loadedFromDisk() || event.getLevel().isClientSide) return;
         if (event.getEntity() instanceof AbstractArrow arrow && arrow.getOwner() instanceof LivingEntity living) {
             TCAttributes.applyToArrow(living, arrow);
-            TCUtils.applyMoltenQuiver(living, arrow);
+            TCUtils.applyIgniteArrow(living, arrow);
         }
     }
 

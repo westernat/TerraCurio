@@ -7,6 +7,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.component.primitive.EntityTypesValue;
 import org.confluence.terra_curio.common.component.primitive.FloatValue;
@@ -147,6 +148,29 @@ public final class TCItems {
 //            HAND_WARMER = registerCurio("hand_warmer", HandWarmer::new), // 暖手宝
 //            PUTRID_SCENT = registerCurio("putrid_scent", PutridScent::new), // 腐香囊
 //            SHACKLE = registerCurio("shackle", Shackle::new); // 脚镣
+
+    public static final Supplier<BaseCurioItem> COPPER_WATCH = registerCurio("copper_watch", builder -> builder.rarity(WHITE).accessories(units(HOUR$WATCH))), // 铜表
+            TIN_WATCH = registerCurio("tin_watch", builder -> builder.rarity(WHITE).accessories(units(HOUR$WATCH))), // 锡表
+            SILVER_WATCH = registerCurio("silver_watch", builder -> builder.rarity(WHITE).accessories(units(HALF$HOUR$WATCH))), // 银表
+            TUNGSTEN_WATCH = registerCurio("tungsten_watch", builder -> builder.rarity(WHITE).accessories(units(HALF$HOUR$WATCH))), // 钨表
+            GOLD_WATCH = registerCurio("gold_watch", builder -> builder.accessories(units(MINUTE$WATCH)).makesPiglinsNeutral()), // 金表
+            PLATINUM_WATCH = registerCurio("platinum_watch", builder -> builder.accessories(units(MINUTE$WATCH))), // 铂金表
+            DEPTH_METER = registerCurio("depth_meter", builder -> builder.accessories(units(DEPTH$METER))), // 深度计
+            COMPASS = registerCurio("compass", builder -> builder.accessories(units(AccessoriesComponent.COMPASS))), // 罗盘
+            RADAR = registerCurio("radar", builder -> builder.accessories(units(AccessoriesComponent.RADAR))), // 雷达
+            LIFE_FORM_ANALYZER = registerCurio("life_form_analyzer", builder -> builder.accessories(units(LIFE$FORM$ANALYZER))), // 生命体分析机
+            TALLY_COUNTER = registerCurio("tally_counter", builder -> builder.accessories(units(TALLY$COUNTER))), // 杀怪计数器
+            METAL_DETECTOR = registerCurio("metal_detector", builder -> builder.accessories(units(METAL$DETECTOR))), // 金属探测器
+            STOPWATCH = registerCurio("stopwatch", builder -> builder.accessories(units(AccessoriesComponent.STOPWATCH))), // 秒表
+            DPS_METER = registerCurio("dps_meter", builder -> builder.accessories(units(DPS$METER))), // 每秒伤害计数器
+            FISHERMANS_POCKET_GUIDE = registerCurio("fishermans_pocket_guide", builder -> builder.accessories(units(FISHERMANS$POCKET$GUIDE))), // 渔民袖珍宝典
+            WEATHER_RADIO = registerCurio("weather_radio", builder -> builder.accessories(units(WEATHER$RADIO))), // 天气收音机
+            SEXTANT = registerCurio("sextant", builder -> builder.accessories(units(AccessoriesComponent.SEXTANT))), // 六分仪
+            GPS = registerCurio("gps", builder -> builder.rarity(ORANGE).accessories(units(MINUTE$WATCH, DEPTH$METER, AccessoriesComponent.COMPASS))), // 全球定位系统
+            REK_3000 = registerCurio("rek_3000", builder -> builder.rarity(ORANGE).accessories(units(AccessoriesComponent.RADAR, LIFE$FORM$ANALYZER, TALLY$COUNTER))), // R.E.K.3000
+            GOBLIN_TECH = registerCurio("goblin_tech", builder -> builder.rarity(ORANGE).accessories(units(METAL$DETECTOR, AccessoriesComponent.STOPWATCH, DPS$METER))), // 哥布林数据仪
+            FISH_FINDER = registerCurio("fish_finder", builder -> builder.rarity(ORANGE).accessories(units(FISHERMANS$POCKET$GUIDE, WEATHER$RADIO, AccessoriesComponent.SEXTANT))), // 探鱼器
+            PDA = registerCurio("pda", builder -> builder.rarity(PINK).accessories(units(FULL$INFORMATION))); // 个人数字助手
 
     public static final Supplier<BaseCurioItem> STEP_STOOL = registerCurio("step_stool", builder -> builder.accessories(units(STEP$STOOL))), // 梯凳
     /* 飞毯 */

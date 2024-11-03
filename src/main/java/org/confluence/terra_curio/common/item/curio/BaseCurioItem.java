@@ -70,6 +70,11 @@ public class BaseCurioItem extends Item implements ICurioItem {
         return CuriosUtils.noSameCurio(slotContext.entity(), this);
     }
 
+    @Override
+    public boolean makesPiglinsNeutral(SlotContext slotContext, ItemStack stack) {
+        return builder.makePiglinsNeutral;
+    }
+
     public static Builder builder(String name, Properties properties) {
         return new Builder(name, properties);
     }
@@ -88,10 +93,16 @@ public class BaseCurioItem extends Item implements ICurioItem {
         private ImmutableMultimap<Holder<Attribute>, AttributeModifier> attributes;
         private ModRarity rarity = ModRarity.BLUE;
         private int jeiInformationCount = 0;
+        private boolean makePiglinsNeutral;
 
         Builder(String name, Properties properties) {
             this.name = name;
             this.properties = properties;
+        }
+
+        public Builder makesPiglinsNeutral() {
+            this.makePiglinsNeutral = true;
+            return this;
         }
 
         public <T> Builder component(Supplier<DataComponentType<T>> type, T value) {
