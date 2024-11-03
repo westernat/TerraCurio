@@ -149,7 +149,7 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
-        if (event.loadedFromDisk() || !event.getLevel().isClientSide) return;
+        if (event.loadedFromDisk() || event.getLevel().isClientSide) return;
         if (event.getEntity() instanceof AbstractArrow arrow && arrow.getOwner() instanceof LivingEntity living) {
             TCAttributes.applyToArrow(living, arrow);
             TCUtils.applyMoltenQuiver(living, arrow);

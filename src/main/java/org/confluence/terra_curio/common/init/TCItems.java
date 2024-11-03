@@ -123,12 +123,10 @@ public final class TCItems {
             MAGIC_QUIVER = registerCurio("magic_quiver", builder -> builder.rarity(LIGHT_RED).accessories(units(MAGIC$QUIVER))
                     .attribute(TCAttributes.getRangedDamage(), "ranged_damage", 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getRangedVelocity(), "ranged_velocity", 0.2, ADD_MULTIPLIED_TOTAL)), // 魔法箭袋
-            MOLTEN_QUIVER = registerCurio("molten_quiver", builder -> builder.rarity(PINK)
-                    .accessories(units(MAGIC$QUIVER, IGNITE$ARROW))
+            MOLTEN_QUIVER = registerCurio("molten_quiver", builder -> builder.rarity(PINK).accessories(units(MAGIC$QUIVER, IGNITE$ARROW))
                     .attribute(TCAttributes.getRangedDamage(), "ranged_damage", 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getRangedVelocity(), "ranged_velocity", 0.2, ADD_MULTIPLIED_TOTAL)), // 熔火箭袋
-            STALKERS_QUIVER = registerCurio("stalkers_quiver", builder -> builder.rarity(PINK)
-                    .accessories(units(MAGIC$QUIVER))
+            STALKERS_QUIVER = registerCurio("stalkers_quiver", builder -> builder.rarity(PINK).accessories(units(MAGIC$QUIVER))
                     .attribute(TCAttributes.getRangedDamage(), "ranged_damage", 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getRangedVelocity(), "ranged_velocity", 0.2, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getAggro(), "aggro", -400, ADD_VALUE)), // 潜行者箭袋

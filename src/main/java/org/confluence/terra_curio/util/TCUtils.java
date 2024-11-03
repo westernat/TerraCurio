@@ -170,6 +170,10 @@ public final class TCUtils {
         return amount;
     }
 
+    public static boolean magicQuiver$shouldConsume(LivingEntity living) {
+        return !living.getData(TCAttachments.ACCESSORIES).isMagicQuiver() || living.getRandom().nextFloat() >= 0.2F;
+    }
+
     public static void resetClientPacket(ServerPlayer serverPlayer) {
         // todo
     }

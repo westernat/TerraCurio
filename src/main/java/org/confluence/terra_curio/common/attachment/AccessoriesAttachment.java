@@ -170,7 +170,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         nbt.putBoolean("starClock", starClock);
         nbt.putBoolean("honeyComb", honeyComb);
         nbt.putBoolean("magicQuiver", magicQuiver);
-        nbt.putBoolean("moltenQuiver", igniteArrow);
+        nbt.putBoolean("igniteArrow", igniteArrow);
         nbt.putBoolean("frozenTurtleShell", frozenTurtleShell);
         nbt.putBoolean("panicNecklace", panicNecklace);
         nbt.putFloat("fishingPower", fishingPower);
@@ -194,7 +194,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         this.starClock = nbt.getBoolean("starClock");
         this.honeyComb = nbt.getBoolean("honeyComb");
         this.magicQuiver = nbt.getBoolean("magicQuiver");
-        this.igniteArrow = nbt.getBoolean("moltenQuiver");
+        this.igniteArrow = nbt.getBoolean("igniteArrow");
         this.frozenTurtleShell = nbt.getBoolean("frozenTurtleShell");
         this.panicNecklace = nbt.getBoolean("panicNecklace");
         this.fishingPower = nbt.getFloat("fishingPower");

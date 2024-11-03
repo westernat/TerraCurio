@@ -2,11 +2,13 @@
     "required": true,
     "minVersion": "0.8",
     "package": "org.confluence.terra_curio.mixin",
-    "compatibilityLevel": "JAVA_8",
+    "compatibilityLevel": "JAVA_21",
     "refmap": "terra_curio.refmap.json",
     "mixins": [
+        "CrossbowItemMixin",
         "EntityMixin",
         "LivingEntityMixin",
+        "ProjectileWeaponItemMixin",
         "TargetingConditionsMixin",
         "accessor.LivingEntityAccessor",
         "accessor.RangedAttributeAccessor"
