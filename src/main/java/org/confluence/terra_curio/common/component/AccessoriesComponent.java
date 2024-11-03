@@ -13,6 +13,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
@@ -20,45 +21,50 @@ public record AccessoriesComponent(Map<Type<?, ? extends PrimitiveValue<?>>, Pri
     public static final Map<ResourceLocation, Codec<PrimitiveValue<?>>> CODECS = new Hashtable<>();
     public static final Map<ResourceLocation, Type<?, ? extends PrimitiveValue<?>>> ENTRIES = new Hashtable<>();
 
-    public static final Type<Unit, UnitValue> FULL_INFORMATION = ofUnit("full_information"),
-            HOUR_WATCH = ofUnit("hour_watch"),
-            HALF_HOUR_WATCH = ofUnit("half_hour_watch"),
-            MINUTE_WATCH = ofUnit("minute_watch"),
-            WEATHER_RADIO = ofUnit("weather_radio"),
+    public static final Type<Unit, UnitValue> FULL$INFORMATION = ofUnit("full_information"),
+            HOUR$WATCH = ofUnit("hour_watch"),
+            HALF$HOUR$WATCH = ofUnit("half_hour_watch"),
+            MINUTE$WATCH = ofUnit("minute_watch"),
+            WEATHER$RADIO = ofUnit("weather_radio"),
             SEXTANT = ofUnit("sextant"),
-            FISHERMANS_POCKET_GUIDE = ofUnit("fishermans_pocket_guide"),
-            METAL_DETECTOR = ofUnit("metal_detector"),
-            LIFE_FORM_ANALYZER = ofUnit("life_form_analyzer"),
+            FISHERMANS$POCKET$GUIDE = ofUnit("fishermans_pocket_guide"),
+            METAL$DETECTOR = ofUnit("metal_detector"),
+            LIFE$FORM$ANALYZER = ofUnit("life_form_analyzer"),
             RADAR = ofUnit("radar"),
-            TALLY_COUNTER = ofUnit("tally_counter"),
-            DPS_METER = ofUnit("dps_meter"),
+            TALLY$COUNTER = ofUnit("tally_counter"),
+            DPS$METER = ofUnit("dps_meter"),
             STOPWATCH = ofUnit("stopwatch"),
             COMPASS = ofUnit("compass"),
-            DEPTH_METER = ofUnit("depth_meter"),
+            DEPTH$METER = ofUnit("depth_meter"),
 
     AUTO_ATTACK = ofUnit("auto_attack"),
-            CTHULHU = ofUnit("shield_of_cthulhu"), // todo
-            TABI = ofUnit("tabi"), // todo
-            SCOPE = ofUnit("scope"), // todo
-            GRAVITY = ofUnit("gravity_globe"), // todo
-            FIRE_ATTACK = ofUnit("fire_attack"),
-            BRAIN = ofUnit("brain_of_confusion"), // todo
-            HIVE = ofUnit("hive_pack"); // todo
-    public static final Type<Integer, IntegerValue> STOOL = ofInteger("stool", CombineRule.INTEGER_ADDITION); // todo
-    public static final Type<Float, FloatValue> FISHING_POWER = ofFloat("fishing_power", CombineRule.FLOAT_ADDITION), // todo
-            INJURY_FREE = ofFloat("injury_free", CombineRule.FLOAT_ADDITION); // todo
-    public static final Type<EntityType<?>, EntityTypeValue> LIVING_IGNORE = ofEntityType("living_ignore"); // todo
+            SHIELD$OF$CTHULHU = ofUnit("shield_of_cthulhu"), // todo
+            SPRINTING = ofUnit("sprinting"),
+            SCOPE = ofUnit("scope"),
+            GRAVITY$GLOBE = ofUnit("gravity_globe"), // todo
+            FIRE$ATTACK = ofUnit("fire_attack"),
+            BRAIN$OF$CONFUSION = ofUnit("brain_of_confusion"),
+            HIVE$PACK = ofUnit("hive_pack"),
+            STAR$CLOCK = ofUnit("star_clock"),
+            HONEY$COMB = ofUnit("honey_comb"),
+            MAGIC$QUIVER = ofUnit("magic_quiver"),
+            IGNITE$ARROW = ofUnit("ignite_arrow"),
+            FROZEN$TURTLE$SHELL = ofUnit("frozen_turtle_shell"),
+            STEP$STOOL = ofUnit("step_stool");
+    public static final Type<Float, FloatValue> FISHING$POWER = ofFloat("fishing_power", CombineRule.FLOAT_ADDITION), // todo
+            INJURY$FREE = ofFloat("injury_free", CombineRule.FLOAT_ADDITION),
+            INVULNERABLE$TICKS$MULTIPLIER = ofFloat("invulnerable_ticks_multiplier", CombineRule.FLOAT_GET_MAX);
+    public static final Type<List<EntityType<?>>, EntityTypesValue> MOB$IGNORE = ofEntityTypes("mob_ignore", CombineRule.ENTITY_TYPES_EXPANSION);
 
-    public static final Codec<AccessoriesComponent> CODEC = Codec.dispatchedMap(ResourceLocation.CODEC, CODECS::get)
-            .xmap(map -> {
-                Map<Type<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> table = new Hashtable<>();
-                map.forEach((key, value) -> table.put(ENTRIES.get(key), value));
-                return new AccessoriesComponent(table);
-            }, component -> {
-                Map<ResourceLocation, PrimitiveValue<?>> table = new Hashtable<>();
-                component.types.forEach((type, value) -> table.put(type.key, value));
-                return table;
-            });
+    public static final Codec<AccessoriesComponent> CODEC = Codec.dispatchedMap(ResourceLocation.CODEC, CODECS::get).xmap(map -> {
+        Map<Type<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> table = new Hashtable<>();
+        map.forEach((key, value) -> table.put(ENTRIES.get(key), value));
+        return new AccessoriesComponent(table);
+    }, component -> {
+        Map<ResourceLocation, PrimitiveValue<?>> table = new Hashtable<>();
+        component.types.forEach((type, value) -> table.put(type.key, value));
+        return table;
+    });
     public static final StreamCodec<FriendlyByteBuf, AccessoriesComponent> STREAM_CODEC = new StreamCodec<>() {
         @Override
         public void encode(FriendlyByteBuf buffer, @NotNull AccessoriesComponent value) {
@@ -146,10 +152,10 @@ public record AccessoriesComponent(Map<Type<?, ? extends PrimitiveValue<?>>, Pri
         return type;
     }
 
-    public static Type<EntityType<?>, EntityTypeValue> ofEntityType(String path) {
+    public static Type<List<EntityType<?>>, EntityTypesValue> ofEntityTypes(String path, CombineRule<List<EntityType<?>>, EntityTypesValue> combineRule) {
         ResourceLocation id = TerraCurio.asResource(path);
-        registerCodec(id, EntityTypeValue.CODEC);
-        Type<EntityType<?>, EntityTypeValue> type = new Type<>(id, CombineRule.ENTITY_TYPE_GET_SELF);
+        registerCodec(id, EntityTypesValue.CODEC);
+        Type<List<EntityType<?>>, EntityTypesValue> type = new Type<>(id, combineRule);
         ENTRIES.put(id, type);
         return type;
     }

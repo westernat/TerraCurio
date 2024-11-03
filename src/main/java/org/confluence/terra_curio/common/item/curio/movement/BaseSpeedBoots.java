@@ -22,6 +22,7 @@ import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
 import org.confluence.terra_curio.util.CuriosUtils;
+import org.confluence.terra_curio.util.TCUtils;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
@@ -56,10 +57,12 @@ public class BaseSpeedBoots extends BaseCurioItem {
     }
 
     protected void speedUp(SlotContext slotContext, ItemStack stack, int addition, int max) {
+        TCUtils.forConfluence$Inject();
         LivingEntity living = slotContext.entity();
         if (living instanceof Player player && player.isLocalPlayer()) {
             SpeedBootsComponent component = stack.get(TCDataComponentTypes.SPEED_BOOTS);
             int speed = component == null ? 0 : component.speed();
+            // todo
             if (player.zza > 0) {
                 if (player.onGround()) {
                     if (TCClientPacketHandler.isHasMagiluminescence()) addition *= 2;

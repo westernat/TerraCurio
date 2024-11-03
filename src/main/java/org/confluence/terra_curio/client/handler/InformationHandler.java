@@ -14,12 +14,11 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.api.event.FishingPowerModificationEvent;
 import org.confluence.terra_curio.client.KeyBindings;
 import org.confluence.terra_curio.common.TCCommonConfigs;
+import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
@@ -184,10 +183,10 @@ public final class InformationHandler {
     }
 
     private static Component getFishingPowerInfo(Player player) {
-        float fishingPower = player.getLuck();
+        float fishingPower = player.getData(TCAttachments.ACCESSORIES).getFishingPower();
         return Component.translatable(
                 "info.terra_curio.fishermans_pocket_guide",
-                "%.2f".formatted(NeoForge.EVENT_BUS.post(new FishingPowerModificationEvent(player, fishingPower)).getNeoValue())
+                "%.2f".formatted(fishingPower)
         );
     }
 

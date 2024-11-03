@@ -7,14 +7,16 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.terra_curio.common.component.primitive.IntegerValue;
 import org.confluence.terra_curio.common.entity.StepStoolEntity;
+import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.util.CuriosUtils;
-import org.confluence.terra_curio.util.ModUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Predicate;
 
 public record StepStoolSteppingPacketC2S(int slot, int step, boolean increase) implements CustomPacketPayload {
     public static final Type<StepStoolSteppingPacketC2S> TYPE = new Type<>(TerraCurio.asResource("step_stool_stepping_c2s"));
@@ -24,6 +26,12 @@ public record StepStoolSteppingPacketC2S(int slot, int step, boolean increase) i
             ByteBufCodecs.BOOL, p -> p.increase,
             StepStoolSteppingPacketC2S::new
     );
+    private static final Predicate<ItemStack> PREDICATE = itemStack -> {
+        AccessoriesComponent component = itemStack.get(TCDataComponentTypes.ACCESSORIES);
+        if (component == null) return false;
+        return component.contains(AccessoriesComponent.STEP$STOOL);
+    };
+    public static final String KEY = TerraCurio.MODID + ":step_stool_id";
 
     @Override
     public @NotNull Type<StepStoolSteppingPacketC2S> type() {
@@ -38,23 +46,20 @@ public record StepStoolSteppingPacketC2S(int slot, int step, boolean increase) i
                     StepStoolEntity pEntity = new StepStoolEntity(serverPlayer);
                     serverPlayer.level().addFreshEntity(pEntity);
                     serverPlayer.teleportRelative(0.0, 1.001, 0.0);
-                    CuriosUtils.getSlot(serverPlayer, "accessory", slot).ifPresent(itemStack -> {
-                        ModUtils.putPrimitiveValue(itemStack, AccessoriesComponent.STOOL, new IntegerValue(pEntity.getId()));
+                    CuriosUtils.getSlot(serverPlayer, PREDICATE, slot).ifPresent(itemStack -> {
+                        serverPlayer.getPersistentData().putInt(KEY, pEntity.getId());
                     });
                 } else {
-                    CuriosUtils.getSlot(serverPlayer, "accessory", slot).ifPresent(itemStack -> {
-                        IntegerValue value = ModUtils.getPrimitiveValue(itemStack, AccessoriesComponent.STOOL);
-                        if (value != null) {
-                            int id = value.get();
-                            Entity entity = serverPlayer.level().getEntity(id);
-                            if (entity instanceof StepStoolEntity stepStool) {
-                                if (step == 0) {
-                                    stepStool.setOwner(null);
-                                } else {
-                                    stepStool.setStep(step);
-                                    if (increase) {
-                                        serverPlayer.teleportRelative(0.0, 1.001, 0.0);
-                                    }
+                    CuriosUtils.getSlot(serverPlayer, PREDICATE, slot).ifPresent(itemStack -> {
+                        int id = serverPlayer.getPersistentData().getInt(KEY);
+                        Entity entity = serverPlayer.level().getEntity(id);
+                        if (entity instanceof StepStoolEntity stepStool) {
+                            if (step == 0) {
+                                stepStool.setOwner(null);
+                            } else {
+                                stepStool.setStep(step);
+                                if (increase) {
+                                    serverPlayer.teleportRelative(0.0, 1.001, 0.0);
                                 }
                             }
                         }

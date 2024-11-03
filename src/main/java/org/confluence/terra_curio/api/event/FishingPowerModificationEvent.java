@@ -1,14 +1,14 @@
 package org.confluence.terra_curio.api.event;
 
-import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.neoforge.event.entity.living.LivingEvent;
 
-public class FishingPowerModificationEvent extends PlayerEvent {
+public class FishingPowerModificationEvent extends LivingEvent {
     private final float original;
     private float neoValue;
 
-    public FishingPowerModificationEvent(Player player, float original) {
-        super(player);
+    public FishingPowerModificationEvent(LivingEntity livingEntity, float original) {
+        super(livingEntity);
         this.original = original;
         this.neoValue = original;
     }

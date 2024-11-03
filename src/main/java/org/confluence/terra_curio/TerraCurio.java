@@ -27,7 +27,7 @@ public class TerraCurio {
         TCAttributes.ATTRIBUTES.register(modEventBus);
         TCEntities.ENTITIES.register(modEventBus);
         TCDataComponentTypes.TYPES.register(modEventBus);
-        CurioItems.ITEMS.register(modEventBus);
+        TCItems.ITEMS.register(modEventBus);
         TCTabs.TABS.register(modEventBus);
         TCAttachments.TYPES.register(modEventBus);
         TCTriggers.TYPES.register(modEventBus);

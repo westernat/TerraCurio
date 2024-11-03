@@ -7,7 +7,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.init.CurioItems;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -103,9 +103,9 @@ public class ModLanguageProvider extends LanguageProvider {
         add("curios.identifier.accessory", "Accessory", "配饰");
         add("curios.modifiers.accessory", "When worn as accessory:", "佩戴配饰时：");
 
-        addItem(CurioItems.BEZOAR, "bezoar", "牛黄");
-        addTooltips(CurioItems.BEZOAR, "Immunity to Poison", "对中毒免疫");
-        addJeiTooltips(CurioItems.BEZOAR,
+        addItem(TCItems.BEZOAR, "bezoar", "牛黄");
+        addTooltips(TCItems.BEZOAR, "Immunity to Poison", "对中毒免疫");
+        addJeiTooltips(TCItems.BEZOAR,
                 new String[]{"The Bezoar is an immunity accessory that grants the player immunity to the Poisoned debuff", "It have a Chance to be dropped from Cave Spider."},
                 new String[]{"牛黄是一种免疫配饰，可赋予玩家对中毒减益的免疫力", "它有几率从洞穴蜘蛛中掉落"}
         );

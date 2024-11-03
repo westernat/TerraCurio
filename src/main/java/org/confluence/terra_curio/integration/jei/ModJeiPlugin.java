@@ -7,7 +7,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.init.CurioItems;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +22,7 @@ public class ModJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(@NotNull IRecipeRegistration registration) {
-        CurioItems.ITEMS.getEntries().forEach(entry -> {
+        TCItems.ITEMS.getEntries().forEach(entry -> {
             if (entry.get() instanceof BaseCurioItem curioItem && curioItem.getJeiInformationCount() > 0){
                 Component[] information = new Component[curioItem.getJeiInformationCount()];
                 for (int i = 0; i < information.length; i++) {

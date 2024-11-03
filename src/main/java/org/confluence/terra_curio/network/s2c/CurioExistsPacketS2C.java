@@ -33,10 +33,10 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     public static final int MAGILUMINESCENCE = 1 << 5;
     public static final Object2IntMap<AccessoriesComponent.Type<Unit, UnitValue>> MAP = Util.make(new Object2IntArrayMap<>(), map -> {
         map.put(AccessoriesComponent.AUTO_ATTACK, AUTO_ATTACK);
-        map.put(AccessoriesComponent.CTHULHU, SHIELD_OF_CTHULHU);
-        map.put(AccessoriesComponent.TABI, TABI);
+        map.put(AccessoriesComponent.SHIELD$OF$CTHULHU, SHIELD_OF_CTHULHU);
+        map.put(AccessoriesComponent.SPRINTING, TABI);
         map.put(AccessoriesComponent.SCOPE, SCOPE);
-        map.put(AccessoriesComponent.GRAVITY, GRAVITY_GLOBE);
+        map.put(AccessoriesComponent.GRAVITY$GLOBE, GRAVITY_GLOBE);
     });
 
     public static final Type<CurioExistsPacketS2C> TYPE = new Type<>(TerraCurio.asResource("curio_exists"));

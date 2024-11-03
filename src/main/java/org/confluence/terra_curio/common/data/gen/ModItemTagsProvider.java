@@ -7,7 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.init.CurioItems;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.init.TCTags;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         IntrinsicTagAppender<Item> appender = tag(TCTags.CURIO);
-        CurioItems.ITEMS.getEntries().forEach(item -> {
+        TCItems.ITEMS.getEntries().forEach(item -> {
             if (item.get() instanceof BaseCurioItem) {
                 appender.add(item.get());
             }

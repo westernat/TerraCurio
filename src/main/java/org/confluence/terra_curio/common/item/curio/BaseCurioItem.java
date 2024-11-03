@@ -7,7 +7,6 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -18,15 +17,13 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.component.EffectImmunities;
 import org.confluence.terra_curio.common.component.ModRarity;
-import org.confluence.terra_curio.common.init.TCAttachments;
+import org.confluence.terra_curio.common.component.primitive.PrimitiveValue;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.util.CuriosUtils;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -61,18 +58,6 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     public int getJeiInformationCount() {
         return builder.jeiInformationCount;
-    }
-
-    @Override
-    public void onEquip(SlotContext slotContext, ItemStack prevStack, ItemStack stack) {
-        LivingEntity living = slotContext.entity();
-        living.getData(TCAttachments.ACCESSORIES).flushAbility(living);
-    }
-
-    @Override
-    public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
-        LivingEntity living = slotContext.entity();
-        living.getData(TCAttachments.ACCESSORIES).flushAbility(living);
     }
 
     @Override
@@ -143,8 +128,16 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
-        public Builder accessories(AccessoriesComponent component) {
-            properties.component(TCDataComponentTypes.ACCESSORIES, component);
+        public Builder accessories(AccessoriesComponent component, AccessoriesComponent... components) {
+            if (components.length == 0) {
+                properties.component(TCDataComponentTypes.ACCESSORIES, component);
+            } else {
+                Map<AccessoriesComponent.Type<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component.types());
+                for (AccessoriesComponent component1 : components) {
+                    map.putAll(component1.types());
+                }
+                properties.component(TCDataComponentTypes.ACCESSORIES, new AccessoriesComponent(map));
+            }
             return this;
         }
 

@@ -6,6 +6,8 @@
     "refmap": "terra_curio.refmap.json",
     "mixins": [
         "EntityMixin",
+        "LivingEntityMixin",
+        "TargetingConditionsMixin",
         "accessor.LivingEntityAccessor",
         "accessor.RangedAttributeAccessor"
     ],

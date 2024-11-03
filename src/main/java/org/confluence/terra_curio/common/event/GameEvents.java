@@ -6,6 +6,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
@@ -15,13 +16,13 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.damagesource.DamageContainer;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
-import net.neoforged.neoforge.event.entity.living.LivingChangeTargetEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
-import net.neoforged.neoforge.event.entity.living.LivingDeathEvent;
-import net.neoforged.neoforge.event.entity.living.MobEffectEvent;
+import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -29,24 +30,44 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.common.TCCommonConfigs;
 import org.confluence.terra_curio.common.data.pack.CurioItemManager;
+import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCTriggers;
+import org.confluence.terra_curio.common.item.curio.combat.PaladinsShield;
+import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
-import org.confluence.terra_curio.util.ModUtils;
+import org.confluence.terra_curio.util.TCUtils;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = TerraCurio.MODID)
 public final class GameEvents {
     @SubscribeEvent
     public static void curios(CurioChangeEvent event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+        LivingEntity living = event.getEntity();
+        living.getData(TCAttachments.ACCESSORIES).flushAbility(living);
+        if (living instanceof ServerPlayer serverPlayer) {
             InfoCurioCheckPacketS2C.sendToPlayer(serverPlayer, serverPlayer.getInventory());
             CurioExistsPacketS2C.sendToClient(serverPlayer);
             TCTriggers.CURIOS_EQUIPPED.get().trigger(serverPlayer, event.getTo());
         }
+    }
+
+    @SubscribeEvent
+    public static void entityInvulnerabilityCheck(EntityInvulnerabilityCheckEvent event) {
+        if (!event.isInvulnerable() && TCUtils.isInvulnerableTo(event.getEntity(), event.getSource())) {
+            event.setInvulnerable(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void livingIncomingDamage(LivingIncomingDamageEvent event) { // todo
+        DamageContainer container = event.getContainer();
+        LivingEntity living = event.getEntity();
+        float invulnerableTicksMultiplier = living.getData(TCAttachments.ACCESSORIES).getInvulnerableTicksMultiplier();
+        container.setPostAttackInvulnerabilityTicks((int) (container.getPostAttackInvulnerabilityTicks() * invulnerableTicksMultiplier));
     }
 
     @SubscribeEvent
@@ -56,31 +77,25 @@ public final class GameEvents {
         DamageSource damageSource = event.getSource();
         if (damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || damageSource.is(DamageTypes.GENERIC_KILL)) return;
         RandomSource random = living.level().random;
-        if (TCAttributes.applyDodge(living, random)) {
-            event.setNewDamage(0.0F);
-            return;
-        }
-
         float amount = event.getNewDamage();
 
-//        IHoneycomb.apply(living, random);
-//        IStarCloak.apply(living, random);
-//        PanicNecklace.apply(living);
+        TCUtils.applyHoneyComb(living, random);
+        TCUtils.applyStarClock(living, random);
+        PanicNecklace.apply(living);
 
         amount = TCAttributes.applyMagicDamage(damageSource, amount);
         amount = TCAttributes.applyRangedDamage(living, damageSource, amount);
-//        amount = PaladinsShield.apply(living, damageSource, amount);
-//        amount = FrozenTurtleShell.apply(living, amount);
+        amount = PaladinsShield.apply(living, damageSource, amount);
+        amount = TCUtils.applyFrozenTurtleShell(living, amount);
 //        amount = ILavaHurtReduce.apply(living, damageSource, amount);
-//        amount = IFallResistance.apply(living, damageSource, amount);
-//        amount = WormScarf.apply(living, amount);
-//        amount = BrainOfConfusion.apply(living, random, amount);
+        amount = TCUtils.applyInjuryFree(living, amount);
+        amount = TCUtils.applyBrainOfConfusion(living, random, damageSource, amount);
 
         if (TCCommonConfigs.RANDOM_ATTACK_DAMAGE.get()) {
-            amount *= ModUtils.nextFloat(random,
+            amount *= TCUtils.forConfluence$ModifyExpression(TCUtils.nextFloat(random,
                     TCCommonConfigs.RANDOM_ATTACK_DAMAGE_MIN.get().floatValue(),
-                    TCCommonConfigs.RANDOM_ATTACK_DAMAGE_MAX.get().floatValue()
-            );
+                    TCCommonConfigs.RANDOM_ATTACK_DAMAGE_MAX.get().floatValue())
+            ); // todo mixin here
         }
         AttackDamagePacketS2C.sendToClient(amount, damageSource.getEntity());
         event.setNewDamage(amount);
@@ -137,13 +152,23 @@ public final class GameEvents {
         if (event.loadedFromDisk() || !event.getLevel().isClientSide) return;
         if (event.getEntity() instanceof AbstractArrow arrow && arrow.getOwner() instanceof LivingEntity living) {
             TCAttributes.applyToArrow(living, arrow);
-//            MoltenQuiver.applyToArrow(living, arrow);
+            TCUtils.applyMoltenQuiver(living, arrow);
         }
     }
 
     @SubscribeEvent
     public static void onDataPackLoad(AddReloadListenerEvent event) {
         event.addListener(CurioItemManager.INSTANCE);
+    }
+
+    @SubscribeEvent
+    public static void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        Player player = event.getEntity();
+        if (TCUtils.isServerNotFake(player)) {
+            ServerPlayer serverPlayer = (ServerPlayer) player;
+            TCUtils.resetClientPacket(serverPlayer);
+            InfoCurioCheckPacketS2C.sendToPlayer(serverPlayer, serverPlayer.getInventory());
+        }
     }
 
     @SubscribeEvent
@@ -155,7 +180,8 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void effectApplicable(MobEffectEvent.Applicable event) {
-        if (ModUtils.hasEffectImmunity(event.getEntity(), event.getEffectInstance().getEffect())) {
+        MobEffectInstance effectInstance = event.getEffectInstance();
+        if (effectInstance != null && TCUtils.applyEffectImmunity(event.getEntity(), effectInstance.getEffect())) {
             event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
         }
     }
@@ -163,8 +189,8 @@ public final class GameEvents {
     @SubscribeEvent
     public static void attackEntity(AttackEntityEvent event) {
         Player player = event.getEntity();
-        if (ModUtils.isServerNotFake(player)) {
-            ModUtils.applyFireAttack(player, event.getTarget());
+        if (TCUtils.isServerNotFake(player)) {
+            TCUtils.applyFireAttack(player, event.getTarget());
         }
     }
 }

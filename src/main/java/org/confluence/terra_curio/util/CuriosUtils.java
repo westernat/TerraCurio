@@ -1,12 +1,12 @@
 package org.confluence.terra_curio.util;
 
 import com.google.common.util.concurrent.AtomicDouble;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.component.primitive.PrimitiveValue;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
@@ -27,7 +27,7 @@ public class CuriosUtils {
         return noSameCurio(living, (Predicate<ItemStack>) itemStack -> clazz.isInstance(itemStack.getItem()));
     }
 
-    public static boolean noSameCurio(LivingEntity living, ResourceLocation type) {
+    public static boolean noSameCurio(LivingEntity living, AccessoriesComponent.Type<?, ? extends PrimitiveValue<?>> type) {
         return noSameCurio(living, (Predicate<ItemStack>) itemStack -> {
             AccessoriesComponent component = itemStack.get(TCDataComponentTypes.ACCESSORIES);
             return component == null || !component.types().containsKey(type);
@@ -59,7 +59,7 @@ public class CuriosUtils {
         return !noSameCurio(living, clazz);
     }
 
-    public static boolean hasCurio(LivingEntity living, ResourceLocation type) {
+    public static boolean hasCurio(LivingEntity living, AccessoriesComponent.Type<?, ? extends PrimitiveValue<?>> type) {
         return !noSameCurio(living, type);
     }
 
@@ -162,6 +162,21 @@ public class CuriosUtils {
                 if (index < stackHandler.getSlots()) {
                     ItemStack stack = stackHandler.getStackInSlot(index);
                     if (!stack.isEmpty()) atomic.set(Optional.of(stack));
+                }
+            }
+        });
+        return atomic.get();
+    }
+
+    public static Optional<ItemStack> getSlot(LivingEntity living, Predicate<ItemStack> predicate, int index) {
+        AtomicReference<Optional<ItemStack>> atomic = new AtomicReference<>(Optional.empty());
+        CuriosApi.getCuriosInventory(living).ifPresent(handler -> {
+            for (ICurioStacksHandler curioStacksHandler : handler.getCurios().values()) {
+                IDynamicStackHandler stackHandler = curioStacksHandler.getStacks();
+                if (stackHandler.getSlots() <= index) continue;
+                ItemStack stack = stackHandler.getStackInSlot(index);
+                if (!stack.isEmpty() && predicate.test(stack)) {
+                    atomic.set(Optional.of(stack));
                 }
             }
         });

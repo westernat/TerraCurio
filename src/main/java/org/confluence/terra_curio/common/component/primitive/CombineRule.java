@@ -4,7 +4,9 @@ import com.mojang.serialization.Codec;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EntityType;
 
+import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 
 public abstract class CombineRule<T, V extends PrimitiveValue<T>> {
@@ -21,15 +23,28 @@ public abstract class CombineRule<T, V extends PrimitiveValue<T>> {
             return "unit_get_self";
         }
     });
-    public static final CombineRule<EntityType<?>, EntityTypeValue> ENTITY_TYPE_GET_SELF = register(new CombineRule<>() {
+    public static final CombineRule<List<EntityType<?>>, EntityTypesValue> ENTITY_TYPES_GET_SELF = register(new CombineRule<>() {
         @Override
-        public EntityType<?> combine(EntityType<?> componentA, EntityType<?> componentB) {
+        public List<EntityType<?>> combine(List<EntityType<?>> componentA, List<EntityType<?>> componentB) {
             return componentA;
         }
 
         @Override
         public String name() {
-            return "entity_type_get_self";
+            return "entity_types_get_self";
+        }
+    });
+    public static final CombineRule<List<EntityType<?>>, EntityTypesValue> ENTITY_TYPES_EXPANSION = register(new CombineRule<>() {
+        @Override
+        public List<EntityType<?>> combine(List<EntityType<?>> componentA, List<EntityType<?>> componentB) {
+            List<EntityType<?>> combined = new ArrayList<>(componentA);
+            combined.addAll(componentB);
+            return combined;
+        }
+
+        @Override
+        public String name() {
+            return "entity_types_expansion";
         }
     });
     public static final CombineRule<Integer, IntegerValue> INTEGER_GET_SELF = register(new CombineRule<>() {
@@ -96,6 +111,17 @@ public abstract class CombineRule<T, V extends PrimitiveValue<T>> {
         @Override
         public String name() {
             return "float_get_self";
+        }
+    });
+    public static final CombineRule<Float, FloatValue> FLOAT_GET_MAX = register(new CombineRule<>() {
+        @Override
+        public Float combine(Float componentA, Float componentB) {
+            return Math.max(componentA, componentB);
+        }
+
+        @Override
+        public String name() {
+            return "float_get_max";
         }
     });
     public static final CombineRule<Float, FloatValue> FLOAT_ADDITION = register(new CombineRule<>() {

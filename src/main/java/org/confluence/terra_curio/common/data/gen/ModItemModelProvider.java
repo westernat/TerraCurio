@@ -5,7 +5,7 @@ import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.init.CurioItems;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 
 public class ModItemModelProvider extends ItemModelProvider {
@@ -15,7 +15,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        CurioItems.ITEMS.getEntries().forEach(item -> {
+        TCItems.ITEMS.getEntries().forEach(item -> {
             try {
                 Item value = item.get();
                 String path = item.getId().getPath().toLowerCase();
