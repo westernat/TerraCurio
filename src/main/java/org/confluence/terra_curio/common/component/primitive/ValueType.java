@@ -33,11 +33,13 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Unit, UnitValue> STOPWATCH = ofUnit("stopwatch");
     public static final ValueType<Unit, UnitValue> COMPASS = ofUnit("compass");
     public static final ValueType<Unit, UnitValue> DEPTH$METER = ofUnit("depth_meter");
-    public static final ValueType<Unit, UnitValue> AUTO_ATTACK = ofUnit("auto_attack");
+
+    public static final ValueType<Unit, UnitValue> AUTO$ATTACK = ofUnit("auto_attack");
     public static final ValueType<Unit, UnitValue> SHIELD$OF$CTHULHU = ofUnit("shield_of_cthulhu");
     public static final ValueType<Unit, UnitValue> SPRINTING = ofUnit("sprinting");
     public static final ValueType<Unit, UnitValue> SCOPE = ofUnit("scope");
     public static final ValueType<Unit, UnitValue> GRAVITY$GLOBE = ofUnit("gravity_globe");
+
     public static final ValueType<Unit, UnitValue> FIRE$ATTACK = ofUnit("fire_attack");
     public static final ValueType<Unit, UnitValue> BRAIN$OF$CONFUSION = ofUnit("brain_of_confusion");
     public static final ValueType<Unit, UnitValue> HIVE$PACK = ofUnit("hive_pack");
@@ -46,13 +48,14 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Unit, UnitValue> MAGIC$QUIVER = ofUnit("magic_quiver");
     public static final ValueType<Unit, UnitValue> IGNITE$ARROW = ofUnit("ignite_arrow");
     public static final ValueType<Unit, UnitValue> FROZEN$TURTLE$SHELL = ofUnit("frozen_turtle_shell");
-    public static final ValueType<Unit, UnitValue> LAVA$HURT$REDUCE = ofUnit("lava_hurt_reduce"); // todo
     public static final ValueType<Unit, UnitValue> FIRE$IMMUNE = ofUnit("fire_immune");
     public static final ValueType<Unit, UnitValue> FLOWER$BOOTS = ofUnit("flower_boots");
-    public static final ValueType<Unit, UnitValue> FROZEN$IMMUNE = ofUnit("frozen_immune"); // todo
+    public static final ValueType<Unit, UnitValue> FROZEN$IMMUNE = ofUnit("frozen_immune");
+
     public static final ValueType<Float, FloatValue> FISHING$POWER = ofFloat("fishing_power", CombineRule.FLOAT_ADDITION, 0.0F); // todo
     public static final ValueType<Float, FloatValue> INJURY$FREE = ofFloat("injury_free", CombineRule.FLOAT_ADDITION, 0.0F);
     public static final ValueType<Float, FloatValue> INVULNERABLE$TICKS$MULTIPLIER = ofFloat("invulnerable_ticks_multiplier", CombineRule.FLOAT_GET_MAX, 1.0F);
+    public static final ValueType<Float, FloatValue> LAVA$HURT$REDUCE = ofFloat("lava_hurt_reduce", CombineRule.FLOAT_GET_MAX, 0.0F);
     public static final ValueType<Integer, IntegerValue> LAVA$IMMUNE$TICKS = ofInteger("lava_immune_ticks", CombineRule.INTEGER_GET_MAX, 0);
     public static final ValueType<List<EntityType<?>>, EntityTypesValue> MOB$IGNORE = create("mob_ignore", CombineRule.ENTITY_TYPES_EXPANSION, EntityTypesValue.CODEC, List.of(), EntityTypesValue::new);
     public static final ValueType<List<TagKey<Fluid>>, FluidTagsValue> FLUID$WALK = create("fluid_walk", CombineRule.FLUID_TAGS_EXPANSION, FluidTagsValue.CODEC, List.of(), FluidTagsValue::new);

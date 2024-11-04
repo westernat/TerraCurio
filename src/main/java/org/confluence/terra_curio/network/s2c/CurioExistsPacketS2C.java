@@ -33,7 +33,7 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     public static final int GRAVITY_GLOBE = 1 << 4;
     public static final int MAGILUMINESCENCE = 1 << 5;
     public static final Object2IntMap<ValueType<Unit, UnitValue>> MAP = Util.make(new Object2IntArrayMap<>(), map -> {
-        map.put(ValueType.AUTO_ATTACK, AUTO_ATTACK);
+        map.put(ValueType.AUTO$ATTACK, AUTO_ATTACK);
         map.put(ValueType.SHIELD$OF$CTHULHU, SHIELD_OF_CTHULHU);
         map.put(ValueType.SPRINTING, TABI);
         map.put(ValueType.SCOPE, SCOPE);

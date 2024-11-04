@@ -50,6 +50,13 @@ public abstract class LivingEntityMixin implements SelfGetter<LivingEntity> {
         return pPosY;
     }
 
+    @Inject(method = "canFreeze", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
+    private void checkFreeze(CallbackInfoReturnable<Boolean> cir) {
+        if (cir.getReturnValue() && self().getData(TCAttachments.ACCESSORIES).contains(ValueType.FROZEN$IMMUNE)) {
+            cir.setReturnValue(false);
+        }
+    }
+
     @Inject(method = "canStandOnFluid", at = @At("RETURN"), cancellable = true)
     private void standOnFluid(FluidState fluidState, CallbackInfoReturnable<Boolean> cir) {
         if (fluidState.isEmpty()) return;

@@ -3,6 +3,7 @@ package org.confluence.terra_curio.common.event;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -66,6 +67,7 @@ public final class GameEvents {
         DamageContainer container = event.getContainer();
         LivingEntity living = event.getEntity();
         float invulnerableTicksMultiplier = living.getData(TCAttachments.ACCESSORIES).getValue(ValueType.INVULNERABLE$TICKS$MULTIPLIER);
+        invulnerableTicksMultiplier = Mth.clamp(invulnerableTicksMultiplier, 0.0F, 100.0F);
         container.setPostAttackInvulnerabilityTicks((int) (container.getPostAttackInvulnerabilityTicks() * invulnerableTicksMultiplier));
     }
 
@@ -86,7 +88,7 @@ public final class GameEvents {
         amount = TCAttributes.applyRangedDamage(living, damageSource, amount);
         amount = PaladinsShield.apply(living, damageSource, amount);
         amount = TCUtils.applyFrozenTurtleShell(living, amount);
-//        amount = ILavaHurtReduce.apply(living, damageSource, amount);
+        amount = TCUtils.applyLavaHurtReduce(living, damageSource, amount);
         amount = TCUtils.applyInjuryFree(living, amount);
         amount = TCUtils.applyBrainOfConfusion(living, random, damageSource, amount);
 

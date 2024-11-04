@@ -46,6 +46,9 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         list.add(ValueType.MAGIC$QUIVER);
         list.add(ValueType.IGNITE$ARROW);
         list.add(ValueType.FROZEN$TURTLE$SHELL);
+        list.add(ValueType.FIRE$IMMUNE);
+        list.add(ValueType.FLOWER$BOOTS);
+        list.add(ValueType.FROZEN$IMMUNE);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.UnitType(list));
     });
     public static final List<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
@@ -55,6 +58,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         list.add(ValueType.MOB$IGNORE);
         list.add(ValueType.LAVA$IMMUNE$TICKS);
         list.add(ValueType.FLUID$WALK);
+        list.add(ValueType.LAVA$HURT$REDUCE);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.OtherType(list));
     });
     private final Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> valueMap = new HashMap<>();

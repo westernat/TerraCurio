@@ -6,6 +6,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -115,6 +116,7 @@ public final class TCUtils {
 
     public static float applyInjuryFree(LivingEntity living, float amount) {
         float injuryFree = living.getData(TCAttachments.ACCESSORIES).getValue(INJURY$FREE);
+        injuryFree = Mth.clamp(injuryFree, 0.0F, 1.0F);
         return amount * (1.0F - injuryFree);
     }
 
@@ -222,5 +224,15 @@ public final class TCUtils {
     @SuppressWarnings("deprecation")
     public static @NotNull CompoundTag getItemStackCompoundTag(ItemStack itemStack) {
         return Objects.requireNonNull(itemStack.get(DataComponents.CUSTOM_DATA)).getUnsafe();
+    }
+
+    public static float applyLavaHurtReduce(LivingEntity living, DamageSource damageSource, float amount) {
+        if (damageSource.is(DamageTypes.LAVA)) {
+            float value = living.getData(TCAttachments.ACCESSORIES).getValue(LAVA$HURT$REDUCE);
+            value = Mth.clamp(value, 0.0F, 1.0F);
+            living.igniteForTicks(140);
+            return amount * (1.0F - value);
+        }
+        return amount;
     }
 }

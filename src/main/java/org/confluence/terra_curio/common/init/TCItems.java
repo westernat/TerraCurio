@@ -76,25 +76,25 @@ public final class TCItems {
                     .attribute(TCAttributes.getMagicDamage(), "magic_damage", 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getCriticalChance(), "critical_chance", 0.08, ADD_VALUE)), // 毁灭者勋章
             FERAL_CLAWS = registerCurio("feral_claws", builder -> builder.rarity(ORANGE).noTooltip()
-                    .accessories(units(ValueType.AUTO_ATTACK))
+                    .accessories(units(ValueType.AUTO$ATTACK))
                     .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)), // 狂爪手套
             TITAN_GLOVE = registerCurio("titan_glove", builder -> builder.rarity(LIGHT_RED).noTooltip()
-                    .accessories(units(ValueType.AUTO_ATTACK))
+                    .accessories(units(ValueType.AUTO$ATTACK))
                     .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, "entity_interaction_range", 0.1, ADD_MULTIPLIED_TOTAL)), // 泰坦手套
             POWER_GLOVE = registerCurio("power_glove", builder -> builder.rarity(PINK).noTooltip()
-                    .accessories(units(ValueType.AUTO_ATTACK))
+                    .accessories(units(ValueType.AUTO$ATTACK))
                     .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, "entity_interaction_range", 0.1, ADD_MULTIPLIED_TOTAL)), // 强力手套
             MECHANICAL_GLOVE = registerCurio("mechanical_glove", builder -> builder.rarity(LIGHT_PURPLE).noTooltip()
-                    .accessories(units(ValueType.AUTO_ATTACK))
+                    .accessories(units(ValueType.AUTO$ATTACK))
                     .attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, "entity_interaction_range", 0.1, ADD_MULTIPLIED_TOTAL)), // 机械手套
             FIRE_GAUNTLET = registerCurio("fire_gauntlet", builder -> builder.rarity(LIME)
-                    .accessories(units(ValueType.AUTO_ATTACK, ValueType.FIRE$ATTACK))
+                    .accessories(units(ValueType.AUTO$ATTACK, ValueType.FIRE$ATTACK))
                     .attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
@@ -103,7 +103,7 @@ public final class TCItems {
                     .attribute(Attributes.ARMOR, "armor", 8.0, ADD_VALUE)
                     .attribute(TCAttributes.getAggro(), "aggro", 400, ADD_VALUE)), // 血肉指虎
             BERSERKERS_GLOVE = registerCurio("berserkers_glove", builder -> builder.rarity(PINK)
-                    .accessories(units(ValueType.AUTO_ATTACK))
+                    .accessories(units(ValueType.AUTO$ATTACK))
                     .attribute(Attributes.ARMOR, "armor", 8.0, ADD_VALUE)
                     .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, "attack_knockback", 1.0, ADD_MULTIPLIED_TOTAL)
@@ -144,13 +144,14 @@ public final class TCItems {
                     .attribute(TCAttributes.getRangedDamage(), "ranged_damage", 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getAggro(), "aggro", -400, ADD_VALUE)), // 侦察镜
             MAGMA_STONE = registerCurio("magma_stone", builder -> builder.rarity(ORANGE).accessories(units(ValueType.FIRE$ATTACK))), // 岩浆石
-            OBSIDIAN_ROSE = registerCurio("obsidian_rose", builder -> builder.rarity(ORANGE).accessories(units(ValueType.LAVA$HURT$REDUCE))), // 黑曜石玫瑰
+            OBSIDIAN_ROSE = registerCurio("obsidian_rose", builder -> builder.rarity(ORANGE).accessories(of(ValueType.LAVA$HURT$REDUCE, new FloatValue(0.5F)))), // 黑曜石玫瑰
             OBSIDIAN_SHIELD = registerCurio("obsidian_shield", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.FIRE$IMMUNE))
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, "knockback_resistance", 1.0, ADD_VALUE)
                     .attribute(Attributes.ARMOR, "armor", 2.0, ADD_VALUE)), // 黑曜石护盾
             OBSIDIAN_SKULL = registerCurio("obsidian_skull", builder -> builder.rarity(GREEN).accessories(units(ValueType.FIRE$IMMUNE))), // 黑曜石骷髅头
-            MOLTEN_SKULL_ROSE = registerCurio("molten_skull_rose", builder -> builder.rarity(LIGHT_PURPLE).accessories(units(ValueType.FIRE$IMMUNE, ValueType.LAVA$HURT$REDUCE), of(ValueType.LAVA$IMMUNE$TICKS, new IntegerValue(140)))), // 熔火骷髅头玫瑰
-            OBSIDIAN_SKULL_ROSE = registerCurio("obsidian_skull_rose", builder -> builder.rarity(PINK).accessories(units(ValueType.FIRE$IMMUNE, ValueType.LAVA$HURT$REDUCE))), // 黑曜石骷髅头玫瑰
+            MOLTEN_SKULL_ROSE = registerCurio("molten_skull_rose", builder -> builder.rarity(LIGHT_PURPLE)
+                    .accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.LAVA$IMMUNE$TICKS, new IntegerValue(140)), of(ValueType.LAVA$HURT$REDUCE, new FloatValue(0.5F)))), // 熔火骷髅头玫瑰
+            OBSIDIAN_SKULL_ROSE = registerCurio("obsidian_skull_rose", builder -> builder.rarity(PINK).accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.LAVA$HURT$REDUCE, new FloatValue(0.5F)))), // 黑曜石骷髅头玫瑰
             HAND_WARMER = registerCurio("hand_warmer", builder -> builder.rarity(GREEN).accessories(units(ValueType.FROZEN$IMMUNE))), // 暖手宝
             PUTRID_SCENT = registerCurio("putrid_scent", builder -> builder.rarity(LIGHT_PURPLE)
                     .attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.05, ADD_MULTIPLIED_TOTAL)
