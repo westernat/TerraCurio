@@ -88,4 +88,13 @@ public final class TCClientPacketHandler {
         GravitationHandler.setHasGlobe((item & GRAVITY_GLOBE) == GRAVITY_GLOBE);
         hasMagiluminescence = (item & MAGILUMINESCENCE) == MAGILUMINESCENCE;
     }
+
+    public static void reset() {
+        autoAttack = false;
+        hasCthulhu = false;
+        hasTabi = false;
+        hasScope = false;
+        hasMagiluminescence = false;
+        rightClickSubtractor = 0;
+    }
 }

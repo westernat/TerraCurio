@@ -47,13 +47,15 @@ public final class GravitationHandler {
         return shouldRot;
     }
 
-    public static void tick(LocalPlayer localPlayer) {
-        if (localPlayer == null) {
-            shouldRot = false;
-            hasGlobe = false;
-        } else if (localPlayer.getY() > localPlayer.level().getMaxBuildHeight()) {
+    public static void handle(LocalPlayer localPlayer) {
+        if (localPlayer.getY() > localPlayer.level().getMaxBuildHeight()) {
             expire();
         }
+    }
+
+    public static void reset() {
+        shouldRot = false;
+        hasGlobe = false;
     }
 
     public static void unCrouching(Player localPlayer) {

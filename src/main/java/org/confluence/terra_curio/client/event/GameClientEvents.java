@@ -9,10 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.ClientTickEvent;
-import net.neoforged.neoforge.client.event.ComputeFovModifierEvent;
-import net.neoforged.neoforge.client.event.InputEvent;
-import net.neoforged.neoforge.client.event.MovementInputUpdateEvent;
+import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.common.NeoForge;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.event.PerformJumpingEvent;
@@ -29,10 +26,20 @@ public final class GameClientEvents {
     public static void clientTick$Post(ClientTickEvent.Pre event) {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer localPlayer = minecraft.player;
-        GravitationHandler.tick(localPlayer);
-        if (localPlayer == null) return;
-        TCClientPacketHandler.applyAutoAttack(minecraft, localPlayer);
-        InformationHandler.handle(localPlayer);
+        if (localPlayer == null) {
+            GravitationHandler.reset();
+            StepStoolHandler.reset();
+            TCClientPacketHandler.reset();
+            InformationHandler.reset();
+            PlayerJumpHandler.reset(true);
+            PlayerClimbHandler.reset();
+            PlayerSprintingHandler.reset();
+        } else {
+            GravitationHandler.handle(localPlayer);
+            StepStoolHandler.handle(localPlayer);
+            TCClientPacketHandler.applyAutoAttack(minecraft, localPlayer);
+            InformationHandler.handle(localPlayer);
+        }
 
         ExpertColorAnimation.INSTANCE.updateColor();
         MasterColorAnimation.INSTANCE.updateColor();
@@ -53,6 +60,13 @@ public final class GameClientEvents {
             PlayerClimbHandler.handle(localPlayer, input.getMoveVector(), jumping);
         }
         if (TCClientPacketHandler.isHasTabi()) PlayerSprintingHandler.handle(localPlayer, input);
+    }
+
+    @SubscribeEvent
+    public static void cameraSetup(ViewportEvent.ComputeCameraAngles event) {
+        if (GravitationHandler.isShouldRot()) {
+            event.setRoll(180.0F);
+        }
     }
 
     @SubscribeEvent

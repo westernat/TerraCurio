@@ -1,9 +1,14 @@
 package org.confluence.terra_curio.util;
 
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
@@ -13,6 +18,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
+import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.apache.commons.compress.utils.Lists;
@@ -21,12 +28,19 @@ import org.confluence.terra_curio.common.component.EffectImmunities;
 import org.confluence.terra_curio.common.entity.projectile.BeeProjectile;
 import org.confluence.terra_curio.common.entity.projectile.StarCloakEntity;
 import org.confluence.terra_curio.common.init.*;
+import org.confluence.terra_curio.mixinauxi.IEntity;
+import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
+import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 import java.util.List;
+import java.util.Objects;
+
+import static org.confluence.terra_curio.common.component.primitive.ValueType.*;
 
 public final class TCUtils {
     @ApiStatus.Internal
@@ -66,7 +80,7 @@ public final class TCUtils {
     }
 
     public static void applyFireAttack(Player player, Entity entity) {
-        if (player.getData(TCAttachments.ACCESSORIES).isFireAttack()) {
+        if (player.getData(TCAttachments.ACCESSORIES).contains(FIRE$ATTACK)) {
             float f = player.getRandom().nextFloat();
             int time;
             if (f < 0.25F) {
@@ -82,23 +96,30 @@ public final class TCUtils {
 
     public static boolean isInvulnerableTo(Entity self, DamageSource damageSource) {
         if (!(self instanceof LivingEntity living)) return false;
-        Entity entity = damageSource.getEntity();
         AccessoriesAttachment attachment = self.getData(TCAttachments.ACCESSORIES);
-        if (entity != null) {
-            if (attachment.getIgnores().contains(entity.getType())) {
-                return true;
-            }
+        Entity attacker = damageSource.getEntity();
+        if (attacker != null && attachment.getIgnores().contains(attacker.getType())) {
+            return true;
         }
+        if (attachment.contains(SHIELD$OF$CTHULHU) && ((IEntity) living).confluence$isOnCthulhuSprinting()) {
+            return true;
+        }
+        if (attachment.contains(FIRE$IMMUNE) && damageSource.is(DamageTypes.IN_FIRE) ||
+                damageSource.is(DamageTypes.ON_FIRE) ||
+                damageSource.is(DamageTypes.HOT_FLOOR) ||
+                damageSource.is(DamageTypes.UNATTRIBUTED_FIREBALL) ||
+                damageSource.is(DamageTypes.FIREBALL)
+        ) return true;
         return TCAttributes.applyDodge(living, living.getRandom());
     }
 
     public static float applyInjuryFree(LivingEntity living, float amount) {
-        float injuryFree = living.getData(TCAttachments.ACCESSORIES).getInjuryFree();
+        float injuryFree = living.getData(TCAttachments.ACCESSORIES).getValue(INJURY$FREE);
         return amount * (1.0F - injuryFree);
     }
 
     public static void applyStarClock(LivingEntity living, RandomSource random) {
-        boolean starClock = living.getData(TCAttachments.ACCESSORIES).isStarClock();
+        boolean starClock = living.getData(TCAttachments.ACCESSORIES).contains(STAR$CLOCK);
         if (starClock) {
             Level level = living.level();
             List<Entity> list = level.getEntities(living, new AABB(living.getOnPos()).inflate(4.0, 3.0, 4.0), entity -> entity instanceof Enemy);
@@ -117,8 +138,8 @@ public final class TCUtils {
 
     public static void applyHoneyComb(LivingEntity living, RandomSource random) {
         AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
-        if (attachment.isHoneyComb()) {
-            boolean hasHivePack = attachment.isHivePack();
+        if (attachment.contains(HONEY$COMB)) {
+            boolean hasHivePack = attachment.contains(HIVE$PACK);
             int summon = random.nextInt(1, hasHivePack ? 5 : 4);
             for (int i = 0; i < summon; i++) {
                 BeeProjectile projectile = new BeeProjectile(living.level(), living, hasHivePack && random.nextBoolean());
@@ -130,13 +151,13 @@ public final class TCUtils {
     }
 
     public static void applyIgniteArrow(LivingEntity living, AbstractArrow arrow) {
-        if (living.getData(TCAttachments.ACCESSORIES).isIgniteArrow()) {
-            arrow.igniteForSeconds(100.0F);
+        if (living.getData(TCAttachments.ACCESSORIES).contains(IGNITE$ARROW)) {
+            arrow.igniteForTicks(2000);
         }
     }
 
     public static float applyFrozenTurtleShell(LivingEntity living, float amount) {
-        if (living.getHealth() / living.getMaxHealth() < 0.5F && living.getData(TCAttachments.ACCESSORIES).isFrozenTurtleShell()) {
+        if (living.getHealth() / living.getMaxHealth() < 0.5F && living.getData(TCAttachments.ACCESSORIES).contains(FROZEN$TURTLE$SHELL)) {
             return amount * 0.75F;
         }
         return amount;
@@ -144,7 +165,7 @@ public final class TCUtils {
 
     public static float applyBrainOfConfusion(LivingEntity living, RandomSource randomSource, DamageSource damageSource, float amount) {
         if (damageSource.is(TCTags.HARMFUL_EFFECT)) return amount;
-        if (!living.getData(TCAttachments.ACCESSORIES).isBrainOfConfusion()) return amount;
+        if (!living.getData(TCAttachments.ACCESSORIES).contains(BRAIN$OF$CONFUSION)) return amount;
         if (randomSource.nextFloat() < 0.6F + amount * 0.02F) {
             float rangeMin, rangeMax;
             if (amount <= 120) rangeMin = amount * 0.5F + 200;
@@ -155,7 +176,7 @@ public final class TCUtils {
             else if (amount <= 46.6F) rangeMax = amount * 1.5F + 350;
             else if (amount <= 100) rangeMax = amount * 0.75F + 525;
             else rangeMax = amount * 0.1875F + 806.25F;
-            float range = TCUtils.nextFloat(randomSource, rangeMin, rangeMax) / 24;
+            float range = nextFloat(randomSource, rangeMin, rangeMax) / 24;
             int duration = randomSource.nextInt((int) (90 + amount / 3), (int) (300 + amount / 2));
             living.level().getEntities(living, new AABB(living.getOnPos()).inflate(range), entity -> entity instanceof Enemy).forEach(enemy -> {
                 if (enemy instanceof LivingEntity living1) {
@@ -171,10 +192,35 @@ public final class TCUtils {
     }
 
     public static boolean magicQuiver$shouldConsume(LivingEntity living) {
-        return !living.getData(TCAttachments.ACCESSORIES).isMagicQuiver() || living.getRandom().nextFloat() >= 0.2F;
+        return !living.getData(TCAttachments.ACCESSORIES).contains(MAGIC$QUIVER) || living.getRandom().nextFloat() >= 0.2F;
+    }
+
+    public static void applyFlowerBoots(LivingEntity living) {
+        if (living.onGround() && living instanceof ServerPlayer && living.getData(TCAttachments.ACCESSORIES).contains(FLOWER$BOOTS)) {
+            ServerLevel serverLevel = (ServerLevel) living.level();
+            BlockPos blockPos = living.getOnPos();
+            if (!serverLevel.getBlockState(blockPos).is(TCTags.FLOWER_BOOTS_AVAILABLE)) return;
+            BlockPos abovePos = blockPos.above();
+            RandomSource random = serverLevel.random;
+            for (BlockPos aroundPos : BlockPos.betweenClosed(abovePos.offset(-1, 0, -1), abovePos.offset(1, 0, 1))) {
+                if (!serverLevel.getBlockState(aroundPos.below()).is(TCTags.FLOWER_BOOTS_AVAILABLE)) continue;
+                if (serverLevel.getBlockState(aroundPos).isCollisionShapeFullBlock(serverLevel, aroundPos)) continue;
+                if (random.nextFloat() < 0.3F && serverLevel.getBlockState(aroundPos).isAir()) {
+                    List<ConfiguredFeature<?, ?>> list = serverLevel.getBiome(aroundPos).value().getGenerationSettings().getFlowerFeatures();
+                    if (list.isEmpty()) continue;
+                    ((RandomPatchConfiguration) list.getFirst().config()).feature().value().place(serverLevel, serverLevel.getChunkSource().getGenerator(), random, aroundPos);
+                }
+            }
+        }
     }
 
     public static void resetClientPacket(ServerPlayer serverPlayer) {
-        // todo
+        InfoCurioCheckPacketS2C.sendToPlayer(serverPlayer, serverPlayer.getInventory());
+        CurioExistsPacketS2C.sendToClient(serverPlayer);
+    }
+
+    @SuppressWarnings("deprecation")
+    public static @NotNull CompoundTag getItemStackCompoundTag(ItemStack itemStack) {
+        return Objects.requireNonNull(itemStack.get(DataComponents.CUSTOM_DATA)).getUnsafe();
     }
 }

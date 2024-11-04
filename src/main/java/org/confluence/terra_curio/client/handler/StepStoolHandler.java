@@ -18,12 +18,7 @@ public final class StepStoolHandler {
     private static int slot = StepStoolSteppingPacketS2C.NO_CURIO;
 
     public static void handle(LocalPlayer localPlayer) {
-        if (localPlayer == null) {
-            step = 0;
-            maxStep = 0;
-            slot = StepStoolSteppingPacketS2C.NO_CURIO;
-            return;
-        } else if (slot == StepStoolSteppingPacketS2C.NO_CURIO || (step == 0 && !localPlayer.onGround())) {
+        if (slot == StepStoolSteppingPacketS2C.NO_CURIO || (step == 0 && !localPlayer.onGround())) {
             step = 0;
             return;
         }
@@ -60,6 +55,12 @@ public final class StepStoolHandler {
         if (step > 0) {
             localPlayer.setDeltaMovement(new Vec3(0.0, localPlayer.getDeltaMovement().y, 0.0));
         }
+    }
+
+    public static void reset() {
+        step = 0;
+        maxStep = 0;
+        slot = StepStoolSteppingPacketS2C.NO_CURIO;
     }
 
     public static void setStep(int step, boolean increase) {

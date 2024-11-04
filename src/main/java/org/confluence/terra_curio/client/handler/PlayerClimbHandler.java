@@ -51,9 +51,14 @@ public final class PlayerClimbHandler {
             localPlayer.hasImpulse = true;
             localPlayer.fallDistance = 0.0F;
             localPlayer.setDeltaMovement(motion.x * 0.93, motionY, motion.z * 0.93);
-            PlayerJumpHandler.flushState(true);
+            PlayerJumpHandler.reset(true);
             PacketDistributor.sendToServer(new PlayerJumpPacketC2S(false, true, (float) motionY));
         }
+    }
+
+    public static void reset() {
+        wallJumped = false;
+        climberAmount = 0;
     }
 
     private static boolean hasMotionToWall(LocalPlayer localPlayer, double x, double z) {

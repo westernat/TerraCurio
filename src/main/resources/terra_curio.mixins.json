@@ -10,11 +10,18 @@
         "LivingEntityMixin",
         "ProjectileWeaponItemMixin",
         "ServerPlayerMixin",
+        "SlimeBlockMixin",
         "TargetingConditionsMixin",
         "accessor.LivingEntityAccessor",
         "accessor.RangedAttributeAccessor"
     ],
     "client": [
+        "client.ClientEntityMixin",
+        "client.ClientLivingEntityMixin",
+        "client.ClientPlayerMixin",
+        "client.LivingEntityRendererMixin",
+        "client.LocalPlayerMixin",
+        "client.MouseHandlerMixin",
         "client.accessor.LocalPlayerAccessor",
         "client.accessor.MinecraftAccessor"
     ],

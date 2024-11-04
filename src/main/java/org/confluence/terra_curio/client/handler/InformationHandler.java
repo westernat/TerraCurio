@@ -18,6 +18,7 @@ import net.neoforged.neoforge.common.Tags;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.KeyBindings;
 import org.confluence.terra_curio.common.TCCommonConfigs;
+import org.confluence.terra_curio.common.component.primitive.ValueType;
 import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
@@ -27,6 +28,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Function;
@@ -164,6 +166,14 @@ public final class InformationHandler {
         }
     }
 
+    public static void reset() {
+        if (!INFORMATION.isEmpty()) {
+            INFORMATION.clear();
+            Arrays.fill(INFO_DATA, (byte) 0);
+            REMOTE_DATA.clear();
+        }
+    }
+
     private static Component getWeatherInfo(Player player) {
         Level level = player.level();
         String weather = level.dimension() == Level.OVERWORLD ? "clear" : "cloudy";
@@ -183,7 +193,7 @@ public final class InformationHandler {
     }
 
     private static Component getFishingPowerInfo(Player player) {
-        float fishingPower = player.getData(TCAttachments.ACCESSORIES).getFishingPower();
+        float fishingPower = player.getData(TCAttachments.ACCESSORIES).getValue(ValueType.FISHING$POWER);
         return Component.translatable(
                 "info.terra_curio.fishermans_pocket_guide",
                 "%.2f".formatted(fishingPower)

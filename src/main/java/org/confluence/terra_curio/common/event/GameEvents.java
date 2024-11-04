@@ -29,6 +29,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.common.TCCommonConfigs;
+import org.confluence.terra_curio.common.component.primitive.ValueType;
 import org.confluence.terra_curio.common.data.pack.CurioItemManager;
 import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.common.init.TCAttributes;
@@ -36,7 +37,6 @@ import org.confluence.terra_curio.common.init.TCTriggers;
 import org.confluence.terra_curio.common.item.curio.combat.PaladinsShield;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
-import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
 import org.confluence.terra_curio.util.TCUtils;
@@ -49,8 +49,7 @@ public final class GameEvents {
         LivingEntity living = event.getEntity();
         living.getData(TCAttachments.ACCESSORIES).flushAbility(living);
         if (living instanceof ServerPlayer serverPlayer) {
-            InfoCurioCheckPacketS2C.sendToPlayer(serverPlayer, serverPlayer.getInventory());
-            CurioExistsPacketS2C.sendToClient(serverPlayer);
+            TCUtils.resetClientPacket(serverPlayer);
             TCTriggers.CURIOS_EQUIPPED.get().trigger(serverPlayer, event.getTo());
         }
     }
@@ -63,10 +62,10 @@ public final class GameEvents {
     }
 
     @SubscribeEvent
-    public static void livingIncomingDamage(LivingIncomingDamageEvent event) { // todo
+    public static void livingIncomingDamage(LivingIncomingDamageEvent event) {
         DamageContainer container = event.getContainer();
         LivingEntity living = event.getEntity();
-        float invulnerableTicksMultiplier = living.getData(TCAttachments.ACCESSORIES).getInvulnerableTicksMultiplier();
+        float invulnerableTicksMultiplier = living.getData(TCAttachments.ACCESSORIES).getValue(ValueType.INVULNERABLE$TICKS$MULTIPLIER);
         container.setPostAttackInvulnerabilityTicks((int) (container.getPostAttackInvulnerabilityTicks() * invulnerableTicksMultiplier));
     }
 

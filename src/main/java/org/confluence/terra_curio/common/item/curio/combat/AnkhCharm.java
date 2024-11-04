@@ -7,7 +7,7 @@ import org.confluence.terra_curio.util.TCUtils;
 
 public class AnkhCharm extends BaseCurioItem {
     public AnkhCharm() {
-        super(getBuilder());
+        super(getBuilder().initialize());
     }
 
     private static Builder getBuilder() {
@@ -17,6 +17,6 @@ public class AnkhCharm extends BaseCurioItem {
                 MobEffects.BLINDNESS, MobEffects.DARKNESS,
                 MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION,
                 MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION
-        ).rarity(ModRarity.LIGHT_PURPLE).initialize());
+        ).rarity(ModRarity.LIGHT_PURPLE));
     }
 }

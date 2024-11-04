@@ -6,13 +6,14 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.component.SpeedBootsComponent;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.item.curio.movement.BaseSpeedBoots;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Predicate;
 
 public record SpeedBootsNBTPacketC2S(int slot, int value) implements CustomPacketPayload {
     public static final Type<SpeedBootsNBTPacketC2S> TYPE = new Type<>(TerraCurio.asResource("speed_boots_nbt"));
@@ -21,6 +22,7 @@ public record SpeedBootsNBTPacketC2S(int slot, int value) implements CustomPacke
             ByteBufCodecs.INT, p -> p.value,
             SpeedBootsNBTPacketC2S::new
     );
+    private static final Predicate<ItemStack> PREDICATE = itemStack -> itemStack.getItem() instanceof BaseSpeedBoots;
 
     @Override
     public @NotNull Type<SpeedBootsNBTPacketC2S> type() {
@@ -30,10 +32,8 @@ public record SpeedBootsNBTPacketC2S(int slot, int value) implements CustomPacke
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer serverPlayer) {
-                CuriosUtils.getSlot(serverPlayer, "accessory", slot).ifPresent(itemStack -> {
-                    if (itemStack.getItem() instanceof BaseSpeedBoots) {
-                        itemStack.set(TCDataComponentTypes.SPEED_BOOTS, new SpeedBootsComponent(value));
-                    }
+                CuriosUtils.getSlot(serverPlayer, PREDICATE, slot).ifPresent(itemStack -> {
+                    serverPlayer.getPersistentData().putInt(BaseSpeedBoots.KEY, value);
                 });
             }
         }).exceptionally(e -> {

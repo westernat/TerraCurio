@@ -1,21 +1,29 @@
 package org.confluence.terra_curio.common.attachment;
 
+import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.confluence.terra_curio.api.event.FishingPowerModificationEvent;
+import org.confluence.terra_curio.api.event.RegisterAccessoriesComponentUpdateEvent;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.component.primitive.FloatValue;
 import org.confluence.terra_curio.common.component.primitive.PrimitiveValue;
+import org.confluence.terra_curio.common.component.primitive.UnitValue;
+import org.confluence.terra_curio.common.component.primitive.ValueType;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.util.MobEntityTypesTest;
@@ -25,107 +33,79 @@ import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
-import static org.confluence.terra_curio.common.component.AccessoriesComponent.*;
-
+@SuppressWarnings("unchecked")
 public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
-    private boolean fireAttack;
-    private boolean brainOfConfusion;
-    private boolean hivePack;
-    private boolean starClock;
-    private boolean honeyComb;
-    private boolean magicQuiver;
-    private boolean igniteArrow;
-    private boolean frozenTurtleShell;
-    private boolean panicNecklace;
-    private float fishingPower;
-    private float invulnerableTicksMultiplier;
-    private float injuryFree;
+    public static final List<ValueType<Unit, UnitValue>> UNITS_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
+        list.add(ValueType.FIRE$ATTACK);
+        list.add(ValueType.BRAIN$OF$CONFUSION);
+        list.add(ValueType.HIVE$PACK);
+        list.add(ValueType.STAR$CLOCK);
+        list.add(ValueType.HONEY$COMB);
+        list.add(ValueType.MAGIC$QUIVER);
+        list.add(ValueType.IGNITE$ARROW);
+        list.add(ValueType.FROZEN$TURTLE$SHELL);
+        ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.UnitType(list));
+    });
+    public static final List<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
+        list.add(ValueType.FISHING$POWER);
+        list.add(ValueType.INVULNERABLE$TICKS$MULTIPLIER);
+        list.add(ValueType.INJURY$FREE);
+        list.add(ValueType.MOB$IGNORE);
+        list.add(ValueType.LAVA$IMMUNE$TICKS);
+        list.add(ValueType.FLUID$WALK);
+        ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.OtherType(list));
+    });
+    private final Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> valueMap = new HashMap<>();
     private final Set<EntityType<?>> ignores = new HashSet<>();
+    private boolean panicNecklace;
+    private transient int remainLavaImmuneTicks;
 
     public AccessoriesAttachment() {
         setToDefaultValue();
     }
 
     public void setToDefaultValue() {
-        this.fireAttack = false;
-        this.brainOfConfusion = false;
-        this.hivePack = false;
-        this.starClock = false;
-        this.honeyComb = false;
-        this.magicQuiver = false;
-        this.igniteArrow = false;
-        this.frozenTurtleShell = false;
-        this.panicNecklace = false;
-        this.fishingPower = 0.0F;
-        this.invulnerableTicksMultiplier = 1.0F;
-        this.injuryFree = 0.0F;
+        this.valueMap.clear();
         this.ignores.clear();
+        this.panicNecklace = false;
     }
 
-    public boolean isFireAttack() {
-        return fireAttack;
+    public <T, V extends PrimitiveValue<T>> T getValue(ValueType<T, V> type) {
+        PrimitiveValue<?> value = valueMap.get(type);
+        return value == null ? type.defaultValue() : (T) value.get();
     }
 
-    public boolean isBrainOfConfusion() {
-        return brainOfConfusion;
-    }
-
-    public boolean isHivePack() {
-        return hivePack;
-    }
-
-    public boolean isStarClock() {
-        return starClock;
-    }
-
-    public boolean isHoneyComb() {
-        return honeyComb;
-    }
-
-    public boolean isMagicQuiver() {
-        return magicQuiver;
-    }
-
-    public boolean isIgniteArrow() {
-        return igniteArrow;
-    }
-
-    public boolean isFrozenTurtleShell() {
-        return frozenTurtleShell;
-    }
-
-    public boolean isPanicNecklace() {
-        return panicNecklace;
-    }
-
-    public float getFishingPower() {
-        return fishingPower;
-    }
-
-    public float getInvulnerableTicksMultiplier() {
-        return invulnerableTicksMultiplier;
-    }
-
-    public float getInjuryFree() {
-        return injuryFree;
+    public <T, V extends PrimitiveValue<T>> boolean contains(ValueType<T, V> type) {
+        return valueMap.containsKey(type);
     }
 
     public Set<EntityType<?>> getIgnores() {
         return ignores;
     }
 
+    public boolean hasPanicNecklace() {
+        return panicNecklace;
+    }
+
+    public void increaseLavaImmuneTicks() {
+        if (remainLavaImmuneTicks < getValue(ValueType.LAVA$IMMUNE$TICKS)) {
+            remainLavaImmuneTicks++;
+        }
+    }
+
+    public boolean decreaseLavaImmuneTicks() {
+        if (remainLavaImmuneTicks > 0) {
+            remainLavaImmuneTicks--;
+            return true;
+        }
+        return false;
+    }
+
     public void flushAbility(LivingEntity living) {
         setToDefaultValue();
         CuriosApi.getCuriosInventory(living).ifPresent(handler -> {
-            float fishingPower = this.fishingPower;
-            float invulnerableTicksMultiplier = this.invulnerableTicksMultiplier;
-            float injuryFree = this.injuryFree;
-            List<EntityType<?>> ignores = new ArrayList<>();
             for (ICurioStacksHandler curioStacksHandler : handler.getCurios().values()) {
                 IDynamicStackHandler stackHandler = curioStacksHandler.getStacks();
                 for (int i = 0; i < stackHandler.getSlots(); i++) {
@@ -134,24 +114,19 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                     if (stack.isEmpty() || (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
                     Item item = stack.getItem();
 
-                    if (!fireAttack && component.contains(FIRE$ATTACK)) this.fireAttack = true;
-                    if (!brainOfConfusion && component.contains(BRAIN$OF$CONFUSION)) this.brainOfConfusion = true;
-                    if (!hivePack && component.contains(HIVE$PACK)) this.hivePack = true;
-                    if (!starClock && component.contains(STAR$CLOCK)) this.starClock = true;
-                    if (!honeyComb && component.contains(HONEY$COMB)) this.honeyComb = true;
-                    if (!magicQuiver && component.contains(MAGIC$QUIVER)) this.magicQuiver = true;
-                    if (!igniteArrow && component.contains(IGNITE$ARROW)) this.igniteArrow = true;
-                    if (!frozenTurtleShell && component.contains(FROZEN$TURTLE$SHELL)) this.frozenTurtleShell = true;
+                    for (ValueType<Unit, UnitValue> type : UNITS_REQUIRE_UPDATE) {
+                        putUnitIfPresent(component, type);
+                    }
+                    for (ValueType<?, ? extends PrimitiveValue<?>> type : OTHER_REQUIRE_UPDATE) {
+                        combineValue(component, type);
+                    }
+
                     if (!panicNecklace && item instanceof PanicNecklace) this.panicNecklace = true;
-                    fishingPower = combineValue(component, fishingPower, FISHING$POWER);
-                    invulnerableTicksMultiplier = combineValue(component, invulnerableTicksMultiplier, INVULNERABLE$TICKS$MULTIPLIER);
-                    injuryFree = combineValue(component, injuryFree, INJURY$FREE);
-                    ignores = combineValue(component, ignores, MOB$IGNORE);
                 }
             }
-            this.fishingPower = NeoForge.EVENT_BUS.post(new FishingPowerModificationEvent(living, fishingPower)).getNeoValue();
-            this.invulnerableTicksMultiplier = invulnerableTicksMultiplier;
-            this.injuryFree = injuryFree;
+            float fishingPower = NeoForge.EVENT_BUS.post(new FishingPowerModificationEvent(living, getValue(ValueType.FISHING$POWER))).getNeoValue();
+            valueMap.put(ValueType.FISHING$POWER, new FloatValue(fishingPower));
+            List<EntityType<?>> ignores = getValue(ValueType.MOB$IGNORE);
             this.ignores.addAll(ignores);
             if (!ignores.isEmpty()) {
                 living.level().getEntities(new MobEntityTypesTest(ignores), new AABB(living.getOnPos()).inflate(31.5), mob -> true).forEach(mob -> {
@@ -161,55 +136,69 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         });
     }
 
+    private <T, V extends PrimitiveValue<T>> void putUnitIfPresent(AccessoriesComponent component, ValueType<T, V> type) {
+        if (component.contains(type)) {
+            valueMap.put(type, UnitValue.INSTANCE);
+        }
+    }
+
+    private <T, V extends PrimitiveValue<T>> void combineValue(AccessoriesComponent component, ValueType<T, V> type) {
+        V v = component.get(type);
+        if (v != null) {
+            if (!valueMap.containsKey(type)) {
+                valueMap.put(type, v);
+            }
+            T t = v.combine((V) valueMap.get(type), type.combineRule());
+            valueMap.put(type, type.newInstance(t));
+        }
+    }
+
     @Override
     public @UnknownNullability CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
         CompoundTag nbt = new CompoundTag();
-        nbt.putBoolean("fireAttack", fireAttack);
-        nbt.putBoolean("brainOfConfusion", brainOfConfusion);
-        nbt.putBoolean("hivePack", hivePack);
-        nbt.putBoolean("starClock", starClock);
-        nbt.putBoolean("honeyComb", honeyComb);
-        nbt.putBoolean("magicQuiver", magicQuiver);
-        nbt.putBoolean("igniteArrow", igniteArrow);
-        nbt.putBoolean("frozenTurtleShell", frozenTurtleShell);
-        nbt.putBoolean("panicNecklace", panicNecklace);
-        nbt.putFloat("fishingPower", fishingPower);
-        nbt.putFloat("injuryFree", injuryFree);
-        nbt.putFloat("invulnerableTicksMultiplier", invulnerableTicksMultiplier);
         ListTag listTag = new ListTag();
+        for (Map.Entry<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> entry : valueMap.entrySet()) {
+            PrimitiveValue<?> value = entry.getValue();
+            value.codec().encodeStart(NbtOps.INSTANCE, tryCast(value)).result().ifPresent(tag -> {
+                CompoundTag compoundTag = new CompoundTag();
+                compoundTag.put(entry.getKey().key().toString(), tag);
+                listTag.add(compoundTag);
+            });
+        }
+        nbt.put("valueMap", listTag);
+        ListTag listTag1 = new ListTag();
         for (EntityType<?> ignore : ignores) {
             CompoundTag type = new CompoundTag();
             type.putString("EntityType", BuiltInRegistries.ENTITY_TYPE.getKey(ignore).toString());
-            listTag.add(type);
+            listTag1.add(type);
         }
-        nbt.put("ignores", listTag);
+        nbt.put("ignores", listTag1);
+        nbt.putBoolean("panicNecklace", panicNecklace);
         return nbt;
+    }
+
+    private static <T, V extends PrimitiveValue<T>> V tryCast(PrimitiveValue<?> primitiveValue) {
+        return (V) primitiveValue;
     }
 
     @Override
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
-        this.fireAttack = nbt.getBoolean("fireAttack");
-        this.brainOfConfusion = nbt.getBoolean("brainOfConfusion");
-        this.hivePack = nbt.getBoolean("hivePack");
-        this.starClock = nbt.getBoolean("starClock");
-        this.honeyComb = nbt.getBoolean("honeyComb");
-        this.magicQuiver = nbt.getBoolean("magicQuiver");
-        this.igniteArrow = nbt.getBoolean("igniteArrow");
-        this.frozenTurtleShell = nbt.getBoolean("frozenTurtleShell");
-        this.panicNecklace = nbt.getBoolean("panicNecklace");
-        this.fishingPower = nbt.getFloat("fishingPower");
-        this.injuryFree = nbt.getFloat("injuryFree");
-        this.invulnerableTicksMultiplier = nbt.getFloat("invulnerableTicksMultiplier");
-        this.ignores.clear();
-        ListTag listTag = nbt.getList("ignores", ListTag.TAG_COMPOUND);
+        this.valueMap.clear();
+        ListTag listTag = nbt.getList("valueMap", Tag.TAG_COMPOUND);
         for (Tag tag : listTag) {
+            CompoundTag compoundTag = (CompoundTag) tag;
+            String key = compoundTag.getAllKeys().stream().findFirst().get();
+            ResourceLocation location = ResourceLocation.parse(key);
+            ValueType.CODECS.get(location).decode(NbtOps.INSTANCE, compoundTag.get(key)).result().ifPresent(pair -> {
+                valueMap.put(ValueType.ENTRIES.get(location), pair.getFirst());
+            });
+        }
+        this.ignores.clear();
+        ListTag listTag1 = nbt.getList("ignores", Tag.TAG_COMPOUND);
+        for (Tag tag : listTag1) {
             String type = ((CompoundTag) tag).getString("EntityType");
             ignores.add(BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(type)));
         }
-    }
-
-    private static <T, V extends PrimitiveValue<T>> T combineValue(AccessoriesComponent component, T value, Type<T, V> type) {
-        V primitiveValue = component.get(type);
-        return primitiveValue == null ? value : primitiveValue.combine(value, type.rule());
+        this.panicNecklace = nbt.getBoolean("panicNecklace");
     }
 }

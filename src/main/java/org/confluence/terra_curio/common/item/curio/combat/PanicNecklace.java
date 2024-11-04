@@ -49,7 +49,7 @@ public class PanicNecklace extends BaseCurioItem {
     }
 
     public static void apply(LivingEntity living) {
-        if (living.getData(TCAttachments.ACCESSORIES).isPanicNecklace()) {
+        if (living.getData(TCAttachments.ACCESSORIES).hasPanicNecklace()) {
             living.getPersistentData().putLong(KEY, living.level().getGameTime());
         }
     }

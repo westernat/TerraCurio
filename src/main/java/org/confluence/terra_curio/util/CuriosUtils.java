@@ -7,6 +7,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.component.primitive.PrimitiveValue;
+import org.confluence.terra_curio.common.component.primitive.ValueType;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.SlotResult;
@@ -27,7 +28,7 @@ public class CuriosUtils {
         return noSameCurio(living, (Predicate<ItemStack>) itemStack -> clazz.isInstance(itemStack.getItem()));
     }
 
-    public static boolean noSameCurio(LivingEntity living, AccessoriesComponent.Type<?, ? extends PrimitiveValue<?>> type) {
+    public static boolean noSameCurio(LivingEntity living, ValueType<?, ? extends PrimitiveValue<?>> type) {
         return noSameCurio(living, (Predicate<ItemStack>) itemStack -> {
             AccessoriesComponent component = itemStack.get(TCDataComponentTypes.ACCESSORIES);
             return component == null || !component.types().containsKey(type);
@@ -59,7 +60,7 @@ public class CuriosUtils {
         return !noSameCurio(living, clazz);
     }
 
-    public static boolean hasCurio(LivingEntity living, AccessoriesComponent.Type<?, ? extends PrimitiveValue<?>> type) {
+    public static boolean hasCurio(LivingEntity living, ValueType<?, ? extends PrimitiveValue<?>> type) {
         return !noSameCurio(living, type);
     }
 

@@ -18,6 +18,7 @@ import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.component.EffectImmunities;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.component.primitive.PrimitiveValue;
+import org.confluence.terra_curio.common.component.primitive.ValueType;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.util.CuriosUtils;
 import top.theillusivec4.curios.api.SlotContext;
@@ -143,7 +144,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
             if (components.length == 0) {
                 properties.component(TCDataComponentTypes.ACCESSORIES, component);
             } else {
-                Map<AccessoriesComponent.Type<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component.types());
+                Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component.types());
                 for (AccessoriesComponent component1 : components) {
                     map.putAll(component1.types());
                 }

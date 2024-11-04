@@ -18,6 +18,7 @@ import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.component.primitive.PrimitiveValue;
 import org.confluence.terra_curio.common.component.primitive.UnitValue;
+import org.confluence.terra_curio.common.component.primitive.ValueType;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.NotNull;
@@ -31,12 +32,12 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     public static final int SCOPE = 1 << 3;
     public static final int GRAVITY_GLOBE = 1 << 4;
     public static final int MAGILUMINESCENCE = 1 << 5;
-    public static final Object2IntMap<AccessoriesComponent.Type<Unit, UnitValue>> MAP = Util.make(new Object2IntArrayMap<>(), map -> {
-        map.put(AccessoriesComponent.AUTO_ATTACK, AUTO_ATTACK);
-        map.put(AccessoriesComponent.SHIELD$OF$CTHULHU, SHIELD_OF_CTHULHU);
-        map.put(AccessoriesComponent.SPRINTING, TABI);
-        map.put(AccessoriesComponent.SCOPE, SCOPE);
-        map.put(AccessoriesComponent.GRAVITY$GLOBE, GRAVITY_GLOBE);
+    public static final Object2IntMap<ValueType<Unit, UnitValue>> MAP = Util.make(new Object2IntArrayMap<>(), map -> {
+        map.put(ValueType.AUTO_ATTACK, AUTO_ATTACK);
+        map.put(ValueType.SHIELD$OF$CTHULHU, SHIELD_OF_CTHULHU);
+        map.put(ValueType.SPRINTING, TABI);
+        map.put(ValueType.SCOPE, SCOPE);
+        map.put(ValueType.GRAVITY$GLOBE, GRAVITY_GLOBE);
     });
 
     public static final Type<CurioExistsPacketS2C> TYPE = new Type<>(TerraCurio.asResource("curio_exists"));
@@ -66,8 +67,8 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
         for (ItemStack itemStack : CuriosUtils.getCurios(player)) {
             AccessoriesComponent component = itemStack.get(TCDataComponentTypes.ACCESSORIES);
             if (component != null) {
-                Map<AccessoriesComponent.Type<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> types = component.types();
-                for (Object2IntMap.Entry<AccessoriesComponent.Type<Unit, UnitValue>> entry : MAP.object2IntEntrySet()) {
+                Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> types = component.types();
+                for (Object2IntMap.Entry<ValueType<Unit, UnitValue>> entry : MAP.object2IntEntrySet()) {
                     if (types.containsKey(entry.getKey())) item |= entry.getIntValue();
                 }
             }

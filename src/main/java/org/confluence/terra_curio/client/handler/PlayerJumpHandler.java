@@ -47,7 +47,7 @@ public final class PlayerJumpHandler {
         if (StepStoolHandler.onStool()) return;
 
         if (localPlayer.onGround()) {
-            flushState(true);
+            reset(true);
         } else if (jumping) {
             if (AirHopHelper.isLoaded() && AirHopHelper.notFinishJump(localPlayer)) {
                 jumpKeyDown = true;
@@ -100,7 +100,7 @@ public final class PlayerJumpHandler {
         }
     }
 
-    public static void flushState(boolean jumpKey) {
+    public static void reset(boolean jumpKey) {
         jumpKeyDown = jumpKey;
         fartFinished = false;
         remainSandstormTicks = maxSandstormTicks;

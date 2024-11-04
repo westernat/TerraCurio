@@ -9,12 +9,9 @@ import org.confluence.terra_curio.util.TCUtils;
 
 public class AnkhShield extends BaseCurioItem {
     public AnkhShield() {
-        super(getBuilder());
+        super(getBuilder().initialize());
     }
 
-    /**
-     * Injected by Confluence
-     */
     private static Builder getBuilder() {
         return TCUtils.forConfluence$ModifyExpression(builder("ankh_shield").effectImmunities(
                 MobEffects.POISON, MobEffects.WITHER,
@@ -26,6 +23,6 @@ public class AnkhShield extends BaseCurioItem {
                 Attributes.KNOCKBACK_RESISTANCE, "knockback_resistance", 1.0, AttributeModifier.Operation.ADD_VALUE
         ).attribute(
                 Attributes.ARMOR, "armor", 4.0, AttributeModifier.Operation.ADD_VALUE
-        ).rarity(ModRarity.LIME).initialize());
+        ).rarity(ModRarity.LIME));
     }
 }

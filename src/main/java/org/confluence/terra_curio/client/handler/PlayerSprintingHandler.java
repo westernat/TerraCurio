@@ -78,6 +78,15 @@ public final class PlayerSprintingHandler {
         }
     }
 
+    public static void reset() {
+        xxa = Movement.NONE;
+        zza = Movement.NONE;
+        coolDown = 0;
+        sprintingTime = 0;
+        xxKeyDown = false;
+        zzKeyDown = false;
+    }
+
     private enum Movement {
         NONE,
         UP,

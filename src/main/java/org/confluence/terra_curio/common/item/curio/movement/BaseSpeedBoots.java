@@ -11,13 +11,10 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.client.ClientConfigs;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
-import org.confluence.terra_curio.common.component.ModRarity;
-import org.confluence.terra_curio.common.component.SpeedBootsComponent;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
@@ -28,16 +25,11 @@ import top.theillusivec4.curios.api.SlotContext;
 import java.util.List;
 
 public class BaseSpeedBoots extends BaseCurioItem {
+    public static final String KEY = TerraCurio.MODID + ":boots_speed";
     public static final ResourceLocation ID = TerraCurio.asResource("base_speed_boots");
-    public static final Component TOOLTIP = Component.translatable("curios.tooltip.speed_boots");
-//    private static final Vector3f COLOR = new Vector3f(1, 1, 1);
 
-    public BaseSpeedBoots(ModRarity rarity) {
-        super(new Properties().component(TCDataComponentTypes.MOD_RARITY, rarity).stacksTo(1).fireResistant());
-    }
-
-    public BaseSpeedBoots() {
-        super(new Properties().component(TCDataComponentTypes.MOD_RARITY, ModRarity.BLUE).stacksTo(1).fireResistant());
+    public BaseSpeedBoots(Builder builder) {
+        super(builder.initialize());
     }
 
     @Override
@@ -47,75 +39,53 @@ public class BaseSpeedBoots extends BaseCurioItem {
 
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
-        speedUp(slotContext, stack, 1, 40);
+        speedUp(slotContext, 1, 40);
     }
 
     @Override
     public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
         super.onUnequip(slotContext, newStack, stack);
-        stack.set(TCDataComponentTypes.SPEED_BOOTS, SpeedBootsComponent.ZERO);
+        slotContext.entity().getPersistentData().putInt(KEY, 0);
     }
 
-    protected void speedUp(SlotContext slotContext, ItemStack stack, int addition, int max) {
+    protected void speedUp(SlotContext slotContext, int acceleration, int maxSpeed) {
         TCUtils.forConfluence$Inject();
-        LivingEntity living = slotContext.entity();
-        if (living instanceof Player player && player.isLocalPlayer()) {
-            SpeedBootsComponent component = stack.get(TCDataComponentTypes.SPEED_BOOTS);
-            int speed = component == null ? 0 : component.speed();
-            // todo
+        if (slotContext.entity() instanceof Player player && player.isLocalPlayer()) {
+            int speed = player.getPersistentData().getInt(KEY);
             if (player.zza > 0) {
                 if (player.onGround()) {
-                    if (TCClientPacketHandler.isHasMagiluminescence()) addition *= 2;
-                    int actually = Math.min(max - speed, addition);
+                    if (TCClientPacketHandler.isHasMagiluminescence()) acceleration *= 2;
+                    int actually = Math.min(maxSpeed - speed, acceleration);
+                    int value = speed + actually;
                     if (actually > 0) {
-                        PacketDistributor.sendToServer(new SpeedBootsNBTPacketC2S(slotContext.index(), speed + actually));
+                        PacketDistributor.sendToServer(new SpeedBootsNBTPacketC2S(slotContext.index(), value));
                     }
-                    if (player.level().getGameTime() % 4 == 0) player.playSound(TCSoundEvents.SHOES_WALK.get());
+                    float ratio = (float) value / maxSpeed;
+                    if (ClientConfigs.playShoesSound && player.level().getGameTime() % (ratio < 0.5F ? 6L : 4L) == 0) {
+                        player.playSound(TCSoundEvents.SHOES_WALK.get());
+                    }
                 }
-//                spawnParticles(player.level(), player.position());
+                if (ClientConfigs.showShoesParticle) {
+                    // todo particle
+                }
             } else if (speed != 0) {
                 PacketDistributor.sendToServer(new SpeedBootsNBTPacketC2S(slotContext.index(), 0));
             }
         }
     }
 
-//    public void spawnParticles(Level level, Vec3 vec3) {
-//        int rand = level.getRandom().nextInt(3, 5);
-//        double particleRandX = (double) (level.getRandom().nextInt(100, 300) - 200) / 1000;
-//        double particleRandY = (double) (level.getRandom().nextInt(100, 300) - 200) / 1000;
-//        double particleRandZ = (double) (level.getRandom().nextInt(100, 300) - 200) / 1000;
-//        CurrentDustOptions options = new CurrentDustOptions(getParticleColorStart(), getParticleColorEnd(), 1.2F);
-//        for (int i = 0; i < rand; ++i) {
-//            level.addParticle(options, vec3.x + particleRandX, vec3.y + particleRandY, vec3.z + particleRandZ, 0, 0, 0);
-//        }
-//    }
-//
-//    public Vector3f getParticleColorStart() {
-//        return COLOR;
-//    }
-//
-//    public Vector3f getParticleColorEnd() {
-//        return COLOR;
-//    }
-
-    protected static AttributeModifier getSpeedModifier(ItemStack stack) {
-        SpeedBootsComponent component = stack.get(TCDataComponentTypes.SPEED_BOOTS);
-        int speed = component == null ? 0 : component.speed();
-        return new AttributeModifier(ID, speed * 0.01, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    protected static AttributeModifier getSpeedModifier(LivingEntity living) {
+        double speed = living == null ? 0.0 : living.getPersistentData().getInt(KEY) * 0.01;
+        return new AttributeModifier(ID, speed, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
-        return ImmutableMultimap.of(Attributes.MOVEMENT_SPEED, getSpeedModifier(stack));
+        return ImmutableMultimap.of(Attributes.MOVEMENT_SPEED, getSpeedModifier(slotContext.entity()));
     }
 
     @Override
     public boolean canEquip(SlotContext slotContext, ItemStack stack) {
         return CuriosUtils.noSameCurio(slotContext.entity(), BaseSpeedBoots.class);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(TOOLTIP);
     }
 }

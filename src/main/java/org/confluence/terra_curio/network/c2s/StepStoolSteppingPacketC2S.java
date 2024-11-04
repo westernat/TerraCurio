@@ -10,10 +10,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.entity.StepStoolEntity;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
+import org.confluence.terra_curio.common.item.curio.movement.StepStool;
 import org.confluence.terra_curio.util.CuriosUtils;
+import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
@@ -26,12 +26,7 @@ public record StepStoolSteppingPacketC2S(int slot, int step, boolean increase) i
             ByteBufCodecs.BOOL, p -> p.increase,
             StepStoolSteppingPacketC2S::new
     );
-    private static final Predicate<ItemStack> PREDICATE = itemStack -> {
-        AccessoriesComponent component = itemStack.get(TCDataComponentTypes.ACCESSORIES);
-        if (component == null) return false;
-        return component.contains(AccessoriesComponent.STEP$STOOL);
-    };
-    public static final String KEY = TerraCurio.MODID + ":step_stool_id";
+    private static final Predicate<ItemStack> PREDICATE = itemStack -> itemStack.getItem() instanceof StepStool;
 
     @Override
     public @NotNull Type<StepStoolSteppingPacketC2S> type() {
@@ -47,11 +42,11 @@ public record StepStoolSteppingPacketC2S(int slot, int step, boolean increase) i
                     serverPlayer.level().addFreshEntity(pEntity);
                     serverPlayer.teleportRelative(0.0, 1.001, 0.0);
                     CuriosUtils.getSlot(serverPlayer, PREDICATE, slot).ifPresent(itemStack -> {
-                        serverPlayer.getPersistentData().putInt(KEY, pEntity.getId());
+                        TCUtils.getItemStackCompoundTag(itemStack).putInt("id", pEntity.getId());
                     });
                 } else {
                     CuriosUtils.getSlot(serverPlayer, PREDICATE, slot).ifPresent(itemStack -> {
-                        int id = serverPlayer.getPersistentData().getInt(KEY);
+                        int id = TCUtils.getItemStackCompoundTag(itemStack).getInt("id");
                         Entity entity = serverPlayer.level().getEntity(id);
                         if (entity instanceof StepStoolEntity stepStool) {
                             if (step == 0) {

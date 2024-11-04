@@ -14,13 +14,12 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.InformationHandler;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.component.primitive.ValueType;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-
-import static org.confluence.terra_curio.common.component.AccessoriesComponent.*;
 
 public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements CustomPacketPayload {
     public static final Type<InfoCurioCheckPacketS2C> TYPE = new Type<>(TerraCurio.asResource("info_curio_check"));
@@ -67,25 +66,25 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         for (ItemStack stack : itemStacks) {
             AccessoriesComponent component = stack.get(TCDataComponentTypes.ACCESSORIES);
             if (component == null) continue;
-            if (component.contains(FULL$INFORMATION)) {
+            if (component.contains(ValueType.FULL$INFORMATION)) {
                 PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), FULL_MYSELF_ARRAY));
                 return;
             }
 
-            if (watch < 1 && component.contains(HOUR$WATCH)) watch = 1;
-            else if (watch < 2 && component.contains(HALF$HOUR$WATCH)) watch = 2;
-            else if (watch < 3 && component.contains(MINUTE$WATCH)) watch = 3;
-            if (component.contains(WEATHER$RADIO)) weatherRadio = 1;
-            if (component.contains(SEXTANT)) sextant = 1;
-            if (component.contains(FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = 1;
-            if (component.contains(METAL$DETECTOR)) metalDetector = 1;
-            if (component.contains(LIFE$FORM$ANALYZER)) lifeFormAnalyzer = 1;
-            if (component.contains(RADAR)) radar = 1;
-            if (component.contains(TALLY$COUNTER)) tallyCounter = 1;
-            if (component.contains(DPS$METER)) dpsMeter = 1;
-            if (component.contains(STOPWATCH)) stopwatch = 1;
-            if (component.contains(COMPASS)) compass = 1;
-            if (component.contains(DEPTH$METER)) depthMeter = 1;
+            if (watch < 1 && component.contains(ValueType.HOUR$WATCH)) watch = 1;
+            else if (watch < 2 && component.contains(ValueType.HALF$HOUR$WATCH)) watch = 2;
+            else if (watch < 3 && component.contains(ValueType.MINUTE$WATCH)) watch = 3;
+            if (component.contains(ValueType.WEATHER$RADIO)) weatherRadio = 1;
+            if (component.contains(ValueType.SEXTANT)) sextant = 1;
+            if (component.contains(ValueType.FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = 1;
+            if (component.contains(ValueType.METAL$DETECTOR)) metalDetector = 1;
+            if (component.contains(ValueType.LIFE$FORM$ANALYZER)) lifeFormAnalyzer = 1;
+            if (component.contains(ValueType.RADAR)) radar = 1;
+            if (component.contains(ValueType.TALLY$COUNTER)) tallyCounter = 1;
+            if (component.contains(ValueType.DPS$METER)) dpsMeter = 1;
+            if (component.contains(ValueType.STOPWATCH)) stopwatch = 1;
+            if (component.contains(ValueType.COMPASS)) compass = 1;
+            if (component.contains(ValueType.DEPTH$METER)) depthMeter = 1;
         }
         PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), new byte[]{
                 watch, weatherRadio, sextant, fishermansPocketGuide, metalDetector,
@@ -111,25 +110,25 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         for (ItemStack stack : itemStacks) {
             AccessoriesComponent component = stack.get(TCDataComponentTypes.ACCESSORIES);
             if (component == null) continue;
-            if (component.contains(FULL$INFORMATION)) {
+            if (component.contains(ValueType.FULL$INFORMATION)) {
                 PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), FULL_REMOTE_ARRAY));
                 return;
             }
 
-            if (watch > -126 && component.contains(HOUR$WATCH)) watch = -126;
-            else if (watch > -127 && component.contains(HALF$HOUR$WATCH)) watch = -127;
-            else if (watch > -128 && component.contains(MINUTE$WATCH)) watch = -128;
-            if (component.contains(WEATHER$RADIO)) weatherRadio = -1;
-            if (component.contains(SEXTANT)) sextant = -1;
-            if (component.contains(FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = -1;
-            if (component.contains(METAL$DETECTOR)) metalDetector = -1;
-            if (component.contains(LIFE$FORM$ANALYZER)) lifeFormAnalyzer = -1;
-            if (component.contains(RADAR)) radar = -1;
-            if (component.contains(TALLY$COUNTER)) tallyCounter = -1;
-            if (component.contains(DPS$METER)) dpsMeter = -1;
-            if (component.contains(STOPWATCH)) stopwatch = -1;
-            if (component.contains(COMPASS)) compass = -1;
-            if (component.contains(DEPTH$METER)) depthMeter = -1;
+            if (watch > -126 && component.contains(ValueType.HOUR$WATCH)) watch = -126;
+            else if (watch > -127 && component.contains(ValueType.HALF$HOUR$WATCH)) watch = -127;
+            else if (watch > -128 && component.contains(ValueType.MINUTE$WATCH)) watch = -128;
+            if (component.contains(ValueType.WEATHER$RADIO)) weatherRadio = -1;
+            if (component.contains(ValueType.SEXTANT)) sextant = -1;
+            if (component.contains(ValueType.FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = -1;
+            if (component.contains(ValueType.METAL$DETECTOR)) metalDetector = -1;
+            if (component.contains(ValueType.LIFE$FORM$ANALYZER)) lifeFormAnalyzer = -1;
+            if (component.contains(ValueType.RADAR)) radar = -1;
+            if (component.contains(ValueType.TALLY$COUNTER)) tallyCounter = -1;
+            if (component.contains(ValueType.DPS$METER)) dpsMeter = -1;
+            if (component.contains(ValueType.STOPWATCH)) stopwatch = -1;
+            if (component.contains(ValueType.COMPASS)) compass = -1;
+            if (component.contains(ValueType.DEPTH$METER)) depthMeter = -1;
         }
         boolean equals = watch == -125 && weatherRadio == -128 && sextant == -128 && fishermansPocketGuide == -128 && metalDetector == -128 &&
                 lifeFormAnalyzer == -128 && radar == -128 && tallyCounter == -128 && dpsMeter == -128 && stopwatch == -128 && compass == -128 && depthMeter == -128;
