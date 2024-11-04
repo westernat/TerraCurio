@@ -49,6 +49,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Unit, UnitValue> LAVA$HURT$REDUCE = ofUnit("lava_hurt_reduce"); // todo
     public static final ValueType<Unit, UnitValue> FIRE$IMMUNE = ofUnit("fire_immune");
     public static final ValueType<Unit, UnitValue> FLOWER$BOOTS = ofUnit("flower_boots");
+    public static final ValueType<Unit, UnitValue> FROZEN$IMMUNE = ofUnit("frozen_immune"); // todo
     public static final ValueType<Float, FloatValue> FISHING$POWER = ofFloat("fishing_power", CombineRule.FLOAT_ADDITION, 0.0F); // todo
     public static final ValueType<Float, FloatValue> INJURY$FREE = ofFloat("injury_free", CombineRule.FLOAT_ADDITION, 0.0F);
     public static final ValueType<Float, FloatValue> INVULNERABLE$TICKS$MULTIPLIER = ofFloat("invulnerable_ticks_multiplier", CombineRule.FLOAT_GET_MAX, 1.0F);
