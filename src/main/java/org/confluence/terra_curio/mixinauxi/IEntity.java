@@ -1,15 +1,15 @@
 package org.confluence.terra_curio.mixinauxi;
 
 public interface IEntity {
-    int confluence$getCthulhuSprintingTime();
+    int terra_curio$getCthulhuSprintingTime();
 
-    void confluence$setCthulhuSprintingTime(int amount);
+    void terra_curio$setCthulhuSprintingTime(int amount);
 
-    default boolean confluence$isOnCthulhuSprinting() {
-        return confluence$getCthulhuSprintingTime() > 20;
+    default boolean terra_curio$isOnCthulhuSprinting() {
+        return terra_curio$getCthulhuSprintingTime() > 20;
     }
 
-    void confluence$setShouldRot(boolean bool);
+    void terra_curio$setShouldRot(boolean bool);
 
-    boolean confluence$isShouldRot();
+    boolean terra_curio$isShouldRot();
 }

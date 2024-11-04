@@ -36,22 +36,22 @@ public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
     private boolean confluence$isShouldRot = false;
 
     @Override
-    public int confluence$getCthulhuSprintingTime() {
+    public int terra_curio$getCthulhuSprintingTime() {
         return confluence$cthulhuSprintingTime;
     }
 
     @Override
-    public void confluence$setCthulhuSprintingTime(int amount) {
+    public void terra_curio$setCthulhuSprintingTime(int amount) {
         this.confluence$cthulhuSprintingTime = amount;
     }
 
     @Override
-    public void confluence$setShouldRot(boolean bool) {
+    public void terra_curio$setShouldRot(boolean bool) {
         this.confluence$isShouldRot = bool;
     }
 
     @Override
-    public boolean confluence$isShouldRot() {
+    public boolean terra_curio$isShouldRot() {
         return confluence$isShouldRot;
     }
 
@@ -91,13 +91,13 @@ public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
 
     @Inject(method = "playerTouch", at = @At("TAIL"))
     private void collidingCheck(Player player, CallbackInfo ci) {
-        if (((IEntity) player).confluence$isOnCthulhuSprinting()) {
+        if (((IEntity) player).terra_curio$isOnCthulhuSprinting()) {
             Entity self = self();
             Vec3 vector = player.getDeltaMovement();
             self.addDeltaMovement(new Vec3(vector.x * 1.6, 0.6, vector.z * 1.6));
             self.hurt(damageSources().playerAttack(player), 7.8F);
             player.setDeltaMovement(vector.scale(-0.9));
-            ((IEntity) player).confluence$setCthulhuSprintingTime(20);
+            ((IEntity) player).terra_curio$setCthulhuSprintingTime(20);
         }
     }
 

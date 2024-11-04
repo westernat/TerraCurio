@@ -38,7 +38,7 @@ public abstract class ClientEntityMixin implements SelfGetter<Entity> {
     @Inject(method = "getOnPosLegacy", at = @At("RETURN"), cancellable = true)
     private void getOnPosAbove(CallbackInfoReturnable<BlockPos> cir) {
         if (self() instanceof Player player) {
-            if (player.isLocalPlayer() ? GravitationHandler.isShouldRot() : ((IEntity) player).confluence$isShouldRot()) {
+            if (player.isLocalPlayer() ? GravitationHandler.isShouldRot() : ((IEntity) player).terra_curio$isShouldRot()) {
                 cir.setReturnValue(getOnPos(-2.2F));
             }
         }

@@ -70,6 +70,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         this.valueMap.clear();
         this.ignores.clear();
         this.panicNecklace = false;
+        this.remainLavaImmuneTicks = 0;
     }
 
     public <T, V extends PrimitiveValue<T>> T getValue(ValueType<T, V> type) {
@@ -91,13 +92,13 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
 
     public void increaseLavaImmuneTicks() {
         if (remainLavaImmuneTicks < getValue(ValueType.LAVA$IMMUNE$TICKS)) {
-            remainLavaImmuneTicks++;
+            this.remainLavaImmuneTicks++;
         }
     }
 
     public boolean decreaseLavaImmuneTicks() {
         if (remainLavaImmuneTicks > 0) {
-            remainLavaImmuneTicks--;
+            this.remainLavaImmuneTicks--;
             return true;
         }
         return false;

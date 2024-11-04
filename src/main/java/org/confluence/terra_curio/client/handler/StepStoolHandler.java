@@ -79,6 +79,7 @@ public final class StepStoolHandler {
     public static void handlePacket(StepStoolSteppingPacketS2C packet) {
         if (packet.slot() == StepStoolSteppingPacketS2C.RESET_STEP) {
             step = 0;
+            maxStep = 0;
         } else {
             maxStep = packet.maxStep();
             slot = maxStep == 0 ? StepStoolSteppingPacketS2C.NO_CURIO : packet.slot();

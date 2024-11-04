@@ -101,7 +101,7 @@ public final class TCUtils {
         if (attacker != null && attachment.getIgnores().contains(attacker.getType())) {
             return true;
         }
-        if (attachment.contains(SHIELD$OF$CTHULHU) && ((IEntity) living).confluence$isOnCthulhuSprinting()) {
+        if (attachment.contains(SHIELD$OF$CTHULHU) && ((IEntity) living).terra_curio$isOnCthulhuSprinting()) {
             return true;
         }
         if (attachment.contains(FIRE$IMMUNE) && damageSource.is(DamageTypes.IN_FIRE) ||

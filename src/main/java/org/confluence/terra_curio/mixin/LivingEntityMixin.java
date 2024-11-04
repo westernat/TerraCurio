@@ -43,7 +43,7 @@ public abstract class LivingEntityMixin implements SelfGetter<LivingEntity> {
     @ModifyArg(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"), index = 2)
     private double fall2(double pPosY) {
         if (self() instanceof Player player) {
-            if (player instanceof ServerPlayer && ((IEntity) player).confluence$isShouldRot()) {
+            if (player instanceof ServerPlayer && ((IEntity) player).terra_curio$isShouldRot()) {
                 return pPosY + getDimensions(player.getPose()).height();
             }
         }

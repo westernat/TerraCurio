@@ -77,7 +77,7 @@ public final class GravitationHandler {
     public static void handleRemoteRot(BroadcastGravitationRotPacketS2C packet, Player player) {
         Entity entity = player.level().getEntity(packet.entityId());
         if (entity != null) {
-            ((IEntity) entity).confluence$setShouldRot(packet.enabled());
+            ((IEntity) entity).terra_curio$setShouldRot(packet.enabled());
         }
     }
 }
