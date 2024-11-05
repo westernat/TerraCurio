@@ -1,0 +1,22 @@
+package org.confluence.terra_curio.common.item.curio.movement;
+
+import net.minecraft.tags.BlockTags;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemStack;
+import top.theillusivec4.curios.api.SlotContext;
+
+public class DuneriderBoots extends BaseSpeedBoots {
+    public DuneriderBoots(String name) {
+        super(1, 40, builder(name));
+    }
+
+    @Override
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
+        LivingEntity living = slotContext.entity();
+        if (living.level().getBlockState(living.getOnPos()).is(BlockTags.SAND)) {
+            speedUp(slotContext, 2, 70);
+        } else {
+            speedUp(slotContext, 1, 40);
+        }
+    }
+}

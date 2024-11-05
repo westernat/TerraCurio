@@ -15,10 +15,9 @@ import top.theillusivec4.curios.api.CuriosApi;
 
 public final class TCTags {
     public static final TagKey<Item> CURIO = ItemTags.create(ResourceLocation.fromNamespaceAndPath(CuriosApi.MODID,"accessory"));
-    public static final TagKey<Item> MINUTE_WATCH = ItemTags.create(TerraCurio.asResource("minute_watch"));
     public static final TagKey<Item> RANGED_WEAPON = ItemTags.create(TerraCurio.asResource("ranged_weapon"));
     public static final TagKey<Block> FLOWER_BOOTS_AVAILABLE = BlockTags.create(TerraCurio.asResource("flower_boots_available"));
     public static final TagKey<Fluid> WATER_LIKE_WALK = FluidTags.create(TerraCurio.asResource("water_like_walk"));
-    public static final TagKey<Fluid> ALL_FLUID_WALK = FluidTags.create(TerraCurio.asResource("all_fluid_walk"));
+    public static final TagKey<Fluid> LAVA_LIKE_WALK = FluidTags.create(TerraCurio.asResource("lava_like_walk"));
     public static final TagKey<DamageType> HARMFUL_EFFECT = TagKey.create(Registries.DAMAGE_TYPE, TerraCurio.asResource("harmful_effect"));
 }

@@ -1,8 +1,6 @@
 package org.confluence.terra_curio.common.event;
 
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.stats.Stats;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -26,11 +24,10 @@ import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.common.TCCommonConfigs;
-import org.confluence.terra_curio.common.component.primitive.ValueType;
 import org.confluence.terra_curio.common.data.pack.CurioItemManager;
 import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.common.init.TCAttributes;
@@ -48,7 +45,9 @@ public final class GameEvents {
     @SubscribeEvent
     public static void curios(CurioChangeEvent event) {
         LivingEntity living = event.getEntity();
-        living.getData(TCAttachments.ACCESSORIES).flushAbility(living);
+        if (!living.level().isClientSide) {
+            living.getData(TCAttachments.ACCESSORIES).flushAbility(living);
+        }
         if (living instanceof ServerPlayer serverPlayer) {
             TCUtils.resetClientPacket(serverPlayer);
             TCTriggers.CURIOS_EQUIPPED.get().trigger(serverPlayer, event.getTo());
@@ -107,10 +106,7 @@ public final class GameEvents {
         LivingEntity living = event.getEntity();
         if (event.getSource().getEntity() instanceof ServerPlayer serverPlayer) {
             EntityType<?> entityType = living.getType();
-            PacketDistributor.sendToPlayer(serverPlayer, new EntityKilledPacketS2C(
-                    serverPlayer.getStats().getValue(Stats.ENTITY_KILLED.get(entityType)),
-                    BuiltInRegistries.ENTITY_TYPE.getKey(entityType)
-            ));
+            EntityKilledPacketS2C.sendToClient(serverPlayer, entityType);
         }
     }
 

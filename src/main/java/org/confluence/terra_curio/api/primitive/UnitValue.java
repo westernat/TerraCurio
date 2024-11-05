@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.common.component.primitive;
+package org.confluence.terra_curio.api.primitive;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.util.Unit;
@@ -9,6 +9,17 @@ public class UnitValue implements PrimitiveValue<Unit> {
     public static final UnitValue INSTANCE = new UnitValue();
     public static final Function<Unit, UnitValue> UNIT_2_VALUE = unit -> UnitValue.INSTANCE;
     public static final Codec<UnitValue> CODEC = Unit.CODEC.xmap(UNIT_2_VALUE, unitValue -> Unit.INSTANCE);
+    public static final CombineRule<Unit, UnitValue> GET_SELF = CombineRule.register(new CombineRule<>() {
+        @Override
+        public Unit combine(Unit componentA, Unit componentB) {
+            return componentA;
+        }
+
+        @Override
+        public String name() {
+            return "unit_get_self";
+        }
+    });
 
     @Override
     public Unit get() {

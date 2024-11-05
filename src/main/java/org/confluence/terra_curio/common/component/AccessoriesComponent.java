@@ -6,9 +6,9 @@ import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
-import org.confluence.terra_curio.common.component.primitive.PrimitiveValue;
-import org.confluence.terra_curio.common.component.primitive.UnitValue;
-import org.confluence.terra_curio.common.component.primitive.ValueType;
+import org.confluence.terra_curio.api.primitive.PrimitiveValue;
+import org.confluence.terra_curio.api.primitive.UnitValue;
+import org.confluence.terra_curio.api.primitive.ValueType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

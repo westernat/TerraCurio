@@ -7,7 +7,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -22,6 +21,7 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
@@ -35,9 +35,7 @@ import org.confluence.terra_curio.common.entity.projectile.BeeProjectile;
 import org.confluence.terra_curio.common.entity.projectile.StarCloakEntity;
 import org.confluence.terra_curio.common.init.*;
 import org.confluence.terra_curio.mixinauxi.IEntity;
-import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
-import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
-import org.confluence.terra_curio.network.s2c.PlayerClimbPacketS2C;
+import org.confluence.terra_curio.network.s2c.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -47,7 +45,7 @@ import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import java.util.List;
 import java.util.Objects;
 
-import static org.confluence.terra_curio.common.component.primitive.ValueType.*;
+import static org.confluence.terra_curio.api.primitive.ValueType.*;
 
 public final class TCUtils {
     public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(TerraCurio.asResource("ice_speed"), 1.0, AttributeModifier.Operation.ADD_VALUE);
@@ -124,7 +122,6 @@ public final class TCUtils {
 
     public static float applyInjuryFree(LivingEntity living, float amount) {
         float injuryFree = living.getData(TCAttachments.ACCESSORIES).getValue(INJURY$FREE);
-        injuryFree = Mth.clamp(injuryFree, 0.0F, 1.0F);
         return amount * (1.0F - injuryFree);
     }
 
@@ -209,17 +206,21 @@ public final class TCUtils {
         InfoCurioCheckPacketS2C.sendToPlayer(serverPlayer, serverPlayer.getInventory());
         CurioExistsPacketS2C.sendToClient(serverPlayer);
         PlayerClimbPacketS2C.sendToClient(serverPlayer);
+        PlayerJumpPacketS2C.sendToClient(serverPlayer);
+        PlayerFlyPacketS2C.sendToClient(serverPlayer);
+        RightClickSubtractorPacketS2C.sendToClient(serverPlayer);
     }
 
     @SuppressWarnings("deprecation")
     public static @NotNull CompoundTag getItemStackCompoundTag(ItemStack itemStack) {
+        CustomData customData = itemStack.get(DataComponents.CUSTOM_DATA);
+        if (customData == null) itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(new CompoundTag()));
         return Objects.requireNonNull(itemStack.get(DataComponents.CUSTOM_DATA)).getUnsafe();
     }
 
     public static float applyLavaHurtReduce(LivingEntity living, DamageSource damageSource, float amount) {
         if (damageSource.is(DamageTypes.LAVA)) {
             float value = living.getData(TCAttachments.ACCESSORIES).getValue(LAVA$HURT$REDUCE);
-            value = Mth.clamp(value, 0.0F, 1.0F);
             living.igniteForTicks(140);
             return amount * (1.0F - value);
         }

@@ -4,15 +4,22 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Tuple;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
+import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
+import org.confluence.terra_curio.common.init.TCAttachments;
 import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.network.codec.ByteBufCodecs.FLOAT;
 import static net.minecraft.network.codec.ByteBufCodecs.INT;
 
-public record PlayerJumpPacketS2C(float fartSpeed, float sandstormSpeed, int sandstormTicks, float blizzardSpeed, int blizzardTicks, float tsunamiSpeed, float cloudSpeed) implements CustomPacketPayload {
+public record PlayerJumpPacketS2C(float fartSpeed, float sandstormSpeed, int sandstormTicks, float blizzardSpeed, int blizzardTicks, float tsunamiSpeed,
+                                  float cloudSpeed) implements CustomPacketPayload {
     public static final Type<PlayerJumpPacketS2C> TYPE = new Type<>(TerraCurio.asResource("player_jump_s2c"));
     public static final StreamCodec<ByteBuf, PlayerJumpPacketS2C> STREAM_CODEC = new StreamCodec<>() {
         @Override
@@ -53,5 +60,18 @@ public record PlayerJumpPacketS2C(float fartSpeed, float sandstormSpeed, int san
             context.disconnect(Component.translatable("neoforge.network.invalid_flow", e.getMessage()));
             return null;
         });
+    }
+
+    public static void sendToClient(ServerPlayer serverPlayer) {
+        AccessoriesAttachment attachment = serverPlayer.getData(TCAttachments.ACCESSORIES);
+        Tuple<Float, Integer> sandStorm = attachment.getValue(ValueType.SAND$STORM);
+        Tuple<Float, Integer> blizzard = attachment.getValue(ValueType.BLIZZARD);
+        PacketDistributor.sendToPlayer(serverPlayer, new PlayerJumpPacketS2C(
+                attachment.getValue(ValueType.FART),
+                sandStorm.getA(), sandStorm.getB(),
+                blizzard.getA(), blizzard.getB(),
+                attachment.getValue(ValueType.TSUNAMI),
+                attachment.getValue(ValueType.CLOUD)
+        ));
     }
 }

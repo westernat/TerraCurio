@@ -9,16 +9,15 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.api.primitive.PrimitiveValue;
+import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.component.EffectImmunities;
 import org.confluence.terra_curio.common.component.ModRarity;
-import org.confluence.terra_curio.common.component.primitive.PrimitiveValue;
-import org.confluence.terra_curio.common.component.primitive.ValueType;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.ApiStatus;
@@ -88,6 +87,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
     public static class Builder {
         private final String name;
         private final Properties properties;
+        private final ResourceLocation defaultId;
 
         private final List<Component> additionTip = new ArrayList<>();
         private boolean hasToolTip = true;
@@ -100,6 +100,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         Builder(String name, Properties properties) {
             this.name = name;
             this.properties = properties;
+            this.defaultId = TerraCurio.asResource(name);
         }
 
         public Builder makesPiglinsNeutral() {
@@ -117,13 +118,8 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
-        public Builder armor(double amount, AttributeModifier.Operation operation) {
-            attributesBuilder.put(Attributes.ARMOR, new AttributeModifier(TerraCurio.asResource(name + "_builtin_armor"), amount, operation));
-            return this;
-        }
-
-        public Builder damage(double amount, AttributeModifier.Operation operation) {
-            attributesBuilder.put(Attributes.ATTACK_DAMAGE, new AttributeModifier(TerraCurio.asResource(name + "_builtin_damage"), amount, operation));
+        public Builder attribute(Holder<Attribute> attribute, double amount, AttributeModifier.Operation operation) {
+            attributesBuilder.put(attribute, new AttributeModifier(defaultId, amount, operation));
             return this;
         }
 

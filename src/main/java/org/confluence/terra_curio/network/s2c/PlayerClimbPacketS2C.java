@@ -9,8 +9,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.PlayerClimbHandler;
-import org.confluence.terra_curio.common.component.primitive.ValueType;
 import org.confluence.terra_curio.common.init.TCAttachments;
 import org.jetbrains.annotations.NotNull;
 

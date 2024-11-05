@@ -28,8 +28,13 @@ public class BaseSpeedBoots extends BaseCurioItem {
     public static final String KEY = TerraCurio.MODID + ":boots_speed";
     public static final ResourceLocation ID = TerraCurio.asResource("base_speed_boots");
 
-    public BaseSpeedBoots(Builder builder) {
+    private final int acceleration;
+    private final int maxSpeed;
+
+    public BaseSpeedBoots(int acceleration, int maxSpeed, Builder builder) {
         super(builder);
+        this.acceleration = acceleration;
+        this.maxSpeed = maxSpeed;
     }
 
     @Override
@@ -39,7 +44,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
 
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
-        speedUp(slotContext, 1, 40);
+        speedUp(slotContext, acceleration, maxSpeed);
     }
 
     @Override

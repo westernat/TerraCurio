@@ -3,9 +3,9 @@ package org.confluence.terra_curio.api.event;
 import net.minecraft.util.Unit;
 import net.neoforged.bus.api.Event;
 import net.neoforged.fml.event.IModBusEvent;
-import org.confluence.terra_curio.common.component.primitive.PrimitiveValue;
-import org.confluence.terra_curio.common.component.primitive.UnitValue;
-import org.confluence.terra_curio.common.component.primitive.ValueType;
+import org.confluence.terra_curio.api.primitive.PrimitiveValue;
+import org.confluence.terra_curio.api.primitive.UnitValue;
+import org.confluence.terra_curio.api.primitive.ValueType;
 
 import java.util.ArrayList;
 

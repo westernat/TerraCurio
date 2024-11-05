@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.common.component.primitive;
+package org.confluence.terra_curio.api.primitive;
 
 import com.mojang.serialization.Codec;
 
