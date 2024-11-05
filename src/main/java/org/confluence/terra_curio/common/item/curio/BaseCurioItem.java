@@ -21,6 +21,7 @@ import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.ApiStatus;
+import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
@@ -74,6 +75,11 @@ public class BaseCurioItem extends Item implements ICurioItem {
     @Override
     public boolean makesPiglinsNeutral(SlotContext slotContext, ItemStack stack) {
         return builder.makePiglinsNeutral;
+    }
+
+    @Override
+    public @NotNull Component getName(@NotNull ItemStack stack) {
+        return Component.translatable(getDescriptionId()).withStyle(style -> style.withColor(stack.get(TCDataComponentTypes.MOD_RARITY).getColor()));
     }
 
     public static Builder builder(String name, Properties properties) {
