@@ -12,7 +12,7 @@ import top.theillusivec4.curios.api.SlotContext;
 
 public class CelestialStone extends BaseCurioItem {
     public CelestialStone() {
-        super(getBuilder().initialize());
+        super(getBuilder());
     }
 
     private static Builder getBuilder() {

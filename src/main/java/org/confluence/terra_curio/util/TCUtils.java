@@ -6,6 +6,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.BlockTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -14,6 +15,9 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeInstance;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -24,6 +28,7 @@ import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConf
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.apache.commons.compress.utils.Lists;
+import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.component.EffectImmunities;
 import org.confluence.terra_curio.common.entity.projectile.BeeProjectile;
@@ -32,6 +37,7 @@ import org.confluence.terra_curio.common.init.*;
 import org.confluence.terra_curio.mixinauxi.IEntity;
 import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
+import org.confluence.terra_curio.network.s2c.PlayerClimbPacketS2C;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -44,6 +50,8 @@ import java.util.Objects;
 import static org.confluence.terra_curio.common.component.primitive.ValueType.*;
 
 public final class TCUtils {
+    public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(TerraCurio.asResource("ice_speed"), 1.0, AttributeModifier.Operation.ADD_VALUE);
+
     @ApiStatus.Internal
     public static void forConfluence$Inject() {}
 
@@ -197,28 +205,10 @@ public final class TCUtils {
         return !living.getData(TCAttachments.ACCESSORIES).contains(MAGIC$QUIVER) || living.getRandom().nextFloat() >= 0.2F;
     }
 
-    public static void applyFlowerBoots(LivingEntity living) {
-        if (living.onGround() && living instanceof ServerPlayer && living.getData(TCAttachments.ACCESSORIES).contains(FLOWER$BOOTS)) {
-            ServerLevel serverLevel = (ServerLevel) living.level();
-            BlockPos blockPos = living.getOnPos();
-            if (!serverLevel.getBlockState(blockPos).is(TCTags.FLOWER_BOOTS_AVAILABLE)) return;
-            BlockPos abovePos = blockPos.above();
-            RandomSource random = serverLevel.random;
-            for (BlockPos aroundPos : BlockPos.betweenClosed(abovePos.offset(-1, 0, -1), abovePos.offset(1, 0, 1))) {
-                if (!serverLevel.getBlockState(aroundPos.below()).is(TCTags.FLOWER_BOOTS_AVAILABLE)) continue;
-                if (serverLevel.getBlockState(aroundPos).isCollisionShapeFullBlock(serverLevel, aroundPos)) continue;
-                if (random.nextFloat() < 0.3F && serverLevel.getBlockState(aroundPos).isAir()) {
-                    List<ConfiguredFeature<?, ?>> list = serverLevel.getBiome(aroundPos).value().getGenerationSettings().getFlowerFeatures();
-                    if (list.isEmpty()) continue;
-                    ((RandomPatchConfiguration) list.getFirst().config()).feature().value().place(serverLevel, serverLevel.getChunkSource().getGenerator(), random, aroundPos);
-                }
-            }
-        }
-    }
-
     public static void resetClientPacket(ServerPlayer serverPlayer) {
         InfoCurioCheckPacketS2C.sendToPlayer(serverPlayer, serverPlayer.getInventory());
         CurioExistsPacketS2C.sendToClient(serverPlayer);
+        PlayerClimbPacketS2C.sendToClient(serverPlayer);
     }
 
     @SuppressWarnings("deprecation")
@@ -234,5 +224,34 @@ public final class TCUtils {
             return amount * (1.0F - value);
         }
         return amount;
+    }
+
+    public static void onChangedBlock(LivingEntity living, ServerLevel level, BlockPos pos) {
+        if (living.onGround()) {
+            AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
+            BlockPos onPos = living.getOnPos();
+            if (attachment.contains(FLOWER$BOOTS) && level.getBlockState(onPos).is(TCTags.FLOWER_BOOTS_AVAILABLE)) {
+                BlockPos abovePos = onPos.above();
+                RandomSource random = level.random;
+                for (BlockPos aroundPos : BlockPos.betweenClosed(abovePos.offset(-1, 0, -1), abovePos.offset(1, 0, 1))) {
+                    if (!level.getBlockState(aroundPos.below()).is(TCTags.FLOWER_BOOTS_AVAILABLE)) continue;
+                    if (level.getBlockState(aroundPos).isCollisionShapeFullBlock(level, aroundPos)) continue;
+                    if (random.nextFloat() < 0.3F && level.getBlockState(aroundPos).isAir()) {
+                        List<ConfiguredFeature<?, ?>> list = level.getBiome(aroundPos).value().getGenerationSettings().getFlowerFeatures();
+                        if (list.isEmpty()) continue;
+                        ((RandomPatchConfiguration) list.getFirst().config()).feature().value().place(level, level.getChunkSource().getGenerator(), random, aroundPos);
+                    }
+                }
+            }
+            if (attachment.contains(ICE$SPEED)) {
+                AttributeInstance attributeInstance = living.getAttribute(Attributes.MOVEMENT_EFFICIENCY);
+                assert attributeInstance != null;
+                if (level.getBlockState(onPos).is(BlockTags.ICE)) {
+                    attributeInstance.addTransientModifier(ICE_SPEED_MODIFIER);
+                } else {
+                    attributeInstance.removeModifier(ICE_SPEED_MODIFIER);
+                }
+            }
+        }
     }
 }

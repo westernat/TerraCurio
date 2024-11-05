@@ -18,7 +18,7 @@ import java.util.List;
 
 public class StepStool extends BaseCurioItem {
     public StepStool(Builder builder) {
-        super(builder.initialize());
+        super(builder);
     }
 
     @Override

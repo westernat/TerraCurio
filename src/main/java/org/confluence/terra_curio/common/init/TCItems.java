@@ -7,14 +7,12 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.component.primitive.EntityTypesValue;
-import org.confluence.terra_curio.common.component.primitive.FloatValue;
-import org.confluence.terra_curio.common.component.primitive.IntegerValue;
 import org.confluence.terra_curio.common.component.primitive.ValueType;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.common.item.curio.combat.*;
+import org.confluence.terra_curio.common.item.curio.health.BandOfRegeneration;
 import org.confluence.terra_curio.common.item.curio.movement.StepStool;
 
 import java.util.function.Consumer;
@@ -22,8 +20,7 @@ import java.util.function.Supplier;
 
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE;
-import static org.confluence.terra_curio.common.component.AccessoriesComponent.of;
-import static org.confluence.terra_curio.common.component.AccessoriesComponent.units;
+import static org.confluence.terra_curio.common.component.AccessoriesComponent.*;
 import static org.confluence.terra_curio.common.component.ModRarity.*;
 
 @SuppressWarnings("all")
@@ -50,8 +47,8 @@ public final class TCItems {
             ANKH_CHARM = registerCurio("ankh_charm", AnkhCharm::new), // 十字章护身符
             ANKH_SHIELD = registerCurio("ankh_shield", AnkhShield::new), // 十字章护盾
             STAR_CLOAK = registerCurio("star_cloak", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.STAR$CLOCK))), // 星星斗篷
-            STAR_VEIL = registerCurio("star_veil", builder -> builder.rarity(LIGHT_PURPLE).accessories(units(ValueType.STAR$CLOCK), AccessoriesComponent.of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, new FloatValue(2.0F)))), // 星星面纱
-            BEE_CLOAK = registerCurio("bee_cloak", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.STAR$CLOCK, ValueType.HONEY$COMB), AccessoriesComponent.of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, new FloatValue(2.0F)))), // 蜜蜂斗篷
+            STAR_VEIL = registerCurio("star_veil", builder -> builder.rarity(LIGHT_PURPLE).accessories(units(ValueType.STAR$CLOCK), of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, 2.0F))), // 星星面纱
+            BEE_CLOAK = registerCurio("bee_cloak", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.STAR$CLOCK, ValueType.HONEY$COMB), of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, 2.0F))), // 蜜蜂斗篷
             BLACK_BELT = registerCurio("black_belt", builder -> builder.rarity(LIME).attribute(TCAttributes.getDodgeChance(), "dodge", 0.1, ADD_VALUE)), // 黑腰带
             /* 天界徽章 */
             /* 月光护身符 */
@@ -61,7 +58,7 @@ public final class TCItems {
             /* 月亮贝壳 */
             /* 天界贝壳 */
             COBALT_SHIELD = registerCurio("cobalt_shield", builder -> builder.rarity(GREEN).attribute(Attributes.KNOCKBACK_RESISTANCE, "knockback_resistance", 1.0, ADD_VALUE).attribute(Attributes.ARMOR, "armor", 1.0, ADD_VALUE)), // 钴护盾
-            CROSS_NECKLACE = registerCurio("cross_necklace", builder -> builder.rarity(LIGHT_RED).accessories(AccessoriesComponent.of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, new FloatValue(2.0F)))), // 十字项链
+            CROSS_NECKLACE = registerCurio("cross_necklace", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, 2.0F))), // 十字项链
             RANGER_EMBLEM = registerCurio("ranger_emblem", builder -> builder.rarity(LIGHT_RED).noTooltip().attribute(TCAttributes.getRangedDamage(), "ranged_damage", 0.15, ADD_MULTIPLIED_TOTAL)), // 游侠徽章
             WARRIOR_EMBLEM = registerCurio("warrior_emblem", builder -> builder.rarity(LIGHT_RED).noTooltip().attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.15, ADD_MULTIPLIED_TOTAL)), // 战士徽章
             SORCERER_EMBLEM = registerCurio("sorcerer_emblem", builder -> builder.rarity(LIGHT_RED).noTooltip().attribute(TCAttributes.getMagicDamage(), "magic_damage", 0.15, ADD_MULTIPLIED_TOTAL)), // 巫士徽章
@@ -144,20 +141,45 @@ public final class TCItems {
                     .attribute(TCAttributes.getRangedDamage(), "ranged_damage", 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getAggro(), "aggro", -400, ADD_VALUE)), // 侦察镜
             MAGMA_STONE = registerCurio("magma_stone", builder -> builder.rarity(ORANGE).accessories(units(ValueType.FIRE$ATTACK))), // 岩浆石
-            OBSIDIAN_ROSE = registerCurio("obsidian_rose", builder -> builder.rarity(ORANGE).accessories(of(ValueType.LAVA$HURT$REDUCE, new FloatValue(0.5F)))), // 黑曜石玫瑰
+            OBSIDIAN_ROSE = registerCurio("obsidian_rose", builder -> builder.rarity(ORANGE).accessories(of(ValueType.LAVA$HURT$REDUCE, 0.5F))), // 黑曜石玫瑰
             OBSIDIAN_SHIELD = registerCurio("obsidian_shield", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.FIRE$IMMUNE))
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, "knockback_resistance", 1.0, ADD_VALUE)
                     .attribute(Attributes.ARMOR, "armor", 2.0, ADD_VALUE)), // 黑曜石护盾
             OBSIDIAN_SKULL = registerCurio("obsidian_skull", builder -> builder.rarity(GREEN).accessories(units(ValueType.FIRE$IMMUNE))), // 黑曜石骷髅头
             MOLTEN_SKULL_ROSE = registerCurio("molten_skull_rose", builder -> builder.rarity(LIGHT_PURPLE)
-                    .accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.LAVA$IMMUNE$TICKS, new IntegerValue(140)), of(ValueType.LAVA$HURT$REDUCE, new FloatValue(0.5F)))), // 熔火骷髅头玫瑰
-            OBSIDIAN_SKULL_ROSE = registerCurio("obsidian_skull_rose", builder -> builder.rarity(PINK).accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.LAVA$HURT$REDUCE, new FloatValue(0.5F)))), // 黑曜石骷髅头玫瑰
+                    .accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.LAVA$IMMUNE$TICKS, 140), of(ValueType.LAVA$HURT$REDUCE, 0.5F))), // 熔火骷髅头玫瑰
+            OBSIDIAN_SKULL_ROSE = registerCurio("obsidian_skull_rose", builder -> builder.rarity(PINK).accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.LAVA$HURT$REDUCE, 0.5F))), // 黑曜石骷髅头玫瑰
             HAND_WARMER = registerCurio("hand_warmer", builder -> builder.rarity(GREEN).accessories(units(ValueType.FROZEN$IMMUNE))), // 暖手宝
             PUTRID_SCENT = registerCurio("putrid_scent", builder -> builder.rarity(LIGHT_PURPLE)
                     .attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.05, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getCriticalChance(), "critical_chance", 0.05, ADD_VALUE)
                     .attribute(TCAttributes.getAggro(), "aggro", -400, ADD_VALUE)), // 腐香囊
             SHACKLE = registerCurio("shackle", builder -> builder.attribute(Attributes.ARMOR, "armor", 1.0, ADD_VALUE)); // 脚镣
+            /* 学徒围巾 */
+            /* 侍卫护盾 */
+            /* 女猎人圆盾 */
+            /* 武僧腰带 */
+            /* 大力士甲虫 */
+            /* 死灵卷轴 */
+            /* 甲虫莎草纸 */
+            /* 矮人项链 */
+
+    public static final Supplier<BaseCurioItem> TOOLBELT = registerCurio("toolbelt", builder -> builder.noTooltip().rarity(ORANGE).attribute(Attributes.BLOCK_INTERACTION_RANGE, "block_interaction_range", 1.0, ADD_VALUE)), // 工具腰带
+            TOOLBOX = registerCurio("toolbox", builder -> builder.noTooltip().rarity(GREEN).attribute(Attributes.BLOCK_INTERACTION_RANGE, "block_interaction_range", 1.0, ADD_VALUE)), // 工具箱
+            /* 喷漆器 */
+            EXTENDO_GRIP = registerCurio("extendo_grip", builder -> builder.noTooltip().rarity(ORANGE).attribute(Attributes.BLOCK_INTERACTION_RANGE, "block_interaction_range", 3.0, ADD_VALUE)), // 加长握爪
+            PORTABLE_CEMENT_MIXER = registerCurio("portable_cement_mixer", builder -> builder.rarity(ORANGE).accessories(of(ValueType.RIGHT$CLICK$DELAY$SUBSTRACTOR, 1))), // 便携式水泥搅拌机
+            BRICK_LAYER = registerCurio("brick_layer", builder -> builder.rarity(ORANGE).accessories(of(ValueType.RIGHT$CLICK$DELAY$SUBSTRACTOR, 1))), // 砌砖刀
+            ARCHITECT_GIZMO_PACK = registerCurio("architect_gizmo_pack", builder -> builder.rarity(PINK).accessories(of(ValueType.RIGHT$CLICK$DELAY$SUBSTRACTOR, 2))
+                    .attribute(Attributes.BLOCK_INTERACTION_RANGE, "block_interaction_range", 3.0, ADD_VALUE)), // 建筑师发明背包
+            /* 自动安放器 */
+            ANCIENT_CHISEL = registerCurio("ancient_chisel", builder -> builder.attribute(Attributes.BLOCK_BREAK_SPEED, "block_break_speed", 0.25, ADD_MULTIPLIED_TOTAL)), // 远古凿子
+            HAND_OF_CREATION = registerCurio("hand_of_creation", () -> new StepStool(BaseCurioItem.builder("hand_of_creation").rarity(LIGHT_PURPLE).accessories(of(ValueType.RIGHT$CLICK$DELAY$SUBSTRACTOR, 3))
+                    .attribute(Attributes.BLOCK_INTERACTION_RANGE, "block_interaction_range", 3.0, ADD_VALUE)
+                    .attribute(Attributes.BLOCK_BREAK_SPEED, "block_break_speed", 0.25, ADD_MULTIPLIED_TOTAL)
+                    .attribute(TCAttributes.getPickupRange(), "pickup_range", 6.25, ADD_VALUE))); // 创造之手
+
+    public static final Supplier<BaseCurioItem> BAND_OF_REGENERATION = registerCurio("band_of_regeneration", () -> new BandOfRegeneration(BaseCurioItem.builder("band_of_regeneration")));
 
     public static final Supplier<BaseCurioItem> COPPER_WATCH = registerCurio("copper_watch", builder -> builder.rarity(WHITE).accessories(units(ValueType.HOUR$WATCH))), // 铜表
             TIN_WATCH = registerCurio("tin_watch", builder -> builder.rarity(WHITE).accessories(units(ValueType.HOUR$WATCH))), // 锡表
@@ -181,73 +203,87 @@ public final class TCItems {
             GOBLIN_TECH = registerCurio("goblin_tech", builder -> builder.rarity(ORANGE).accessories(units(ValueType.METAL$DETECTOR, ValueType.STOPWATCH, ValueType.DPS$METER))), // 哥布林数据仪
             FISH_FINDER = registerCurio("fish_finder", builder -> builder.rarity(ORANGE).accessories(units(ValueType.FISHERMANS$POCKET$GUIDE, ValueType.WEATHER$RADIO, ValueType.SEXTANT))), // 探鱼器
             PDA = registerCurio("pda", builder -> builder.rarity(PINK).accessories(units(ValueType.FULL$INFORMATION))); // 个人数字助手
+            /* 标尺 */
+            /* 机械标尺 */
 
     public static final Supplier<BaseCurioItem> STEP_STOOL = registerCurio("step_stool", () -> new StepStool(BaseCurioItem.builder("step_stool"))), // 梯凳
-    /* 飞毯 */
-//    AGLET("aglet", Aglet::new), // 金属带扣
-//    ANKLET_OF_THE_WIND("anklet_of_the_wind", AnkletOfTheWind::new), // 疾风脚镯
-//    MAGILUMINESCENCE("magiluminescence", Magiluminescence::new), // 魔光护符
-//    LAVA_CHARM("lava_charm", LavaCharm::new), // 熔岩护身符
-//    MAGMA_SKULL("magma_skull", MagmaSkull::new), // 岩浆骷髅头
-//    MOLTEN_CHARM("molten_charm", MoltenCharm::new), // 熔火护身符
-//    CLIMBING_CLAWS("climbing_claws", ClimbingClaws::new), // 攀爬爪
-//    SHOE_SPIKES("shoe_spikes", ShoeSpikes::new), // 鞋钉
-//    TIGER_CLIMBING_GEAR("tiger_climbing_gear", TigerClimbingGear::new), // 猛虎攀爬装备
-//    TABI("tabi", Tabi::new), // 分趾厚底袜
-//    MASTER_NINJA_GEAR("master_ninja_gear", MasterNinjaGear::new), // 忍者大师装备
-//    ICE_SKATES("ice_skates", IceSkates::new), // 溜冰鞋
-//    HERMES_BOOTS("hermes_boots", HermesBoots::new), // 赫尔墨斯靴
-//    FLURRY_BOOTS("flurry_boots", FlurryBoots::new), // 疾风雪靴
-//    SAILFISH_BOOTS("sailfish_boots", SailfishBoots::new), // 旗鱼靴
-//    DUNERIDER_BOOTS("dunerider_boots", DuneriderBoots::new), // 沙丘行者靴
-//    ROCKET_BOOTS("rocket_boots", RocketBoots::new), // 火箭靴
-//    SPECTRE_BOOTS("spectre_boots", SpectreBoots::new), // 幽灵靴
-//    FAIRY_BOOTS("fairy_boots", FairyBoots::new), // 仙灵靴
-//    LIGHTNING_BOOTS("lightning_boots", LightningBoots::new), // 闪电靴
-//    FROSTSPARK_BOOTS("frostspark_boots", FrostsparkBoots::new), // 霜花靴
-//    WATER_WALKING_BOOTS("water_walking_boots", WaterWalkingBoots::new), // 水上漂靴
-//    OBSIDIAN_WATER_WALKING_BOOTS("obsidian_water_walking_boots", ObsidianWaterWalkingBoots::new), // 黑曜石水上漂靴
-//    LAVA_WADERS("lava_waders", LavaWaders::new), // 熔岩靴
-//    TERRASPARK_BOOTS("terraspark_boots", TerrasparkBoots::new), // 泰拉闪耀靴
-//    CLOUD_IN_A_BOTTLE("cloud_in_a_bottle", CloudInABottle::new), // 云朵瓶
-//    BLIZZARD_IN_A_BOTTLE("blizzard_in_a_bottle", BlizzardInABottle::new), // 暴雪瓶
-//    SANDSTORM_IN_A_BOTTLE("sandstorm_in_a_bottle", SandstormInABottle::new), // 沙暴瓶
-//    FART_IN_A_JAR("fart_in_a_jar", FartInAJar::new), // 罐中臭屁
-//    TSUNAMI_IN_A_BOTTLE("tsunami_in_a_bottle", TsunamiInABottle::new), // 海啸瓶
-//    SHINY_RED_BALLOON("shiny_red_balloon", ShinyRedBalloon::new), // 闪亮红气球
-//    BALLOON_PUFFERFISH("balloon_pufferfish", BallonPuffefish::new), // 气球河豚鱼
-//    CLOUD_IN_A_BALLOON("cloud_in_a_balloon", CloudInABalloon::new), // 云朵气球
-//    BLIZZARD_IN_A_BALLOON("blizzard_in_a_balloon", BlizzardInABalloon::new), // 暴雪气球
-//    SANDSTORM_IN_A_BALLOON("sandstorm_in_a_balloon", SandstormInABalloon::new), // 沙暴气球
-//    FART_IN_A_BALLOON("fart_in_a_balloon", FartInABalloon::new), // 臭屁气球
-//    SHARKRON_BALLOON("sharkron_balloon", SharkronBalloon::new), // 鲨鱼龙气球
-//    HONEY_BALLOON("honey_balloon", HoneyBalloon::new), // 蜂蜜气球
-//    BUNDLE_OF_BALLOONS("bundle_of_balloons", BundleOfBalloons::new), // 气球束
+            /* 飞毯 */
+            AGLET = registerCurio("aglet", builder -> builder.noTooltip().attribute(Attributes.MOVEMENT_SPEED, "movement_speed", 0.05, ADD_MULTIPLIED_TOTAL)), // 金属带扣
+            ANKLET_OF_THE_WIND = registerCurio("anklet_of_the_wind", builder -> builder.noTooltip().attribute(Attributes.MOVEMENT_SPEED, "movement_speed", 0.1, ADD_MULTIPLIED_TOTAL)), // 疾风脚镯
+            MAGILUMINESCENCE = registerCurio("magiluminescence", builder -> builder.accessories(units(ValueType.MAGILUMINESCENCE)).attribute(Attributes.MOVEMENT_SPEED, "movement_speed", 0.15, ADD_MULTIPLIED_TOTAL)), // 魔光护符
+            LAVA_CHARM = registerCurio("lava_charm", builder -> builder.rarity(ORANGE).accessories(of(ValueType.LAVA$IMMUNE$TICKS, 140))), // 熔岩护身符
+            MAGMA_SKULL = registerCurio("magma_skull", builder -> builder.rarity(PINK).accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.LAVA$IMMUNE$TICKS, 140))), // 岩浆骷髅头
+            MOLTEN_CHARM = registerCurio("molten_charm", builder -> builder.rarity(PINK).accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.LAVA$IMMUNE$TICKS, 140))), // 熔火护身符
+            CLIMBING_CLAWS = registerCurio("climbing_claws", builder -> builder.accessories(of(ValueType.WALL$CLIMB, (byte) 1))), // 攀爬爪
+            SHOE_SPIKES = registerCurio("shoe_spikes", builder -> builder.accessories(of(ValueType.WALL$CLIMB, (byte) 1))), // 鞋钉
+            TIGER_CLIMBING_GEAR = registerCurio("tiger_climbing_gear", builder -> builder.rarity(GREEN).accessories(of(ValueType.WALL$CLIMB, (byte) 2))), // 猛虎攀爬装备
+            TABI = registerCurio("tabi", builder -> builder.rarity(LIME).accessories(units(ValueType.SPRINTING))), // 分趾厚底袜
+            MASTER_NINJA_GEAR = registerCurio("master_ninja_gear", builder -> builder.rarity(YELLOW).accessories(units(ValueType.SPRINTING), of(ValueType.WALL$CLIMB, (byte) 2)).attribute(TCAttributes.getDodgeChance(), "dodge_chance", 0.1, ADD_VALUE)), // 忍者大师装备
+            ICE_SKATES = registerCurio("ice_skates", builder -> builder.accessories(units(ValueType.ICE$SPEED))), // 溜冰鞋
+//            HERMES_BOOTS = registerCurio("hermes_boots", HermesBoots::new), // 赫尔墨斯靴
+//            FLURRY_BOOTS = registerCurio("flurry_boots", FlurryBoots::new), // 疾风雪靴
+//            SAILFISH_BOOTS = registerCurio("sailfish_boots", SailfishBoots::new), // 旗鱼靴
+//            DUNERIDER_BOOTS = registerCurio("dunerider_boots", DuneriderBoots::new), // 沙丘行者靴
+//            ROCKET_BOOTS = registerCurio("rocket_boots", RocketBoots::new), // 火箭靴
+//            SPECTRE_BOOTS = registerCurio("spectre_boots", SpectreBoots::new), // 幽灵靴
+//            FAIRY_BOOTS = registerCurio("fairy_boots", FairyBoots::new), // 仙灵靴
+//            LIGHTNING_BOOTS = registerCurio("lightning_boots", LightningBoots::new), // 闪电靴
+//            FROSTSPARK_BOOTS = registerCurio("frostspark_boots", FrostsparkBoots::new), // 霜花靴
+//            WATER_WALKING_BOOTS = registerCurio("water_walking_boots", WaterWalkingBoots::new), // 水上漂靴
+//            OBSIDIAN_WATER_WALKING_BOOTS = registerCurio("obsidian_water_walking_boots", ObsidianWaterWalkingBoots::new), // 黑曜石水上漂靴
+//            LAVA_WADERS = registerCurio("lava_waders", LavaWaders::new), // 熔岩靴
+//            TERRASPARK_BOOTS = registerCurio("terraspark_boots", TerrasparkBoots::new), // 泰拉闪耀靴
+//            CLOUD_IN_A_BOTTLE = registerCurio("cloud_in_a_bottle", CloudInABottle::new), // 云朵瓶
+//            BLIZZARD_IN_A_BOTTLE = registerCurio("blizzard_in_a_bottle", BlizzardInABottle::new), // 暴雪瓶
+//            SANDSTORM_IN_A_BOTTLE = registerCurio("sandstorm_in_a_bottle", SandstormInABottle::new), // 沙暴瓶
+//            FART_IN_A_JAR = registerCurio("fart_in_a_jar", FartInAJar::new), // 罐中臭屁
+//            TSUNAMI_IN_A_BOTTLE = registerCurio("tsunami_in_a_bottle", TsunamiInABottle::new), // 海啸瓶
+//            SHINY_RED_BALLOON = registerCurio("shiny_red_balloon", ShinyRedBalloon::new), // 闪亮红气球
+//            BALLOON_PUFFERFISH = registerCurio("balloon_pufferfish", BallonPuffefish::new), // 气球河豚鱼
+//            CLOUD_IN_A_BALLOON = registerCurio("cloud_in_a_balloon", CloudInABalloon::new), // 云朵气球
+//            BLIZZARD_IN_A_BALLOON = registerCurio("blizzard_in_a_balloon", BlizzardInABalloon::new), // 暴雪气球
+//            SANDSTORM_IN_A_BALLOON = registerCurio("sandstorm_in_a_balloon", SandstormInABalloon::new), // 沙暴气球
+//            FART_IN_A_BALLOON = registerCurio("fart_in_a_balloon", FartInABalloon::new), // 臭屁气球
+//            SHARKRON_BALLOON = registerCurio("sharkron_balloon", SharkronBalloon::new), // 鲨鱼龙气球
+//            HONEY_BALLOON = registerCurio("honey_balloon", HoneyBalloon::new), // 蜂蜜气球
+//            BUNDLE_OF_BALLOONS = registerCurio("bundle_of_balloons", BundleOfBalloons::new), // 气球束
             LUCKY_HORSESHOE = registerCurio("lucky_horseshoe", builder -> builder
                     .attribute(Attributes.LUCK, "luck", 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, "fall_damage_multiplier", -100.0, ADD_VALUE)); // 幸运马掌
-//    OBSIDIAN_HORSESHOE("obsidian_horseshoe", ObsidianHorseshoe::new), // 黑曜石马掌
-//    WHITE_HORSESHOE_BALLOON("white_horseshoe_balloon", WhiteHorseshoeBalloon::new), // 白马掌气球
-//    BLUE_HORSESHOE_BALLOON("blue_horseshoe_balloon", BlueHorseshoeBalloon::new), // 蓝马掌气球
-//    YELLOW_HORSESHOE_BALLOON("yellow_horseshoe_balloon", YellowHorseshoeBalloon::new), // 黄马掌气球
-//    GREEN_HORSESHOE_BALLOON("green_horseshoe_balloon", GreenHorseshoeBalloon::new), // 绿马掌气球
-//    PINK_HORSESHOE_BALLOON("pink_horseshoe_balloon", PinkHorseshoeBalloon::new), // 粉马掌气球
-//    AMBER_HORSESHOE_BALLOON("amber_horseshoe_balloon", AmberHorseshoeBalloon::new), // 琥珀马掌气球
-//    BUNDLE_OF_HORSESHOE_BALLOONS("bundle_of_horseshoe_balloons", BundleOfHorseshoeBalloons::new), // 马掌气球束
-    /* 浮游圈 */
-//    FLIPPER("flipper", Flipper::new), // 脚蹼
-    /* 潜水装备 */
-    /* 水母潜水装备 */
-    /* 北极潜水装备 */
-//    FROG_LEG("frog_leg", FrogLeg::new), // 蛙腿
-//    FROG_FLIPPER("frog_flipper", FrogFlipper::new), // 青蛙脚蹼
-//    FROG_WEBBING("frog_webbing", FrogWebbing::new), // 青蛙蹼
-//    FROG_GEAR("frog_gear", FrogGear::new), // 青蛙装备
-//    AMBHIPIAN_BOOTS("ambhipian_boots", AmbhipianBoots::new), // 水陆两用靴
+//            OBSIDIAN_HORSESHOE = registerCurio("obsidian_horseshoe", ObsidianHorseshoe::new), // 黑曜石马掌
+//            WHITE_HORSESHOE_BALLOON = registerCurio("white_horseshoe_balloon", WhiteHorseshoeBalloon::new), // 白马掌气球
+//            BLUE_HORSESHOE_BALLOON = registerCurio("blue_horseshoe_balloon", BlueHorseshoeBalloon::new), // 蓝马掌气球
+//            YELLOW_HORSESHOE_BALLOON = registerCurio("yellow_horseshoe_balloon", YellowHorseshoeBalloon::new), // 黄马掌气球
+//            GREEN_HORSESHOE_BALLOON = registerCurio("green_horseshoe_balloon", GreenHorseshoeBalloon::new), // 绿马掌气球
+//            PINK_HORSESHOE_BALLOON = registerCurio("pink_horseshoe_balloon", PinkHorseshoeBalloon::new), // 粉马掌气球
+//            AMBER_HORSESHOE_BALLOON = registerCurio("amber_horseshoe_balloon", AmberHorseshoeBalloon::new), // 琥珀马掌气球
+//            BUNDLE_OF_HORSESHOE_BALLOONS = registerCurio("bundle_of_horseshoe_balloons", BundleOfHorseshoeBalloons::new), // 马掌气球束
+            /* 浮游圈 */
+//            FLIPPER = registerCurio("flipper", Flipper::new), // 脚蹼
+            /* 潜水装备 */
+            /* 水母潜水装备 */
+            /* 北极潜水装备 */
+//            FROG_LEG = registerCurio("frog_leg", FrogLeg::new), // 蛙腿
+//            FROG_FLIPPER = registerCurio("frog_flipper", FrogFlipper::new), // 青蛙脚蹼
+//            FROG_WEBBING = registerCurio("frog_webbing", FrogWebbing::new), // 青蛙蹼
+//            FROG_GEAR = registerCurio("frog_gear", FrogGear::new), // 青蛙装备
+//            AMBHIPIAN_BOOTS = registerCurio("ambhipian_boots", AmbhipianBoots::new), // 水陆两用靴
 
-    public static final Supplier<BaseCurioItem> ROYAL_GEL = registerCurio("royal_gel", builder -> builder.rarity(ModRarity.EXPERT).accessories(AccessoriesComponent.of(ValueType.MOB$IGNORE, new EntityTypesValue(EntityType.SLIME)))), // 皇家凝胶
+//            //LUCKY_COIN = registerCurio("lucky_coin", LuckyCoin::new), // 幸运币
+//            //GOLD_RING = registerCurio("gold_ring", GoldRing::new), // 金戒指
+//            //COIN_RING = registerCurio("coin_ring", CoinRing::new), // 钱币戒指
+            /* 优惠卡 */
+            /* 贪婪戒指 */
+//            TREASURE_MAGNET = registerCurio("treasure_magnet", TreasureMagnet::new), // 宝藏磁石
+//            FLOWER_BOOTS = registerCurio("flower_boots", FlowerBoots::new), // 花靴
+            /* 水母项链 */
+            /* 收音机 */
+//
+//            ANGLER_EARRING = registerCurio("angler_earring", AnglerEarring::new), // 渔夫耳环
+
+    public static final Supplier<BaseCurioItem> ROYAL_GEL = registerCurio("royal_gel", builder -> builder.rarity(ModRarity.EXPERT).accessories(entry(ValueType.MOB$IGNORE, new EntityTypesValue(EntityType.SLIME)))), // 皇家凝胶
             SHIELD_OF_CTHULHU = registerCurio("shield_of_cthulhu", builder -> builder.rarity(ModRarity.EXPERT).accessories(units(ValueType.SHIELD$OF$CTHULHU))), // 克苏鲁护盾
-            WORM_SCARF = registerCurio("worm_scarf", builder -> builder.rarity(ModRarity.EXPERT).accessories(of(ValueType.INJURY$FREE, new FloatValue(0.17F)))), // 蠕虫围巾
+            WORM_SCARF = registerCurio("worm_scarf", builder -> builder.rarity(ModRarity.EXPERT).accessories(of(ValueType.INJURY$FREE, 0.17F))), // 蠕虫围巾
             BRAIN_OF_CONFUSION = registerCurio("brain_of_confusion", builder -> builder.rarity(ModRarity.EXPERT).accessories(units(ValueType.BRAIN$OF$CONFUSION))), // 混乱之脑
             HIVE_PACK = registerCurio("hive_pack", builder -> builder.rarity(ModRarity.EXPERT).accessories(units(ValueType.HIVE$PACK))), // 蜂巢背包
             /* 骨头手套 */

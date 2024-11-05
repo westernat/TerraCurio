@@ -38,6 +38,7 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
         map.put(ValueType.SPRINTING, TABI);
         map.put(ValueType.SCOPE, SCOPE);
         map.put(ValueType.GRAVITY$GLOBE, GRAVITY_GLOBE);
+        map.put(ValueType.MAGILUMINESCENCE, MAGILUMINESCENCE);
     });
 
     public static final Type<CurioExistsPacketS2C> TYPE = new Type<>(TerraCurio.asResource("curio_exists"));

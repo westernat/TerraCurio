@@ -5,12 +5,9 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -35,17 +32,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements SelfGetter<LivingEntity> {
     @Shadow
-    public abstract EntityDimensions getDimensions(Pose pPose);
-
-    @Shadow
     public abstract boolean hasEffect(Holder<MobEffect> effect);
 
     @ModifyArg(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"), index = 2)
-    private double fall2(double pPosY) {
-        if (self() instanceof Player player) {
-            if (player instanceof ServerPlayer && ((IEntity) player).terra_curio$isShouldRot()) {
-                return pPosY + getDimensions(player.getPose()).height();
-            }
+    private double modifyParticlePosY(double pPosY) {
+        IEntity self = (IEntity) self();
+        if (self.terra_curio$isShouldRot()) {
+            return pPosY + self.terra_curio$getDimensionHeight();
         }
         return pPosY;
     }
@@ -120,6 +113,6 @@ public abstract class LivingEntityMixin implements SelfGetter<LivingEntity> {
 
     @Inject(method = "onChangedBlock", at = @At("TAIL"))
     private void onMoved(ServerLevel level, BlockPos pos, CallbackInfo ci) {
-        TCUtils.applyFlowerBoots(self());
+        TCUtils.onChangedBlock(self(), level, pos);
     }
 }

@@ -1,13 +1,20 @@
 package org.confluence.terra_curio.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityDimensions;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.component.primitive.ValueType;
@@ -19,6 +26,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -30,34 +38,52 @@ public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
     @Shadow
     protected abstract BlockPos getOnPos(float yOffset);
 
+    @Shadow
+    public abstract EntityDimensions getDimensions(Pose pose);
+
+    @Shadow
+    public abstract Pose getPose();
+
+    @Shadow
+    public float fallDistance;
+
+    @Shadow
+    private Level level;
     @Unique
-    private int confluence$cthulhuSprintingTime = 0;
+    private int terra_curio$cthulhuSprintingTime = 0;
     @Unique
-    private boolean confluence$isShouldRot = false;
+    private boolean terra_curio$isShouldRot = false;
+    @Unique
+    private float terra_curio$dimensionHeight = 0.0F;
 
     @Override
     public int terra_curio$getCthulhuSprintingTime() {
-        return confluence$cthulhuSprintingTime;
+        return terra_curio$cthulhuSprintingTime;
     }
 
     @Override
     public void terra_curio$setCthulhuSprintingTime(int amount) {
-        this.confluence$cthulhuSprintingTime = amount;
+        this.terra_curio$cthulhuSprintingTime = amount;
     }
 
     @Override
     public void terra_curio$setShouldRot(boolean bool) {
-        this.confluence$isShouldRot = bool;
+        this.terra_curio$isShouldRot = bool;
     }
 
     @Override
     public boolean terra_curio$isShouldRot() {
-        return confluence$isShouldRot;
+        return terra_curio$isShouldRot;
+    }
+
+    @Override
+    public float terra_curio$getDimensionHeight() {
+        return terra_curio$dimensionHeight;
     }
 
     @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isInLava()Z", ordinal = 1))
     private boolean resetLavaImmune(boolean original) {
-        if (self() instanceof Player living) {
+        if (self() instanceof LivingEntity living) {
             BlockPos onPos = living.getOnPos();
             if (living.level().getFluidState(onPos).is(FluidTags.LAVA) && !living.level().getFluidState(onPos.above()).is(FluidTags.LAVA)) return false;
             AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
@@ -68,25 +94,26 @@ public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
             } else {
                 attachment.increaseLavaImmuneTicks();
             }
+            this.terra_curio$dimensionHeight = terra_curio$isShouldRot ? getDimensions(getPose()).height() : 0.0F;
         }
         return original;
     }
 
     @Inject(method = "setSprinting", at = @At("TAIL"))
     private void sprinting(boolean bool, CallbackInfo ci) {
-        if (bool && self() instanceof Player living) {
-            if (confluence$cthulhuSprintingTime == 0 && living.getData(TCAttachments.ACCESSORIES).contains(ValueType.SHIELD$OF$CTHULHU)) {
+        if (bool && self() instanceof LivingEntity living) {
+            if (terra_curio$cthulhuSprintingTime == 0 && living.getData(TCAttachments.ACCESSORIES).contains(ValueType.SHIELD$OF$CTHULHU)) {
                 float f = living.getYRot() * Mth.DEG_TO_RAD;
                 double factor = living.onGround() ? 1.6 : 1.2;
                 living.setDeltaMovement(living.getDeltaMovement().add(-Mth.sin(f) * factor, 0.0D, Mth.cos(f) * factor));
-                this.confluence$cthulhuSprintingTime = 32;
+                this.terra_curio$cthulhuSprintingTime = 32;
             }
         }
     }
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V"))
     private void tickProfiler(CallbackInfo ci) {
-        if (confluence$cthulhuSprintingTime > 0) this.confluence$cthulhuSprintingTime--;
+        if (terra_curio$cthulhuSprintingTime > 0) this.terra_curio$cthulhuSprintingTime--;
     }
 
     @Inject(method = "playerTouch", at = @At("TAIL"))
@@ -103,8 +130,37 @@ public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
 
     @Inject(method = "getOnPosLegacy", at = @At("RETURN"), cancellable = true)
     private void getOnPosAbove(CallbackInfoReturnable<BlockPos> cir) {
-        if (self() instanceof ServerPlayer && confluence$isShouldRot) {
-            cir.setReturnValue(getOnPos(-2.2F));
+        if (terra_curio$isShouldRot) {
+            cir.setReturnValue(getOnPos(-(terra_curio$dimensionHeight + 0.2F)));
         }
+    }
+
+    @WrapOperation(method = "checkSupportingBlock", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getBoundingBox()Lnet/minecraft/world/phys/AABB;"))
+    private AABB getBoundingBox(Entity instance, Operation<AABB> original) {
+        AABB aabb = original.call(instance);
+        if (terra_curio$isShouldRot) {
+            return new AABB(aabb.minX, aabb.maxY + Mth.EPSILON, aabb.minZ, aabb.maxX, aabb.maxY, aabb.maxZ);
+        }
+        return aabb;
+    }
+
+    @Inject(method = "checkFallDamage", at = @At("TAIL"))
+    private void updateFallDIstance(double y, boolean onGround, BlockState state, BlockPos pos, CallbackInfo ci) {
+        if (terra_curio$isShouldRot && !level.isClientSide && y > 0.0) {
+            this.fallDistance += (float) y;
+        }
+    }
+
+    @ModifyArg(method = "spawnSprintParticle", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), index = 2)
+    private double modifyParticlePosY(double y) {
+        if (terra_curio$isShouldRot) {
+            return y - 0.2 + terra_curio$dimensionHeight;
+        }
+        return y;
+    }
+
+    @ModifyArg(method = "spawnSprintParticle", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), index = 5)
+    private double modifyParticleSpeedY(double y) {
+        return terra_curio$isShouldRot ? -y : y;
     }
 }

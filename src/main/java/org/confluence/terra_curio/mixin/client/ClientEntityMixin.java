@@ -25,7 +25,7 @@ public abstract class ClientEntityMixin implements SelfGetter<Entity> {
     @Inject(method = "getEyeHeight()F", at = @At("RETURN"), cancellable = true)
     private void eyeHeight(CallbackInfoReturnable<Float> cir) {
         if (self() instanceof LocalPlayer localPlayer && GravitationHandler.isShouldRot()) {
-            cir.setReturnValue(localPlayer.getDimensions(localPlayer.getPose()).height() * 0.15F);
+            cir.setReturnValue(((IEntity) localPlayer).terra_curio$getDimensionHeight() * 0.15F);
         }
     }
 

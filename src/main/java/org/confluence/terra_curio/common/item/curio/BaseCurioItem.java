@@ -21,6 +21,7 @@ import org.confluence.terra_curio.common.component.primitive.PrimitiveValue;
 import org.confluence.terra_curio.common.component.primitive.ValueType;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.util.CuriosUtils;
+import org.jetbrains.annotations.ApiStatus;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
@@ -35,7 +36,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
     protected Builder builder;
 
     protected BaseCurioItem(Builder builder) {
-        super(builder.properties);
+        super(builder.initialize().properties);
         this.builder = builder;
     }
 
@@ -170,6 +171,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
+        @ApiStatus.Internal
         public Builder initialize() {
             properties.stacksTo(1).component(TCDataComponentTypes.MOD_RARITY, rarity);
             this.attributes = attributesBuilder.build();
@@ -178,7 +180,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         }
 
         public BaseCurioItem build() {
-            return new BaseCurioItem(initialize());
+            return new BaseCurioItem(this);
         }
     }
 }

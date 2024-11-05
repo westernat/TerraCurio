@@ -29,7 +29,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
     public static final ResourceLocation ID = TerraCurio.asResource("base_speed_boots");
 
     public BaseSpeedBoots(Builder builder) {
-        super(builder.initialize());
+        super(builder);
     }
 
     @Override

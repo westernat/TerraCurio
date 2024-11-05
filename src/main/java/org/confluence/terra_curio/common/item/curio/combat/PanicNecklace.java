@@ -21,7 +21,7 @@ public class PanicNecklace extends BaseCurioItem {
     public static final String KEY = TerraCurio.MODID + ":last_hurt";
 
     public PanicNecklace(Builder builder) {
-        super(builder.initialize());
+        super(builder);
     }
 
     @Override

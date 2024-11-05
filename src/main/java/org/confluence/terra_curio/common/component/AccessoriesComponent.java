@@ -19,7 +19,7 @@ import java.util.Map;
 public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> types) implements DataComponentType<AccessoriesComponent> {
     public static final Codec<AccessoriesComponent> CODEC = Codec.dispatchedMap(ResourceLocation.CODEC, ValueType.CODECS::get).xmap(map -> {
         Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> table = new Hashtable<>();
-        map.forEach((key, value) -> table.put(ValueType.ENTRIES.get(key), value));
+        map.forEach((key, value) -> table.put(ValueType.TYPES.get(key), value));
         return new AccessoriesComponent(table);
     }, component -> {
         Map<ResourceLocation, PrimitiveValue<?>> table = new Hashtable<>();
@@ -39,8 +39,16 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
         }
     };
 
-    public static <T, V extends PrimitiveValue<T>> AccessoriesComponent of(ValueType<T, V> type, V value) {
-        return new AccessoriesComponent(new Hashtable<>(Map.of(type, value)));
+    public static <T, V extends PrimitiveValue<T>> AccessoriesComponent entry(ValueType<T, V> type, V value) {
+        Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>();
+        map.put(type, value);
+        return new AccessoriesComponent(map);
+    }
+
+    public static <T, V extends PrimitiveValue<T>> AccessoriesComponent of(ValueType<T, V> type, T value) {
+        Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>();
+        map.put(type, type.newInstance(value));
+        return new AccessoriesComponent(map);
     }
 
     public static AccessoriesComponent units(ValueType<Unit, UnitValue> type, ValueType<Unit, UnitValue>... types) {

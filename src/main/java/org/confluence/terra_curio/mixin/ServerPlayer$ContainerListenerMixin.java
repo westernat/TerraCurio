@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(targets = "net.minecraft.server.level.ServerPlayer$2")
-public abstract class ServerPlayerMixin {
+public abstract class ServerPlayer$ContainerListenerMixin {
     @Shadow
     @Final
     ServerPlayer this$0;

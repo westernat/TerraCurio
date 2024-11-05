@@ -16,7 +16,7 @@ import top.theillusivec4.curios.api.SlotContext;
 
 public class PaladinsShield extends BaseCurioItem {
     public PaladinsShield(Builder builder) {
-        super(builder.initialize());
+        super(builder);
     }
 
     @Override

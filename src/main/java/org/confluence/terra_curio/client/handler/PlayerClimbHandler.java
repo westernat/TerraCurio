@@ -15,7 +15,7 @@ import org.confluence.terra_curio.network.s2c.PlayerClimbPacketS2C;
 @OnlyIn(Dist.CLIENT)
 public final class PlayerClimbHandler {
     private static boolean wallJumped = false;
-    private static int climberAmount = 0;
+    private static byte climberAmount = 0;
 
     public static void handle(LocalPlayer localPlayer, Vec2 vector, boolean jumping) {
         if (climberAmount <= 0 || localPlayer.onGround() || (vector.x == 0.0 && vector.y == 0.0)){

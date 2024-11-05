@@ -7,7 +7,7 @@ import org.confluence.terra_curio.util.TCUtils;
 
 public class AnkhCharm extends BaseCurioItem {
     public AnkhCharm() {
-        super(getBuilder().initialize());
+        super(getBuilder());
     }
 
     private static Builder getBuilder() {

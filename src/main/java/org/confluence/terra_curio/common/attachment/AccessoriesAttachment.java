@@ -37,7 +37,7 @@ import java.util.*;
 
 @SuppressWarnings("unchecked")
 public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
-    public static final List<ValueType<Unit, UnitValue>> UNITS_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
+    private static final List<ValueType<Unit, UnitValue>> UNITS_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
         list.add(ValueType.FIRE$ATTACK);
         list.add(ValueType.BRAIN$OF$CONFUSION);
         list.add(ValueType.HIVE$PACK);
@@ -49,16 +49,19 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         list.add(ValueType.FIRE$IMMUNE);
         list.add(ValueType.FLOWER$BOOTS);
         list.add(ValueType.FROZEN$IMMUNE);
+        list.add(ValueType.ICE$SPEED);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.UnitType(list));
     });
-    public static final List<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
+    private static final List<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
         list.add(ValueType.FISHING$POWER);
-        list.add(ValueType.INVULNERABLE$TICKS$MULTIPLIER);
         list.add(ValueType.INJURY$FREE);
-        list.add(ValueType.MOB$IGNORE);
-        list.add(ValueType.LAVA$IMMUNE$TICKS);
-        list.add(ValueType.FLUID$WALK);
+        list.add(ValueType.INVULNERABLE$TICKS$MULTIPLIER);
         list.add(ValueType.LAVA$HURT$REDUCE);
+        list.add(ValueType.LAVA$IMMUNE$TICKS);
+        list.add(ValueType.RIGHT$CLICK$DELAY$SUBSTRACTOR);
+        list.add(ValueType.MOB$IGNORE);
+        list.add(ValueType.FLUID$WALK);
+        list.add(ValueType.WALL$CLIMB);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.OtherType(list));
     });
     private final Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> valueMap = new HashMap<>();
@@ -195,7 +198,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
             String key = compoundTag.getAllKeys().stream().findFirst().get();
             ResourceLocation location = ResourceLocation.parse(key);
             ValueType.CODECS.get(location).decode(NbtOps.INSTANCE, compoundTag.get(key)).result().ifPresent(pair -> {
-                valueMap.put(ValueType.ENTRIES.get(location), pair.getFirst());
+                valueMap.put(ValueType.TYPES.get(location), pair.getFirst());
             });
         }
         this.ignores.clear();

@@ -16,7 +16,7 @@ import java.util.function.Function;
 @SuppressWarnings("unchecked")
 public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final Map<ResourceLocation, Codec<PrimitiveValue<?>>> CODECS = new Hashtable<>();
-    public static final Map<ResourceLocation, ValueType<?, ? extends PrimitiveValue<?>>> ENTRIES = new Hashtable<>();
+    public static final Map<ResourceLocation, ValueType<?, ? extends PrimitiveValue<?>>> TYPES = new Hashtable<>();
 
     public static final ValueType<Unit, UnitValue> FULL$INFORMATION = ofUnit("full_information");
     public static final ValueType<Unit, UnitValue> HOUR$WATCH = ofUnit("hour_watch");
@@ -39,6 +39,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Unit, UnitValue> SPRINTING = ofUnit("sprinting");
     public static final ValueType<Unit, UnitValue> SCOPE = ofUnit("scope");
     public static final ValueType<Unit, UnitValue> GRAVITY$GLOBE = ofUnit("gravity_globe");
+    public static final ValueType<Unit, UnitValue> MAGILUMINESCENCE = ofUnit("magiluminescence");
 
     public static final ValueType<Unit, UnitValue> FIRE$ATTACK = ofUnit("fire_attack");
     public static final ValueType<Unit, UnitValue> BRAIN$OF$CONFUSION = ofUnit("brain_of_confusion");
@@ -51,14 +52,17 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Unit, UnitValue> FIRE$IMMUNE = ofUnit("fire_immune");
     public static final ValueType<Unit, UnitValue> FLOWER$BOOTS = ofUnit("flower_boots");
     public static final ValueType<Unit, UnitValue> FROZEN$IMMUNE = ofUnit("frozen_immune");
+    public static final ValueType<Unit, UnitValue> ICE$SPEED = ofUnit("ice_speed");
 
     public static final ValueType<Float, FloatValue> FISHING$POWER = ofFloat("fishing_power", CombineRule.FLOAT_ADDITION, 0.0F); // todo
     public static final ValueType<Float, FloatValue> INJURY$FREE = ofFloat("injury_free", CombineRule.FLOAT_ADDITION, 0.0F);
     public static final ValueType<Float, FloatValue> INVULNERABLE$TICKS$MULTIPLIER = ofFloat("invulnerable_ticks_multiplier", CombineRule.FLOAT_GET_MAX, 1.0F);
     public static final ValueType<Float, FloatValue> LAVA$HURT$REDUCE = ofFloat("lava_hurt_reduce", CombineRule.FLOAT_GET_MAX, 0.0F);
     public static final ValueType<Integer, IntegerValue> LAVA$IMMUNE$TICKS = ofInteger("lava_immune_ticks", CombineRule.INTEGER_GET_MAX, 0);
+    public static final ValueType<Integer, IntegerValue> RIGHT$CLICK$DELAY$SUBSTRACTOR = ofInteger("right_click_delay_substractor", CombineRule.INTEGER_GET_MAX, 0);
     public static final ValueType<List<EntityType<?>>, EntityTypesValue> MOB$IGNORE = create("mob_ignore", CombineRule.ENTITY_TYPES_EXPANSION, EntityTypesValue.CODEC, List.of(), EntityTypesValue::new);
     public static final ValueType<List<TagKey<Fluid>>, FluidTagsValue> FLUID$WALK = create("fluid_walk", CombineRule.FLUID_TAGS_EXPANSION, FluidTagsValue.CODEC, List.of(), FluidTagsValue::new);
+    public static final ValueType<Byte, ByteValue> WALL$CLIMB = create("wall_climb", CombineRule.BYTE_ADDITION_WITHIN_0_TO_2, ByteValue.CODEC, (byte) 0, ByteValue::new);
 
     private final ResourceLocation key;
     private final CombineRule<T, V> combineRule;
@@ -82,7 +86,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
         ResourceLocation id = TerraCurio.asResource(path);
         registerCodec(id, codec);
         ValueType<T, V> type = new ValueType<>(id, combineRule, defaultValue, factory);
-        ENTRIES.put(id, type);
+        TYPES.put(id, type);
         return type;
     }
 

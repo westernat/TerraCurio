@@ -150,7 +150,12 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
-        if (event.loadedFromDisk() || event.getLevel().isClientSide) return;
+        if (event.loadedFromDisk() || event.getLevel().isClientSide) {
+            if (event.getEntity() instanceof LivingEntity living) {
+                living.getData(TCAttachments.ACCESSORIES).flushAbility(living); // contains local player
+            }
+            return;
+        }
         if (event.getEntity() instanceof AbstractArrow arrow && arrow.getOwner() instanceof LivingEntity living) {
             TCAttributes.applyToArrow(living, arrow);
             TCUtils.applyIgniteArrow(living, arrow);
@@ -165,11 +170,10 @@ public final class GameEvents {
     @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
-        if (TCUtils.isServerNotFake(player)) {
-            ServerPlayer serverPlayer = (ServerPlayer) player;
-            TCUtils.resetClientPacket(serverPlayer);
-            InfoCurioCheckPacketS2C.sendToPlayer(serverPlayer, serverPlayer.getInventory());
-        }
+        player.getData(TCAttachments.ACCESSORIES).flushAbility(player);
+        ServerPlayer serverPlayer = (ServerPlayer) player;
+        TCUtils.resetClientPacket(serverPlayer);
+        InfoCurioCheckPacketS2C.sendToPlayer(serverPlayer, serverPlayer.getInventory());
     }
 
     @SubscribeEvent

@@ -12,4 +12,6 @@ public interface IEntity {
     void terra_curio$setShouldRot(boolean bool);
 
     boolean terra_curio$isShouldRot();
+
+    float terra_curio$getDimensionHeight();
 }

@@ -2,6 +2,7 @@ package org.confluence.terra_curio.common.component.primitive;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.material.Fluid;
@@ -23,17 +24,6 @@ public abstract class CombineRule<T, V extends PrimitiveValue<T>> {
         @Override
         public String name() {
             return "unit_get_self";
-        }
-    });
-    public static final CombineRule<List<EntityType<?>>, EntityTypesValue> ENTITY_TYPES_GET_SELF = register(new CombineRule<>() {
-        @Override
-        public List<EntityType<?>> combine(List<EntityType<?>> componentA, List<EntityType<?>> componentB) {
-            return componentA;
-        }
-
-        @Override
-        public String name() {
-            return "entity_types_get_self";
         }
     });
     public static final CombineRule<List<EntityType<?>>, EntityTypesValue> ENTITY_TYPES_EXPANSION = register(new CombineRule<>() {
@@ -62,17 +52,6 @@ public abstract class CombineRule<T, V extends PrimitiveValue<T>> {
             return "fluid_tag_expansion";
         }
     });
-    public static final CombineRule<Integer, IntegerValue> INTEGER_GET_SELF = register(new CombineRule<>() {
-        @Override
-        public Integer combine(Integer componentA, Integer componentB) {
-            return componentA;
-        }
-
-        @Override
-        public String name() {
-            return "integer_get_self";
-        }
-    });
     public static final CombineRule<Integer, IntegerValue> INTEGER_GET_MAX = register(new CombineRule<>() {
         @Override
         public Integer combine(Integer componentA, Integer componentB) {
@@ -82,61 +61,6 @@ public abstract class CombineRule<T, V extends PrimitiveValue<T>> {
         @Override
         public String name() {
             return "integer_get_max";
-        }
-    });
-    public static final CombineRule<Integer, IntegerValue> INTEGER_ADDITION = register(new CombineRule<>() {
-        @Override
-        public Integer combine(Integer componentA, Integer componentB) {
-            return componentA + componentB;
-        }
-
-        @Override
-        public String name() {
-            return "integer_addition";
-        }
-    });
-    public static final CombineRule<Integer, IntegerValue> INTEGER_SUBSTRACTION = register(new CombineRule<>() {
-        @Override
-        public Integer combine(Integer componentA, Integer componentB) {
-            return componentA - componentB;
-        }
-
-        @Override
-        public String name() {
-            return "integer_substraction";
-        }
-    });
-    public static final CombineRule<Integer, IntegerValue> INTEGER_MULTIPLICATION = register(new CombineRule<>() {
-        @Override
-        public Integer combine(Integer componentA, Integer componentB) {
-            return componentA * componentB;
-        }
-
-        @Override
-        public String name() {
-            return "integer_multiplication";
-        }
-    });
-    public static final CombineRule<Integer, IntegerValue> INTEGER_DIVISION = register(new CombineRule<>() {
-        @Override
-        public Integer combine(Integer componentA, Integer componentB) {
-            return componentA * componentB;
-        }
-
-        @Override
-        public String name() {
-            return "integer_multiply";
-        }
-    });
-    public static final CombineRule<Float, FloatValue> FLOAT_GET_SELF = register(new CombineRule<>() {
-        @Override
-        public Float combine(Float componentA, Float componentB) {
-            return componentA;
-        }
-
-        @Override
-        public String name() {
-            return "float_get_self";
         }
     });
     public static final CombineRule<Float, FloatValue> FLOAT_GET_MAX = register(new CombineRule<>() {
@@ -159,6 +83,17 @@ public abstract class CombineRule<T, V extends PrimitiveValue<T>> {
         @Override
         public String name() {
             return "float_addition";
+        }
+    });
+    public static final CombineRule<Byte, ByteValue> BYTE_ADDITION_WITHIN_0_TO_2 = register(new CombineRule<>() {
+        @Override
+        public Byte combine(Byte componentA, Byte componentB) {
+            return (byte) Mth.clamp(componentA + componentB, 0, 2);
+        }
+
+        @Override
+        public String name() {
+            return "byte_addition_within_2";
         }
     });
 
