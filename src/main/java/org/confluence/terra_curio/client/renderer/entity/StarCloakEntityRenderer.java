@@ -23,7 +23,7 @@ public class StarCloakEntityRenderer extends EntityRenderer<StarCloakEntity> {
     public StarCloakEntityRenderer(EntityRendererProvider.Context pContext) {
         super(pContext);
         this.itemRenderer = pContext.getItemRenderer();
-        this.item = new ItemStack(TCItems.STAR.get());
+        this.item = TCItems.STAR.get().getDefaultInstance();
     }
 
     @Override

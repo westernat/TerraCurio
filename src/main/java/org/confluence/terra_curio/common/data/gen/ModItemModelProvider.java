@@ -15,7 +15,7 @@ public class ModItemModelProvider extends ItemModelProvider {
 
     @Override
     protected void registerModels() {
-        TCItems.ITEMS.getEntries().forEach(item -> {
+        TCItems.CURIOS.getEntries().forEach(item -> {
             try {
                 Item value = item.get();
                 String path = item.getId().getPath().toLowerCase();

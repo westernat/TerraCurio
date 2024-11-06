@@ -6,6 +6,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
+import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.EntityTypesValue;
@@ -31,9 +33,10 @@ import static org.confluence.terra_curio.common.component.ModRarity.*;
 
 @SuppressWarnings("all")
 public final class TCItems {
-    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(TerraCurio.MODID);
+    public static final DeferredRegister.Items OTHERS = DeferredRegister.createItems(TerraCurio.MODID);
+    public static final DeferredRegister.Items CURIOS = DeferredRegister.createItems(TerraCurio.MODID);
 
-    public static final Supplier<Item> STAR = ITEMS.register("star", () -> new Item(new Item.Properties()));
+    public static final Supplier<Item> STAR = OTHERS.register("star", () -> new Item(new Item.Properties()));
 
     public static final Supplier<BaseCurioItem> BEZOAR = registerCurio("bezoar", builder -> builder.rarity(LIGHT_RED).effectImmunities(MobEffects.POISON)), // 牛黄 中毒
             HOLY_WATER = registerCurio("holy_water", builder -> builder.rarity(LIGHT_RED).effectImmunities(MobEffects.WITHER)), // 圣水 凋零
@@ -216,15 +219,23 @@ public final class TCItems {
             /* 飞毯 */
             AGLET = registerCurio("aglet", builder -> builder.noTooltip().attribute(Attributes.MOVEMENT_SPEED, 0.05, ADD_MULTIPLIED_TOTAL)), // 金属带扣
             ANKLET_OF_THE_WIND = registerCurio("anklet_of_the_wind", builder -> builder.noTooltip().attribute(Attributes.MOVEMENT_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)), // 疾风脚镯
-            MAGILUMINESCENCE = registerCurio("magiluminescence", builder -> builder.accessories(units(ValueType.MAGILUMINESCENCE)).attribute(Attributes.MOVEMENT_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)), // 魔光护符
+            MAGILUMINESCENCE = registerCurio("magiluminescence", builder -> builder
+                    .accessories(units(ValueType.MAGILUMINESCENCE))
+                    .attribute(Attributes.MOVEMENT_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)), // 魔光护符
             LAVA_CHARM = registerCurio("lava_charm", builder -> builder.rarity(ORANGE).accessories(of(ValueType.LAVA$IMMUNE$TICKS, 140))), // 熔岩护身符
-            MAGMA_SKULL = registerCurio("magma_skull", builder -> builder.rarity(PINK).accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.LAVA$IMMUNE$TICKS, 140))), // 岩浆骷髅头
-            MOLTEN_CHARM = registerCurio("molten_charm", builder -> builder.rarity(PINK).accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.LAVA$IMMUNE$TICKS, 140))), // 熔火护身符
+            MAGMA_SKULL = registerCurio("magma_skull", builder -> builder.rarity(PINK).accessories(
+                    units(ValueType.FIRE$IMMUNE),
+                    of(ValueType.LAVA$IMMUNE$TICKS, 140))), // 岩浆骷髅头
+            MOLTEN_CHARM = registerCurio("molten_charm", builder -> builder.rarity(PINK).accessories(
+                    units(ValueType.FIRE$IMMUNE),
+                    of(ValueType.LAVA$IMMUNE$TICKS, 140))), // 熔火护身符
             CLIMBING_CLAWS = registerCurio("climbing_claws", builder -> builder.accessories(of(ValueType.WALL$CLIMB, (byte) 1))), // 攀爬爪
             SHOE_SPIKES = registerCurio("shoe_spikes", builder -> builder.accessories(of(ValueType.WALL$CLIMB, (byte) 1))), // 鞋钉
             TIGER_CLIMBING_GEAR = registerCurio("tiger_climbing_gear", builder -> builder.rarity(GREEN).accessories(of(ValueType.WALL$CLIMB, (byte) 2))), // 猛虎攀爬装备
             TABI = registerCurio("tabi", builder -> builder.rarity(LIME).accessories(units(ValueType.SPRINTING))), // 分趾厚底袜
-            MASTER_NINJA_GEAR = registerCurio("master_ninja_gear", builder -> builder.rarity(YELLOW).accessories(units(ValueType.SPRINTING), of(ValueType.WALL$CLIMB, (byte) 2)).attribute(TCAttributes.getDodgeChance(), 0.1, ADD_VALUE)), // 忍者大师装备
+            MASTER_NINJA_GEAR = registerCurio("master_ninja_gear", builder -> builder.rarity(YELLOW)
+                    .accessories(units(ValueType.SPRINTING), of(ValueType.WALL$CLIMB, (byte) 2))
+                    .attribute(TCAttributes.getDodgeChance(), 0.1, ADD_VALUE)), // 忍者大师装备
             ICE_SKATES = registerCurio("ice_skates", builder -> builder.accessories(units(ValueType.ICE$SPEED))), // 溜冰鞋
             HERMES_BOOTS = registerDirectly("hermes_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name))), // 赫尔墨斯靴
             FLURRY_BOOTS = registerDirectly("flurry_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name))), // 疾风雪靴
@@ -233,12 +244,16 @@ public final class TCItems {
             ROCKET_BOOTS = registerDirectly("rocket_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).accessories(of(ValueType.MAY$FLY, new Tuple<>(0.3F, 32))))), // 火箭靴
             SPECTRE_BOOTS = registerDirectly("spectre_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIGHT_RED).accessories(of(ValueType.MAY$FLY, new Tuple<>(0.3F, 32))))), // 幽灵靴
             FAIRY_BOOTS = registerDirectly("fairy_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(PINK).accessories(units(ValueType.FLOWER$BOOTS), of(ValueType.MAY$FLY, new Tuple<>(0.3F, 32))))), // 仙灵靴
-            LIGHTNING_BOOTS = registerDirectly("lightning_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(PINK).accessories(of(ValueType.MAY$FLY, new Tuple<>(0.3F, 32))).attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL))), // 闪电靴
+            LIGHTNING_BOOTS = registerDirectly("lightning_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(PINK)
+                    .accessories(of(ValueType.MAY$FLY, new Tuple<>(0.3F, 32)))
+                    .attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL))), // 闪电靴
             FROSTSPARK_BOOTS = registerDirectly("frostspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIME)
                     .accessories(units(ValueType.ICE$SPEED), of(ValueType.MAY$FLY, new Tuple<>(0.3F, 32)))
                     .attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL))), // 霜花靴
             WATER_WALKING_BOOTS = registerCurio("water_walking_boots", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.FLUID$WALK, List.of(TCTags.WATER_LIKE_WALK)))), // 水上漂靴
-            OBSIDIAN_WATER_WALKING_BOOTS = registerCurio("obsidian_water_walking_boots", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.FLUID$WALK, List.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)))), // 黑曜石水上漂靴
+            OBSIDIAN_WATER_WALKING_BOOTS = registerCurio("obsidian_water_walking_boots", builder -> builder.rarity(LIGHT_RED).accessories(
+                    units(ValueType.FIRE$IMMUNE),
+                    of(ValueType.FLUID$WALK, List.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)))), // 黑曜石水上漂靴
             LAVA_WADERS = registerCurio("lava_waders", builder -> builder.rarity(LIME).accessories(
                     units(ValueType.FIRE$IMMUNE),
                     of(ValueType.FLUID$WALK, List.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)),
@@ -258,12 +273,22 @@ public final class TCItems {
             TSUNAMI_IN_A_BOTTLE = registerCurio("tsunami_in_a_bottle", builder -> builder.accessories(of(ValueType.TSUNAMI, 1.0F))), // 海啸瓶
             SHINY_RED_BALLOON = registerCurio("shiny_red_balloon", builder -> builder.attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)), // 闪亮红气球
             BALLOON_PUFFERFISH = registerCurio("balloon_pufferfish", builder -> builder.attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)), // 气球河豚鱼
-            CLOUD_IN_A_BALLOON = registerCurio("cloud_in_a_balloon", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.CLOUD, 1.1F)).attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)), // 云朵气球
-            BLIZZARD_IN_A_BALLOON = registerCurio("blizzard_in_a_balloon", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.BLIZZARD, new Tuple<>(0.4F, 16))).attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)), // 暴雪气球
-            SANDSTORM_IN_A_BALLOON = registerCurio("sandstorm_in_a_balloon", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.SAND$STORM, new Tuple<>(0.45F, 20))).attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)), // 沙暴气球
-            FART_IN_A_BALLOON = registerCurio("fart_in_a_balloon", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.FART, 2.1F)).attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)), // 臭屁气球
+            CLOUD_IN_A_BALLOON = registerCurio("cloud_in_a_balloon", builder -> builder.rarity(LIGHT_RED)
+                    .accessories(of(ValueType.CLOUD, 1.1F))
+                    .attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)), // 云朵气球
+            BLIZZARD_IN_A_BALLOON = registerCurio("blizzard_in_a_balloon", builder -> builder.rarity(LIGHT_RED)
+                    .accessories(of(ValueType.BLIZZARD, new Tuple<>(0.4F, 16)))
+                    .attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)), // 暴雪气球
+            SANDSTORM_IN_A_BALLOON = registerCurio("sandstorm_in_a_balloon", builder -> builder.rarity(LIGHT_RED)
+                    .accessories(of(ValueType.SAND$STORM, new Tuple<>(0.45F, 20)))
+                    .attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)), // 沙暴气球
+            FART_IN_A_BALLOON = registerCurio("fart_in_a_balloon", builder -> builder.rarity(LIGHT_RED)
+                    .accessories(of(ValueType.FART, 2.1F))
+                    .attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)), // 臭屁气球
             SHARKRON_BALLOON = registerCurio("sharkron_balloon", builder -> builder.accessories(of(ValueType.TSUNAMI, 1.1F)).attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)), // 鲨鱼龙气球
-            HONEY_BALLOON = registerCurio("honey_balloon", builder -> builder.rarity(GREEN).accessories(units(ValueType.HONEY$COMB)).attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)), // 蜂蜜气球
+            HONEY_BALLOON = registerCurio("honey_balloon", builder -> builder.rarity(GREEN)
+                    .accessories(units(ValueType.HONEY$COMB))
+                    .attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)), // 蜂蜜气球
             BUNDLE_OF_BALLOONS = registerCurio("bundle_of_balloons", builder -> builder.rarity(YELLOW).accessories(
                     of(ValueType.SAND$STORM, new Tuple<>(0.45F, 20)),
                     of(ValueType.BLIZZARD, new Tuple<>(0.4F, 16)),
@@ -272,30 +297,75 @@ public final class TCItems {
             LUCKY_HORSESHOE = registerCurio("lucky_horseshoe", builder -> builder
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 幸运马掌
-            OBSIDIAN_HORSESHOE = registerCurio("obsidian_horseshoe", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.FIRE$IMMUNE))
+            OBSIDIAN_HORSESHOE = registerCurio("obsidian_horseshoe", builder -> builder.rarity(LIGHT_RED)
+                    .accessories(units(ValueType.FIRE$IMMUNE))
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 黑曜石马掌
-//            WHITE_HORSESHOE_BALLOON = registerCurio("white_horseshoe_balloon", WhiteHorseshoeBalloon::new), // 白马掌气球
-//            BLUE_HORSESHOE_BALLOON = registerCurio("blue_horseshoe_balloon", BlueHorseshoeBalloon::new), // 蓝马掌气球
-//            YELLOW_HORSESHOE_BALLOON = registerCurio("yellow_horseshoe_balloon", YellowHorseshoeBalloon::new), // 黄马掌气球
-//            GREEN_HORSESHOE_BALLOON = registerCurio("green_horseshoe_balloon", GreenHorseshoeBalloon::new), // 绿马掌气球
-//            PINK_HORSESHOE_BALLOON = registerCurio("pink_horseshoe_balloon", PinkHorseshoeBalloon::new), // 粉马掌气球
-//            AMBER_HORSESHOE_BALLOON = registerCurio("amber_horseshoe_balloon", AmberHorseshoeBalloon::new), // 琥珀马掌气球
-//            BUNDLE_OF_HORSESHOE_BALLOONS = registerCurio("bundle_of_horseshoe_balloons", BundleOfHorseshoeBalloons::new), // 马掌气球束
+            WHITE_HORSESHOE_BALLOON = registerCurio("white_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED)
+                    .accessories(of(ValueType.BLIZZARD, new Tuple<>(0.4F, 16)))
+                    .attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
+                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 白马掌气球
+            BLUE_HORSESHOE_BALLOON = registerCurio("blue_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED)
+                    .accessories(of(ValueType.CLOUD, 1.1F))
+                    .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
+                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 蓝马掌气球
+            YELLOW_HORSESHOE_BALLOON = registerCurio("yellow_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED)
+                    .accessories(of(ValueType.SAND$STORM, new Tuple<>(0.45F, 20)))
+                    .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
+                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 黄马掌气球
+            GREEN_HORSESHOE_BALLOON = registerCurio("green_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED)
+                    .accessories(of(ValueType.FART, 2.1F))
+                    .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
+                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 绿马掌气球
+            PINK_HORSESHOE_BALLOON = registerCurio("pink_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED)
+                    .accessories(of(ValueType.FART, 1.1F))
+                    .attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
+                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 粉马掌气球
+            AMBER_HORSESHOE_BALLOON = registerCurio("amber_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED)
+                    .accessories(units(ValueType.HONEY$COMB))
+                    .attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
+                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 琥珀马掌气球
+            BUNDLE_OF_HORSESHOE_BALLOONS = registerCurio("bundle_of_horseshoe_balloons", builder -> builder.rarity(YELLOW).accessories(
+                            of(ValueType.SAND$STORM, new Tuple<>(0.45F, 20)),
+                            of(ValueType.BLIZZARD, new Tuple<>(0.4F, 16)),
+                            of(ValueType.CLOUD, 1.1F))
+                    .attribute(Attributes.JUMP_STRENGTH, 0.33, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
+                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 马掌气球束
             /* 浮游圈 */
-//            FLIPPER = registerCurio("flipper", Flipper::new), // 脚蹼
+            FLIPPER = registerCurio("flipper", builder -> builder.noTooltip().attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)), // 脚蹼
             /* 潜水装备 */
             /* 水母潜水装备 */
             /* 北极潜水装备 */
-//            FROG_LEG = registerCurio("frog_leg", FrogLeg::new), // 蛙腿
-//            FROG_FLIPPER = registerCurio("frog_flipper", FrogFlipper::new), // 青蛙脚蹼
-//            FROG_WEBBING = registerCurio("frog_webbing", FrogWebbing::new), // 青蛙蹼
-//            FROG_GEAR = registerCurio("frog_gear", FrogGear::new), // 青蛙装备
-//            AMBHIPIAN_BOOTS = registerCurio("ambhipian_boots", AmbhipianBoots::new), // 水陆两用靴
+            FROG_LEG = registerCurio("frog_leg", builder -> builder
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 7.0, ADD_VALUE)
+                    .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)), // 蛙腿
+            FROG_FLIPPER = registerCurio("frog_flipper", builder -> builder
+                    .attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 7.0, ADD_VALUE)
+                    .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)), // 青蛙脚蹼
+            FROG_WEBBING = registerCurio("frog_webbing", builder -> builder.rarity(PINK)
+                    .accessories(of(ValueType.WALL$CLIMB, (byte) 2))
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 7.0, ADD_VALUE)
+                    .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)), // 青蛙蹼
+            FROG_GEAR = registerCurio("frog_gear", builder -> builder.rarity(PINK)
+                    .accessories(of(ValueType.WALL$CLIMB, (byte) 2))
+                    .attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 7.0, ADD_VALUE)
+                    .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)), // 青蛙装备
+            AMBHIPIAN_BOOTS = registerDirectly("ambhipian_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 7.0, ADD_VALUE)
+                    .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL))), // 水陆两用靴
 
-//            //LUCKY_COIN = registerCurio("lucky_coin", LuckyCoin::new), // 幸运币
-//            //GOLD_RING = registerCurio("gold_ring", GoldRing::new), // 金戒指
-//            //COIN_RING = registerCurio("coin_ring", CoinRing::new), // 钱币戒指
+            /* 幸运币 */
+            /* 金戒指 */
+            /* 钱币戒指 */
             /* 优惠卡 */
             /* 贪婪戒指 */
             TREASURE_MAGNET = registerCurio("treasure_magnet", builder -> builder.attribute(TCAttributes.getPickupRange(), 6.25, ADD_VALUE)), // 宝藏磁石
@@ -319,7 +389,7 @@ public final class TCItems {
             GRAVITY_GLOBE = registerCurio("gravity_globe", builder -> builder.rarity(ModRarity.EXPERT).accessories(units(ValueType.GRAVITY$GLOBE))); // 重力球
 
     public static Supplier<BaseCurioItem> registerCurio(String name, Consumer<BaseCurioItem.Builder> consumer) {
-        return ITEMS.register(name, () -> {
+        return CURIOS.register(name, () -> {
             BaseCurioItem.Builder builder = BaseCurioItem.builder(name);
             consumer.accept(builder);
             return builder.build();
@@ -327,10 +397,15 @@ public final class TCItems {
     }
 
     public static Supplier<BaseCurioItem> registerCurio(String name, Supplier<BaseCurioItem> supplier) {
-        return ITEMS.register(name, supplier);
+        return CURIOS.register(name, supplier);
     }
 
     public static Supplier<BaseCurioItem> registerDirectly(String name, Function<String, BaseCurioItem> function) {
-        return ITEMS.register(name, () -> function.apply(name));
+        return CURIOS.register(name, () -> function.apply(name));
+    }
+
+    public static void register(IEventBus eventBus) {
+        CURIOS.register(eventBus);
+        OTHERS.register(eventBus);
     }
 }

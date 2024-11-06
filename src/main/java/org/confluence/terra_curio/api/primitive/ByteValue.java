@@ -5,15 +5,15 @@ import net.minecraft.util.Mth;
 
 public record ByteValue(byte value) implements PrimitiveValue<Byte> {
     public static final Codec<ByteValue> CODEC = Codec.BYTE.xmap(ByteValue::new, ByteValue::get);
-    public static final CombineRule<Byte, ByteValue> ADDITION_WITHIN_0_TO_4 = CombineRule.register(new CombineRule<>() {
+    public static final CombineRule<Byte, ByteValue> ADDITION_WITHIN_0_TO_2 = CombineRule.register(new CombineRule<>() {
         @Override
         public Byte combine(Byte componentA, Byte componentB) {
-            return (byte) Mth.clamp(componentA + componentB, 0, 4);
+            return (byte) Mth.clamp(componentA + componentB, 0, 2);
         }
 
         @Override
         public String name() {
-            return "byte_addition_within_1_to_4";
+            return "byte_addition_within_1_to_2";
         }
     });
 

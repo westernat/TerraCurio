@@ -23,7 +23,7 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
         IntrinsicTagAppender<Item> appender = tag(TCTags.CURIO);
-        TCItems.ITEMS.getEntries().forEach(item -> {
+        TCItems.CURIOS.getEntries().forEach(item -> {
             if (item.get() instanceof BaseCurioItem) {
                 appender.add(item.get());
             }

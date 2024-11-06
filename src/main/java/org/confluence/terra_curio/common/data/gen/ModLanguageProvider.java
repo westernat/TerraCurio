@@ -7,14 +7,19 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.common.init.TCAttributes;
+import org.confluence.terra_curio.common.init.TCEffects;
+import org.confluence.terra_curio.common.init.TCEntities;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
 public class ModLanguageProvider extends LanguageProvider {
     private final Map<String, String> enData = new TreeMap<>();
@@ -78,12 +83,12 @@ public class ModLanguageProvider extends LanguageProvider {
         add("info.terra_curio.tally_counter", "Killed '", "已杀死 '");
         add("info.terra_curio.life_form_analyzer.none", "No rare creatures nearby!", "未发现稀有生物");
         add("info.terra_curio.life_form_analyzer", "%s detected nearby!", "发现稀有生物: %s");
-        add("info.terra_curio.metal_detector.none",  "No treasure nearby!", "未发现稀有方块");
+        add("info.terra_curio.metal_detector.none", "No treasure nearby!", "未发现稀有方块");
         add("info.terra_curio.metal_detector", "%s detected nearby!", "在附近发现%s!");
         add("info.terra_curio.stopwatch", "Speed: %s m/s", "速度: %s m/s");
         add("info.terra_curio.dps_meter", "DPS: %s", "DPS: %s");
         add("info.terra_curio.sextant.0", "Moon phase: Full Moon", "月相: 满月");
-        add("info.terra_curio.sextant.1",  "Moon phase: Waning Gibbous", "月相: 亏凸月");
+        add("info.terra_curio.sextant.1", "Moon phase: Waning Gibbous", "月相: 亏凸月");
         add("info.terra_curio.sextant.2", "Moon phase: Third Quarter", "月相: 下弦月");
         add("info.terra_curio.sextant.3", "Moon phase: Waning Crescent", "月相: 残月");
         add("info.terra_curio.sextant.4", "Moon phase: New Moon", "月相: 新月");
@@ -109,10 +114,34 @@ public class ModLanguageProvider extends LanguageProvider {
                 new String[]{"The Bezoar is an immunity accessory that grants the player immunity to the Poisoned debuff", "It have a Chance to be dropped from Cave Spider."},
                 new String[]{"牛黄是一种免疫配饰，可赋予玩家对中毒减益的免疫力", "它有几率从洞穴蜘蛛中掉落"}
         );
+
+        if (locale.equals("en_us")) {
+            sidedAdd(TCItems.EXPLORERS_EQUIPMENT.get().getDescriptionId(), "Explorer's Equipment", enData);
+            sidedAdd(TCItems.PALADINS_SHIELD.get().getDescriptionId(), "Paladin's Shield", enData);
+            sidedAdd(TCItems.STALKERS_QUIVER.get().getDescriptionId(), "Stalker's Quiver", enData);
+            sidedAdd(TCItems.DPS_METER.get().getDescriptionId(), "DPS Meter", enData);
+            sidedAdd(TCItems.FISHERMANS_POCKET_GUIDE.get().getDescriptionId(), "Fisherman's Pocket Guide", enData);
+            sidedAdd(TCItems.GPS.get().getDescriptionId(), "GPS", enData);
+            sidedAdd(TCItems.PDA.get().getDescriptionId(), "PDA", enData);
+            sidedAdd(TCItems.REK_3000.get().getDescriptionId(), "R.E.K.3000", enData);
+            TCItems.CURIOS.getEntries().forEach(item -> {
+                Item item1 = item.get();
+                sidedAdd(item1.getDescriptionId(), toTitleCase(item.getId().getPath()), enData);
+            });
+            TCEntities.ENTITIES.getEntries().forEach(entity -> sidedAdd(entity.get().getDescriptionId(), toTitleCase(entity.getId().getPath()), enData));
+            TCEffects.EFFECTS.getEntries().forEach(effect -> sidedAdd(effect.get().getDescriptionId(), toTitleCase(effect.getId().getPath()), enData));
+            TCAttributes.ATTRIBUTES.getEntries().forEach(attribute -> sidedAdd(attribute.get().getDescriptionId(), toTitleCase(attribute.getId().getPath()), enData));
+        }
+    }
+
+    private static String toTitleCase(String raw) {
+        return Arrays.stream(raw.split("_"))
+                .map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase())
+                .collect(Collectors.joining(" "));
     }
 
     @Override
-    public @NotNull CompletableFuture<?> run(CachedOutput cache) {
+    public @NotNull CompletableFuture<?> run(@NotNull CachedOutput cache) {
         addTranslations();
         Path path = output.getOutputFolder(PackOutput.Target.RESOURCE_PACK).resolve(TerraCurio.MODID).resolve("lang");
         if (locale.equals("en_us") && !enData.isEmpty()) {
@@ -154,5 +183,9 @@ public class ModLanguageProvider extends LanguageProvider {
         } else if (locale.equals("zh_cn") && !cnData.containsKey(key)) {
             cnData.put(key, zh);
         }
+    }
+
+    private void sidedAdd(String key, String value, Map<String, String> side) {
+        if (!side.containsKey(key)) side.put(key, value);
     }
 }
