@@ -16,7 +16,7 @@ import java.util.Objects;
 
 
 public class ModRarity implements DataComponentType<ModRarity> {
-    public static final ModRarity COMMON = new ModRarity("common",16777215);
+    public static final ModRarity COMMON = new ModRarity("common", 16777215);
     public static final ModRarity UNCOMMON = new ModRarity("uncommon", 16777045);
     public static final ModRarity RARE = new ModRarity("rare", 5636095);
     public static final ModRarity EPIC = new ModRarity("epic", 16733695);
@@ -34,53 +34,51 @@ public class ModRarity implements DataComponentType<ModRarity> {
     public static final ModRarity CYAN = new ModRarity("cyan", 0x05C8FF);
     public static final ModRarity RED = new ModRarity("red", 0xFF2864);
     public static final ModRarity PURPLE = new ModRarity("purple", 0xB428FF);
-    
 
-    public static final ModRarity EXPERT = new ModRarity("expert",ExpertColorAnimation.INSTANCE);
-    public static final ModRarity MASTER = new ModRarity("master",MasterColorAnimation.INSTANCE);
-    public static final ModRarity QUEST = new ModRarity("quest",0xFFAF00);
-
-
-
+    public static final ModRarity EXPERT = new ModRarity("expert", ExpertColorAnimation.INSTANCE);
+    public static final ModRarity MASTER = new ModRarity("master", MasterColorAnimation.INSTANCE);
+    public static final ModRarity QUEST = new ModRarity("quest", 0xFFAF00);
 
     public static final Codec<ModRarity> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(ModRarity::getName),
             ColorAnimation.CODEC.fieldOf("animation").forGetter(ModRarity::getAnimation),
             Style.Serializer.CODEC.fieldOf("style").forGetter(ModRarity::getStyle)
     ).apply(instance, ModRarity::new));
-
     public static final StreamCodec<RegistryFriendlyByteBuf, ModRarity> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.STRING_UTF8, ModRarity::getName,
             ByteBufCodecs.INT, ModRarity::getColor,
             Style.Serializer.TRUSTED_STREAM_CODEC, ModRarity::getStyle,
             ModRarity::new
     );
-    private ColorAnimation animation;
 
-    private String name;
-    private Style style;
-
+    private final ColorAnimation animation;
+    private final String name;
+    private final Style style;
 
     public ModRarity(String name, int color) {
         this.name = name;
         this.animation = new ColorAnimation(color);
         this.style = Style.EMPTY.withColor(color);
     }
+
     public ModRarity(String name, ColorAnimation animation) {
         this.name = name;
         this.animation = animation;
         this.style = Style.EMPTY.withColor(animation.getColor());
     }
+
     public ModRarity(String name, Style style) {
         this.name = name;
         this.animation = new ColorAnimation(0);
         this.style = style;
     }
+
     public ModRarity(String name, int color, Style style) {
         this.name = name;
         this.animation = new ColorAnimation(color);
         this.style = style;
     }
+
     public ModRarity(String string, ColorAnimation animation, Style style) {
         this.name = string;
         this.animation = animation;

@@ -53,9 +53,9 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
                 ItemStack itemStack = pContainer.getItem(index);
                 if (!itemStack.isEmpty() && ingredient.test(itemStack)) {
                     if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
-                        itemStack.split(amountIngredient.amount());
+                        itemStack.shrink(amountIngredient.amount());
                     } else {
-                        itemStack.split(1);
+                        itemStack.shrink(1);
                     }
                     break;
                 }
