@@ -26,7 +26,7 @@ public class StepStool extends BaseCurioItem {
         if (prevStack.getItem() == stack.getItem()) return;
         super.onEquip(slotContext, prevStack, stack);
         if (!slotContext.entity().level().isClientSide) {
-            StepStoolSteppingPacketS2C.sendToClient(slotContext, TCUtils.getItemStackCompoundTag(stack).getInt("extraStep") + 1);
+            StepStoolSteppingPacketS2C.sendToClient(slotContext, TCUtils.getItemStackNbt(stack).getInt("extraStep") + 1);
         }
     }
 
@@ -37,7 +37,7 @@ public class StepStool extends BaseCurioItem {
         Level level = slotContext.entity().level();
         if (!level.isClientSide) {
             StepStoolSteppingPacketS2C.resetStep(slotContext.entity());
-            if (level.getEntity(TCUtils.getItemStackCompoundTag(stack).getInt("id")) instanceof StepStoolEntity stepStool) {
+            if (level.getEntity(TCUtils.getItemStackNbt(stack).getInt("id")) instanceof StepStoolEntity stepStool) {
                 stepStool.setOwner(null);
             }
         }

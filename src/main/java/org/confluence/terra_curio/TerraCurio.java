@@ -31,6 +31,9 @@ public class TerraCurio {
         TCTabs.TABS.register(eventBus);
         TCAttachments.TYPES.register(eventBus);
         TCTriggers.TYPES.register(eventBus);
+        TCRecipes.register(eventBus);
+        TCBlocks.BLOCKS.register(eventBus);
+        TCMenus.TYPES.register(eventBus);
     }
 
     public static ResourceLocation asResource(String path) {

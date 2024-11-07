@@ -42,11 +42,11 @@ public record StepStoolSteppingPacketC2S(int slot, int step, boolean increase) i
                     serverPlayer.level().addFreshEntity(pEntity);
                     serverPlayer.teleportRelative(0.0, 1.001, 0.0);
                     CuriosUtils.getSlot(serverPlayer, PREDICATE, slot).ifPresent(itemStack -> {
-                        TCUtils.getItemStackCompoundTag(itemStack).putInt("id", pEntity.getId());
+                        TCUtils.updateItemStackNbt(itemStack, nbt -> nbt.putInt("id", pEntity.getId()));
                     });
                 } else {
                     CuriosUtils.getSlot(serverPlayer, PREDICATE, slot).ifPresent(itemStack -> {
-                        int id = TCUtils.getItemStackCompoundTag(itemStack).getInt("id");
+                        int id = TCUtils.getItemStackNbt(itemStack).getInt("id");
                         Entity entity = serverPlayer.level().getEntity(id);
                         if (entity instanceof StepStoolEntity stepStool) {
                             if (step == 0) {

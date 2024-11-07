@@ -11,6 +11,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.item.curio.movement.BaseSpeedBoots;
 import org.confluence.terra_curio.util.CuriosUtils;
+import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
@@ -33,7 +34,7 @@ public record SpeedBootsNBTPacketC2S(int slot, int value) implements CustomPacke
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer serverPlayer) {
                 CuriosUtils.getSlot(serverPlayer, PREDICATE, slot).ifPresent(itemStack -> {
-                    serverPlayer.getPersistentData().putInt(BaseSpeedBoots.KEY, value);
+                    TCUtils.updateItemStackNbt(itemStack, nbt -> nbt.putInt(BaseSpeedBoots.KEY, value));
                 });
             }
         }).exceptionally(e -> {

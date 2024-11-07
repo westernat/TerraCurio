@@ -181,6 +181,11 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
+        @ApiStatus.Internal
+        public ImmutableMultimap<Holder<Attribute>, AttributeModifier> getAttributes() {
+            return attributes;
+        }
+
         public BaseCurioItem build() {
             return new BaseCurioItem(this);
         }

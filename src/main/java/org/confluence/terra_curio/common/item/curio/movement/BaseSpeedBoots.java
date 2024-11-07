@@ -5,7 +5,6 @@ import com.google.common.collect.Multimap;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -44,19 +43,19 @@ public class BaseSpeedBoots extends BaseCurioItem {
 
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
-        speedUp(slotContext, acceleration, maxSpeed);
+        speedUp(slotContext, stack, acceleration, maxSpeed);
     }
 
     @Override
     public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
         super.onUnequip(slotContext, newStack, stack);
-        slotContext.entity().getPersistentData().putInt(KEY, 0);
+        TCUtils.getItemStackNbt(stack).putInt(KEY, 0);
     }
 
-    protected void speedUp(SlotContext slotContext, int acceleration, int maxSpeed) {
+    protected void speedUp(SlotContext slotContext, ItemStack stack, int acceleration, int maxSpeed) {
         TCUtils.forConfluence$Inject();
         if (slotContext.entity() instanceof Player player && player.isLocalPlayer()) {
-            int speed = player.getPersistentData().getInt(KEY);
+            int speed = TCUtils.getItemStackNbt(stack).getInt(KEY);
             if (player.zza > 0) {
                 if (player.onGround()) {
                     if (TCClientPacketHandler.isHasMagiluminescence()) acceleration *= 2;
@@ -79,14 +78,15 @@ public class BaseSpeedBoots extends BaseCurioItem {
         }
     }
 
-    protected static AttributeModifier getSpeedModifier(LivingEntity living) {
-        double speed = living == null ? 0.0 : living.getPersistentData().getInt(KEY) * 0.01;
-        return new AttributeModifier(ID, speed, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-    }
-
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
-        return ImmutableMultimap.of(Attributes.MOVEMENT_SPEED, getSpeedModifier(slotContext.entity()));
+        ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> builder1 = ImmutableMultimap.builder();
+        builder1.putAll(builder.getAttributes());
+        double speed = TCUtils.getItemStackNbt(stack).getInt(KEY) * 0.01;
+        if (speed > 0.0) {
+            builder1.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(ID, speed, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+        }
+        return builder1.build();
     }
 
     @Override

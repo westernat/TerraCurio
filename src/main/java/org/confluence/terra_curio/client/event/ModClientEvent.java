@@ -5,6 +5,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.model.entity.BeeProjectileModel;
 import org.confluence.terra_curio.client.model.entity.StepStoolModel;
@@ -12,7 +13,9 @@ import org.confluence.terra_curio.client.renderer.entity.BeeProjectileRenderer;
 import org.confluence.terra_curio.client.renderer.entity.StarCloakEntityRenderer;
 import org.confluence.terra_curio.client.renderer.entity.StepStoolRenderer;
 import org.confluence.terra_curio.client.renderer.gui.InfoHudOverlay;
+import org.confluence.terra_curio.client.renderer.gui.WorkshopScreen;
 import org.confluence.terra_curio.common.init.TCEntities;
+import org.confluence.terra_curio.common.init.TCMenus;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = TerraCurio.MODID, value = Dist.CLIENT)
 public final class ModClientEvent {
@@ -32,5 +35,10 @@ public final class ModClientEvent {
     @SubscribeEvent
     public static void registerGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAboveAll(TerraCurio.asResource("info_hud"), new InfoHudOverlay());
+    }
+
+    @SubscribeEvent
+    public static void registerMenuScreens(RegisterMenuScreensEvent event) {
+        event.register(TCMenus.WORKSHOP.get(), WorkshopScreen::new);
     }
 }

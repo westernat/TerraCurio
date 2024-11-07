@@ -32,6 +32,7 @@ public class TCCommonConfigs {
     public static ModConfigSpec.DoubleValue RANDOM_ATTACK_DAMAGE_MIN;
     public static ModConfigSpec.DoubleValue RANDOM_ATTACK_DAMAGE_MAX;
 
+    public static ModConfigSpec.IntValue MAX_ACCESSORIES;
 
     public static void onLoad() {
         RARE_BLOCKS.get().forEach(s -> {
@@ -105,6 +106,7 @@ public class TCCommonConfigs {
         RANDOM_ATTACK_DAMAGE = BUILDER.push("Random Attack Damage").define("enable", false);
         RANDOM_ATTACK_DAMAGE_MIN = BUILDER.defineInRange("min", 0.8, 0.0, 1.0);
         RANDOM_ATTACK_DAMAGE_MAX = BUILDER.defineInRange("max", 1.2, 1.0, 2.0);
+        MAX_ACCESSORIES = BUILDER.pop().defineInRange("Max Accessory Amount", 7, 6, 100);
         container.registerConfig(ModConfig.Type.COMMON, BUILDER.build());
     }
 }

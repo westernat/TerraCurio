@@ -14,7 +14,8 @@
         "SlimeBlockMixin",
         "TargetingConditionsMixin",
         "accessor.LivingEntityAccessor",
-        "accessor.RangedAttributeAccessor"
+        "accessor.RangedAttributeAccessor",
+        "accessor.SmithingTransformRecipeAccessor"
     ],
     "client": [
         "client.ClientEntityMixin",

@@ -23,7 +23,7 @@ import java.util.stream.Collectors;
 
 public class ModLanguageProvider extends LanguageProvider {
     private final Map<String, String> enData = new TreeMap<>();
-    private final Map<String, String> cnData = new TreeMap<>();
+    private final Map<String, String> zhData = new TreeMap<>();
     private final PackOutput output;
     private final String locale;
 
@@ -108,7 +108,7 @@ public class ModLanguageProvider extends LanguageProvider {
         add("curios.identifier.accessory", "Accessory", "配饰");
         add("curios.modifiers.accessory", "When worn as accessory:", "佩戴配饰时：");
 
-        addItem(TCItems.BEZOAR, "bezoar", "牛黄");
+        addZhItem(TCItems.BEZOAR, "牛黄");
         addTooltips(TCItems.BEZOAR, "Immunity to Poison", "对中毒免疫");
         addJeiTooltips(TCItems.BEZOAR,
                 new String[]{"The Bezoar is an immunity accessory that grants the player immunity to the Poisoned debuff", "It have a Chance to be dropped from Cave Spider."},
@@ -147,8 +147,8 @@ public class ModLanguageProvider extends LanguageProvider {
         if (locale.equals("en_us") && !enData.isEmpty()) {
             return save(enData, cache, path.resolve("en_us.json"));
         }
-        if (locale.equals("zh_cn") && !cnData.isEmpty()) {
-            return save(cnData, cache, path.resolve("zh_cn.json"));
+        if (locale.equals("zh_cn") && !zhData.isEmpty()) {
+            return save(zhData, cache, path.resolve("zh_cn.json"));
         }
         return CompletableFuture.allOf();
     }
@@ -167,12 +167,22 @@ public class ModLanguageProvider extends LanguageProvider {
         add("tooltip." + key.get().getDescriptionId(), en, cn);
     }
 
+    private void addTooltips(Supplier<? extends Item> key, String[] en, String[] cn) {
+        if (en.length == cn.length) {
+            for (int i = 0; i < en.length; i++) {
+                String enLang = en[i];
+                String cnLang = cn[i];
+                add("tooltip." + key.get().getDescriptionId() + "." + i, enLang, cnLang);
+            }
+        }
+    }
+
     private void addJeiTooltips(Supplier<? extends Item> key, String[] en, String[] cn) {
         if (en.length == cn.length) {
             for (int i = 0; i < en.length; i++) {
                 String enLang = en[i];
                 String cnLang = cn[i];
-                add("jei.tooltip." + key.get().getDescriptionId(), enLang, cnLang);
+                add("jei.tooltip." + key.get().getDescriptionId() + "." + i, enLang, cnLang);
             }
         }
     }
@@ -180,12 +190,19 @@ public class ModLanguageProvider extends LanguageProvider {
     private void add(String key, String en, String zh) {
         if (locale.equals("en_us") && !enData.containsKey(key)) {
             enData.put(key, en);
-        } else if (locale.equals("zh_cn") && !cnData.containsKey(key)) {
-            cnData.put(key, zh);
+        } else if (locale.equals("zh_cn") && !zhData.containsKey(key)) {
+            zhData.put(key, zh);
         }
     }
 
     private void sidedAdd(String key, String value, Map<String, String> side) {
         if (!side.containsKey(key)) side.put(key, value);
+    }
+
+    private void addZhItem(Supplier<? extends Item> key, String value) {
+        String key1 = key.get().getDescriptionId();
+        if (locale.equals("zh_cn") && !zhData.containsKey(key1)) {
+            zhData.put(key1, value);
+        }
     }
 }

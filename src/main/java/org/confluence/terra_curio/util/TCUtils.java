@@ -2,7 +2,6 @@ package org.confluence.terra_curio.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -21,7 +20,6 @@ import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
@@ -31,6 +29,7 @@ import org.apache.commons.compress.utils.Lists;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.component.EffectImmunities;
+import org.confluence.terra_curio.common.component.NbtComponent;
 import org.confluence.terra_curio.common.entity.projectile.BeeProjectile;
 import org.confluence.terra_curio.common.entity.projectile.StarCloakEntity;
 import org.confluence.terra_curio.common.init.*;
@@ -43,7 +42,7 @@ import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.function.Consumer;
 
 import static org.confluence.terra_curio.api.primitive.ValueType.*;
 
@@ -211,11 +210,26 @@ public final class TCUtils {
         RightClickSubtractorPacketS2C.sendToClient(serverPlayer);
     }
 
-    @SuppressWarnings("deprecation")
-    public static @NotNull CompoundTag getItemStackCompoundTag(ItemStack itemStack) {
-        CustomData customData = itemStack.get(DataComponents.CUSTOM_DATA);
-        if (customData == null) itemStack.set(DataComponents.CUSTOM_DATA, CustomData.of(new CompoundTag()));
-        return Objects.requireNonNull(itemStack.get(DataComponents.CUSTOM_DATA)).getUnsafe();
+    public static @NotNull CompoundTag getItemStackNbt(ItemStack itemStack) {
+        NbtComponent nbtComponent = itemStack.get(TCDataComponentTypes.NBT);
+        if (nbtComponent == null) {
+            CompoundTag nbt = new CompoundTag();
+            itemStack.set(TCDataComponentTypes.NBT, new NbtComponent(nbt));
+            return nbt;
+        }
+        return nbtComponent.nbt();
+    }
+
+    public static void updateItemStackNbt(ItemStack itemStack, Consumer<CompoundTag> consumer) {
+        NbtComponent nbtComponent = itemStack.get(TCDataComponentTypes.NBT);
+        CompoundTag nbt;
+        if (nbtComponent == null) {
+            nbt = new CompoundTag();
+        } else {
+            nbt = nbtComponent.nbt().copy();
+        }
+        consumer.accept(nbt);
+        itemStack.set(TCDataComponentTypes.NBT, new NbtComponent(nbt));
     }
 
     public static float applyLavaHurtReduce(LivingEntity living, DamageSource damageSource, float amount) {
