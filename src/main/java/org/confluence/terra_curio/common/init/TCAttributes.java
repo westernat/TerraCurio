@@ -1,13 +1,10 @@
 package org.confluence.terra_curio.common.init;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import net.minecraft.Util;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
-import net.minecraft.util.GsonHelper;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -28,18 +25,14 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.integration.apothic.ApothicHelper;
 import org.confluence.terra_curio.mixin.accessor.RangedAttributeAccessor;
 
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 // todo
 public final class TCAttributes {
-    private static final Hashtable<Holder<Attribute>, Holder<Attribute>> MAP = new Hashtable<>();
 
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(BuiltInRegistries.ATTRIBUTE, TerraCurio.MODID);
 
@@ -51,6 +44,17 @@ public final class TCAttributes {
     public static final DeferredHolder<Attribute, Attribute> MAGIC_DAMAGE = ATTRIBUTES.register("magic_damage", () -> new RangedAttribute("attribute.name.generic.magic_damage", 1.0, 0.0, 10.0).setSyncable(true)); // MULTIPLY_TOTAL
     public static final DeferredHolder<Attribute, Attribute> ARMOR_PASS = ATTRIBUTES.register("armor_pass", () -> new RangedAttribute("attribute.name.generic.armor_pass", 0.0, 0.0, 10000).setSyncable(true)); // ADDITION
     public static final DeferredHolder<Attribute, Attribute> PICKUP_RANGE = ATTRIBUTES.register("pickup_range", () -> new RangedAttribute("attribute.name.generic.pickup_range", 0.0, 0.0, 64.0).setSyncable(true)); // ADDITION
+
+    private static final Hashtable<Holder<Attribute>, Holder<Attribute>> MAP = Util.make(new Hashtable<>(), table -> {
+        table.put(CRIT_CHANCE, CRIT_CHANCE);
+        table.put(RANGED_DAMAGE, RANGED_DAMAGE);
+        table.put(RANGED_VELOCITY, RANGED_VELOCITY);
+        table.put(DODGE_CHANCE, DODGE_CHANCE);
+        table.put(AGGRO, AGGRO);
+        table.put(MAGIC_DAMAGE, MAGIC_DAMAGE);
+        table.put(ARMOR_PASS, ARMOR_PASS);
+        table.put(PICKUP_RANGE, PICKUP_RANGE);
+    });
 
     public static Holder<Attribute> getCriticalChance() {
         return getCustomAttribute(CRIT_CHANCE);
@@ -176,19 +180,25 @@ public final class TCAttributes {
 
         ApothicHelper.preset(MAP);
 
-        Path path = TerraCurio.CONFIG_PATH.resolve("attributes.json");
-        if (Files.notExists(path)) return;
-        try (InputStream inputStream = new FileInputStream(path.toFile())) {
-            JsonObject jsonObject = GsonHelper.convertToJsonObject(JsonParser.parseReader(new InputStreamReader(inputStream)), "replaceable");
-            for (Map.Entry<String, JsonElement> entry : jsonObject.entrySet()) {
-                Holder<Attribute> raw = available.get(entry.getKey());
-                if (raw == null) continue;
-                ResourceLocation resourceLocation = ResourceLocation.parse(entry.getValue().getAsString());
-                if (BuiltInRegistries.ATTRIBUTE.containsKey(resourceLocation)) {
-                    MAP.put(raw, BuiltInRegistries.ATTRIBUTE.getHolder(resourceLocation).get());
-                }
+        List<String> attributes = TCStartupConfigs.ATTRIBUTE_REPLACE.get();
+        for (String attribute : attributes) {
+            String[] split = attribute.split("=");
+            if (split.length != 2) {
+                TerraCurio.LOGGER.warn("Bad format of '{}', which must contains exactly one '='", attribute);
+                continue;
             }
-        } catch (Exception ignored) {}
+            Holder<Attribute> holder = available.get(split[0]);
+            if (holder == null) {
+                TerraCurio.LOGGER.warn("Unsupported attribute: {}", split[0]);
+                continue;
+            }
+            Optional<Holder.Reference<Attribute>> optional = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(split[1]));
+            if (optional.isEmpty()) {
+                TerraCurio.LOGGER.warn("Unknown attribute: {}", split[1]);
+            } else {
+                MAP.replace(holder, optional.get());
+            }
+        }
     }
 
     public static void modifyAttributesUpperLimit() {
