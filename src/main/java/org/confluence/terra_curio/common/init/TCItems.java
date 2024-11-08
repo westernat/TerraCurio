@@ -40,7 +40,9 @@ public final class TCItems {
     public static final DeferredRegister.Items OTHERS = DeferredRegister.createItems(TerraCurio.MODID);
     public static final DeferredRegister.Items CURIOS = DeferredRegister.createItems(TerraCurio.MODID);
 
-    public static final Supplier<Item> STAR = OTHERS.register("star", () -> new Item(new Item.Properties()));
+    public static final Supplier<Item> STAR = OTHERS.register("star", () -> new Item(new Item.Properties().component(TCDataComponentTypes.MOD_RARITY, MASTER)));
+    public static final Supplier<Item> ICON = OTHERS.register("icon", () -> new Item(new Item.Properties().component(TCDataComponentTypes.MOD_RARITY, MASTER)));
+
     public static final Supplier<BlockItem> WORKSHOP = CURIOS.register("workshop", () -> new BlockItem(TCBlocks.WORKSHOP.get(), new Item.Properties()));
     public static final Supplier<DemonHeart> DEMON_HEART = CURIOS.register("demon_heart", DemonHeart::new);
     public static final Supplier<MagicMirror> MAGIC_MIRROR = CURIOS.register("magic_mirror", () -> new MagicMirror(BLUE));

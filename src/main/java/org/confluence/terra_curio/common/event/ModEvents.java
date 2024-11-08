@@ -27,7 +27,7 @@ public final class ModEvents {
 
     @SubscribeEvent
     public static void entityAttributeModification(EntityAttributeModificationEvent event) {
-        TCAttributes.readJsonConfig();
+        TCAttributes.prepareReplacements();
         TCAttributes.registerAttribute(TCAttributes.CRIT_CHANCE, event::add);
         TCAttributes.registerAttribute(TCAttributes.RANGED_VELOCITY, event::add);
         TCAttributes.registerAttribute(TCAttributes.RANGED_DAMAGE, event::add);

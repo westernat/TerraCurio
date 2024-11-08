@@ -1,0 +1,23 @@
+{
+    "type": "minecraft:entity",
+    "pools": [
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "terra_curio:frog_leg"
+                },
+                {
+                    "condition": "minecraft:damage_source_properties",
+                    "predicate": {
+                        "direct_entity": {
+                            "type": "minecraft:player"
+                        },
+                        "is_direct": true
+                    }
+                }
+            ]
+        }
+    ]
+}

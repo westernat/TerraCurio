@@ -166,7 +166,7 @@ public final class TCAttributes {
         });
     }
 
-    public static void readJsonConfig() {
+    public static void prepareReplacements() {
         Map<String, Holder<Attribute>> available = Map.of(
                 "crit_chance", CRIT_CHANCE,
                 "ranged_velocity", RANGED_VELOCITY,
