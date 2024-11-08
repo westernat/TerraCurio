@@ -1,11 +1,15 @@
 package org.confluence.terra_curio.api.primitive;
 
+import com.google.common.collect.ImmutableListMultimap;
 import com.mojang.serialization.Codec;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.level.material.Fluid;
 import org.confluence.terra_curio.TerraCurio;
 
@@ -16,8 +20,9 @@ import java.util.function.Function;
 
 @SuppressWarnings("unchecked")
 public class ValueType<T, V extends PrimitiveValue<T>> {
-    public static final Map<ResourceLocation, Codec<PrimitiveValue<?>>> CODECS = new Hashtable<>();
+    public static final Map<ResourceLocation, Codec<PrimitiveValue<?>>> VALUE_CODECS = new Hashtable<>();
     public static final Map<ResourceLocation, ValueType<?, ? extends PrimitiveValue<?>>> TYPES = new Hashtable<>();
+    public static final Codec<ValueType<?, ? extends PrimitiveValue<?>>> CODEC = ResourceLocation.CODEC.xmap(TYPES::get, ValueType::key);
     // client side info_check
     public static final ValueType<Unit, UnitValue> FULL$INFORMATION = ofUnit("full_information");
     public static final ValueType<Unit, UnitValue> HOUR$WATCH = ofUnit("hour_watch");
@@ -70,6 +75,8 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Float, FloatValue> TSUNAMI = ofFloat("tsunami", FloatValue.GET_SELF, 0.0F);
     public static final ValueType<Float, FloatValue> CLOUD = ofFloat("cloud", FloatValue.GET_SELF, 0.0F);
     public static final ValueType<Tuple<Float, Integer>, FloatAndIntegerValue> MAY$FLY = ofFloatAndInteger("may_fly", FloatAndIntegerValue.GET_SELF, new Tuple<>(0.0F, 0));
+    // no updates
+    public static final ValueType<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> ATTRIBUTES = create("attributes", AttributeModifiersValue.GET_SELF, AttributeModifiersValue.CODEC, ImmutableListMultimap.of(), AttributeModifiersValue::new);
 
     private final ResourceLocation key;
     private final CombineRule<T, V> combineRule;
@@ -85,7 +92,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
 
     private static <T, V extends PrimitiveValue<T>> void registerCodec(ResourceLocation id, Codec<V> codec) {
         if (codec instanceof Codec<? extends PrimitiveValue<?>> codec1) {
-            CODECS.put(id, (Codec<PrimitiveValue<?>>) codec1);
+            VALUE_CODECS.put(id, (Codec<PrimitiveValue<?>>) codec1);
         }
     }
 

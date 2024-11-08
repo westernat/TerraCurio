@@ -6,7 +6,6 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLPaths;
-import org.confluence.terra_curio.common.TCCommonConfigs;
 import org.confluence.terra_curio.common.init.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +33,7 @@ public class TerraCurio {
         TCRecipes.register(eventBus);
         TCBlocks.BLOCKS.register(eventBus);
         TCMenus.TYPES.register(eventBus);
+        eventBus.addListener(TCDataMaps::registerDataMapTypes);
     }
 
     public static ResourceLocation asResource(String path) {

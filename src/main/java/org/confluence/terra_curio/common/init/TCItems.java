@@ -157,7 +157,7 @@ public final class TCItems {
                     .attribute(TCAttributes.getCriticalChance(), 0.1, ADD_VALUE)
                     .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getAggro(), -400, ADD_VALUE)), // 侦察镜
-            MAGMA_STONE = registerCurio("magma_stone", builder -> builder.rarity(ORANGE).accessories(units(ValueType.FIRE$ATTACK))), // 岩浆石
+            MAGMA_STONE = registerCurio("magma_stone", builder -> builder.rarity(ORANGE)/* Removed .accessories() for test data_map */), // 岩浆石
             OBSIDIAN_ROSE = registerCurio("obsidian_rose", builder -> builder.rarity(ORANGE).accessories(of(ValueType.LAVA$HURT$REDUCE, 0.5F))), // 黑曜石玫瑰
             OBSIDIAN_SHIELD = registerCurio("obsidian_shield", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.FIRE$IMMUNE))
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)
@@ -171,7 +171,7 @@ public final class TCItems {
                     .attribute(Attributes.ATTACK_DAMAGE, 0.05, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getCriticalChance(), 0.05, ADD_VALUE)
                     .attribute(TCAttributes.getAggro(), -400, ADD_VALUE)), // 腐香囊
-            SHACKLE = registerCurio("shackle", builder -> builder.attribute(Attributes.ARMOR, 1.0, ADD_VALUE)); // 脚镣
+            SHACKLE = registerCurio("shackle", builder -> builder.rarity(BLUE)/* Removed .attribute() for test data_map */); // 脚镣
             /* 学徒围巾 */
             /* 侍卫护盾 */
             /* 女猎人圆盾 */

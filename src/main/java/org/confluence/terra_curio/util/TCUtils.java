@@ -27,6 +27,7 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.apache.commons.compress.utils.Lists;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.component.EffectImmunities;
 import org.confluence.terra_curio.common.component.NbtComponent;
@@ -55,6 +56,11 @@ public final class TCUtils {
     @ApiStatus.Internal
     public static <T> T forConfluence$ModifyExpression(T value) {
         return value;
+    }
+
+    @ApiStatus.Internal
+    public static <T, V extends PrimitiveValue<T>> V tryCast(PrimitiveValue<?> primitiveValue) {
+        return (V) primitiveValue;
     }
 
     public static float nextFloat(RandomSource randomSource, float origin, float bound) {

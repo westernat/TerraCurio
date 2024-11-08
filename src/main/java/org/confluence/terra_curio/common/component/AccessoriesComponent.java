@@ -1,23 +1,31 @@
 package org.confluence.terra_curio.common.component;
 
+import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
+import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.registries.datamaps.DataMapValueRemover;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Optional;
 
 @SuppressWarnings("unchecked")
 public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> types) implements DataComponentType<AccessoriesComponent> {
-    public static final Codec<AccessoriesComponent> CODEC = Codec.dispatchedMap(ResourceLocation.CODEC, ValueType.CODECS::get).xmap(map -> {
+    public static final Codec<AccessoriesComponent> CODEC = Codec.dispatchedMap(ResourceLocation.CODEC, ValueType.VALUE_CODECS::get).xmap(map -> {
         Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> table = new Hashtable<>();
         map.forEach((key, value) -> table.put(ValueType.TYPES.get(key), value));
         return new AccessoriesComponent(table);
@@ -81,5 +89,16 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
     @Override
     public @NotNull StreamCodec<FriendlyByteBuf, AccessoriesComponent> streamCodec() {
         return STREAM_CODEC;
+    }
+
+    public record Remover(ValueType<?, ? extends PrimitiveValue<?>> type) implements DataMapValueRemover<Item, AccessoriesComponent> {
+        public static final Codec<Remover> CODEC = ValueType.CODEC.xmap(Remover::new, Remover::type);
+
+        @Override
+        public Optional<AccessoriesComponent> remove(AccessoriesComponent component, Registry<Item> registry, Either<TagKey<Item>, ResourceKey<Item>> source, Item item) {
+            HashMap<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new HashMap<>(component.types());
+            map.remove(type);
+            return Optional.of(new AccessoriesComponent(map));
+        }
     }
 }

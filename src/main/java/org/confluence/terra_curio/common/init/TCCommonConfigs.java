@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.common;
+package org.confluence.terra_curio.common.init;
 
 import net.minecraft.commands.arguments.blocks.BlockStateParser;
 import net.minecraft.core.registries.BuiltInRegistries;

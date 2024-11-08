@@ -16,7 +16,6 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
-import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
@@ -27,10 +26,9 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
-import org.confluence.terra_curio.common.TCCommonConfigs;
-import org.confluence.terra_curio.common.data.pack.CurioItemManager;
 import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.common.init.TCAttributes;
+import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.common.init.TCTriggers;
 import org.confluence.terra_curio.common.item.curio.combat.PaladinsShield;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
@@ -156,11 +154,6 @@ public final class GameEvents {
             TCAttributes.applyToArrow(living, arrow);
             TCUtils.applyIgniteArrow(living, arrow);
         }
-    }
-
-    @SubscribeEvent
-    public static void onDataPackLoad(AddReloadListenerEvent event) {
-        event.addListener(CurioItemManager.INSTANCE);
     }
 
     @SubscribeEvent

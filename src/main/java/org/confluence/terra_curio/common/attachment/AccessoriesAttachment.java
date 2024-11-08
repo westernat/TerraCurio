@@ -25,6 +25,7 @@ import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
+import org.confluence.terra_curio.common.init.TCDataMaps;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.util.MobEntityTypesTest;
 import org.jetbrains.annotations.NotNull;
@@ -34,6 +35,8 @@ import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
 import java.util.*;
+
+import static org.confluence.terra_curio.util.TCUtils.tryCast;
 
 @SuppressWarnings("unchecked")
 public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
@@ -124,8 +127,9 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                 IDynamicStackHandler stackHandler = curioStacksHandler.getStacks();
                 for (int i = 0; i < stackHandler.getSlots(); i++) {
                     ItemStack stack = stackHandler.getStackInSlot(i);
-                    AccessoriesComponent component;
-                    if (stack.isEmpty() || (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
+                    if (stack.isEmpty()) continue;
+                    AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+                    if (component == null && (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
                     Item item = stack.getItem();
 
                     for (ValueType<Unit, UnitValue> type : UNITS_REQUIRE_UPDATE) {
@@ -191,10 +195,6 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         return nbt;
     }
 
-    private static <T, V extends PrimitiveValue<T>> V tryCast(PrimitiveValue<?> primitiveValue) {
-        return (V) primitiveValue;
-    }
-
     @Override
     public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
         this.valueMap.clear();
@@ -203,7 +203,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
             CompoundTag compoundTag = (CompoundTag) tag;
             String key = compoundTag.getAllKeys().stream().findFirst().get();
             ResourceLocation location = ResourceLocation.parse(key);
-            ValueType.CODECS.get(location).decode(NbtOps.INSTANCE, compoundTag.get(key)).result().ifPresent(pair -> {
+            ValueType.VALUE_CODECS.get(location).decode(NbtOps.INSTANCE, compoundTag.get(key)).result().ifPresent(pair -> {
                 valueMap.put(ValueType.TYPES.get(location), pair.getFirst());
             });
         }
