@@ -7,7 +7,7 @@
             "terra_curio:attributes": {
                 "minecraft:generic.armor": [
                     {
-                        "id": "terra_curio:magma_stone",
+                        "id": "terra_curio:shackle",
                         "amount": 1.0,
                         "operation": "add_value"
                     }
