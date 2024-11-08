@@ -203,8 +203,8 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
             CompoundTag compoundTag = (CompoundTag) tag;
             String key = compoundTag.getAllKeys().stream().findFirst().get();
             ResourceLocation location = ResourceLocation.parse(key);
-            ValueType.VALUE_CODECS.get(location).decode(NbtOps.INSTANCE, compoundTag.get(key)).result().ifPresent(pair -> {
-                valueMap.put(ValueType.TYPES.get(location), pair.getFirst());
+            ValueType.VALUE_CODECS.get(location).parse(NbtOps.INSTANCE, compoundTag.get(key)).result().ifPresent(value -> {
+                valueMap.put(ValueType.TYPES.get(location), value);
             });
         }
         this.ignores.clear();
