@@ -4,14 +4,12 @@ package org.confluence.terra_curio.client.event;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.sounds.SoundEvents;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.Tags;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.event.PerformJumpingEvent;
 import org.confluence.terra_curio.client.animate.ExpertColorAnimation;
@@ -71,11 +69,17 @@ public final class GameClientEvents {
 
     @SubscribeEvent
     public static void fov(ComputeFovModifierEvent event) {
-        Player player = event.getPlayer();
-        if (TCClientPacketHandler.isHasScope() && player.isCrouching() &&
-                Minecraft.getInstance().options.getCameraType().isFirstPerson() &&
-                player.getItemInHand(InteractionHand.MAIN_HAND).is(Tags.Items.RANGED_WEAPON_TOOLS)
-        ) event.setNewFovModifier(0.1F);
+        if (ScopeFovHandler.canApplyScope(event.getPlayer())) {
+            event.setNewFovModifier(ScopeFovHandler.getFovModifier());
+            if (!ScopeFovHandler.scoping) {
+                if (ScopeFovHandler.getFovModifier() != 1.0) {
+                    event.getPlayer().playSound(SoundEvents.SPYGLASS_USE);
+                }
+                ScopeFovHandler.scoping = true;
+            }
+        } else {
+            ScopeFovHandler.scoping = false;
+        }
     }
 
     @SubscribeEvent
@@ -84,6 +88,15 @@ public final class GameClientEvents {
             MinecraftAccessor instance = (MinecraftAccessor) Minecraft.getInstance();
             int delay = instance.getRightClickDelay() - TCClientPacketHandler.getRightClickSubtractor();
             instance.setRightClickDelay(Math.max(0, delay));
+        }
+    }
+
+    @SubscribeEvent
+    public static void mouseScrolling(InputEvent.MouseScrollingEvent event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null && ScopeFovHandler.canApplyScope(player)) {
+            ScopeFovHandler.handle(player, event.getScrollDeltaY());
+            event.setCanceled(true);
         }
     }
 }

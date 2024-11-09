@@ -22,7 +22,6 @@ public final class TCClientPacketHandler {
     private static boolean autoAttack = false;
     private static boolean hasCthulhu = false;
     private static boolean hasTabi = false;
-    private static boolean hasScope = false;
     private static boolean hasMagiluminescence = false;
     private static int rightClickSubtractor = 0;
 
@@ -36,10 +35,6 @@ public final class TCClientPacketHandler {
 
     public static boolean isHasTabi() {
         return hasTabi;
-    }
-
-    public static boolean isHasScope() {
-        return hasScope;
     }
 
     public static boolean isHasMagiluminescence() {
@@ -84,7 +79,7 @@ public final class TCClientPacketHandler {
         autoAttack = (item & AUTO_ATTACK) == AUTO_ATTACK;
         hasCthulhu = (item & SHIELD_OF_CTHULHU) == SHIELD_OF_CTHULHU;
         hasTabi = (item & TABI) == TABI;
-        hasScope = (item & SCOPE) == SCOPE;
+        ScopeFovHandler.hasScope = (item & SCOPE) == SCOPE;
         GravitationHandler.setHasGlobe((item & GRAVITY_GLOBE) == GRAVITY_GLOBE);
         hasMagiluminescence = (item & MAGILUMINESCENCE) == MAGILUMINESCENCE;
     }
@@ -93,7 +88,7 @@ public final class TCClientPacketHandler {
         autoAttack = false;
         hasCthulhu = false;
         hasTabi = false;
-        hasScope = false;
+        ScopeFovHandler.hasScope = false;
         hasMagiluminescence = false;
         rightClickSubtractor = 0;
     }
