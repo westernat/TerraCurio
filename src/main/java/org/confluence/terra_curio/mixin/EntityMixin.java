@@ -101,7 +101,7 @@ public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
 
     @Inject(method = "setSprinting", at = @At("TAIL"))
     private void sprinting(boolean bool, CallbackInfo ci) {
-        if (bool && self() instanceof LivingEntity living) {
+        if (bool && !level.isClientSide && self() instanceof LivingEntity living) {
             if (terra_curio$cthulhuSprintingTime == 0 && living.getData(TCAttachments.ACCESSORIES).contains(ValueType.SHIELD$OF$CTHULHU)) {
                 float f = living.getYRot() * Mth.DEG_TO_RAD;
                 double factor = living.onGround() ? 1.6 : 1.2;

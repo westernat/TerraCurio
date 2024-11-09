@@ -14,8 +14,8 @@ public abstract class MouseHandlerMixin {
     @WrapOperation(method = "turnPlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;turn(DD)V"))
     private void modify(LocalPlayer instance, double y, double x, Operation<Void> original) {
         if (GravitationHandler.isShouldRot()) {
-            x *= -1.0;
-            y *= -1.0;
+            x = -x;
+            y = -y;
         }
         if (ScopeFovHandler.isScoping()) {
             double factor = ScopeFovHandler.getCameraMoveFactor();
