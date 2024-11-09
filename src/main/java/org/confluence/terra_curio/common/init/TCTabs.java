@@ -13,7 +13,7 @@ public final class TCTabs {
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TerraCurio.MODID);
 
     public static final Supplier<CreativeModeTab> ACCESSORIES = TABS.register("accessories",
-            () -> CreativeModeTab.builder().icon(() -> TCItems.ANKH_SHIELD.get().getDefaultInstance())
+            () -> CreativeModeTab.builder().icon(() -> TCItems.ICON.get().getDefaultInstance())
                     .title(Component.translatable("creativetab.terra_curio"))
                     .displayItems((parameters, output) -> {
                         TCUtils.forConfluence$Inject();
