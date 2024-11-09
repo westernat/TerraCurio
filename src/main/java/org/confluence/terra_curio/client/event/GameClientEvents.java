@@ -4,7 +4,6 @@ package org.confluence.terra_curio.client.event;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.sounds.SoundEvents;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -32,11 +31,13 @@ public final class GameClientEvents {
             PlayerJumpHandler.reset(true);
             PlayerClimbHandler.reset();
             PlayerSprintingHandler.reset();
+            ScopeFovHandler.reset();
         } else {
             GravitationHandler.handle(localPlayer);
             StepStoolHandler.handle(localPlayer);
             TCClientPacketHandler.applyAutoAttack(minecraft, localPlayer);
             InformationHandler.handle(localPlayer);
+            ScopeFovHandler.handle(localPlayer);
         }
 
         ExpertColorAnimation.INSTANCE.updateColor();
@@ -69,16 +70,8 @@ public final class GameClientEvents {
 
     @SubscribeEvent
     public static void fov(ComputeFovModifierEvent event) {
-        if (ScopeFovHandler.canApplyScope(event.getPlayer())) {
+        if (ScopeFovHandler.isScoping()) {
             event.setNewFovModifier(ScopeFovHandler.getFovModifier());
-            if (!ScopeFovHandler.scoping) {
-                if (ScopeFovHandler.getFovModifier() != 1.0) {
-                    event.getPlayer().playSound(SoundEvents.SPYGLASS_USE);
-                }
-                ScopeFovHandler.scoping = true;
-            }
-        } else {
-            ScopeFovHandler.scoping = false;
         }
     }
 
@@ -94,8 +87,8 @@ public final class GameClientEvents {
     @SubscribeEvent
     public static void mouseScrolling(InputEvent.MouseScrollingEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player != null && ScopeFovHandler.canApplyScope(player)) {
-            ScopeFovHandler.handle(player, event.getScrollDeltaY());
+        if (player != null && ScopeFovHandler.isScoping()) {
+            ScopeFovHandler.handleScroll(player, event.getScrollDeltaY());
             event.setCanceled(true);
         }
     }

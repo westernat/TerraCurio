@@ -19,7 +19,7 @@ public final class GravitationHandler {
     public static final Vec3 DOWN = new Vec3(0.0, -0.3000001, 0.0);
     private static boolean keyDown = false;
     private static boolean shouldRot = false;
-    private static boolean hasGlobe = false;
+    static boolean hasGlobe = false;
 
     public static void handle(LocalPlayer localPlayer, boolean jumping) {
         if (StepStoolHandler.onStool() || localPlayer.getAbilities().flying) return;
@@ -64,10 +64,6 @@ public final class GravitationHandler {
             localPlayer.setPose(Pose.STANDING);
             ((LocalPlayerAccessor) localPlayer).setCrouching(false);
         }
-    }
-
-    static void setHasGlobe(boolean has) {
-        hasGlobe = has;
     }
 
     public static boolean isHasGlobe() {

@@ -80,7 +80,7 @@ public final class TCClientPacketHandler {
         hasCthulhu = (item & SHIELD_OF_CTHULHU) == SHIELD_OF_CTHULHU;
         hasTabi = (item & TABI) == TABI;
         ScopeFovHandler.hasScope = (item & SCOPE) == SCOPE;
-        GravitationHandler.setHasGlobe((item & GRAVITY_GLOBE) == GRAVITY_GLOBE);
+        GravitationHandler.hasGlobe = (item & GRAVITY_GLOBE) == GRAVITY_GLOBE;
         hasMagiluminescence = (item & MAGILUMINESCENCE) == MAGILUMINESCENCE;
     }
 
@@ -88,7 +88,6 @@ public final class TCClientPacketHandler {
         autoAttack = false;
         hasCthulhu = false;
         hasTabi = false;
-        ScopeFovHandler.hasScope = false;
         hasMagiluminescence = false;
         rightClickSubtractor = 0;
     }

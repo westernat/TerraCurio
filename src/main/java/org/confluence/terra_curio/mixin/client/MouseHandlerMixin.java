@@ -17,7 +17,7 @@ public abstract class MouseHandlerMixin {
             x *= -1.0;
             y *= -1.0;
         }
-        if (ScopeFovHandler.canApplyScope(instance)) {
+        if (ScopeFovHandler.isScoping()) {
             double factor = ScopeFovHandler.getCameraMoveFactor();
             x *= factor;
             y *= factor;
