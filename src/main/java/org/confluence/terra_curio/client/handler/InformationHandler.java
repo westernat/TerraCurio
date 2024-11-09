@@ -301,7 +301,7 @@ public final class InformationHandler {
     public static void handleEntityKilled(EntityKilledPacketS2C packet) {
         EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(packet.entityType());
         tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter")
-                .append(entityType.getDescription()).append("': " + packet.amount() + 1);
+                .append(entityType.getDescription()).append("': " + (packet.amount() + 1));
     }
 
     public static void handleAttackDamage(AttackDamagePacketS2C packet, Player player) {

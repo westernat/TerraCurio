@@ -68,8 +68,12 @@ public class ModJeiPlugin implements IModPlugin {
     }
 
     public static void addInput(IRecipeLayoutBuilder builder, int x, int y, Ingredient ingredient) {
-        if (!ingredient.isEmpty() && ingredient.isCustom() && ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
-            builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredients(amountIngredient.ingredient());
+        if (!ingredient.isEmpty()) {
+            if (ingredient.isCustom() && ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
+                builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredients(amountIngredient.ingredient());
+            } else {
+                builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredients(ingredient);
+            }
         }
     }
 }
