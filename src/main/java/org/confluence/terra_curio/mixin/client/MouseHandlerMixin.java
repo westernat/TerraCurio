@@ -7,9 +7,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.MouseHandler;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
+import net.neoforged.neoforge.common.Tags;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
-import org.confluence.terra_curio.common.init.TCTags;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -34,6 +34,6 @@ public abstract class MouseHandlerMixin {
     private boolean hasScope(boolean original) {
         LocalPlayer player = minecraft.player;
         if (player == null) return original;
-        return original || (TCClientPacketHandler.isHasScope() && player.isCrouching() && player.getItemInHand(InteractionHand.MAIN_HAND).is(TCTags.RANGED_WEAPON));
+        return original || (TCClientPacketHandler.isHasScope() && player.isCrouching() && player.getItemInHand(InteractionHand.MAIN_HAND).is(Tags.Items.RANGED_WEAPON_TOOLS));
     }
 }

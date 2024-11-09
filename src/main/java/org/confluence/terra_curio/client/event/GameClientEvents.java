@@ -11,13 +11,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.Tags;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.event.PerformJumpingEvent;
 import org.confluence.terra_curio.client.animate.ExpertColorAnimation;
 import org.confluence.terra_curio.client.animate.MasterColorAnimation;
 import org.confluence.terra_curio.client.handler.*;
 import org.confluence.terra_curio.common.init.TCEffects;
-import org.confluence.terra_curio.common.init.TCTags;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
 
 @EventBusSubscriber(modid = TerraCurio.MODID, value = Dist.CLIENT)
@@ -74,7 +74,7 @@ public final class GameClientEvents {
         Player player = event.getPlayer();
         if (TCClientPacketHandler.isHasScope() && player.isCrouching() &&
                 Minecraft.getInstance().options.getCameraType().isFirstPerson() &&
-                player.getItemInHand(InteractionHand.MAIN_HAND).is(TCTags.RANGED_WEAPON)
+                player.getItemInHand(InteractionHand.MAIN_HAND).is(Tags.Items.RANGED_WEAPON_TOOLS)
         ) event.setNewFovModifier(0.1F);
     }
 
