@@ -20,6 +20,10 @@ public abstract class RegisterAccessoriesComponentUpdateEvent extends Event impl
         public ArrayList<ValueType<Unit, UnitValue>> getList() {
             return list;
         }
+
+        public void register(ValueType<Unit, UnitValue> type) {
+            list.add(type);
+        }
     }
 
     public static class OtherType extends RegisterAccessoriesComponentUpdateEvent {
@@ -31,6 +35,10 @@ public abstract class RegisterAccessoriesComponentUpdateEvent extends Event impl
 
         public ArrayList<ValueType<?, ? extends PrimitiveValue<?>>> getList() {
             return list;
+        }
+
+        public void register(ValueType<?, ? extends PrimitiveValue<?>> type) {
+            list.add(type);
         }
     }
 }
