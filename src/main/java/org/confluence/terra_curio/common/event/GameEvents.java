@@ -62,8 +62,7 @@ public final class GameEvents {
     @SubscribeEvent
     public static void livingIncomingDamage(LivingIncomingDamageEvent event) {
         DamageContainer container = event.getContainer();
-        LivingEntity living = event.getEntity();
-        float invulnerableTicksMultiplier = living.getData(TCAttachments.ACCESSORIES).getValue(ValueType.INVULNERABLE$TICKS$MULTIPLIER);
+        float invulnerableTicksMultiplier = TCUtils.getAccessoriesValue(event.getEntity(), ValueType.INVULNERABLE$TICKS$MULTIPLIER);
         invulnerableTicksMultiplier = Mth.clamp(invulnerableTicksMultiplier, 0.0F, 100.0F);
         container.setPostAttackInvulnerabilityTicks((int) (container.getPostAttackInvulnerabilityTicks() * invulnerableTicksMultiplier));
     }

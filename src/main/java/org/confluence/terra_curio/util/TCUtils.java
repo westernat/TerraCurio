@@ -7,6 +7,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
@@ -28,6 +29,8 @@ import net.neoforged.neoforge.common.util.FakePlayer;
 import org.apache.commons.compress.utils.Lists;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
+import org.confluence.terra_curio.api.primitive.UnitValue;
+import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.component.EffectImmunities;
 import org.confluence.terra_curio.common.component.NbtComponent;
@@ -92,7 +95,7 @@ public final class TCUtils {
     }
 
     public static void applyFireAttack(Player player, Entity entity) {
-        if (player.getData(TCAttachments.ACCESSORIES).contains(FIRE$ATTACK)) {
+        if (hasAccessoriesType(player, FIRE$ATTACK)) {
             float f = player.getRandom().nextFloat();
             int time;
             if (f < 0.25F) {
@@ -126,12 +129,12 @@ public final class TCUtils {
     }
 
     public static float applyInjuryFree(LivingEntity living, float amount) {
-        float injuryFree = living.getData(TCAttachments.ACCESSORIES).getValue(INJURY$FREE);
+        float injuryFree = TCUtils.getAccessoriesValue(living, INJURY$FREE);
         return amount * (1.0F - injuryFree);
     }
 
     public static void applyStarClock(LivingEntity living, RandomSource random) {
-        boolean starClock = living.getData(TCAttachments.ACCESSORIES).contains(STAR$CLOCK);
+        boolean starClock = hasAccessoriesType(living, STAR$CLOCK);
         if (starClock) {
             Level level = living.level();
             List<Entity> list = level.getEntities(living, new AABB(living.getOnPos()).inflate(4.0, 3.0, 4.0), entity -> entity instanceof Enemy);
@@ -163,13 +166,13 @@ public final class TCUtils {
     }
 
     public static void applyIgniteArrow(LivingEntity living, AbstractArrow arrow) {
-        if (living.getData(TCAttachments.ACCESSORIES).contains(IGNITE$ARROW)) {
+        if (hasAccessoriesType(living, IGNITE$ARROW)) {
             arrow.igniteForTicks(2000);
         }
     }
 
     public static float applyFrozenTurtleShell(LivingEntity living, float amount) {
-        if (living.getHealth() / living.getMaxHealth() < 0.5F && living.getData(TCAttachments.ACCESSORIES).contains(FROZEN$TURTLE$SHELL)) {
+        if (living.getHealth() / living.getMaxHealth() < 0.5F && hasAccessoriesType(living, FROZEN$TURTLE$SHELL)) {
             return amount * 0.75F;
         }
         return amount;
@@ -240,14 +243,14 @@ public final class TCUtils {
 
     public static float applyLavaHurtReduce(LivingEntity living, DamageSource damageSource, float amount) {
         if (damageSource.is(DamageTypes.LAVA)) {
-            float value = living.getData(TCAttachments.ACCESSORIES).getValue(LAVA$HURT$REDUCE);
+            float value = getAccessoriesValue(living, LAVA$HURT$REDUCE);
             living.igniteForTicks(140);
             return amount * (1.0F - value);
         }
         return amount;
     }
 
-    public static void onChangedBlock(LivingEntity living, ServerLevel level, BlockPos pos) {
+    public static void onChangedBlock(LivingEntity living, ServerLevel level) {
         if (living.onGround()) {
             AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
             BlockPos onPos = living.getOnPos();
@@ -274,5 +277,13 @@ public final class TCUtils {
                 }
             }
         }
+    }
+
+    public static boolean hasAccessoriesType(LivingEntity living, ValueType<Unit, UnitValue> type) {
+        return living.getData(TCAttachments.ACCESSORIES).contains(type);
+    }
+
+    public static <T, V extends PrimitiveValue<T>> T getAccessoriesValue(LivingEntity living, ValueType<T, V> type) {
+        return living.getData(TCAttachments.ACCESSORIES).getValue(type);
     }
 }

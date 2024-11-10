@@ -15,7 +15,6 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import org.confluence.terra_curio.api.primitive.ValueType;
-import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCDamageTypes;
 import org.confluence.terra_curio.common.init.TCEffects;
@@ -45,7 +44,7 @@ public abstract class LivingEntityMixin implements SelfGetter<LivingEntity> {
 
     @Inject(method = "canFreeze", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
     private void checkFreeze(CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValue() && self().getData(TCAttachments.ACCESSORIES).contains(ValueType.FROZEN$IMMUNE)) {
+        if (cir.getReturnValue() && TCUtils.hasAccessoriesType(self(), ValueType.FROZEN$IMMUNE)) {
             cir.setReturnValue(false);
         }
     }
@@ -56,7 +55,7 @@ public abstract class LivingEntityMixin implements SelfGetter<LivingEntity> {
         LivingEntity self = self();
         if (self.isCrouching()) {
             cir.setReturnValue(false);
-        } else if (self.getData(TCAttachments.ACCESSORIES).getValue(ValueType.FLUID$WALK).stream().anyMatch(fluidState::is)) {
+        } else if (TCUtils.getAccessoriesValue(self, ValueType.FLUID$WALK).stream().anyMatch(fluidState::is)) {
             cir.setReturnValue(true);
         }
     }
@@ -113,6 +112,6 @@ public abstract class LivingEntityMixin implements SelfGetter<LivingEntity> {
 
     @Inject(method = "onChangedBlock", at = @At("TAIL"))
     private void onMoved(ServerLevel level, BlockPos pos, CallbackInfo ci) {
-        TCUtils.onChangedBlock(self(), level, pos);
+        TCUtils.onChangedBlock(self(), level);
     }
 }

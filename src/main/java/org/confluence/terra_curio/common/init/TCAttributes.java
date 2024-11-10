@@ -180,7 +180,7 @@ public final class TCAttributes {
 
         ApothicHelper.preset(MAP);
 
-        List<String> attributes = TCStartupConfigs.ATTRIBUTE_REPLACE.get();
+        List<? extends String> attributes = TCStartupConfigs.ATTRIBUTE_REPLACE.get();
         for (String attribute : attributes) {
             String[] split = attribute.split("=");
             if (split.length != 2) {

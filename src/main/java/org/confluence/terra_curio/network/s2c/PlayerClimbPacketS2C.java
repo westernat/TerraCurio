@@ -11,7 +11,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.PlayerClimbHandler;
-import org.confluence.terra_curio.common.init.TCAttachments;
+import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
 public record PlayerClimbPacketS2C(byte climberAmount) implements CustomPacketPayload {
@@ -38,6 +38,6 @@ public record PlayerClimbPacketS2C(byte climberAmount) implements CustomPacketPa
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        PacketDistributor.sendToPlayer(serverPlayer, new PlayerClimbPacketS2C(serverPlayer.getData(TCAttachments.ACCESSORIES).getValue(ValueType.WALL$CLIMB)));
+        PacketDistributor.sendToPlayer(serverPlayer, new PlayerClimbPacketS2C(TCUtils.getAccessoriesValue(serverPlayer, ValueType.WALL$CLIMB)));
     }
 }

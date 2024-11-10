@@ -21,6 +21,7 @@ import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.mixinauxi.IEntity;
 import org.confluence.terra_curio.mixinauxi.SelfGetter;
+import org.confluence.terra_curio.util.TCUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -102,7 +103,7 @@ public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
     @Inject(method = "setSprinting", at = @At("TAIL"))
     private void sprinting(boolean bool, CallbackInfo ci) {
         if (bool && !level.isClientSide && self() instanceof LivingEntity living) {
-            if (terra_curio$cthulhuSprintingTime == 0 && living.getData(TCAttachments.ACCESSORIES).contains(ValueType.SHIELD$OF$CTHULHU)) {
+            if (terra_curio$cthulhuSprintingTime == 0 && TCUtils.hasAccessoriesType(living, ValueType.SHIELD$OF$CTHULHU)) {
                 float f = living.getYRot() * Mth.DEG_TO_RAD;
                 double factor = living.onGround() ? 1.6 : 1.2;
                 living.setDeltaMovement(living.getDeltaMovement().add(-Mth.sin(f) * factor, 0.0D, Mth.cos(f) * factor));

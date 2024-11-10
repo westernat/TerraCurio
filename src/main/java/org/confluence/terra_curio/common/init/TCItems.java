@@ -374,15 +374,8 @@ public final class TCItems {
                     .attribute(Attributes.SAFE_FALL_DISTANCE, 7.0, ADD_VALUE)
                     .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL))), // 水陆两用靴
 
-            /* 幸运币 */
-            /* 金戒指 */
-            /* 钱币戒指 */
-            /* 优惠卡 */
-            /* 贪婪戒指 */
             TREASURE_MAGNET = registerCurio("treasure_magnet", builder -> builder.attribute(TCAttributes.getPickupRange(), 6.25, ADD_VALUE)), // 宝藏磁石
             FLOWER_BOOTS = registerCurio("flower_boots", builder -> builder.rarity(LIME).accessories(units(ValueType.FLOWER$BOOTS))); // 花靴
-            /* 水母项链 */
-            /* 收音机 */
 
     public static final Supplier<BaseCurioItem> ANGLER_EARRING = registerCurio("angler_earring", AnglerEarring::new); // 渔夫耳环
 
