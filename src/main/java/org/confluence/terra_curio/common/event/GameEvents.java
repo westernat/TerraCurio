@@ -145,7 +145,7 @@ public final class GameEvents {
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
         if (event.loadedFromDisk() || event.getLevel().isClientSide) {
             if (event.getEntity() instanceof LivingEntity living) {
-                living.getData(TCAttachments.ACCESSORIES).flushAbility(living); // contains local player
+                living.getData(TCAttachments.ACCESSORIES).flushAbility(living);
             }
             return;
         }
