@@ -226,7 +226,7 @@ public final class TCUtils {
             itemStack.set(TCDataComponentTypes.NBT, new NbtComponent(nbt));
             return nbt;
         }
-        return nbtComponent.nbt();
+        return nbtComponent.nbt().copy();
     }
 
     public static void updateItemStackNbt(ItemStack itemStack, Consumer<CompoundTag> consumer) {
