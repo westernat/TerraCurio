@@ -121,7 +121,7 @@ dependencies {
     compileOnly("mezz.jei:jei-1.21-neoforge-api:${jei_version}")
     runtimeOnly("mezz.jei:jei-1.21-neoforge:${jei_version}")
 
-    implementation jarJar(group: 'org.mesdag', name: 'particlestorm', version: "[1.0.1,)")
+    //implementation jarJar(group: 'org.mesdag', name: 'particlestorm', version: "[1.0.1,)")
 
 
 
