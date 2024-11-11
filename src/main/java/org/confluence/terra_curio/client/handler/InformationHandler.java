@@ -17,7 +17,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.Tags;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.ValueType;
-import org.confluence.terra_curio.client.KeyBindings;
+import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
@@ -89,7 +89,7 @@ public final class InformationHandler {
         }
 
         b = INFO_DATA[METAL_DETECTOR];
-        if (KeyBindings.METAL_DETECTOR.get().isDown()) {
+        if (TCKeyBindings.METAL_DETECTOR.get().isDown()) {
             if (!detectorPressed && b != 0) {
                 detectorPressed = true;
                 metalDetectorInfo = getMetalDetectorInfo(localPlayer);

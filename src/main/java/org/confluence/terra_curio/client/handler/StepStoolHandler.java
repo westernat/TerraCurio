@@ -5,7 +5,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.terra_curio.client.KeyBindings;
+import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.network.c2s.StepStoolSteppingPacketC2S;
 import org.confluence.terra_curio.network.s2c.StepStoolSteppingPacketS2C;
 
@@ -34,7 +34,7 @@ public final class StepStoolHandler {
             }
         }
 
-        if (KeyBindings.STEP_STOOL.get().isDown()) {
+        if (TCKeyBindings.STEP_STOOL.get().isDown()) {
             if (!upKeyDown && step < maxStep) {
                 setStep(step + 1, true);
                 upKeyDown = true;
