@@ -38,12 +38,12 @@ public class BaseCurioItem extends Item implements ICurioItem {
     protected static final Consumer<Builder> NO_BUILDER = builder -> {};
     protected Builder builder;
 
-    protected BaseCurioItem(Builder builder) {
+    public BaseCurioItem(Builder builder) {
         super(builder.initialize().properties);
         this.builder = builder;
     }
 
-    protected BaseCurioItem(Properties properties) {
+    public BaseCurioItem(Properties properties) {
         super(properties);
     }
 

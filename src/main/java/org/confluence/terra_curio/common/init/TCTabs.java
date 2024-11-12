@@ -18,7 +18,6 @@ public final class TCTabs {
                     .displayItems((parameters, output) -> {
                         TCUtils.forConfluence$Inject();
                         TCItems.CURIOS.getEntries().forEach(entry -> output.accept(entry.get()));
-                    })
-                    .build()
+                    }).build()
     );
 }

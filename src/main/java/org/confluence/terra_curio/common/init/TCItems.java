@@ -3,7 +3,6 @@ package org.confluence.terra_curio.common.init;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -72,8 +71,8 @@ public final class TCItems {
                     MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))), // 十字章护身符
             ANKH_SHIELD = registerCurio("ankh_shield", builder -> builder.rarity(LIME)
                     .accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))
-                    .attribute(Attributes.KNOCKBACK_RESISTANCE, "knockback_resistance", 1.0, AttributeModifier.Operation.ADD_VALUE)
-                    .attribute(Attributes.ARMOR, "armor", 4.0, AttributeModifier.Operation.ADD_VALUE)), // 十字章护盾
+                    .attribute(Attributes.KNOCKBACK_RESISTANCE, "knockback_resistance", 1.0, ADD_VALUE)
+                    .attribute(Attributes.ARMOR, "armor", 4.0, ADD_VALUE)), // 十字章护盾
             STAR_CLOAK = registerCurio("star_cloak", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.STAR$CLOCK))), // 星星斗篷
             STAR_VEIL = registerCurio("star_veil", builder -> builder.rarity(LIGHT_PURPLE).accessories(units(ValueType.STAR$CLOCK), of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, 2.0F))), // 星星面纱
             BEE_CLOAK = registerCurio("bee_cloak", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.STAR$CLOCK, ValueType.HONEY$COMB), of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, 2.0F))), // 蜜蜂斗篷
@@ -135,16 +134,16 @@ public final class TCItems {
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getAggro(), 400, ADD_VALUE)), // 狂战士手套
             PALADINS_SHIELD = registerDirectly("paladins_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).rarity(ModRarity.YELLOW)
-                    .attribute(Attributes.ARMOR, 6.0, AttributeModifier.Operation.ADD_VALUE)
-                    .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, AttributeModifier.Operation.ADD_VALUE))), // 圣骑士护盾
+                    .attribute(Attributes.ARMOR, 6.0, ADD_VALUE)
+                    .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE))), // 圣骑士护盾
             HERO_SHIELD = registerDirectly("hero_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).rarity(ModRarity.PINK)
-                    .attribute(Attributes.ARMOR, 10.0, AttributeModifier.Operation.ADD_VALUE)
-                    .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, AttributeModifier.Operation.ADD_VALUE)
-                    .attribute(TCAttributes.getAggro(), 400, AttributeModifier.Operation.ADD_VALUE))), // 英雄护盾
+                    .attribute(Attributes.ARMOR, 10.0, ADD_VALUE)
+                    .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)
+                    .attribute(TCAttributes.getAggro(), 400, ADD_VALUE))), // 英雄护盾
             FROZEN_TURTLE_SHELL = registerCurio("frozen_turtle_shell", builder -> builder.rarity(PINK).accessories(units(ValueType.FROZEN$TURTLE$SHELL))), // 冰冻海龟壳
             FROZEN_SHIELD = registerDirectly("frozen_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).rarity(PINK)
-                    .accessories(units(ValueType.FROZEN$TURTLE$SHELL)).attribute(Attributes.ARMOR, 6.0, AttributeModifier.Operation.ADD_VALUE)
-                    .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, AttributeModifier.Operation.ADD_VALUE))), // 冰冻护盾
+                    .accessories(units(ValueType.FROZEN$TURTLE$SHELL)).attribute(Attributes.ARMOR, 6.0, ADD_VALUE)
+                    .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE))), // 冰冻护盾
             HONEY_COMB = registerCurio("honey_comb", builder -> builder.rarity(GREEN).accessories(units(ValueType.HONEY$COMB))), // 蜂窝
             SHARK_TOOTH_NECKLACE = registerCurio("shark_tooth_necklace", builder -> builder.attribute(TCAttributes.getArmorPass(), 5.0, ADD_VALUE)), // 鲨牙项链
             STINGER_NECKLACE = registerCurio("stinger_necklace", builder -> builder.rarity(PINK).accessories(units(ValueType.HONEY$COMB)).attribute(TCAttributes.getArmorPass(), 5.0, ADD_VALUE)), // 毒刺项链
@@ -168,7 +167,7 @@ public final class TCItems {
                     .attribute(TCAttributes.getCriticalChance(), 0.1, ADD_VALUE)
                     .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getAggro(), -400, ADD_VALUE)), // 侦察镜
-            MAGMA_STONE = registerCurio("magma_stone", builder -> builder.rarity(ORANGE)/* Removed .accessories() for test data_map */), // 岩浆石
+            MAGMA_STONE = registerCurio("magma_stone", ORANGE), // 岩浆石
             OBSIDIAN_ROSE = registerCurio("obsidian_rose", builder -> builder.rarity(ORANGE).accessories(of(ValueType.LAVA$HURT$REDUCE, 0.5F))), // 黑曜石玫瑰
             OBSIDIAN_SHIELD = registerCurio("obsidian_shield", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.FIRE$IMMUNE))
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)
@@ -182,7 +181,7 @@ public final class TCItems {
                     .attribute(Attributes.ATTACK_DAMAGE, 0.05, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getCriticalChance(), 0.05, ADD_VALUE)
                     .attribute(TCAttributes.getAggro(), -400, ADD_VALUE)), // 腐香囊
-            SHACKLE = registerCurio("shackle", builder -> builder.rarity(BLUE)/* Removed .attribute() for test data_map */); // 脚镣
+            SHACKLE = registerCurio("shackle", BLUE); // 脚镣
             /* 学徒围巾 */
             /* 侍卫护盾 */
             /* 女猎人圆盾 */
@@ -405,6 +404,14 @@ public final class TCItems {
             BaseCurioItem.Builder builder = BaseCurioItem.builder(name);
             consumer.accept(builder);
             return builder.build();
+        });
+    }
+
+    public static Supplier<BaseCurioItem> registerCurio(String name, ModRarity rarity) {
+        return CURIOS.register(name, () -> {
+            Item.Properties properties = new Item.Properties().component(TCDataComponentTypes.MOD_RARITY, rarity);
+            if (rarity != WHITE && rarity != GRAY) properties.fireResistant();
+            return new BaseCurioItem(properties);
         });
     }
 
