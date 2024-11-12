@@ -49,23 +49,31 @@ public final class TCItems {
     public static final Supplier<MagicMirror> MAGIC_MIRROR = CURIOS.register("magic_mirror", () -> new MagicMirror(BLUE));
     public static final Supplier<CellPhone> CELL_PHONE = CURIOS.register("cell_phone", CellPhone::new);
 
-    public static final Supplier<BaseCurioItem> BEZOAR = registerCurio("bezoar", builder -> builder.rarity(LIGHT_RED).effectImmunities(MobEffects.POISON)), // 牛黄 中毒
-            HOLY_WATER = registerCurio("holy_water", builder -> builder.rarity(LIGHT_RED).effectImmunities(MobEffects.WITHER)), // 圣水 凋零
-            DETOXIFICATION_CAPSULE = registerCurio("detoxification_capsule", builder -> builder.rarity(PINK).effectImmunities(MobEffects.POISON, MobEffects.WITHER)), // 解毒囊
-            VITAMINS = registerCurio("vitamins", builder -> builder.rarity(LIGHT_RED).effectImmunities(MobEffects.WEAKNESS)), // 维生素 虚弱
-            ENERGY_BAR = registerCurio("energy_bar", builder -> builder.rarity(LIGHT_RED).effectImmunities(MobEffects.HUNGER)), // 能量棒 饥饿
-            NUTRIENT_SOLUTION = registerCurio("nutrient_solution", builder -> builder.rarity(PINK).effectImmunities(MobEffects.WEAKNESS, MobEffects.HUNGER)), // 营养液
-            BLINDFOLD = registerCurio("blindfold", builder -> builder.rarity(LIGHT_RED).effectImmunities(MobEffects.BLINDNESS)), // 蒙眼布 失明
-            FLASHLIGHT = registerCurio("flashlight", builder -> builder.rarity(ORANGE).effectImmunities(MobEffects.DARKNESS)), // 手电筒 黑暗
-            SEARCHLIGHT = registerCurio("searchlight", builder -> builder.rarity(PINK).effectImmunities(MobEffects.BLINDNESS, MobEffects.DARKNESS)), // 探照灯
-            FAST_CLOCK = registerCurio("fast_clock", builder -> builder.rarity(LIGHT_RED).effectImmunities(MobEffects.MOVEMENT_SLOWDOWN)), // 快走时钟 缓慢
-            TRIFOLD_MAP = registerCurio("trifold_map", builder -> builder.rarity(LIGHT_RED).effectImmunities(MobEffects.CONFUSION)), // 三折地图 反胃
-            THE_PLAN = registerCurio("the_plan", builder -> builder.rarity(PINK).effectImmunities(MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION)), // 计划书
-            HAND_DRILL = registerCurio("hand_drill", builder -> builder.rarity(LIGHT_RED).effectImmunities(MobEffects.DIG_SLOWDOWN)), // 手钻 挖掘疲劳
-            SHOT_PUT = registerCurio("shot_put", builder -> builder.rarity(GREEN).effectImmunities(MobEffects.LEVITATION)), // 铅球 漂浮
-            EXPLORERS_EQUIPMENT = registerCurio("explorers_equipment", builder -> builder.rarity(PINK).effectImmunities(MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)), // 探险家宝具
-            ANKH_CHARM = registerCurio("ankh_charm", AnkhCharm::new), // 十字章护身符
-            ANKH_SHIELD = registerCurio("ankh_shield", AnkhShield::new), // 十字章护盾
+    public static final Supplier<BaseCurioItem> BEZOAR = registerCurio("bezoar", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.POISON)))), // 牛黄 中毒
+            HOLY_WATER = registerCurio("holy_water", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.WITHER)))), // 圣水 凋零
+            DETOXIFICATION_CAPSULE = registerCurio("detoxification_capsule", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.POISON, MobEffects.WITHER)))), // 解毒囊
+            VITAMINS = registerCurio("vitamins", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.WEAKNESS)))), // 维生素 虚弱
+            ENERGY_BAR = registerCurio("energy_bar", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.HUNGER)))), // 能量棒 饥饿
+            NUTRIENT_SOLUTION = registerCurio("nutrient_solution", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.WEAKNESS, MobEffects.HUNGER)))), // 营养液
+            BLINDFOLD = registerCurio("blindfold", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.BLINDNESS)))), // 蒙眼布 失明
+            FLASHLIGHT = registerCurio("flashlight", builder -> builder.rarity(ORANGE).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.DARKNESS)))), // 手电筒 黑暗
+            SEARCHLIGHT = registerCurio("searchlight", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.BLINDNESS, MobEffects.DARKNESS)))), // 探照灯
+            FAST_CLOCK = registerCurio("fast_clock", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.MOVEMENT_SLOWDOWN)))), // 快走时钟 缓慢
+            TRIFOLD_MAP = registerCurio("trifold_map", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.CONFUSION)))), // 三折地图 反胃
+            THE_PLAN = registerCurio("the_plan", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION)))), // 计划书
+            HAND_DRILL = registerCurio("hand_drill", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.DIG_SLOWDOWN)))), // 手钻 挖掘疲劳
+            SHOT_PUT = registerCurio("shot_put", builder -> builder.rarity(GREEN).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.LEVITATION)))), // 铅球 漂浮
+            EXPLORERS_EQUIPMENT = registerCurio("explorers_equipment", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))), // 探险家宝具
+            ANKH_CHARM = registerCurio("ankh_charm", builder -> builder.rarity(LIGHT_PURPLE).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(
+                    MobEffects.POISON, MobEffects.WITHER,
+                    MobEffects.WEAKNESS, MobEffects.HUNGER,
+                    MobEffects.BLINDNESS, MobEffects.DARKNESS,
+                    MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION,
+                    MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))), // 十字章护身符
+            ANKH_SHIELD = registerCurio("ankh_shield", builder -> builder.rarity(LIME)
+                    .accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))
+                    .attribute(Attributes.KNOCKBACK_RESISTANCE, "knockback_resistance", 1.0, AttributeModifier.Operation.ADD_VALUE)
+                    .attribute(Attributes.ARMOR, "armor", 4.0, AttributeModifier.Operation.ADD_VALUE)), // 十字章护盾
             STAR_CLOAK = registerCurio("star_cloak", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.STAR$CLOCK))), // 星星斗篷
             STAR_VEIL = registerCurio("star_veil", builder -> builder.rarity(LIGHT_PURPLE).accessories(units(ValueType.STAR$CLOCK), of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, 2.0F))), // 星星面纱
             BEE_CLOAK = registerCurio("bee_cloak", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.STAR$CLOCK, ValueType.HONEY$COMB), of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, 2.0F))), // 蜜蜂斗篷

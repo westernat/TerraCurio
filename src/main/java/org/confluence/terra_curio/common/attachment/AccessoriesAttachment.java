@@ -126,11 +126,9 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                     if (component == null && (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
                     Item item = stack.getItem();
 
-                    for (ValueType<Unit, UnitValue> type : UNITS_REQUIRE_UPDATE) {
-                        putUnitIfPresent(component, type);
-                    }
-                    for (ValueType<?, ? extends PrimitiveValue<?>> type : OTHER_REQUIRE_UPDATE) {
-                        combineValue(component, type);
+                    for (Map.Entry<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> entry : component.types().entrySet()) {
+                        putUnitIfPresent(entry.getKey());
+                        combineValue(entry.getKey(), tryCast(entry.getValue()));
                     }
 
                     if (!panicNecklace && item instanceof PanicNecklace) this.panicNecklace = true;
@@ -147,20 +145,21 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         });
     }
 
-    private <T, V extends PrimitiveValue<T>> void putUnitIfPresent(AccessoriesComponent component, ValueType<T, V> type) {
-        if (component.contains(type)) {
+    private <T, V extends PrimitiveValue<T>> void putUnitIfPresent(ValueType<T, V> type) {
+        if (UNITS_REQUIRE_UPDATE.contains(type)) {
             valueMap.put(type, UnitValue.INSTANCE);
         }
     }
 
-    private <T, V extends PrimitiveValue<T>> void combineValue(AccessoriesComponent component, ValueType<T, V> type) {
-        V v = component.get(type);
-        if (v != null) {
-            if (!valueMap.containsKey(type)) {
-                valueMap.put(type, v);
+    private <T, V extends PrimitiveValue<T>> void combineValue(ValueType<T, V> type, V value) {
+        if (OTHER_REQUIRE_UPDATE.contains(type)) {
+            V other = (V) valueMap.get(type);
+            if (other == null) {
+                valueMap.put(type, value);
+            } else {
+                T t = value.combine(other, type.combineRule());
+                valueMap.put(type, type.newInstance(t));
             }
-            T t = v.combine((V) valueMap.get(type), type.combineRule());
-            valueMap.put(type, type.newInstance(t));
         }
     }
 

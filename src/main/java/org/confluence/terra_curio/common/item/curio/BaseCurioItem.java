@@ -6,7 +6,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
@@ -26,7 +25,10 @@ import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -134,12 +136,6 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         public Builder attribute(Holder<Attribute> attribute, double amount, AttributeModifier.Operation operation) {
             attributesBuilder.put(attribute, new AttributeModifier(defaultId, amount, operation));
-            return this;
-        }
-
-        @SafeVarargs
-        public final Builder effectImmunities(Holder<MobEffect>... effectImmunities) {
-            properties.component(TCDataComponentTypes.ACCESSORIES, AccessoriesComponent.of(ValueType.EFFECT_IMMUNITIES, Set.of(effectImmunities)));
             return this;
         }
 
