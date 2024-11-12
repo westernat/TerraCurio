@@ -115,6 +115,11 @@ public class ModLanguageProvider extends LanguageProvider {
                 new String[]{"牛黄是一种免疫配饰，可赋予玩家对中毒减益的免疫力", "它有几率从洞穴蜘蛛中掉落"}
         );
 
+
+        addZhItem(TCItems.DEMON_HEART, "恶魔之心");
+        addTooltips(TCItems.DEMON_HEART, "Permanently Expand Your Jewelry Slot Capacity", "永久提升你的饰品栏数量");
+        add("jei.tooltip.item.terra_curio.demon_heart", "The Heart of the Demon is a buff item that permanently increases the player's jewelry slot capacity.It is guaranteed to drop from the Wither.", "恶魔之心是一种增益物品，可永久提升玩家的饰品栏数量,它必定从凋零中掉落");
+
         if (locale.equals("en_us")) {
             sidedAdd(TCItems.EXPLORERS_EQUIPMENT.get().getDescriptionId(), "Explorer's Equipment", enData);
             sidedAdd(TCItems.PALADINS_SHIELD.get().getDescriptionId(), "Paladin's Shield", enData);
