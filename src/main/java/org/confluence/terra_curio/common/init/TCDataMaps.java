@@ -8,11 +8,10 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
 
 public final class TCDataMaps {
-    public static final AdvancedDataMapType<Item, AccessoriesComponent, AccessoriesComponent.Remover> ACCESSORIES = AdvancedDataMapType.builder(
-            TerraCurio.asResource("accessories"),
-            Registries.ITEM,
-            AccessoriesComponent.CODEC
-    ).synced(AccessoriesComponent.CODEC, false).remover(AccessoriesComponent.Remover.CODEC).build();
+    public static final AdvancedDataMapType<Item, AccessoriesComponent, AccessoriesComponent.Remover> ACCESSORIES = AdvancedDataMapType.builder(TerraCurio.asResource("accessories"), Registries.ITEM, AccessoriesComponent.CODEC)
+            .synced(AccessoriesComponent.CODEC, false)
+            .remover(AccessoriesComponent.Remover.CODEC)
+            .merger(new AccessoriesComponent.Merger()).build();
 
     public static void registerDataMapTypes(RegisterDataMapTypesEvent event) {
         event.register(ACCESSORIES);

@@ -14,12 +14,9 @@ import java.util.List;
 
 public record EffectImmunities(List<Holder<MobEffect>> immunities) implements DataComponentType<EffectImmunities> {
     public final static EffectImmunities EMPTY = new EffectImmunities(List.of());
-
     public static final Codec<EffectImmunities> CODEC = RecordCodecBuilder.create(ins -> ins.group(
             MobEffect.CODEC.listOf().fieldOf("immunities").forGetter(EffectImmunities::immunities)
     ).apply(ins, EffectImmunities::new));
-
-
     public static final StreamCodec<FriendlyByteBuf, EffectImmunities> STREAM_CODEC = new StreamCodec<>() {
         @Override
         public void encode(FriendlyByteBuf buffer, EffectImmunities value) {

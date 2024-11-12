@@ -17,7 +17,6 @@ import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.terra_curio.common.component.EffectImmunities;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCDataMaps;
@@ -140,7 +139,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         @SafeVarargs
         public final Builder effectImmunities(Holder<MobEffect>... effectImmunities) {
-            properties.component(TCDataComponentTypes.EFFECT_IMMUNITIES, EffectImmunities.of(Set.of(effectImmunities).stream().toList()));
+            properties.component(TCDataComponentTypes.ACCESSORIES, AccessoriesComponent.of(ValueType.EFFECT_IMMUNITIES, Set.of(effectImmunities)));
             return this;
         }
 

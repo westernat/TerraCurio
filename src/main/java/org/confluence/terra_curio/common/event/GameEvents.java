@@ -174,7 +174,7 @@ public final class GameEvents {
     @SubscribeEvent
     public static void effectApplicable(MobEffectEvent.Applicable event) {
         MobEffectInstance effectInstance = event.getEffectInstance();
-        if (effectInstance != null && TCUtils.applyEffectImmunity(event.getEntity(), effectInstance.getEffect())) {
+        if (effectInstance != null && TCUtils.getAccessoriesValue(event.getEntity(), ValueType.EFFECT_IMMUNITIES).contains(effectInstance.getEffect())) {
             event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
         }
     }

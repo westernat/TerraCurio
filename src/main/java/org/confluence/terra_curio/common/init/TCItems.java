@@ -26,7 +26,7 @@ import org.confluence.terra_curio.common.item.curio.movement.BaseSpeedBoots;
 import org.confluence.terra_curio.common.item.curio.movement.DuneriderBoots;
 import org.confluence.terra_curio.common.item.curio.movement.StepStool;
 
-import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -261,19 +261,19 @@ public final class TCItems {
             FROSTSPARK_BOOTS = registerDirectly("frostspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIME)
                     .accessories(units(ValueType.ICE$SPEED), of(ValueType.MAY$FLY, new Tuple<>(0.3F, 40)))
                     .attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL))), // 霜花靴
-            WATER_WALKING_BOOTS = registerCurio("water_walking_boots", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.FLUID$WALK, List.of(TCTags.WATER_LIKE_WALK)))), // 水上漂靴
+            WATER_WALKING_BOOTS = registerCurio("water_walking_boots", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK)))), // 水上漂靴
             OBSIDIAN_WATER_WALKING_BOOTS = registerCurio("obsidian_water_walking_boots", builder -> builder.rarity(LIGHT_RED).accessories(
                     units(ValueType.FIRE$IMMUNE),
-                    of(ValueType.FLUID$WALK, List.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)))), // 黑曜石水上漂靴
+                    of(ValueType.FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)))), // 黑曜石水上漂靴
             LAVA_WADERS = registerCurio("lava_waders", builder -> builder.rarity(LIME).accessories(
                     units(ValueType.FIRE$IMMUNE),
-                    of(ValueType.FLUID$WALK, List.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)),
+                    of(ValueType.FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)),
                     of(ValueType.LAVA$IMMUNE$TICKS, 140),
                     of(ValueType.LAVA$HURT$REDUCE, 0.5F))), // 熔岩靴
             TERRASPARK_BOOTS = registerDirectly("terraspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIME).accessories(
                     units(ValueType.ICE$SPEED, ValueType.FIRE$IMMUNE),
                     of(ValueType.MAY$FLY, new Tuple<>(0.3F, 40)),
-                    of(ValueType.FLUID$WALK, List.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)),
+                    of(ValueType.FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)),
                     of(ValueType.LAVA$IMMUNE$TICKS, 140),
                     of(ValueType.LAVA$HURT$REDUCE, 0.5F)
             ).attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL))), // 泰拉闪耀靴

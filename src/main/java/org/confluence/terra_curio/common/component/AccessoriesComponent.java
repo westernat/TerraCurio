@@ -11,6 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
 import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.registries.datamaps.DataMapValueMerger;
 import net.neoforged.neoforge.registries.datamaps.DataMapValueRemover;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
@@ -99,6 +100,15 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
             HashMap<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new HashMap<>(component.types());
             map.remove(type);
             return Optional.of(new AccessoriesComponent(map));
+        }
+    }
+
+    public static class Merger implements DataMapValueMerger<Item, AccessoriesComponent> {
+        @Override
+        public AccessoriesComponent merge(Registry<Item> registry, Either<TagKey<Item>, ResourceKey<Item>> either, AccessoriesComponent component, Either<TagKey<Item>, ResourceKey<Item>> either1, AccessoriesComponent component1) {
+            Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component.types());
+            map.putAll(component1.types());
+            return new AccessoriesComponent(map);
         }
     }
 }

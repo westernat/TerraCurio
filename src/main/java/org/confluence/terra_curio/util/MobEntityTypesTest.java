@@ -7,12 +7,12 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
+import java.util.Set;
 
 public class MobEntityTypesTest implements EntityTypeTest<Entity, Mob> {
-    private final List<EntityType<?>> values;
+    private final Set<EntityType<?>> values;
 
-    public MobEntityTypesTest(List<EntityType<?>> values) {
+    public MobEntityTypesTest(Set<EntityType<?>> values) {
         this.values = values;
     }
 

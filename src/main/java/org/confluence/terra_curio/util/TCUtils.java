@@ -1,7 +1,6 @@
 package org.confluence.terra_curio.util;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -10,7 +9,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -26,13 +24,11 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.util.FakePlayer;
-import org.apache.commons.compress.utils.Lists;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
-import org.confluence.terra_curio.common.component.EffectImmunities;
 import org.confluence.terra_curio.common.component.NbtComponent;
 import org.confluence.terra_curio.common.entity.projectile.BeeProjectile;
 import org.confluence.terra_curio.common.entity.projectile.StarCloakEntity;
@@ -41,9 +37,6 @@ import org.confluence.terra_curio.mixinauxi.IEntity;
 import org.confluence.terra_curio.network.s2c.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
-import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -78,22 +71,6 @@ public final class TCUtils {
         return player instanceof ServerPlayer && !(player instanceof FakePlayer);
     }
 
-    public static boolean applyEffectImmunity(LivingEntity living, Holder<MobEffect> mobEffect) {
-        ICuriosItemHandler curiosItemHandler = CuriosApi.getCuriosInventory(living).orElse(null);
-        return curiosItemHandler != null && curiosItemHandler.getCurios().values().stream()
-                .map(ICurioStacksHandler::getStacks).flatMap(iDynamicStackHandler -> {
-                    int slots = iDynamicStackHandler.getSlots();
-                    List<ItemStack> stacks = Lists.newArrayList();
-                    for (int i = 0; i < slots; i++) {
-                        stacks.add(iDynamicStackHandler.getStackInSlot(i));
-                    }
-                    return stacks.stream();
-                }).anyMatch(stack -> {
-                    EffectImmunities component = stack.get(TCDataComponentTypes.EFFECT_IMMUNITIES);
-                    return component != null && component.contains(mobEffect);
-                });
-    }
-
     public static void applyFireAttack(Player player, Entity entity) {
         if (hasAccessoriesType(player, FIRE$ATTACK)) {
             float f = player.getRandom().nextFloat();
@@ -113,7 +90,7 @@ public final class TCUtils {
         if (!(self instanceof LivingEntity living)) return false;
         AccessoriesAttachment attachment = self.getData(TCAttachments.ACCESSORIES);
         Entity attacker = damageSource.getEntity();
-        if (attacker != null && attachment.getIgnores().contains(attacker.getType())) {
+        if (attacker != null && attachment.getValue(MOB$IGNORE).contains(attacker.getType())) {
             return true;
         }
         if (attachment.contains(SHIELD$OF$CTHULHU) && ((IEntity) living).terra_curio$isOnCthulhuSprinting()) {

@@ -4,18 +4,24 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.function.Supplier;
+import java.util.stream.Collectors;
 
-public class EntityTypesValue implements PrimitiveValue<List<EntityType<?>>> {
-    public static final Codec<EntityTypesValue> CODEC = BuiltInRegistries.ENTITY_TYPE.byNameCodec().listOf()
-            .xmap(EntityTypesValue::new, EntityTypesValue::get);
-    public static final CombineRule<List<EntityType<?>>, EntityTypesValue> EXPANSION = CombineRule.register(new CombineRule<>() {
+public class EntityTypesValue implements PrimitiveValue<Set<EntityType<?>>> {
+    public static final Codec<EntityTypesValue> CODEC = BuiltInRegistries.ENTITY_TYPE.byNameCodec().listOf().xmap(
+            values -> new EntityTypesValue(new HashSet<>(values)),
+            value -> new ArrayList<>(value.values)
+    );
+    public static final CombineRule<Set<EntityType<?>>, EntityTypesValue> EXPANSION = CombineRule.register(new CombineRule<>() {
         @Override
-        public List<EntityType<?>> combine(List<EntityType<?>> componentA, List<EntityType<?>> componentB) {
+        public Set<EntityType<?>> combine(Set<EntityType<?>> componentA, Set<EntityType<?>> componentB) {
             Set<EntityType<?>> combined = new HashSet<>(componentA);
             combined.addAll(componentB);
-            return new ArrayList<>(combined);
+            return combined;
         }
 
         @Override
@@ -23,25 +29,25 @@ public class EntityTypesValue implements PrimitiveValue<List<EntityType<?>>> {
             return "entity_types_expansion";
         }
     });
-    private final Supplier<List<EntityType<?>>> supplier;
-    private List<EntityType<?>> values;
+    private final Supplier<Set<EntityType<?>>> supplier;
+    private Set<EntityType<?>> values;
 
-    public EntityTypesValue(Supplier<List<EntityType<?>>> supplier) {
+    public EntityTypesValue(Supplier<Set<EntityType<?>>> supplier) {
         this.supplier = supplier;
         this.values = null;
     }
 
-    public EntityTypesValue(List<EntityType<?>> values) {
+    public EntityTypesValue(Set<EntityType<?>> values) {
         this.supplier = null;
         this.values = values;
     }
 
     public EntityTypesValue(EntityType<?>... values) {
-        this(Arrays.stream(values).toList());
+        this(Arrays.stream(values).collect(Collectors.toSet()));
     }
 
     @Override
-    public List<EntityType<?>> get() {
+    public Set<EntityType<?>> get() {
         if (supplier != null && values == null) {
             this.values = supplier.get();
         }

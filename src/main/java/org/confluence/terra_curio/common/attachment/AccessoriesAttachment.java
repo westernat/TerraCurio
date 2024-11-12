@@ -2,7 +2,6 @@ package org.confluence.terra_curio.common.attachment;
 
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
@@ -71,10 +70,10 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         list.add(ValueType.TSUNAMI);
         list.add(ValueType.CLOUD);
         list.add(ValueType.MAY$FLY);
+        list.add(ValueType.EFFECT_IMMUNITIES);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.OtherType(list));
     });
     private final Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> valueMap = new HashMap<>();
-    private final Set<EntityType<?>> ignores = new HashSet<>();
     private boolean panicNecklace;
     private transient int remainLavaImmuneTicks;
 
@@ -84,7 +83,6 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
 
     public void setToDefaultValue() {
         this.valueMap.clear();
-        this.ignores.clear();
         this.panicNecklace = false;
         this.remainLavaImmuneTicks = 0;
     }
@@ -96,10 +94,6 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
 
     public <T, V extends PrimitiveValue<T>> boolean contains(ValueType<T, V> type) {
         return valueMap.containsKey(type);
-    }
-
-    public Set<EntityType<?>> getIgnores() {
-        return ignores;
     }
 
     public boolean hasPanicNecklace() {
@@ -144,8 +138,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
             }
             float fishingPower = NeoForge.EVENT_BUS.post(new FishingPowerModificationEvent(living, getValue(ValueType.FISHING$POWER))).getNeoValue();
             valueMap.put(ValueType.FISHING$POWER, new FloatValue(fishingPower));
-            List<EntityType<?>> ignores = getValue(ValueType.MOB$IGNORE);
-            this.ignores.addAll(ignores);
+            Set<EntityType<?>> ignores = getValue(ValueType.MOB$IGNORE);
             if (!ignores.isEmpty()) {
                 living.level().getEntities(new MobEntityTypesTest(ignores), new AABB(living.getOnPos()).inflate(31.5), mob -> true).forEach(mob -> {
                     if (mob.getTarget() == living) mob.setTarget(null);
@@ -184,13 +177,6 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
             });
         }
         nbt.put("valueMap", listTag);
-        ListTag listTag1 = new ListTag();
-        for (EntityType<?> ignore : ignores) {
-            CompoundTag type = new CompoundTag();
-            type.putString("EntityType", BuiltInRegistries.ENTITY_TYPE.getKey(ignore).toString());
-            listTag1.add(type);
-        }
-        nbt.put("ignores", listTag1);
         nbt.putBoolean("panicNecklace", panicNecklace);
         return nbt;
     }
@@ -206,12 +192,6 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
             ValueType.VALUE_CODECS.get(location).parse(NbtOps.INSTANCE, compoundTag.get(key)).result().ifPresent(value -> {
                 valueMap.put(ValueType.TYPES.get(location), value);
             });
-        }
-        this.ignores.clear();
-        ListTag listTag1 = nbt.getList("ignores", Tag.TAG_COMPOUND);
-        for (Tag tag : listTag1) {
-            String type = ((CompoundTag) tag).getString("EntityType");
-            ignores.add(BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(type)));
         }
         this.panicNecklace = nbt.getBoolean("panicNecklace");
     }

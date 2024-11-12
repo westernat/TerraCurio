@@ -7,6 +7,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
 import net.minecraft.util.Unit;
+import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -14,8 +15,8 @@ import net.minecraft.world.level.material.Fluid;
 import org.confluence.terra_curio.TerraCurio;
 
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
 
 @SuppressWarnings("unchecked")
@@ -66,8 +67,8 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Float, FloatValue> LAVA$HURT$REDUCE = ofFloat("lava_hurt_reduce", FloatValue.GET_MAX_WITHIN_0_TO_1, 0.0F);
     public static final ValueType<Integer, IntegerValue> LAVA$IMMUNE$TICKS = ofInteger("lava_immune_ticks", IntegerValue.GET_MAX, 0);
     public static final ValueType<Integer, IntegerValue> RIGHT$CLICK$DELAY$SUBSTRACTOR = ofInteger("right_click_delay_substractor", IntegerValue.GET_MAX, 0);
-    public static final ValueType<List<EntityType<?>>, EntityTypesValue> MOB$IGNORE = create("mob_ignore", EntityTypesValue.EXPANSION, EntityTypesValue.CODEC, List.of(), EntityTypesValue::new);
-    public static final ValueType<List<TagKey<Fluid>>, FluidTagsValue> FLUID$WALK = create("fluid_walk", FluidTagsValue.EXPANSION, FluidTagsValue.CODEC, List.of(), FluidTagsValue::new);
+    public static final ValueType<Set<EntityType<?>>, EntityTypesValue> MOB$IGNORE = create("mob_ignore", EntityTypesValue.EXPANSION, EntityTypesValue.CODEC, Set.of(), EntityTypesValue::new);
+    public static final ValueType<Set<TagKey<Fluid>>, FluidTagsValue> FLUID$WALK = create("fluid_walk", FluidTagsValue.EXPANSION, FluidTagsValue.CODEC, Set.of(), FluidTagsValue::new);
     public static final ValueType<Byte, ByteValue> WALL$CLIMB = create("wall_climb", ByteValue.ADDITION_WITHIN_0_TO_2, ByteValue.CODEC, (byte) 0, ByteValue::new);
     public static final ValueType<Float, FloatValue> FART = ofFloat("fart", FloatValue.GET_SELF, 0.0F);
     public static final ValueType<Tuple<Float, Integer>, FloatAndIntegerValue> SAND$STORM = ofFloatAndInteger("sand_storm", FloatAndIntegerValue.GET_SELF, new Tuple<>(0.0F, 0));
@@ -75,6 +76,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Float, FloatValue> TSUNAMI = ofFloat("tsunami", FloatValue.GET_SELF, 0.0F);
     public static final ValueType<Float, FloatValue> CLOUD = ofFloat("cloud", FloatValue.GET_SELF, 0.0F);
     public static final ValueType<Tuple<Float, Integer>, FloatAndIntegerValue> MAY$FLY = ofFloatAndInteger("may_fly", FloatAndIntegerValue.GET_SELF, new Tuple<>(0.0F, 0));
+    public static final ValueType<Set<Holder<MobEffect>>, MobEffectsValue> EFFECT_IMMUNITIES = create("effect_immunities", MobEffectsValue.EXPANSION, MobEffectsValue.CODEC, Set.of(), MobEffectsValue::new);
     // no updates
     public static final ValueType<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> ATTRIBUTES = create("attributes", AttributeModifiersValue.GET_SELF, AttributeModifiersValue.CODEC, ImmutableListMultimap.of(), AttributeModifiersValue::new);
 
