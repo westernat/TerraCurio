@@ -373,20 +373,22 @@ public class ModLanguageProvider extends LanguageProvider {
 
     private void addTooltips(String key, String[] enTooltip, String[] zhTooltip) {
         if (enTooltip.length == zhTooltip.length) {
+            String tooltip = "tooltip." + key + ".";
             for (int i = 0; i < enTooltip.length; i++) {
                 String enLang = enTooltip[i];
                 String cnLang = zhTooltip[i];
-                add("tooltip." + key + "." + i, enLang, cnLang);
+                add(tooltip + i, enLang, cnLang);
             }
         }
     }
 
     private void addJeiInfos(String key, String[] enJeiInfo, String[] zhJeiInfo) {
         if (enJeiInfo.length == zhJeiInfo.length) {
+            String jeiInfo = "jei.tooltip." + key + ".";
             for (int i = 0; i < enJeiInfo.length; i++) {
                 String enLang = enJeiInfo[i];
                 String zhLang = zhJeiInfo[i];
-                add("jei.tooltip." + key + "." + i, enLang, zhLang);
+                add(jeiInfo + i, enLang, zhLang);
             }
         }
     }
