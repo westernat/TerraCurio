@@ -36,6 +36,7 @@ public class ModLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add("creativetab.terra_curio", "Terra Curio", "泰拉饰品");
+
         add("curios.tooltip.speed_boots", "The wearer can run super fast", "穿戴者可飞速奔跑");
         add("curios.tooltip.may_fly", "Allows flight", "可飞行");
         add("curios.tooltip.jump_boost", "Increases jump height", "增加跳跃高度");
@@ -108,17 +109,187 @@ public class ModLanguageProvider extends LanguageProvider {
         add("curios.identifier.accessory", "Accessory", "配饰");
         add("curios.modifiers.accessory", "When worn as accessory:", "佩戴配饰时：");
 
-        addZhItem(TCItems.BEZOAR, "牛黄");
-        addTooltips(TCItems.BEZOAR, "Immunity to Poison", "对中毒免疫");
-        addJeiTooltips(TCItems.BEZOAR,
-                new String[]{"The Bezoar is an immunity accessory that grants the player immunity to the Poisoned debuff", "It have a Chance to be dropped from Cave Spider."},
-                new String[]{"牛黄是一种免疫配饰，可赋予玩家对中毒减益的免疫力", "它有几率从洞穴蜘蛛中掉落"}
-        );
+        add("container.terra_curio.workshop", "工匠作坊");
+        add("title.terra_curio.workshop", "工匠作坊");
 
-
-        addZhItem(TCItems.DEMON_HEART, "恶魔之心");
-        addTooltips(TCItems.DEMON_HEART, "Permanently Expand Your Jewelry Slot Capacity", "永久提升你的饰品栏数量");
-        add("jei.tooltip.item.terra_curio.demon_heart", "The Heart of the Demon is a buff item that permanently increases the player's jewelry slot capacity.It is guaranteed to drop from the Wither.", "恶魔之心是一种增益物品，可永久提升玩家的饰品栏数量,它必定从凋零中掉落");
+        onlyJeiInfo(TCItems.AGLET, "金属带扣", "It can be found in Shipwreck Chests.", "它出现在沉船宝箱中");
+        onlyTooltip(TCItems.AMBER_HORSESHOE_BALLOON, "琥珀马掌气球", "增加跳跃高度、消除掉落伤害", "Increases jump height and negates fall damage");
+//        "ambhipian_boots": "水陆两用靴",
+//        "ancient_chisel": "远古凿子",
+//        "ancient_chisel.tooltip2": "“古老的问题需要古老的解决方案”",
+//        "angler_earring": "渔夫耳环",
+//        "ankh_charm": "十字章护身符",
+//        "ankh_shield": "十字章护盾",
+//        "anklet_of_the_wind": "疾风脚镯",
+//        "arcane_flower.tooltip3": "敌人不太可能以你为目标",
+//        "architect_gizmo_pack": "建筑师发明背包",
+//        "avenger_emblem": "复仇者勋章",
+//        "balloon_pufferfish": "气球河豚鱼",
+//        "band_of_regeneration": "再生手环",
+//        "bee_cloak": "蜜蜂斗篷",
+//        "berserkers_glove": "狂战士手套",
+        tooltipAndJeiInfo(TCItems.BEZOAR, "牛黄", "Immunity to Poison", "对中毒免疫", "It have a Chance to be dropped from Cave Spider.", "它有几率从洞穴蜘蛛身上掉落。");
+//        "black_belt": "黑腰带",
+//        "blindfold": "蒙眼布",
+//        "blizzard_in_a_balloon": "暴雪气球",
+//        "blizzard_in_a_bottle": "暴雪瓶",
+//        "blue_horseshoe_balloon": "蓝马掌气球",
+//        "brain_of_confusion": "混乱之脑",
+//        "brain_of_confusion.tooltip2": "闪避后暂时增加暴击几率",
+//        "brain_of_confusion.tooltip3": "被击中后可能会迷惑附近的敌人",
+//        "brick_layer": "砌砖刀",
+//        "bundle_of_balloons": "气球束",
+//        "bundle_of_horseshoe_balloon.tooltip2": "增加跳跃高度、消除掉落伤害",
+//        "bundle_of_horseshoe_balloons": "马掌气球束",
+//        "celestial_stone": "天界石",
+//        "cell_phone": "手机",
+//        "cell_phone.tooltip2": "可随意回家",
+//        "climbing_claws": "攀爬爪",
+//        "cloud_in_a_balloon": "云朵气球",
+//        "cloud_in_a_bottle": "云朵瓶",
+//        "cobalt_shield": "钴护盾",
+//        "compass": "罗盘",
+//        "copper_watch": "铜表",
+//        "cross_necklace": "十字项链",
+        tooltipAndJeiInfo(TCItems.DEMON_HEART, "恶魔之心", "Permanently increases the number of accessory slots", "永久增加配饰栏数量", "It to be dropped from Wither.", "它必定从凋零身上掉落。");
+//        "depth_meter": "深度计",
+//        "destroyer_emblem": "毁灭者勋章",
+//        "detoxification_capsule": "解毒囊",
+//        "dps_meter": "每秒伤害计数器",
+//        "dunerider_boots": "沙丘行者靴",
+//        "dunerider_boots.tooltip2": "“无节律行走就不会引来蠕虫”",
+//        "energy_bar": "能量棒",
+//        "explorers_equipment": "探险家宝具",
+//        "extendo_grip": "加长握爪",
+//        "eye_of_the_golem": "石巨人之眼",
+//        "fairy_boots": "仙灵靴",
+//        "fart_in_a_balloon": "臭屁气球",
+//        "fart_in_a_jar": "罐中臭屁",
+//        "fast_clock": "快走时钟",
+//        "feral_claws": "狂爪手套",
+//        "fire_gauntlet": "烈火手套",
+//        "fish_finder": "探鱼器",
+//        "fishermans_pocket_guide": "渔民袖珍宝典",
+//        "flashlight": "手电筒",
+//        "flesh_knuckles": "血肉指虎",
+//        "flipper": "脚蹼",
+//        "flower_boots": "花靴",
+//        "flurry_boots": "疾风雪靴",
+//        "frog_flipper": "青蛙脚蹼",
+//        "frog_gear": "青蛙装备",
+//        "frog_leg": "蛙腿",
+//        "frog_webbing": "青蛙蹼",
+//        "frostspark_boots": "霜花靴",
+//        "frozen_shield": "冰冻护盾",
+//        "frozen_shield.tooltip2": "当生命值低于50%时，在主人周围放置一个外壳，使伤害降低25%",
+//        "frozen_turtle_shell": "冰冻海龟壳",
+//        "goblin_tech": "哥布林数据仪",
+//        "gold_watch": "金表",
+//        "gps": "全球定位系统",
+//        "gravity_globe": "重力球",
+//        "gravity_globe.tooltip2": "按跳跃键可改变重力",
+//        "green_horseshoe_balloon": "绿马掌气球",
+//        "hand_drill": "手钻",
+//        "hand_of_creation": "创造之手",
+//        "hand_of_creation.tooltip2": "右键点击延迟降低3，且降低效果不能与其材料的降低效果叠加",
+//        "hand_warmer": "暖手宝",
+//        "hermes_boots": "赫尔墨斯靴",
+//        "hero_shield": "英雄护盾",
+//        "hive_pack": "蜂巢背包",
+//        "holy_water": "圣水",
+//        "honey_balloon": "蜂蜜气球",
+//        "honey_comb": "蜂窝",
+//        "ice_skates": "溜冰鞋",
+//        "lava_charm": "熔岩护身符",
+//        "lava_waders": "熔岩靴",
+//        "lava_waders.tooltip2": "对火块免疫、对岩浆免疫7秒",
+//        "life_form_analyzer": "生命体分析机",
+//        "lightning_boots": "闪电靴",
+//        "lucky_horseshoe": "幸运马掌",
+//        "magic_mirror": "魔镜",
+//        "magic_quiver": "魔法箭袋",
+//        "magic_quiver.info7": "这件物品有几率从凋零骷髅身上掉落。",
+//        "magic_quiver.tooltip2": "20%几率不消耗箭",
+//        "magiluminescence": "魔光护符",
+//        "magiluminescence.tooltip3": "“我黑暗生命中的一道短暂曙光。”",
+//        "magma_skull": "岩浆骷髅头",
+//        "magma_stone": "岩浆石",
+//        "master_ninja_gear": "忍者大师装备",
+//        "mechanical_glove": "机械手套",
+//        "metal_detector": "金属探测器",
+//        "molten_charm": "熔火护身符",
+//        "molten_quiver": "熔火箭袋",
+//        "molten_quiver.tooltip2": "“在恐惧中颤抖吧！”",
+//        "molten_skull_rose": "熔火骷髅头玫瑰",
+//        "moon_stone": "月亮石",
+//        "nutrient_solution": "营养液",
+//        "obsidian_horseshoe": "黑曜石马掌",
+//        "obsidian_rose": "黑曜石玫瑰",
+//        "obsidian_shield": "黑曜石护盾",
+//        "obsidian_skull": "黑曜石骷髅头",
+//        "obsidian_skull_rose": "黑曜石骷髅头玫瑰",
+//        "obsidian_water_walking_boots": "黑曜石水上漂靴",
+//        "paladins_shield": "圣骑士护盾",
+//        "panic_necklace": "恐慌项链",
+//        "pda": "个人数字助手",
+//        "pink_horseshoe_balloon": "粉马掌气球",
+//        "platinum_watch": "铂金表",
+//        "portable_cement_mixer": "便携式水泥搅拌机",
+//        "power_glove": "强力手套",
+//        "putrid_scent": "腐香囊",
+//        "radar": "雷达",
+//        "ranger_emblem": "游侠徽章",
+//        "recon_scope": "侦察镜",
+//        "rek_3000": "R.E.K.3000",
+//        "rifle_scope": "步枪瞄准镜",
+//        "rocket_boots": "火箭靴",
+//        "royal_gel": "皇家凝胶",
+//        "sailfish_boots": "旗鱼靴",
+//        "sandstorm_in_a_balloon": "沙暴气球",
+//        "sandstorm_in_a_bottle": "沙暴瓶",
+//        "searchlight": "探照灯",
+//        "sextant": "六分仪",
+//        "shackle": "脚镣",
+//        "shark_tooth_necklace": "鲨牙项链",
+//        "sharkron_balloon": "鲨鱼龙气球",
+//        "shield_of_cthulhu": "克苏鲁护盾",
+//        "shiny_red_balloon": "闪亮红气球",
+//        "shoe_spikes": "鞋钉",
+//        "shot_put": "铅球",
+//        "silver_watch": "银表",
+//        "sniper_scope": "狙击镜",
+//        "sorcerer_emblem": "巫师徽章",
+//        "spectre_boots": "幽灵靴",
+//        "stalkers_quiver": "潜行者箭袋",
+//        "star_cloak": "星星斗篷",
+//        "star_veil": "星星面纱",
+//        "step_stool": "梯凳",
+//        "step_stool.tooltip2": "额外高度：%s",
+//        "stinger_necklace": "毒刺项链",
+//        "stopwatch": "秒表",
+//        "sun_stone": "太阳石",
+//        "sweetheart_necklace": "甜心项链",
+//        "tabi": "分趾厚底袜",
+//        "tally_counter": "杀怪计数器",
+//        "terraspark_boots": "泰拉闪耀靴",
+//        "terraspark_boots.tooltip2": "对火块免疫并在7秒内对熔岩免疫",
+//        "the_plan": "计划书",
+//        "tiger_climbing_gear": "猛虎攀爬装备",
+//        "tin_watch": "锡表",
+//        "titan_glove": "泰坦手套",
+//        "toolbelt": "工具腰带",
+//        "toolbox": "工具箱",
+//        "treasure_magnet": "宝藏磁石",
+//        "trifold_map": "三折地图",
+//        "tsunami_in_a_bottle": "海啸瓶",
+//        "tungsten_watch": "钨表",
+//        "vitamins": "维生素",
+//        "warrior_emblem": "战士徽章",
+//        "water_walking_boots": "水上漂靴",
+//        "weather_radio": "天气收音机",
+//        "white_horseshoe_balloon": "白马掌气球",
+//        "worm_scarf": "蠕虫围巾",
+//        "yellow_horseshoe_balloon": "黄马掌气球",
 
         if (locale.equals("en_us")) {
             sidedAdd(TCItems.EXPLORERS_EQUIPMENT.get().getDescriptionId(), "Explorer's Equipment", enData);
@@ -164,30 +335,75 @@ public class ModLanguageProvider extends LanguageProvider {
         return DataProvider.saveStable(cache, json, target);
     }
 
-    private void addItem(Supplier<? extends Item> key, String en, String cn) {
-        add(key.get().getDescriptionId(), en, cn);
+    private void tooltipsAndJeiInfos(Supplier<? extends Item> item, String zhName, String[] enTooltip, String[] zhTooltip, String[] enJeiInfo, String[] zhJeiInfo) {
+        String key = item.get().getDescriptionId();
+        sidedAdd(key, zhName, zhData);
+        addTooltips(key, enTooltip, zhTooltip);
+        addJeiInfos(key, enJeiInfo, zhJeiInfo);
     }
 
-    private void addTooltips(Supplier<? extends Item> key, String en, String cn) {
-        add("tooltip." + key.get().getDescriptionId(), en, cn);
+    private void tooltipsAndJeiInfo(Supplier<? extends Item> item, String zhName, String[] enTooltip, String[] zhTooltip, String enJeiInfo, String zhJeiInfo) {
+        String key = item.get().getDescriptionId();
+        sidedAdd(key, zhName, zhData);
+        addTooltips(key, enTooltip, zhTooltip);
+        add("jei.tooltip." + key + ".0", enJeiInfo, zhJeiInfo);
     }
 
-    private void addTooltips(Supplier<? extends Item> key, String[] en, String[] cn) {
-        if (en.length == cn.length) {
-            for (int i = 0; i < en.length; i++) {
-                String enLang = en[i];
-                String cnLang = cn[i];
-                add("tooltip." + key.get().getDescriptionId() + "." + i, enLang, cnLang);
+    private void tooltipAndJeiInfo(Supplier<? extends Item> item, String zhName, String enTooltip, String zhTooltip, String enJeiInfo, String zhJeiInfo) {
+        String key = item.get().getDescriptionId();
+        sidedAdd(key, zhName, zhData);
+        add("tooltip." + key + ".0", enTooltip, zhTooltip);
+        add("jei.tooltip." + key + ".0", enJeiInfo, zhJeiInfo);
+    }
+
+    private void onlyTooltips(Supplier<? extends Item> item, String zhName, String[] enTooltip, String[] zhTooltip) {
+        String key = item.get().getDescriptionId();
+        sidedAdd(key, zhName, zhData);
+        addTooltips(key, enTooltip, zhTooltip);
+    }
+
+    private void onlyJeiInfos(Supplier<? extends Item> item, String zhName, String[] enJeiInfo, String[] zhJeiInfo) {
+        String key = item.get().getDescriptionId();
+        sidedAdd(key, zhName, zhData);
+        addJeiInfos(key, enJeiInfo, zhJeiInfo);
+    }
+
+    private void onlyZhName(Supplier<? extends Item> item, String zhName) {
+        sidedAdd(item.get().getDescriptionId(), zhName, zhData);
+    }
+
+    private void onlyTooltip(Supplier<? extends Item> item, String zhName, String enTooltip, String zhTooltip) {
+        String key = item.get().getDescriptionId();
+        sidedAdd(key, zhName, zhData);
+        add("tooltip." + key + ".0", enTooltip, zhTooltip);
+    }
+
+    private void onlyJeiInfo(Supplier<? extends Item> item, String zhName, String enJeiInfo, String zhJeiInfo) {
+        String key = item.get().getDescriptionId();
+        sidedAdd(key, zhName, zhData);
+        add("jei.tooltip." + key + ".0", enJeiInfo, zhJeiInfo);
+    }
+
+    private void addTooltip(Supplier<? extends Item> key, int index, String en, String zh) {
+        add("tooltip." + key.get().getDescriptionId() + "." + index, en, zh);
+    }
+
+    private void addTooltips(String key, String[] enTooltip, String[] zhTooltip) {
+        if (enTooltip.length == zhTooltip.length) {
+            for (int i = 0; i < enTooltip.length; i++) {
+                String enLang = enTooltip[i];
+                String cnLang = zhTooltip[i];
+                add("tooltip." + key + "." + i, enLang, cnLang);
             }
         }
     }
 
-    private void addJeiTooltips(Supplier<? extends Item> key, String[] en, String[] cn) {
-        if (en.length == cn.length) {
-            for (int i = 0; i < en.length; i++) {
-                String enLang = en[i];
-                String cnLang = cn[i];
-                add("jei.tooltip." + key.get().getDescriptionId() + "." + i, enLang, cnLang);
+    private void addJeiInfos(String key, String[] enJeiInfo, String[] zhJeiInfo) {
+        if (enJeiInfo.length == zhJeiInfo.length) {
+            for (int i = 0; i < enJeiInfo.length; i++) {
+                String enLang = enJeiInfo[i];
+                String zhLang = zhJeiInfo[i];
+                add("jei.tooltip." + key + "." + i, enLang, zhLang);
             }
         }
     }
@@ -202,12 +418,5 @@ public class ModLanguageProvider extends LanguageProvider {
 
     private void sidedAdd(String key, String value, Map<String, String> side) {
         if (!side.containsKey(key)) side.put(key, value);
-    }
-
-    private void addZhItem(Supplier<? extends Item> key, String value) {
-        String key1 = key.get().getDescriptionId();
-        if (locale.equals("zh_cn") && !zhData.containsKey(key1)) {
-            zhData.put(key1, value);
-        }
     }
 }

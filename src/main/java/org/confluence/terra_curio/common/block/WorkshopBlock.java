@@ -34,7 +34,7 @@ import static net.minecraft.world.level.block.state.properties.BlockStatePropert
 public class WorkshopBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
     public static final MapCodec<WorkshopBlock> CODEC = simpleCodec(WorkshopBlock::new);
     private static final VoxelShape SHAPE = Shapes.or(box(1, 0, 1, 15, 14, 15), box(0, 14, 0, 16, 16, 16));
-    private static final Component CONTAINER_TITLE = Component.translatable("container.confluence.workshop");
+    private static final Component CONTAINER_TITLE = Component.translatable("container.terra_curio.workshop");
 
     public WorkshopBlock(Properties properties) {
         super(properties);

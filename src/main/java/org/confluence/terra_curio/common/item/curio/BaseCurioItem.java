@@ -63,7 +63,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         boolean b = builder == null;
         if (b || builder.hasToolTip) {
-            tooltipComponents.add(Component.translatable("tooltip." + stack.getDescriptionId()));
+            tooltipComponents.add(Component.translatable("tooltip." + stack.getDescriptionId() + ".0"));
             if (!b) tooltipComponents.addAll(builder.additionTip);
         }
     }
@@ -110,7 +110,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         private transient ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> attributesBuilder = ImmutableMultimap.builder();
         private ImmutableMultimap<Holder<Attribute>, AttributeModifier> attributes;
         private ModRarity rarity = ModRarity.BLUE;
-        private int jeiInformationCount = 0;
+        private int jeiInformationCount = 1;
         private boolean makePiglinsNeutral;
 
         Builder(String name, Properties properties) {
@@ -159,14 +159,30 @@ public class BaseCurioItem extends Item implements ICurioItem {
             }
             return this;
         }
-
+        /**
+         * 额外的工具提示
+         */
         public Builder tooltip(String str) {
             if (!hasToolTip) throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
-            additionTip.add(Component.translatable("tooltip." + str));
+            additionTip.add(Component.translatable(str));
             return this;
         }
 
-        public Builder jeiInformationCount(int count) {
+        /**
+         * 额外的工具提示
+         *
+         * @param count 额外的数量
+         */
+        public Builder tooltips(int count) {
+            if (!hasToolTip) throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
+            count += 1;
+            for (int i = 1; i < count; i++) {
+                additionTip.add(Component.translatable("tooltip.item.terra_curio." + name + "." + i));
+            }
+            return this;
+        }
+
+        public Builder jeiInfos(int count) {
             this.jeiInformationCount = count;
             return this;
         }
