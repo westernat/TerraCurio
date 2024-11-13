@@ -10,7 +10,9 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityEvent;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -23,6 +25,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.common.util.FakePlayer;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
@@ -254,6 +258,48 @@ public final class TCUtils {
                 }
             }
         }
+    }
+
+    public static Vec3 getWalkVec(LivingEntity living, Vec3 par1) {
+        if (living instanceof Player && living.getEyeInFluidType() == NeoForgeMod.EMPTY_TYPE.value()) {
+            if (living.canStandOnFluid(living.level().getFluidState(living.blockPosition()))) {
+                AttributeInstance instance = living.getAttribute(Attributes.MOVEMENT_SPEED);
+                if (instance == null) return par1;
+                double horizon = Math.min(0.91 * living.getSpeed() / instance.getBaseValue(), 0.93);
+                return living.getDeltaMovement().multiply(horizon, 1.0, horizon);
+            }
+        }
+        return par1;
+    }
+
+    public static float applyArmorPass(DamageSource damageSource, float armorValue) {
+        if (!TCAttributes.hasCustomAttribute(TCAttributes.ARMOR_PASS) && damageSource.getEntity() instanceof LivingEntity attacker) {
+            AttributeInstance attributeInstance = attacker.getAttribute(TCAttributes.ARMOR_PASS);
+            if (attributeInstance != null) armorValue -= (float) attributeInstance.getValue();
+            if (damageSource.is(TCDamageTypes.STAR_CLOAK)) armorValue -= 3.0F;
+            return Math.max(armorValue, 0.0F);
+        }
+        return armorValue;
+    }
+
+    public static boolean applyTotemAbility(LivingEntity living) {
+        int cooldown = getAccessoriesValue(living, ValueType.TOTEM$WITH$COOLDOWN);
+        CompoundTag data = living.getPersistentData();
+        if (cooldown > 0) {
+            if (data.getInt("terra_curio:totem_cooldown") <= 0) {
+                living.setHealth(1.0F);
+                living.removeEffectsCuredBy(net.neoforged.neoforge.common.EffectCures.PROTECTED_BY_TOTEM);
+                living.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
+                living.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
+                living.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
+                living.level().broadcastEntityEvent(living, EntityEvent.TALISMAN_ACTIVATE);
+                data.putInt("terra_curio:totem_cooldown", cooldown);
+                return true;
+            }
+        } else {
+            data.putInt("terra_curio:totem_cooldown", -1);
+        }
+        return false;
     }
 
     public static boolean hasAccessoriesType(LivingEntity living, ValueType<Unit, UnitValue> type) {

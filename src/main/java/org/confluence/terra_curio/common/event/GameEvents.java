@@ -21,7 +21,6 @@ import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
-import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.ValueType;
@@ -131,13 +130,6 @@ public final class GameEvents {
                             event.setNewAboutToBeSetTarget(player); // 只有当新目标的仇恨值大于旧目标时，才设置新目标
                         }
                     });
-        }
-    }
-
-    @SubscribeEvent
-    public static void entityTick$Post(EntityTickEvent.Post event) {
-        if (event.getEntity() instanceof LivingEntity living) {
-            TCAttributes.applyPickupRange(living);
         }
     }
 

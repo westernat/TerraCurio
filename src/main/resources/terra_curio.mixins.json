@@ -20,6 +20,7 @@
     "client": [
         "client.ClientEntityMixin",
         "client.ClientLivingEntityMixin",
+        "client.ClientPacketListenerMixin",
         "client.ClientPlayerMixin",
         "client.KeyboardInputMixin",
         "client.LivingEntityRendererMixin",

@@ -53,7 +53,30 @@
             }
         },
         "terra_curio:everlasting": {
-
+            "terra_curio:shield_of_cthulhu": {},
+            "terra_curio:effect_immunities": [
+                "minecraft:poison",
+                "minecraft:wither",
+                "minecraft:weakness",
+                "minecraft:hunger",
+                "minecraft:blindness",
+                "minecraft:darkness",
+                "minecraft:slowness",
+                "minecraft:nausea",
+                "minecraft:mining_fatigue",
+                "minecraft:levitation"
+            ],
+            "terra_curio:totem_with_cooldown": 2400,
+            "terra_curio:invulnerable_ticks_multiplier": 2.0,
+            "terra_curio:attributes": {
+                "terra_curio:dodge_chance": [
+                    {
+                        "id": "terra_curio:everlasting",
+                        "amount": 0.1,
+                        "operation": "add_value"
+                    }
+                ]
+            }
         }
     }
 }

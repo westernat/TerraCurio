@@ -109,8 +109,11 @@ public class ModLanguageProvider extends LanguageProvider {
         add("curios.identifier.accessory", "Accessory", "配饰");
         add("curios.modifiers.accessory", "When worn as accessory:", "佩戴配饰时：");
 
-        add("container.terra_curio.workshop", "工匠作坊");
-        add("title.terra_curio.workshop", "工匠作坊");
+        add("container.terra_curio.workshop", "工匠作坊", "Workshop");
+        add("title.terra_curio.workshop", "工匠作坊", "Workshop");
+
+        add(TCItems.BASE_POINT.get().getDescriptionId(), "基点", "Base Point");
+        add(TCItems.EVERLASTING.get().getDescriptionId(), "亘古", "Everlasting");
 
         onlyJeiInfo(TCItems.AGLET, "金属带扣", "It can be found in Shipwreck Chests.", "它出现在沉船宝箱中");
         onlyTooltip(TCItems.AMBER_HORSESHOE_BALLOON, "琥珀马掌气球", "增加跳跃高度、消除掉落伤害", "Increases jump height and negates fall damage");
