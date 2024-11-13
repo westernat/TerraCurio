@@ -21,6 +21,7 @@
         "client.ClientEntityMixin",
         "client.ClientLivingEntityMixin",
         "client.ClientPlayerMixin",
+        "client.KeyboardInputMixin",
         "client.LivingEntityRendererMixin",
         "client.LocalPlayerMixin",
         "client.MouseHandlerMixin",

@@ -146,16 +146,16 @@ public final class PlayerJumpHandler {
         } else {
             y = speed;
         }
-        airMove(localPlayer, y, (float) localPlayer.getAttributeValue(Attributes.MOVEMENT_SPEED) + 0.7F);
+        airMove(localPlayer, y, (float) (localPlayer.getAttributeValue(Attributes.MOVEMENT_SPEED) + speed));
     }
 
     private static void glide(LocalPlayer localPlayer) {
-        airMove(localPlayer, -0.3, (float) localPlayer.getAttributeValue(Attributes.MOVEMENT_SPEED) + 0.7F);
+        airMove(localPlayer, -0.3, (float) localPlayer.getAttributeValue(Attributes.MOVEMENT_SPEED) + 0.4F);
     }
 
     private static void horizontalFlight(LocalPlayer localPlayer) {
         AttributeMap attributes = localPlayer.getAttributes();
-        airMove(localPlayer, 0.0, (float) ((attributes.getValue(Attributes.MOVEMENT_SPEED) + 0.7) / attributes.getValue(Attributes.SNEAKING_SPEED)));
+        airMove(localPlayer, 0.0, (float) (attributes.getValue(Attributes.MOVEMENT_SPEED) * 4.0));
     }
 
     private static void airMove(LocalPlayer localPlayer, double y, float h) {
@@ -189,7 +189,7 @@ public final class PlayerJumpHandler {
         horizontalFlight = packet.horizontalFlight();
     }
 
-    public static boolean isOnGlide() {
-        return onFly;
+    public static boolean isOnHorizontalFlight() {
+        return onFly && horizontalFlight;
     }
 }
