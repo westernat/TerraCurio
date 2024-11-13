@@ -77,7 +77,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Float, FloatValue> CLOUD = ofFloat("cloud", FloatValue.GET_SELF, 0.0F);
     public static final ValueType<MayFlyAbilityValue.Storage, MayFlyAbilityValue> MAY$FLY = create("may_fly", MayFlyAbilityValue.COMBINE_RULE, MayFlyAbilityValue.CODEC, new MayFlyAbilityValue.Storage(0.0F, 0, false, false), MayFlyAbilityValue::new);
     public static final ValueType<Set<Holder<MobEffect>>, MobEffectsValue> EFFECT$IMMUNITIES = create("effect_immunities", MobEffectsValue.EXPANSION, MobEffectsValue.CODEC, Set.of(), MobEffectsValue::new);
-    public static final ValueType<Integer, IntegerValue> TOTEM$WITH$COOLDOWN = ofInteger("totem_with_cooldown", IntegerValue.GET_MAX, -1);
+    public static final ValueType<Integer, IntegerValue> TOTEM$WITH$COOLDOWN = ofInteger("totem_with_cooldown", IntegerValue.GET_MIN_GREAT_EQUAL_THAN_0, -1);
     // no updates
     public static final ValueType<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> ATTRIBUTES = create("attributes", AttributeModifiersValue.GET_SELF, AttributeModifiersValue.CODEC, ImmutableListMultimap.of(), AttributeModifiersValue::new);
 
