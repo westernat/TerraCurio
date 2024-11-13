@@ -11,6 +11,7 @@ import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.EntityTypesValue;
+import org.confluence.terra_curio.api.primitive.MayFlyAbilityValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.item.CellPhone;
@@ -21,6 +22,8 @@ import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.common.item.curio.combat.*;
 import org.confluence.terra_curio.common.item.curio.fishing.AnglerEarring;
 import org.confluence.terra_curio.common.item.curio.health.BandOfRegeneration;
+import org.confluence.terra_curio.common.item.curio.master.BasePoint;
+import org.confluence.terra_curio.common.item.curio.master.Everlasting;
 import org.confluence.terra_curio.common.item.curio.movement.BaseSpeedBoots;
 import org.confluence.terra_curio.common.item.curio.movement.DuneriderBoots;
 import org.confluence.terra_curio.common.item.curio.movement.StepStool;
@@ -40,37 +43,39 @@ public final class TCItems {
     public static final DeferredRegister.Items OTHERS = DeferredRegister.createItems(TerraCurio.MODID);
     public static final DeferredRegister.Items CURIOS = DeferredRegister.createItems(TerraCurio.MODID);
 
-    public static final Supplier<Item> STAR = OTHERS.register("star", MasterItem::new);
-    public static final Supplier<Item> ICON = OTHERS.register("icon", MasterItem::new);
+    public static final Supplier<MasterItem> STAR = OTHERS.register("star", MasterItem::new);
+    public static final Supplier<MasterItem> ICON = OTHERS.register("icon", MasterItem::new);
+    public static final Supplier<BasePoint> BASE_POINT = OTHERS.register("base_point", BasePoint::new);
+    public static final Supplier<Everlasting> EVERLASTING = OTHERS.register("everlasting", Everlasting::new);
 
-    public static final Supplier<BlockItem> WORKSHOP = CURIOS.register("workshop", () -> new BlockItem(TCBlocks.WORKSHOP.get(), new Item.Properties()));
-    public static final Supplier<DemonHeart> DEMON_HEART = CURIOS.register("demon_heart", DemonHeart::new);
-    public static final Supplier<MagicMirror> MAGIC_MIRROR = CURIOS.register("magic_mirror", () -> new MagicMirror(BLUE));
-    public static final Supplier<CellPhone> CELL_PHONE = CURIOS.register("cell_phone", CellPhone::new);
+    public static final Supplier<BlockItem> WORKSHOP = OTHERS.register("workshop", () -> new BlockItem(TCBlocks.WORKSHOP.get(), new Item.Properties()));
+    public static final Supplier<DemonHeart> DEMON_HEART = OTHERS.register("demon_heart", DemonHeart::new);
+    public static final Supplier<MagicMirror> MAGIC_MIRROR = OTHERS.register("magic_mirror", () -> new MagicMirror(BLUE));
+    public static final Supplier<CellPhone> CELL_PHONE = OTHERS.register("cell_phone", CellPhone::new);
 
-    public static final Supplier<BaseCurioItem> BEZOAR = registerCurio("bezoar", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.POISON)))), // 牛黄 中毒
-            HOLY_WATER = registerCurio("holy_water", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.WITHER)))), // 圣水 凋零
-            DETOXIFICATION_CAPSULE = registerCurio("detoxification_capsule", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.POISON, MobEffects.WITHER)))), // 解毒囊
-            VITAMINS = registerCurio("vitamins", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.WEAKNESS)))), // 维生素 虚弱
-            ENERGY_BAR = registerCurio("energy_bar", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.HUNGER)))), // 能量棒 饥饿
-            NUTRIENT_SOLUTION = registerCurio("nutrient_solution", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.WEAKNESS, MobEffects.HUNGER)))), // 营养液
-            BLINDFOLD = registerCurio("blindfold", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.BLINDNESS)))), // 蒙眼布 失明
-            FLASHLIGHT = registerCurio("flashlight", builder -> builder.rarity(ORANGE).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.DARKNESS)))), // 手电筒 黑暗
-            SEARCHLIGHT = registerCurio("searchlight", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.BLINDNESS, MobEffects.DARKNESS)))), // 探照灯
-            FAST_CLOCK = registerCurio("fast_clock", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.MOVEMENT_SLOWDOWN)))), // 快走时钟 缓慢
-            TRIFOLD_MAP = registerCurio("trifold_map", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.CONFUSION)))), // 三折地图 反胃
-            THE_PLAN = registerCurio("the_plan", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION)))), // 计划书
-            HAND_DRILL = registerCurio("hand_drill", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.DIG_SLOWDOWN)))), // 手钻 挖掘疲劳
-            SHOT_PUT = registerCurio("shot_put", builder -> builder.rarity(GREEN).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.LEVITATION)))), // 铅球 漂浮
-            EXPLORERS_EQUIPMENT = registerCurio("explorers_equipment", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))), // 探险家宝具
-            ANKH_CHARM = registerCurio("ankh_charm", builder -> builder.rarity(LIGHT_PURPLE).accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(
+    public static final Supplier<BaseCurioItem> BEZOAR = registerCurio("bezoar", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.POISON)))), // 牛黄 中毒
+            HOLY_WATER = registerCurio("holy_water", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.WITHER)))), // 圣水 凋零
+            DETOXIFICATION_CAPSULE = registerCurio("detoxification_capsule", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.POISON, MobEffects.WITHER)))), // 解毒囊
+            VITAMINS = registerCurio("vitamins", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.WEAKNESS)))), // 维生素 虚弱
+            ENERGY_BAR = registerCurio("energy_bar", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.HUNGER)))), // 能量棒 饥饿
+            NUTRIENT_SOLUTION = registerCurio("nutrient_solution", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.WEAKNESS, MobEffects.HUNGER)))), // 营养液
+            BLINDFOLD = registerCurio("blindfold", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.BLINDNESS)))), // 蒙眼布 失明
+            FLASHLIGHT = registerCurio("flashlight", builder -> builder.rarity(ORANGE).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.DARKNESS)))), // 手电筒 黑暗
+            SEARCHLIGHT = registerCurio("searchlight", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.BLINDNESS, MobEffects.DARKNESS)))), // 探照灯
+            FAST_CLOCK = registerCurio("fast_clock", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.MOVEMENT_SLOWDOWN)))), // 快走时钟 缓慢
+            TRIFOLD_MAP = registerCurio("trifold_map", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.CONFUSION)))), // 三折地图 反胃
+            THE_PLAN = registerCurio("the_plan", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION)))), // 计划书
+            HAND_DRILL = registerCurio("hand_drill", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.DIG_SLOWDOWN)))), // 手钻 挖掘疲劳
+            SHOT_PUT = registerCurio("shot_put", builder -> builder.rarity(GREEN).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.LEVITATION)))), // 铅球 漂浮
+            EXPLORERS_EQUIPMENT = registerCurio("explorers_equipment", builder -> builder.rarity(PINK).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))), // 探险家宝具
+            ANKH_CHARM = registerCurio("ankh_charm", builder -> builder.rarity(LIGHT_PURPLE).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(
                     MobEffects.POISON, MobEffects.WITHER,
                     MobEffects.WEAKNESS, MobEffects.HUNGER,
                     MobEffects.BLINDNESS, MobEffects.DARKNESS,
                     MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION,
                     MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))), // 十字章护身符
             ANKH_SHIELD = registerCurio("ankh_shield", builder -> builder.rarity(LIME)
-                    .accessories(of(ValueType.EFFECT_IMMUNITIES, Set.of(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))
+                    .accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, "knockback_resistance", 1.0, ADD_VALUE)
                     .attribute(Attributes.ARMOR, "armor", 4.0, ADD_VALUE)), // 十字章护盾
             STAR_CLOAK = registerCurio("star_cloak", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.STAR$CLOCK))), // 星星斗篷
@@ -182,14 +187,6 @@ public final class TCItems {
                     .attribute(TCAttributes.getCriticalChance(), 0.05, ADD_VALUE)
                     .attribute(TCAttributes.getAggro(), -400, ADD_VALUE)), // 腐香囊
             SHACKLE = registerCurio("shackle", BLUE); // 脚镣
-            /* 学徒围巾 */
-            /* 侍卫护盾 */
-            /* 女猎人圆盾 */
-            /* 武僧腰带 */
-            /* 大力士甲虫 */
-            /* 死灵卷轴 */
-            /* 甲虫莎草纸 */
-            /* 矮人项链 */
 
     public static final Supplier<BaseCurioItem> TOOLBELT = registerCurio("toolbelt", builder -> builder.noTooltip().rarity(ORANGE).attribute(Attributes.BLOCK_INTERACTION_RANGE, 1.0, ADD_VALUE)), // 工具腰带
             TOOLBOX = registerCurio("toolbox", builder -> builder.noTooltip().rarity(GREEN).attribute(Attributes.BLOCK_INTERACTION_RANGE, 1.0, ADD_VALUE)), // 工具箱
@@ -259,14 +256,14 @@ public final class TCItems {
             FLURRY_BOOTS = registerDirectly("flurry_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name))), // 疾风雪靴
             SAILFISH_BOOTS = registerDirectly("sailfish_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name))), // 旗鱼靴
             DUNERIDER_BOOTS = registerDirectly("dunerider_boots", DuneriderBoots::new), // 沙丘行者靴
-            ROCKET_BOOTS = registerDirectly("rocket_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).accessories(of(ValueType.MAY$FLY, new Tuple<>(0.3F, 36))))), // 火箭靴
-            SPECTRE_BOOTS = registerDirectly("spectre_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIGHT_RED).accessories(of(ValueType.MAY$FLY, new Tuple<>(0.3F, 36))))), // 幽灵靴
-            FAIRY_BOOTS = registerDirectly("fairy_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(PINK).accessories(units(ValueType.FLOWER$BOOTS), of(ValueType.MAY$FLY, new Tuple<>(0.3F, 36))))), // 仙灵靴
+            ROCKET_BOOTS = registerDirectly("rocket_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).accessories(of(ValueType.MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 36, false, false))))), // 火箭靴
+            SPECTRE_BOOTS = registerDirectly("spectre_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIGHT_RED).accessories(of(ValueType.MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 36, false, false))))), // 幽灵靴
+            FAIRY_BOOTS = registerDirectly("fairy_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(PINK).accessories(units(ValueType.FLOWER$BOOTS), of(ValueType.MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 36, false, false))))), // 仙灵靴
             LIGHTNING_BOOTS = registerDirectly("lightning_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(PINK)
-                    .accessories(of(ValueType.MAY$FLY, new Tuple<>(0.3F, 36)))
+                    .accessories(of(ValueType.MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 36, false, false)))
                     .attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL))), // 闪电靴
             FROSTSPARK_BOOTS = registerDirectly("frostspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIME)
-                    .accessories(units(ValueType.ICE$SPEED), of(ValueType.MAY$FLY, new Tuple<>(0.3F, 40)))
+                    .accessories(units(ValueType.ICE$SPEED), of(ValueType.MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 40, false, false)))
                     .attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL))), // 霜花靴
             WATER_WALKING_BOOTS = registerCurio("water_walking_boots", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK)))), // 水上漂靴
             OBSIDIAN_WATER_WALKING_BOOTS = registerCurio("obsidian_water_walking_boots", builder -> builder.rarity(LIGHT_RED).accessories(
@@ -279,7 +276,7 @@ public final class TCItems {
                     of(ValueType.LAVA$HURT$REDUCE, 0.5F))), // 熔岩靴
             TERRASPARK_BOOTS = registerDirectly("terraspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIME).accessories(
                     units(ValueType.ICE$SPEED, ValueType.FIRE$IMMUNE),
-                    of(ValueType.MAY$FLY, new Tuple<>(0.3F, 40)),
+                    of(ValueType.MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 40, false, false)),
                     of(ValueType.FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)),
                     of(ValueType.LAVA$IMMUNE$TICKS, 140),
                     of(ValueType.LAVA$HURT$REDUCE, 0.5F)

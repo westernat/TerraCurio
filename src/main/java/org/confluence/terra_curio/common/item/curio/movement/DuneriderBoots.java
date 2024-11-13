@@ -13,7 +13,7 @@ public class DuneriderBoots extends BaseSpeedBoots {
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
         LivingEntity living = slotContext.entity();
-        if (living.level().getBlockState(living.getOnPos()).is(BlockTags.SAND)) {
+        if (living.getBlockStateOn().is(BlockTags.SAND)) {
             speedUp(slotContext, stack, 2, 70);
         } else {
             speedUp(slotContext, stack, 1, 40);

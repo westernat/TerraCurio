@@ -69,7 +69,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
     }
 
     public int getJeiInformationCount() {
-        return builder.jeiInformationCount;
+        return builder == null ? 0 : builder.jeiInformationCount;
     }
 
     @Override

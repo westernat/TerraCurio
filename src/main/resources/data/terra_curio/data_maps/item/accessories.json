@@ -13,6 +13,47 @@
                     }
                 ]
             }
+        },
+        "terra_curio:base_point": {
+            "terra_curio:ice_speed": {},
+            "terra_curio:may_fly": {
+                "fly_speed": 0.5,
+                "fly_ticks": 70,
+                "could_glide": true,
+                "horizontal_flight": true
+            },
+            "terra_curio:fluid_walk": [
+                "terra_curio:water_like_walk",
+                "terra_curio:lava_like_walk"
+            ],
+            "terra_curio:lava_immune_ticks": 200,
+            "terra_curio:lava_hurt_reduce": 0.75,
+            "terra_curio:attributes": {
+                "minecraft:generic.movement_speed": [
+                    {
+                        "id": "terra_curio:base_point",
+                        "amount": 0.16,
+                        "operation": "add_multiplied_total"
+                    }
+                ],
+                "minecraft:generic.safe_fall_distance": [
+                    {
+                        "id": "terra_curio:base_point",
+                        "amount": 7.0,
+                        "operation": "add_value"
+                    }
+                ],
+                "minecraft:generic.jump_strength": [
+                    {
+                        "id": "terra_curio:base_point",
+                        "amount": 1.0,
+                        "operation": "add_multiplied_total"
+                    }
+                ]
+            }
+        },
+        "terra_curio:everlasting": {
+
         }
     }
 }

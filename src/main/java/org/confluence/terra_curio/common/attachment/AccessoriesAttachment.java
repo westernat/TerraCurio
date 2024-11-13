@@ -70,7 +70,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         list.add(ValueType.TSUNAMI);
         list.add(ValueType.CLOUD);
         list.add(ValueType.MAY$FLY);
-        list.add(ValueType.EFFECT_IMMUNITIES);
+        list.add(ValueType.EFFECT$IMMUNITIES);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.OtherType(list));
     });
     private final Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> valueMap = new HashMap<>();

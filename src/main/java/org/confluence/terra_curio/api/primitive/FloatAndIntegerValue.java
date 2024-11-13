@@ -7,8 +7,8 @@ import net.minecraft.util.Tuple;
 
 public record FloatAndIntegerValue(Tuple<Float, Integer> value) implements PrimitiveValue<Tuple<Float, Integer>> {
     public static final Codec<FloatAndIntegerValue> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            ExtraCodecs.POSITIVE_FLOAT.fieldOf("floatValue").forGetter(v -> v.value.getA()),
-            ExtraCodecs.POSITIVE_INT.fieldOf("integerValue").forGetter(v -> v.value.getB())
+            ExtraCodecs.POSITIVE_FLOAT.fieldOf("float_value").forGetter(v -> v.value.getA()),
+            ExtraCodecs.POSITIVE_INT.fieldOf("integer_value").forGetter(v -> v.value.getB())
     ).apply(instance, (speed, ticks) -> new FloatAndIntegerValue(new Tuple<>(speed, ticks))));
     public static final CombineRule<Tuple<Float, Integer>, FloatAndIntegerValue> GET_SELF = CombineRule.register(new CombineRule<>() {
         @Override
@@ -19,6 +19,17 @@ public record FloatAndIntegerValue(Tuple<Float, Integer> value) implements Primi
         @Override
         public String name() {
             return "float_and_integer_get_self";
+        }
+    });
+    public static final CombineRule<Tuple<Float, Integer>, FloatAndIntegerValue> GET_EACH_MAX = CombineRule.register(new CombineRule<>() {
+        @Override
+        public Tuple<Float, Integer> combine(Tuple<Float, Integer> componentA, Tuple<Float, Integer> componentB) {
+            return new Tuple<>(Math.max(componentA.getA(), componentB.getA()), Math.max(componentA.getB(), componentB.getB()));
+        }
+
+        @Override
+        public String name() {
+            return "float_and_integer_get_each_max";
         }
     });
 
