@@ -146,7 +146,7 @@ public final class TCItems {
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)
                     .attribute(TCAttributes.getAggro(), 400, ADD_VALUE))), // 英雄护盾
             FROZEN_TURTLE_SHELL = registerCurio("frozen_turtle_shell", builder -> builder.rarity(PINK).accessories(units(ValueType.FROZEN$TURTLE$SHELL))), // 冰冻海龟壳
-            FROZEN_SHIELD = registerDirectly("frozen_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).rarity(PINK)
+            FROZEN_SHIELD = registerDirectly("frozen_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).rarity(PINK).tooltips(1)
                     .accessories(units(ValueType.FROZEN$TURTLE$SHELL)).attribute(Attributes.ARMOR, 6.0, ADD_VALUE)
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE))), // 冰冻护盾
             HONEY_COMB = registerCurio("honey_comb", builder -> builder.rarity(GREEN).accessories(units(ValueType.HONEY$COMB))), // 蜂窝
@@ -157,7 +157,7 @@ public final class TCItems {
             MAGIC_QUIVER = registerCurio("magic_quiver", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.MAGIC$QUIVER))
                     .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getRangedVelocity(), 0.2, ADD_MULTIPLIED_TOTAL)), // 魔法箭袋
-            MOLTEN_QUIVER = registerCurio("molten_quiver", builder -> builder.rarity(PINK).accessories(units(ValueType.MAGIC$QUIVER, ValueType.IGNITE$ARROW))
+            MOLTEN_QUIVER = registerCurio("molten_quiver", builder -> builder.rarity(PINK).accessories(units(ValueType.MAGIC$QUIVER, ValueType.IGNITE$ARROW)).tooltips(1)
                     .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getRangedVelocity(), 0.2, ADD_MULTIPLIED_TOTAL)), // 熔火箭袋
             STALKERS_QUIVER = registerCurio("stalkers_quiver", builder -> builder.rarity(PINK).accessories(units(ValueType.MAGIC$QUIVER))
@@ -230,12 +230,12 @@ public final class TCItems {
             /* 标尺 */
             /* 机械标尺 */
 
-    public static final Supplier<BaseCurioItem> STEP_STOOL = registerDirectly("step_stool", name -> new StepStool(BaseCurioItem.builder(name))), // 梯凳
+    public static final Supplier<BaseCurioItem> STEP_STOOL = registerDirectly("step_stool", name -> new StepStool(BaseCurioItem.builder(name).tooltips(1))), // 梯凳
             /* 飞毯 */
             AGLET = registerCurio("aglet", builder -> builder.noTooltip().attribute(Attributes.MOVEMENT_SPEED, 0.05, ADD_MULTIPLIED_TOTAL)), // 金属带扣
             ANKLET_OF_THE_WIND = registerCurio("anklet_of_the_wind", builder -> builder.noTooltip().attribute(Attributes.MOVEMENT_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)), // 疾风脚镯
             MAGILUMINESCENCE = registerCurio("magiluminescence", builder -> builder
-                    .accessories(units(ValueType.MAGILUMINESCENCE))
+                    .accessories(units(ValueType.MAGILUMINESCENCE)).tooltips(1)
                     .attribute(Attributes.MOVEMENT_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)), // 魔光护符
             LAVA_CHARM = registerCurio("lava_charm", builder -> builder.rarity(ORANGE).accessories(of(ValueType.LAVA$IMMUNE$TICKS, 140))), // 熔岩护身符
             MAGMA_SKULL = registerCurio("magma_skull", builder -> builder.rarity(PINK).accessories(
@@ -386,7 +386,7 @@ public final class TCItems {
     public static final Supplier<BaseCurioItem> ROYAL_GEL = registerCurio("royal_gel", builder -> builder.rarity(ModRarity.EXPERT).accessories(entry(ValueType.MOB$IGNORE, new EntityTypesValue(EntityType.SLIME)))), // 皇家凝胶
             SHIELD_OF_CTHULHU = registerCurio("shield_of_cthulhu", builder -> builder.rarity(ModRarity.EXPERT).accessories(units(ValueType.SHIELD$OF$CTHULHU))), // 克苏鲁护盾
             WORM_SCARF = registerCurio("worm_scarf", builder -> builder.rarity(ModRarity.EXPERT).accessories(of(ValueType.INJURY$FREE, 0.17F))), // 蠕虫围巾
-            BRAIN_OF_CONFUSION = registerCurio("brain_of_confusion", builder -> builder.rarity(ModRarity.EXPERT).accessories(units(ValueType.BRAIN$OF$CONFUSION))), // 混乱之脑
+            BRAIN_OF_CONFUSION = registerCurio("brain_of_confusion", builder -> builder.rarity(ModRarity.EXPERT).accessories(units(ValueType.BRAIN$OF$CONFUSION)).tooltips(2)), // 混乱之脑
             HIVE_PACK = registerCurio("hive_pack", builder -> builder.rarity(ModRarity.EXPERT).accessories(units(ValueType.HIVE$PACK))), // 蜂巢背包
             /* 骨头手套 */
             /* 骸骨头盔 */
@@ -394,7 +394,7 @@ public final class TCItems {
             /* 孢子囊 */
             /* 闪亮石 */
             /* 翱翔徽章 */
-            GRAVITY_GLOBE = registerCurio("gravity_globe", builder -> builder.rarity(ModRarity.EXPERT).accessories(units(ValueType.GRAVITY$GLOBE))); // 重力球
+            GRAVITY_GLOBE = registerCurio("gravity_globe", builder -> builder.rarity(ModRarity.EXPERT).accessories(units(ValueType.GRAVITY$GLOBE)).tooltips(1)); // 重力球
 
     public static Supplier<BaseCurioItem> registerCurio(String name, Consumer<BaseCurioItem.Builder> consumer) {
         return CURIOS.register(name, () -> {

@@ -337,32 +337,117 @@ public class ModLanguageProvider extends LanguageProvider {
                 "It can be found in End City Chests.",
                 "它可以在末地城的宝箱中找到。"
         );
-
-
-//        "step_stool": "梯凳",
-//        "stinger_necklace": "毒刺项链",
-//        "stopwatch": "秒表",
-//        "sun_stone": "太阳石",
-//        "sweetheart_necklace": "甜心项链",
-//        "tabi": "分趾厚底袜",
-//        "tally_counter": "杀怪计数器",
-//        "terraspark_boots": "泰拉闪耀靴",
-//        "the_plan": "计划书",
-//        "tiger_climbing_gear": "猛虎攀爬装备",
-//        "tin_watch": "锡表",
-//        "titan_glove": "泰坦手套",
-//        "toolbelt": "工具腰带",
-//        "toolbox": "工具箱",
-//        "treasure_magnet": "宝藏磁石",
-//        "trifold_map": "三折地图",
-//        "tsunami_in_a_bottle": "海啸瓶",
-//        "tungsten_watch": "钨表",
-//        "vitamins": "维生素",
-//        "warrior_emblem": "战士徽章",
-//        "water_walking_boots": "水上漂靴",
-//        "weather_radio": "天气收音机",
-//        "white_horseshoe_balloon": "白马掌气球",
-//        "worm_scarf": "蠕虫围巾",
+        tooltipsAndJeiInfo(TCItems.STEP_STOOL, "梯凳",
+            new String[]{
+                "Press ↑ key to stand higher, and press Shift key to down",
+                "Extra Step: %s"
+            },
+            new String[]{
+                "按↑键站得更高，按Shift键下来",
+                "额外高度：%s"
+            },
+            "You can use Step Stool to upgrade its Extra Step from Smithing Table.",
+            "你可以在锻造台使用梯凳升级它的额外高度。"
+        );
+        onlyTooltip(TCItems.STINGER_NECKLACE, "毒刺项链", "Releases bees and douses the user in honey when damaged.", "受到伤害后释放蜜蜂并将使用者浸入蜂蜜中。");
+        onlyTooltip(TCItems.STOPWATCH, "秒表", "Displays how fast the player is moving", "显示玩家的移动速度");
+        tooltipsAndJeiInfo(TCItems.SUN_STONE, "太阳石",
+            new String[]{
+                "During daytime, grants minor increase."
+            },
+            new String[]{
+                "在白天时略微增强属性值"
+            },
+            "It have a Chance to be dropped from Blaze.",
+            "它有几率由烈焰人掉落。");
+        onlyTooltip(TCItems.SWEETHEART_NECKLACE, "甜心项链", "When damaged, the bee is released and the user is immersed in honey and increases movement speed.", "受到伤害后释放蜜蜂并将使用者浸入蜂蜜中、并提高移动速度。");
+        tooltipsAndJeiInfo(TCItems.TABI, "分趾厚底袜",
+            new String[]{
+                "Allows the ability to dash while double tap a direction"
+            },
+            new String[]{
+                "双击一个方向可猛冲"
+            },
+            "It can be found in Chests in the Fortress.",
+            "它可以在要塞的宝箱中找到。"
+        );
+        tooltipsAndJeiInfo(TCItems.TALLY_COUNTER, "杀怪计数器",
+            new String[]{
+                "Displays how many monsters have been killed"
+            },
+            new String[]{
+                "显示怪物击杀数量"
+            },
+            "The Tally Counter a Chance to be dropped from Creeper.",
+            "它有几率从爬行者（苦力怕）身上掉落。"
+        );
+        onlyTooltip(TCItems.TERRASPARK_BOOTS, "泰拉闪耀靴", "Grants immunity to fire blocks and 7 seconds of immunity to lava", "对火块免疫并在7秒内对熔岩免疫");
+        onlyTooltip(TCItems.THE_PLAN, "计划书", "Immunity to Slow and Nausea", "对缓慢和反胃免疫");
+        onlyJeiInfo(TCItems.TITAN_GLOVE, "泰坦手套", "It can be found in Chests in the Mineshaft.", "它可以在废弃矿井的宝箱中找到。");
+        onlyJeiInfo(TCItems.TOOLBELT, "toolbelt", "It can be located in the chests found within Toolsmith Villagers' houses.", "它可以在工具匠村民家中的箱子中找到。");
+        onlyJeiInfo(TCItems.TOOLBOX, "工具箱", "It can be located in the chests found within Toolsmith Villagers' houses.", "它可以在工具匠村民家中的箱子中找到");
+        tooltipsAndJeiInfo(TCItems.TREASURE_MAGNET, "宝藏磁石",
+            new String[]{
+                "Expanded item pickup"
+            },
+            new String[]{
+                "扩大物品拾取范围"
+            },
+            "It can be discovered in chests found within Desert Pyramids, End City, Jungle Pyramids, or Ancient Cities.",
+            "它可以在沙漠神殿、末地城、丛林神庙或古代城内的宝箱中找到。"
+        );
+        tooltipsAndJeiInfo(TCItems.TRIFOLD_MAP, "三折地图",
+            new String[]{
+                "Immunity to Nausea"
+            },
+            new String[]{
+                "对反胃免疫"
+            },
+            "It can be found in Chests in the Stronghold Library.",
+            "它可以在要塞图书馆的宝箱中找到。"
+        );
+        onlyJeiInfo(TCItems.TSUNAMI_IN_A_BOTTLE, "海啸瓶", "It can be found in Shipwreck Chests.", "它可以在沉船宝箱中找到。");
+        tooltipsAndJeiInfo(TCItems.VITAMINS, "维生素",
+            new String[]{
+                "Immunity to Weakness"
+            },
+            new String[]{
+                "对虚弱免疫"
+            },
+            "It have a Chance to be dropped from Witch.",
+            "它有几率从女巫身上掉落。"
+        );
+        onlyJeiInfo(TCItems.WARRIOR_EMBLEM, "战士徽章", "It have a Chance to be dropped from Vindicator.", "它有几率从卫道士身上掉落。");
+        tooltipsAndJeiInfo(TCItems.WATER_WALKING_BOOTS, "水上漂靴",
+            new String[]{
+                "Provides the ability to walk on water & honey"
+            },
+            new String[]{
+                "提供在水和蜂蜜上行走的能力"
+            },
+            "It can be found in Ocean Ruins Chests.",
+            "它可以在海洋废墟宝箱中找到。"
+        );
+        tooltipsAndJeiInfo(TCItems.WEATHER_RADIO, "weather_radio",
+            new String[]{
+                "Displays the weather"
+            },
+            new String[]{
+                "显示天气"
+            },
+            "This item can be located in the chests found within Fisherman Villagers' houses.",
+            "这件物品可以在渔夫村民家中的箱子中找到。"
+        );
+        tooltipsAndJeiInfo(TCItems.WORM_SCARF, "蠕虫围巾",
+            new String[]{
+                "Reduces damage taken by 17%"
+            },
+            new String[]{
+                "所受伤害减少17%"
+            },
+            "When a player has a tamed cat, the cat may give the player this item when they wake up.",
+            "当玩家有一只被驯服的猫时，猫可能会在玩家醒来时给玩家这个物品。"
+            );
 //        "yellow_horseshoe_balloon": "黄马掌气球",
 
         if (locale.equals("en_us")) {
