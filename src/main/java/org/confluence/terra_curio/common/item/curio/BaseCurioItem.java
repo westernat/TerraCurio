@@ -29,13 +29,10 @@ import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 public class BaseCurioItem extends Item implements ICurioItem {
-    protected static final List<Component> EMPTY_TOOLTIP = List.of();
     protected static final ImmutableMultimap<Holder<Attribute>, AttributeModifier> EMPTY_ATTRIBUTE = ImmutableMultimap.of();
-    protected static final Consumer<Builder> NO_BUILDER = builder -> {};
     protected Builder builder;
 
     public BaseCurioItem(Builder builder) {
@@ -49,12 +46,10 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
-        if (slotContext.entity() != null) {
-            AccessoriesComponent component;
-            AttributeModifiersValue value;
-            if ((component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES)) != null && (value = component.get(ValueType.ATTRIBUTES)) != null) {
-                return value.get();
-            }
+        AccessoriesComponent component;
+        AttributeModifiersValue value;
+        if ((component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES)) != null && (value = component.get(ValueType.ATTRIBUTES)) != null) {
+            return value.get();
         }
         return builder == null ? EMPTY_ATTRIBUTE : builder.attributes;
     }
@@ -111,7 +106,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         private ImmutableMultimap<Holder<Attribute>, AttributeModifier> attributes;
         private ModRarity rarity = ModRarity.BLUE;
         private int jeiInformationCount = 1;
-        private boolean makePiglinsNeutral;
+        private boolean makePiglinsNeutral = false;
 
         Builder(String name, Properties properties) {
             this.name = name;

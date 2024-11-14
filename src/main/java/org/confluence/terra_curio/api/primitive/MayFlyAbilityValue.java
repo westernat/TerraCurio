@@ -6,22 +6,12 @@ import net.minecraft.util.ExtraCodecs;
 
 public record MayFlyAbilityValue(Storage storage) implements PrimitiveValue<MayFlyAbilityValue.Storage> {
     public static final Codec<MayFlyAbilityValue> CODEC = Storage.CODEC.xmap(MayFlyAbilityValue::new, MayFlyAbilityValue::get);
-    public static final CombineRule<Storage, MayFlyAbilityValue> COMBINE_RULE = CombineRule.register(new CombineRule<>() {
-        @Override
-        public Storage combine(Storage componentA, Storage componentB) {
-            return new Storage(
-                    Math.max(componentA.flySpeed, componentB.flySpeed),
-                    Math.max(componentA.flyTicks, componentB.flyTicks),
-                    componentA.couldGlide || componentB.couldGlide,
-                    componentA.horizontalFlight || componentB.horizontalFlight
-            );
-        }
-
-        @Override
-        public String name() {
-            return "may_fly_ability";
-        }
-    });
+    public static final CombineRule<Storage, MayFlyAbilityValue> COMBINE_RULE = CombineRule.register((a, b) -> new Storage(
+            Math.max(a.flySpeed, b.flySpeed),
+            Math.max(a.flyTicks, b.flyTicks),
+            a.couldGlide || b.couldGlide,
+            a.horizontalFlight || b.horizontalFlight
+    ), "may_fly_ability");
 
     @Override
     public Storage get() {

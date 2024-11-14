@@ -24,7 +24,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final Map<ResourceLocation, Codec<PrimitiveValue<?>>> VALUE_CODECS = new Hashtable<>();
     public static final Map<ResourceLocation, ValueType<?, ? extends PrimitiveValue<?>>> TYPES = new Hashtable<>();
     public static final Codec<ValueType<?, ? extends PrimitiveValue<?>>> CODEC = ResourceLocation.CODEC.xmap(TYPES::get, ValueType::key);
-    // client side info_check
+    // client side info_check todo optimization
     public static final ValueType<Unit, UnitValue> FULL$INFORMATION = ofUnit("full_information");
     public static final ValueType<Unit, UnitValue> HOUR$WATCH = ofUnit("hour_watch");
     public static final ValueType<Unit, UnitValue> HALF$HOUR$WATCH = ofUnit("half_hour_watch");
@@ -61,7 +61,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Unit, UnitValue> FROZEN$IMMUNE = ofUnit("frozen_immune");
     public static final ValueType<Unit, UnitValue> ICE$SPEED = ofUnit("ice_speed");
 
-    public static final ValueType<Float, FloatValue> FISHING$POWER = ofFloat("fishing_power", FloatValue.ADDITION, 0.0F); // todo
+    public static final ValueType<Float, FloatValue> FISHING$POWER = ofFloat("fishing_power", FloatValue.ADDITION, 0.0F);
     public static final ValueType<Float, FloatValue> INJURY$FREE = ofFloat("injury_free", FloatValue.ADDITION_WITHIN_0_TO_1, 0.0F);
     public static final ValueType<Float, FloatValue> INVULNERABLE$TICKS$MULTIPLIER = ofFloat("invulnerable_ticks_multiplier", FloatValue.GET_MAX, 1.0F);
     public static final ValueType<Float, FloatValue> LAVA$HURT$REDUCE = ofFloat("lava_hurt_reduce", FloatValue.GET_MAX_WITHIN_0_TO_1, 0.0F);
@@ -71,8 +71,8 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Set<TagKey<Fluid>>, FluidTagsValue> FLUID$WALK = create("fluid_walk", FluidTagsValue.EXPANSION, FluidTagsValue.CODEC, Set.of(), FluidTagsValue::new);
     public static final ValueType<Byte, ByteValue> WALL$CLIMB = create("wall_climb", ByteValue.ADDITION_WITHIN_0_TO_2, ByteValue.CODEC, (byte) 0, ByteValue::new);
     public static final ValueType<Float, FloatValue> FART = ofFloat("fart", FloatValue.GET_SELF, 0.0F);
-    public static final ValueType<Tuple<Float, Integer>, FloatAndIntegerValue> SAND$STORM = ofFloatAndInteger("sand_storm", FloatAndIntegerValue.GET_SELF, new Tuple<>(0.0F, 0));
-    public static final ValueType<Tuple<Float, Integer>, FloatAndIntegerValue> BLIZZARD = ofFloatAndInteger("blizzard", FloatAndIntegerValue.GET_SELF, new Tuple<>(0.0F, 0));
+    public static final ValueType<Tuple<Float, Integer>, OneTimeJumpAbilityValue> SAND$STORM = create("sand_storm", OneTimeJumpAbilityValue.COMBINE_RULE, OneTimeJumpAbilityValue.CODEC, new Tuple<>(0.0F, 0), OneTimeJumpAbilityValue::new);
+    public static final ValueType<Tuple<Float, Integer>, OneTimeJumpAbilityValue> BLIZZARD = create("blizzard", OneTimeJumpAbilityValue.COMBINE_RULE, OneTimeJumpAbilityValue.CODEC, new Tuple<>(0.0F, 0), OneTimeJumpAbilityValue::new);
     public static final ValueType<Float, FloatValue> TSUNAMI = ofFloat("tsunami", FloatValue.GET_SELF, 0.0F);
     public static final ValueType<Float, FloatValue> CLOUD = ofFloat("cloud", FloatValue.GET_SELF, 0.0F);
     public static final ValueType<MayFlyAbilityValue.Storage, MayFlyAbilityValue> MAY$FLY = create("may_fly", MayFlyAbilityValue.COMBINE_RULE, MayFlyAbilityValue.CODEC, new MayFlyAbilityValue.Storage(0.0F, 0, false, false), MayFlyAbilityValue::new);
@@ -117,10 +117,6 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
 
     public static ValueType<Float, FloatValue> ofFloat(String path, CombineRule<Float, FloatValue> combineRule, float defaultValue) {
         return create(path, combineRule, FloatValue.CODEC, defaultValue, FloatValue::new);
-    }
-
-    public static ValueType<Tuple<Float, Integer>, FloatAndIntegerValue> ofFloatAndInteger(String path, CombineRule<Tuple<Float, Integer>, FloatAndIntegerValue> combineRule, Tuple<Float, Integer> defaultValue) {
-        return create(path, combineRule, FloatAndIntegerValue.CODEC, defaultValue, FloatAndIntegerValue::new);
     }
 
     public ResourceLocation key() {

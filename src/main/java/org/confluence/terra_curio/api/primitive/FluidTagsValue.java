@@ -16,19 +16,11 @@ public record FluidTagsValue(Set<TagKey<Fluid>> tags) implements PrimitiveValue<
             values -> new FluidTagsValue(new HashSet<>(values)),
             value -> new ArrayList<>(value.tags)
     );
-    public static final CombineRule<Set<TagKey<Fluid>>, FluidTagsValue> EXPANSION = CombineRule.register(new CombineRule<>() {
-        @Override
-        public Set<TagKey<Fluid>> combine(Set<TagKey<Fluid>> componentA, Set<TagKey<Fluid>> componentB) {
-            Set<TagKey<Fluid>> combined = new HashSet<>(componentA);
-            combined.addAll(componentB);
-            return combined;
-        }
-
-        @Override
-        public String name() {
-            return "fluid_tags_expansion";
-        }
-    });
+    public static final CombineRule<Set<TagKey<Fluid>>, FluidTagsValue> EXPANSION = CombineRule.register((a, b) -> {
+        Set<TagKey<Fluid>> combined = new HashSet<>(a);
+        combined.addAll(b);
+        return combined;
+    }, "fluid_tags_expansion");
 
     @SafeVarargs
     public FluidTagsValue(TagKey<Fluid>... tags) {

@@ -20,6 +20,7 @@ import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
+import net.neoforged.neoforge.event.entity.player.CriticalHitEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.confluence.terra_curio.TerraCurio;
@@ -164,6 +165,16 @@ public final class GameEvents {
     }
 
     @SubscribeEvent
+    public static void playerTick$Post(PlayerTickEvent.Post event) {
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            if (serverPlayer.level().getGameTime() % 200 == 0) {
+                // 每十秒向周围玩家共享一次信息配饰
+                InfoCurioCheckPacketS2C.sendToOthers(serverPlayer);
+            }
+        }
+    }
+
+    @SubscribeEvent
     public static void effectApplicable(MobEffectEvent.Applicable event) {
         MobEffectInstance effectInstance = event.getEffectInstance();
         if (effectInstance != null && TCUtils.getAccessoriesValue(event.getEntity(), ValueType.EFFECT$IMMUNITIES).contains(effectInstance.getEffect())) {
@@ -176,6 +187,19 @@ public final class GameEvents {
         Player player = event.getEntity();
         if (TCUtils.isServerNotFake(player)) {
             TCUtils.applyFireAttack(player, event.getTarget());
+        }
+    }
+
+    @SubscribeEvent
+    public static void criticalHit(CriticalHitEvent event) {
+        if (TCAttributes.hasCustomAttribute(TCAttributes.CRIT_CHANCE)) return;
+        Player player = event.getEntity();
+        if (!event.isVanillaCritical()) {
+            double chance = player.getAttributeValue(TCAttributes.CRIT_CHANCE);
+            if (player.level().random.nextFloat() < chance) {
+                event.setDamageMultiplier(1.5F);
+                event.setCriticalHit(true);
+            }
         }
     }
 }

@@ -16,7 +16,6 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.Tags;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
@@ -193,7 +192,7 @@ public final class InformationHandler {
     }
 
     private static Component getFishingPowerInfo(Player player) {
-        float fishingPower = TCUtils.getAccessoriesValue(player, ValueType.FISHING$POWER);
+        float fishingPower = TCUtils.forConfluence$ModifyExpression(player.getLuck());
         return Component.translatable(
                 "info.terra_curio.fishermans_pocket_guide",
                 "%.2f".formatted(fishingPower)

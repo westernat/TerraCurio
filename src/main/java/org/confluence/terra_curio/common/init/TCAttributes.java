@@ -8,6 +8,7 @@ import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
@@ -31,9 +32,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
-// todo
 public final class TCAttributes {
-
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(BuiltInRegistries.ATTRIBUTE, TerraCurio.MODID);
 
     public static final DeferredHolder<Attribute, Attribute> CRIT_CHANCE = ATTRIBUTES.register("crit_chance", () -> new RangedAttribute("attribute.name.generic.critical_chance", 0.0, 0.0, 10.0).setSyncable(true)); // ADDITION
@@ -103,11 +102,7 @@ public final class TCAttributes {
     }
 
     public static void applyToArrow(LivingEntity living, AbstractArrow abstractArrow) {
-        AttributeInstance attributeInstance = living.getAttribute(Attributes.ATTACK_KNOCKBACK);
-        if (attributeInstance != null) { // todo AbstractArrow.doKnockback
-//            abstractArrow.setKnockback((int) Math.ceil(abstractArrow.getKnockback() * (1.0 + attributeInstance.getValue())));
-        }
-
+        AttributeInstance attributeInstance;
         if (!hasCustomAttribute(RANGED_VELOCITY)) {
             attributeInstance = living.getAttribute(RANGED_VELOCITY);
             if (attributeInstance != null) {
@@ -120,6 +115,14 @@ public final class TCAttributes {
                 abstractArrow.setCritArrow(living.getRandom().nextFloat() < attributeInstance.getValue());
             }
         }
+    }
+
+    public static float applyArrowKnockback(Entity attacker, float original) {
+        if (attacker instanceof LivingEntity living) {
+            AttributeInstance instance = living.getAttribute(Attributes.ATTACK_KNOCKBACK);
+            if (instance != null) return (float) (original * (1.0 + instance.getValue()));
+        }
+        return original;
     }
 
     public static boolean applyDodge(LivingEntity living, RandomSource random) {

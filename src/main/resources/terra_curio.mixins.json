@@ -5,6 +5,7 @@
     "compatibilityLevel": "JAVA_21",
     "refmap": "terra_curio.refmap.json",
     "mixins": [
+        "AbstractArrowMixin",
         "CrossbowItemMixin",
         "EntityMixin",
         "LivingEntityMixin",

@@ -16,19 +16,11 @@ public class EntityTypesValue implements PrimitiveValue<Set<EntityType<?>>> {
             values -> new EntityTypesValue(new HashSet<>(values)),
             value -> new ArrayList<>(value.values)
     );
-    public static final CombineRule<Set<EntityType<?>>, EntityTypesValue> EXPANSION = CombineRule.register(new CombineRule<>() {
-        @Override
-        public Set<EntityType<?>> combine(Set<EntityType<?>> componentA, Set<EntityType<?>> componentB) {
-            Set<EntityType<?>> combined = new HashSet<>(componentA);
-            combined.addAll(componentB);
-            return combined;
-        }
-
-        @Override
-        public String name() {
-            return "entity_types_expansion";
-        }
-    });
+    public static final CombineRule<Set<EntityType<?>>, EntityTypesValue> EXPANSION = CombineRule.register((a, b) -> {
+        Set<EntityType<?>> combined = new HashSet<>(a);
+        combined.addAll(b);
+        return combined;
+    }, "entity_types_expansion");
     private final Supplier<Set<EntityType<?>>> supplier;
     private Set<EntityType<?>> values;
 

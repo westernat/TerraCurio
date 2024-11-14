@@ -36,10 +36,10 @@
                         "operation": "add_multiplied_total"
                     }
                 ],
-                "minecraft:generic.safe_fall_distance": [
+                "minecraft:generic.fall_damage_multiplier": [
                     {
                         "id": "terra_curio:base_point",
-                        "amount": 7.0,
+                        "amount": -100.0,
                         "operation": "add_value"
                     }
                 ],

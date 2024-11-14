@@ -29,17 +29,7 @@ public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, A
                 return map;
             }
     );
-    public static final CombineRule<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> GET_SELF = new CombineRule<>() {
-        @Override
-        public ImmutableListMultimap<Holder<Attribute>, AttributeModifier> combine(ImmutableListMultimap<Holder<Attribute>, AttributeModifier> componentA, ImmutableListMultimap<Holder<Attribute>, AttributeModifier> componentB) {
-            return componentA;
-        }
-
-        @Override
-        public String name() {
-            return "attributes_modifiers_get_self";
-        }
-    };
+    public static final CombineRule<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> GET_SELF = CombineRule.register(PrimitiveValue.getSelfFunction(), "attributes_modifiers_get_self");
 
     @Override
     public ImmutableListMultimap<Holder<Attribute>, AttributeModifier> get() {
