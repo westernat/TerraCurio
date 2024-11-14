@@ -294,7 +294,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 },
                 new String[]{
                         "提高移动速度和加速度",
-                        "我黑暗生命中的一道短暂曙光"
+                        "‘我黑暗生命中的一道短暂曙光’"
                 },
                 "It can be found in End City Chests.",
                 "它可以在末地城的宝箱中找到。"

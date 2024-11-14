@@ -26,7 +26,7 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.integration.apothic.ApothicHelper;
 import org.confluence.terra_curio.mixin.accessor.RangedAttributeAccessor;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,15 +44,15 @@ public final class TCAttributes {
     public static final DeferredHolder<Attribute, Attribute> ARMOR_PASS = ATTRIBUTES.register("armor_pass", () -> new RangedAttribute("attribute.name.generic.armor_pass", 0.0, 0.0, 10000).setSyncable(true)); // ADDITION
     public static final DeferredHolder<Attribute, Attribute> PICKUP_RANGE = ATTRIBUTES.register("pickup_range", () -> new RangedAttribute("attribute.name.generic.pickup_range", 0.0, 0.0, 64.0).setSyncable(true)); // ADDITION
 
-    private static final Hashtable<Holder<Attribute>, Holder<Attribute>> MAP = Util.make(new Hashtable<>(), table -> {
-        table.put(CRIT_CHANCE, CRIT_CHANCE);
-        table.put(RANGED_DAMAGE, RANGED_DAMAGE);
-        table.put(RANGED_VELOCITY, RANGED_VELOCITY);
-        table.put(DODGE_CHANCE, DODGE_CHANCE);
-        table.put(AGGRO, AGGRO);
-        table.put(MAGIC_DAMAGE, MAGIC_DAMAGE);
-        table.put(ARMOR_PASS, ARMOR_PASS);
-        table.put(PICKUP_RANGE, PICKUP_RANGE);
+    private static final Map<Holder<Attribute>, Holder<Attribute>> MAP = Util.make(new HashMap<>(), table -> {
+        table.put(CRIT_CHANCE, null);
+        table.put(RANGED_DAMAGE, null);
+        table.put(RANGED_VELOCITY, null);
+        table.put(DODGE_CHANCE, null);
+        table.put(AGGRO, null);
+        table.put(MAGIC_DAMAGE, null);
+        table.put(ARMOR_PASS, null);
+        table.put(PICKUP_RANGE, null);
     });
 
     public static Holder<Attribute> getCriticalChance() {
@@ -161,7 +161,7 @@ public final class TCAttributes {
         living.level().getEntitiesOfClass(
                 ItemEntity.class,
                 new AABB(living.getOnPos()).inflate(range),
-                itemEntity -> true
+                itemEntity -> !itemEntity.hasPickUpDelay() && !itemEntity.getItem().is(TCTags.RANGE_PICKUP_IGNORE)
         ).forEach(itemEntity -> {
             if (itemEntity.isRemoved()) return;
             itemEntity.addDeltaMovement(living.position().subtract(itemEntity.getX(), itemEntity.getY(), itemEntity.getZ()).normalize().scale(0.05F).add(0, 0.04F, 0));

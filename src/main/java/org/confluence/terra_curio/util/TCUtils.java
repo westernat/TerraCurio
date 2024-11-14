@@ -59,6 +59,7 @@ public final class TCUtils {
     }
 
     @ApiStatus.Internal
+    @SuppressWarnings("unchecked")
     public static <T, V extends PrimitiveValue<T>> V tryCast(PrimitiveValue<?> primitiveValue) {
         return (V) primitiveValue;
     }

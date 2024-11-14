@@ -14,6 +14,7 @@
         "ServerPlayer$ContainerListenerMixin",
         "SlimeBlockMixin",
         "TargetingConditionsMixin",
+        "accessor.ItemEntityAccessor",
         "accessor.LivingEntityAccessor",
         "accessor.RangedAttributeAccessor",
         "accessor.SmithingTransformRecipeAccessor"

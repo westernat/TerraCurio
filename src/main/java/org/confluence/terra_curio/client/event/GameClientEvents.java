@@ -35,7 +35,7 @@ public final class GameClientEvents {
         } else {
             GravitationHandler.handle(localPlayer);
             StepStoolHandler.handle(localPlayer);
-            TCClientPacketHandler.applyAutoAttack(minecraft, localPlayer);
+            TCClientPacketHandler.handle(minecraft, localPlayer);
             InformationHandler.handle(localPlayer);
             ScopeFovHandler.handle(localPlayer);
         }
