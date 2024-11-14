@@ -74,7 +74,7 @@ public final class TCItems {
                     MobEffects.BLINDNESS, MobEffects.DARKNESS,
                     MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION,
                     MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))), // 十字章护身符
-            ANKH_SHIELD = registerCurio("ankh_shield", builder -> builder.rarity(LIME)
+            ANKH_SHIELD = registerCurio("ankh_shield", builder -> builder.tooltips(1).rarity(LIME)
                     .accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, "knockback_resistance", 1.0, ADD_VALUE)
                     .attribute(Attributes.ARMOR, "armor", 4.0, ADD_VALUE)), // 十字章护盾
@@ -326,7 +326,7 @@ public final class TCItems {
                     .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 蓝马掌气球
-            YELLOW_HORSESHOE_BALLOON = registerCurio("yellow_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED)
+            YELLOW_HORSESHOE_BALLOON = registerCurio("yellow_horseshoe_balloon", builder -> builder.noTooltip().jeiInfos(0).rarity(LIGHT_RED)
                     .accessories(of(ValueType.SAND$STORM, new Tuple<>(0.45F, 17)))
                     .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)

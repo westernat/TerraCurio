@@ -7,10 +7,7 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.init.TCAttributes;
-import org.confluence.terra_curio.common.init.TCEffects;
-import org.confluence.terra_curio.common.init.TCEntities;
-import org.confluence.terra_curio.common.init.TCItems;
+import org.confluence.terra_curio.common.init.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -36,41 +33,6 @@ public class ModLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add("creativetab.terra_curio", "Terra Curio", "泰拉饰品");
-
-        add("curios.tooltip.speed_boots", "The wearer can run super fast", "穿戴者可飞速奔跑");
-        add("curios.tooltip.may_fly", "Allows flight", "可飞行");
-        add("curios.tooltip.jump_boost", "Increases jump height", "增加跳跃高度");
-        add("curios.tooltip.multi_jump", "Allows the holder to double jump", "可让持有者二连跳");
-        add("curios.tooltip.negates_fall_damage", "Increases fall resistance", "消除掉落伤害");
-        add("curios.tooltip.fall_resistance", "Negates fall damage", "增加抗坠落性");
-        add("curios.tooltip.watch", "Tell the time", "报时");
-        add("curios.tooltip.fire_immune", "Grants immunity to fire blocks", "对火块免疫");
-        add("curios.tooltip.fluid_walk.part", "Provides the ability to walk on water & honey", "提供在水和蜂蜜上行走的能力");
-        add("curios.tooltip.fluid_walk.all", "Provides the ability t walk on water, honey & lava", "提供在水、蜂蜜、岩浆上行走的能力");
-        add("curios.tooltip.lava_immune", "Provides 7 seconds of immunity to lava", "对岩浆免疫7秒");
-        add("curios.tooltip.lava_hurt_reduce", "Reduces damage from touching lava", "减少因触碰熔岩而造成的伤害");
-        add("curios.tooltip.fire_attack", "Melee attacks inflict fire damage", "近战攻击造成火焰伤害");
-        add("curios.tooltip.auto_attack", "Enables auto swing for melee weapons", "启用近战武器自动挥动");
-        add("curios.tooltip.aggro_attach", "Enemies are more likely to target you", "多人模式时，敌人更可能以你为目标");
-        add("curios.tooltip.armor_pass", "Increases armor penetration by %s", "盔甲穿透力提高%s点");
-        add("curios.tooltip.projectile_attack", "%s%% increased ranged damage", "远程伤害提高%s%%");
-        add("curios.tooltip.compass", "Displays horizontal position", "显示水平位置");
-        add("curios.tooltip.depth_meter", "Displays depth", "显示深度");
-        add("curios.tooltip.dps_meter", "Displays your damage per second", "显示你的每秒伤害");
-        add("curios.tooltip.fishermans_pocket_guide", "Displays fishing information", "显示钓鱼信息");
-        add("curios.tooltip.life_form_analyzer", "Displays the name of rare creatures around you", "显示您周围稀有生物的名称");
-        add("curios.tooltip.metal_detector", "Displays the most valuable ore around you", "显示你周围最贵重的矿石");
-        add("curios.tooltip.radar", "Detects enemies around you", "探测你周围的敌人");
-        add("curios.tooltip.sextant", "Displays the phase of the moon", "显示月相");
-        add("curios.tooltip.stopwatch", "Displays how fast the player is moving", "显示玩家的移动速度");
-        add("curios.tooltip.tally_counter", "Displays how many monsters have been killed", "显示怪物击杀数量");
-        add("curios.tooltip.weather_radio", "Displays the weather", "显示天气");
-        add("curios.tooltip.scope", "Increases view range for ranged weapons", "扩大远程武器的视野范围");
-        add("curios.tooltip.scope2", "Hold ranged weapon and crouch to zoom multiOut", "手持远程武器并潜行可拉远视野");
-        add("curios.tooltip.wall_climb", "Allows the ability to climb walls, hold shift key to slide down", "可爬墙，按住shift键可快速下滑");
-        add("curios.tooltip.wall_slide", "Allows the ability to slide down walls, hold shift key to slide down quickly", "可沿墙滑下，按住shift键可更快地下滑");
-        add("curios.tooltip.tabi", "Allows the ability to dash while double tap a direction", "双击一个方向可猛冲");
-        add("curios.tooltip.dodge", "Gives a chance to dodge attacks", "有几率避开攻击");
 
         add("info.terra_curio.time", "Time: [%s:%s]", "时间: [%s:%s]");
         add("info.terra_curio.radar", "Enemies: %s", "敌人: %s");
@@ -120,8 +82,8 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyZhName(TCItems.AMBHIPIAN_BOOTS, "水陆两用靴");
         tooltipAndJeiInfo(TCItems.ANCIENT_CHISEL, "远古凿子", "“Age-old problems require age-old solutions”", "“古老的问题需要古老的解决方案”", "The item can be pass the Archaeology to obtained.", "该物品可以通过考古获得。");
         onlyJeiInfo(TCItems.ANGLER_EARRING, "渔夫耳环", "This item can be located in the chests found within Fisherman Villagers' houses.", "这件物品可以在渔夫村民家中的箱子中找到。");
-        onlyJeiInfo(TCItems.ANKH_CHARM, "十字章护身符", "Grants immunity to most debuffs.", "对大部分减益免疫。");
-        onlyZhName(TCItems.ANKH_SHIELD, "十字章护盾");
+        onlyTooltip(TCItems.ANKH_CHARM, "十字章护身符", "Grants immunity to most debuffs.", "对大部分减益免疫。");
+        onlyTooltips(TCItems.ANKH_SHIELD, "十字章护盾", new String[]{"Grants immunity to most debuffs.", "Grants immunity to fire blocks"}, new String[]{"对大部分减益免疫。", "对火块免疫"});
         onlyZhName(TCItems.ANKLET_OF_THE_WIND, "疾风脚镯");
         onlyTooltip(TCItems.ARCHITECT_GIZMO_PACK, "建筑师发明背包", "Decreased 'Right Click Delay' by 2, cannot stack the decrease of its materials", "右键点击延迟降低2，且降低效果不能与其材料的降低效果叠加。");
         onlyZhName(TCItems.AVENGER_EMBLEM, "复仇者勋章");
@@ -384,7 +346,7 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyTooltip(TCItems.TERRASPARK_BOOTS, "泰拉闪耀靴", "Grants immunity to fire blocks and 7 seconds of immunity to lava", "对火块免疫并在7秒内对熔岩免疫");
         onlyTooltip(TCItems.THE_PLAN, "计划书", "Immunity to Slow and Nausea", "对缓慢和反胃免疫");
         onlyJeiInfo(TCItems.TITAN_GLOVE, "泰坦手套", "It can be found in Chests in the Mineshaft.", "它可以在废弃矿井的宝箱中找到。");
-        onlyJeiInfo(TCItems.TOOLBELT, "toolbelt", "It can be located in the chests found within Toolsmith Villagers' houses.", "它可以在工具匠村民家中的箱子中找到。");
+        onlyJeiInfo(TCItems.TOOLBELT, "工具腰带", "It can be located in the chests found within Toolsmith Villagers' houses.", "它可以在工具匠村民家中的箱子中找到。");
         onlyJeiInfo(TCItems.TOOLBOX, "工具箱", "It can be located in the chests found within Toolsmith Villagers' houses.", "它可以在工具匠村民家中的箱子中找到");
         tooltipsAndJeiInfo(TCItems.TREASURE_MAGNET, "宝藏磁石",
             new String[]{
@@ -448,7 +410,7 @@ public class ModLanguageProvider extends LanguageProvider {
             "When a player has a tamed cat, the cat may give the player this item when they wake up.",
             "当玩家有一只被驯服的猫时，猫可能会在玩家醒来时给玩家这个物品。"
             );
-//        "yellow_horseshoe_balloon": "黄马掌气球",
+        onlyZhName(TCItems.YELLOW_HORSESHOE_BALLOON, "黄马掌气球");
 
         if (locale.equals("en_us")) {
             sidedAdd(TCItems.EXPLORERS_EQUIPMENT.get().getDescriptionId(), "Explorer's Equipment", enData);
@@ -467,6 +429,7 @@ public class ModLanguageProvider extends LanguageProvider {
             TCEffects.EFFECTS.getEntries().forEach(effect -> sidedAdd(effect.get().getDescriptionId(), toTitleCase(effect.getId().getPath()), enData));
             TCAttributes.ATTRIBUTES.getEntries().forEach(attribute -> sidedAdd(attribute.get().getDescriptionId(), toTitleCase(attribute.getId().getPath()), enData));
         }
+        add(TCBlocks.WORKSHOP.get().getDescriptionId(), "Workshop", "工匠作坊");
     }
 
     private static String toTitleCase(String raw) {

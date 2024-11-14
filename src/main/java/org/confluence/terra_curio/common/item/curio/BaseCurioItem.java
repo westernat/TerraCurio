@@ -166,12 +166,12 @@ public class BaseCurioItem extends Item implements ICurioItem {
         /**
          * 额外的工具提示
          *
-         * @param count 额外的数量
+         * @param extra 额外的数量
          */
-        public Builder tooltips(int count) {
+        public Builder tooltips(int extra) {
             if (!hasToolTip) throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
-            count += 1;
-            for (int i = 1; i < count; i++) {
+            extra += 1;
+            for (int i = 1; i < extra; i++) {
                 additionTip.add(Component.translatable("tooltip.item.terra_curio." + name + "." + i));
             }
             return this;
