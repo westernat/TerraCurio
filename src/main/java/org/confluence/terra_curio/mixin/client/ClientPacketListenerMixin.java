@@ -21,8 +21,8 @@ public abstract class ClientPacketListenerMixin {
     @WrapOperation(method = "handleEntityEvent", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/multiplayer/ClientPacketListener;findTotem(Lnet/minecraft/world/entity/player/Player;)Lnet/minecraft/world/item/ItemStack;"))
     private ItemStack replaceTotem(Player player, Operation<ItemStack> original) {
         Optional<ItemStack> curio = CuriosUtils.findCurio(player, (Predicate<ItemStack>) itemStack -> {
-            AccessoriesComponent component = itemStack.get(TCDataComponentTypes.ACCESSORIES);
-            if (component != null || (component = itemStack.getItemHolder().getData(TCDataMaps.ACCESSORIES)) != null){
+            AccessoriesComponent component = itemStack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+            if (component != null || (component = itemStack.get(TCDataComponentTypes.ACCESSORIES)) != null) {
                 return component.contains(ValueType.TOTEM$WITH$COOLDOWN);
             }
             return false;

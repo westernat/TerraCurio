@@ -85,10 +85,15 @@ public final class TCClientPacketHandler {
             if (player.level().getEntity(id) instanceof ItemEntity itemEntity) {
                 itemEntity.setPickUpDelay(next.getIntValue());
                 iterator.remove();
+                pickupDelayCounter.remove(id);
             } else {
                 int count = pickupDelayCounter.get(id);
-                if (count == 20) iterator.remove();
-                pickupDelayCounter.put(id, count + 1);
+                if (count == 20) {
+                    iterator.remove();
+                    pickupDelayCounter.remove(id);
+                } else {
+                    pickupDelayCounter.put(id, count + 1);
+                }
             }
         }
     }

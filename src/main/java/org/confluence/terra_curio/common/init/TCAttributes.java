@@ -20,9 +20,11 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.ModList;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.api.event.RangePickupItemEvent;
 import org.confluence.terra_curio.integration.apothic.ApothicHelper;
 import org.confluence.terra_curio.mixin.accessor.RangedAttributeAccessor;
 
@@ -156,14 +158,15 @@ public final class TCAttributes {
         if (hasCustomAttribute(PICKUP_RANGE)) return;
         AttributeInstance attributeInstance = living.getAttribute(PICKUP_RANGE);
         if (attributeInstance == null) return;
-        double range = attributeInstance.getValue();
-        if (range <= 0.0) return;
+        float originalRange = (float) attributeInstance.getValue();
+        float range = NeoForge.EVENT_BUS.post(new RangePickupItemEvent.Pre(living, originalRange)).getRange();
+        if (range <= 0.0F) return;
         living.level().getEntitiesOfClass(
                 ItemEntity.class,
                 new AABB(living.getOnPos()).inflate(range),
-                itemEntity -> !itemEntity.hasPickUpDelay() && !itemEntity.getItem().is(TCTags.RANGE_PICKUP_IGNORE)
+                itemEntity -> !itemEntity.hasPickUpDelay()
         ).forEach(itemEntity -> {
-            if (itemEntity.isRemoved()) return;
+            if (itemEntity.isRemoved() || NeoForge.EVENT_BUS.post(new RangePickupItemEvent.Post(living, itemEntity, originalRange)).isCanceled()) return;
             itemEntity.addDeltaMovement(living.position().subtract(itemEntity.getX(), itemEntity.getY(), itemEntity.getZ()).normalize().scale(0.05F).add(0, 0.04F, 0));
             itemEntity.move(MoverType.SELF, itemEntity.getDeltaMovement());
         });

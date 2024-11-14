@@ -67,8 +67,8 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     public static void sendToClient(ServerPlayer player) {
         int item = 0;
         for (ItemStack itemStack : CuriosUtils.getCurios(player)) {
-            AccessoriesComponent component = itemStack.get(TCDataComponentTypes.ACCESSORIES);
-            if (component != null || (component = itemStack.getItemHolder().getData(TCDataMaps.ACCESSORIES)) != null) {
+            AccessoriesComponent component = itemStack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+            if (component != null || (component = itemStack.get(TCDataComponentTypes.ACCESSORIES)) != null) {
                 Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> types = component.types();
                 for (Object2IntMap.Entry<ValueType<Unit, UnitValue>> entry : MAP.object2IntEntrySet()) {
                     if (types.containsKey(entry.getKey())) item |= entry.getIntValue();
