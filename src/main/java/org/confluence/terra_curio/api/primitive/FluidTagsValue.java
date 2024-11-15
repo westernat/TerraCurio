@@ -5,10 +5,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public record FluidTagsValue(Set<TagKey<Fluid>> tags) implements PrimitiveValue<Set<TagKey<Fluid>>> {
@@ -35,5 +32,14 @@ public record FluidTagsValue(Set<TagKey<Fluid>> tags) implements PrimitiveValue<
     @Override
     public Codec<FluidTagsValue> codec() {
         return CODEC;
+    }
+
+    @Override
+    public List<String> getDescription() {
+        List<String> list = new ArrayList<>();
+        for (TagKey<Fluid> tag : tags) {
+            list.add(tag.toString());
+        }
+        return list;
     }
 }

@@ -26,7 +26,7 @@ public class DuneriderBoots extends BaseSpeedBoots {
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.dunerider_boots.0"));
         tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.dunerider_boots.1"));
     }

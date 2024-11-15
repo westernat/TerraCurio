@@ -66,7 +66,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         byte depthMeter = 0;
         for (ItemStack stack : itemStacks) {
             AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
-            if (component == null || (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
+            if (component == null && (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
             if (component.contains(ValueType.FULL$INFORMATION)) {
                 PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), FULL_MYSELF_ARRAY));
                 return;
@@ -110,7 +110,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         byte depthMeter = -128;
         for (ItemStack stack : itemStacks) {
             AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
-            if (component == null || (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
+            if (component == null && (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
             if (component.contains(ValueType.FULL$INFORMATION)) {
                 PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), FULL_REMOTE_ARRAY));
                 return;

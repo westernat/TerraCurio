@@ -48,7 +48,7 @@ import java.util.function.Consumer;
 import static org.confluence.terra_curio.api.primitive.ValueType.*;
 
 public final class TCUtils {
-    public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(TerraCurio.asResource("ice_speed"), 1.0, AttributeModifier.Operation.ADD_VALUE);
+    public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(TerraCurio.asResource("ice_speed"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
     @ApiStatus.Internal
     public static void forConfluence$Inject() {}
@@ -116,7 +116,8 @@ public final class TCUtils {
     }
 
     public static void applyStarClock(LivingEntity living, RandomSource random) {
-        boolean starClock = hasAccessoriesType(living, STAR$CLOCK);
+        AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
+        boolean starClock = attachment.contains(STAR$CLOCK);
         if (starClock) {
             Level level = living.level();
             List<Entity> list = level.getEntities(living, new AABB(living.getOnPos()).inflate(4.0, 3.0, 4.0), entity -> entity instanceof Enemy);
@@ -127,7 +128,7 @@ public final class TCUtils {
                 } else {
                     target = list.get(random.nextInt(list.size()));
                 }
-                StarCloakEntity entity = new StarCloakEntity(level, living, target, forConfluence$ModifyExpression(false)); // todo mixin here
+                StarCloakEntity entity = new StarCloakEntity(level, living, target, attachment.getValue(STAR$CLOCK));
                 level.addFreshEntity(entity);
             }
         }
@@ -250,12 +251,14 @@ public final class TCUtils {
                 }
             }
             if (attachment.contains(ICE$SPEED)) {
-                AttributeInstance attributeInstance = living.getAttribute(Attributes.MOVEMENT_EFFICIENCY);
-                assert attributeInstance != null;
+                AttributeInstance instance = living.getAttribute(Attributes.MOVEMENT_SPEED);
+                assert instance != null;
                 if (level.getBlockState(onPos).is(BlockTags.ICE)) {
-                    attributeInstance.addTransientModifier(ICE_SPEED_MODIFIER);
+                    if (!instance.hasModifier(ICE_SPEED_MODIFIER.id())) {
+                        instance.addTransientModifier(ICE_SPEED_MODIFIER);
+                    }
                 } else {
-                    attributeInstance.removeModifier(ICE_SPEED_MODIFIER);
+                    instance.removeModifier(ICE_SPEED_MODIFIER);
                 }
             }
         }

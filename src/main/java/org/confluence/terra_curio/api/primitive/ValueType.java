@@ -3,6 +3,7 @@ package org.confluence.terra_curio.api.primitive;
 import com.google.common.collect.ImmutableListMultimap;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Tuple;
@@ -15,6 +16,7 @@ import net.minecraft.world.level.material.Fluid;
 import org.confluence.terra_curio.TerraCurio;
 
 import java.util.Hashtable;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.function.Function;
@@ -51,7 +53,6 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Unit, UnitValue> FIRE$ATTACK = ofUnit("fire_attack");
     public static final ValueType<Unit, UnitValue> BRAIN$OF$CONFUSION = ofUnit("brain_of_confusion");
     public static final ValueType<Unit, UnitValue> HIVE$PACK = ofUnit("hive_pack");
-    public static final ValueType<Unit, UnitValue> STAR$CLOCK = ofUnit("star_clock");
     public static final ValueType<Unit, UnitValue> HONEY$COMB = ofUnit("honey_comb");
     public static final ValueType<Unit, UnitValue> MAGIC$QUIVER = ofUnit("magic_quiver");
     public static final ValueType<Unit, UnitValue> IGNITE$ARROW = ofUnit("ignite_arrow");
@@ -61,9 +62,10 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Unit, UnitValue> FROZEN$IMMUNE = ofUnit("frozen_immune");
     public static final ValueType<Unit, UnitValue> ICE$SPEED = ofUnit("ice_speed");
 
-    public static final ValueType<Float, FloatValue> FISHING$POWER = ofFloat("fishing_power", FloatValue.ADDITION, 0.0F);
+    public static final ValueType<Boolean, BooleanValue> STAR$CLOCK = create("star_clock", BooleanValue.OR, BooleanValue.CODEC, false, BooleanValue::new);
+
     public static final ValueType<Float, FloatValue> INJURY$FREE = ofFloat("injury_free", FloatValue.ADDITION_WITHIN_0_TO_1, 0.0F);
-    public static final ValueType<Float, FloatValue> INVULNERABLE$TICKS$MULTIPLIER = ofFloat("invulnerable_ticks_multiplier", FloatValue.GET_MAX, 1.0F);
+    public static final ValueType<Float, FloatValue> INVULNERABLE$TICKS$MULTIPLIER = ofFloat("invulnerable_ticks_multiplier", FloatValue.GET_MAX_WITHIN_0_TO_100, 1.0F);
     public static final ValueType<Float, FloatValue> LAVA$HURT$REDUCE = ofFloat("lava_hurt_reduce", FloatValue.GET_MAX_WITHIN_0_TO_1, 0.0F);
     public static final ValueType<Integer, IntegerValue> LAVA$IMMUNE$TICKS = ofInteger("lava_immune_ticks", IntegerValue.GET_MAX, 0);
     public static final ValueType<Integer, IntegerValue> RIGHT$CLICK$DELAY$SUBSTRACTOR = ofInteger("right_click_delay_substractor", IntegerValue.GET_MAX, 0);
@@ -80,6 +82,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Integer, IntegerValue> TOTEM$WITH$COOLDOWN = ofInteger("totem_with_cooldown", IntegerValue.GET_MIN_GREAT_EQUAL_THAN_0, -1);
     // no updates
     public static final ValueType<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> ATTRIBUTES = create("attributes", AttributeModifiersValue.GET_SELF, AttributeModifiersValue.CODEC, ImmutableListMultimap.of(), AttributeModifiersValue::new);
+    public static final ValueType<List<Component>, ComponentsValue> COMPONENTS = create("components", ComponentsValue.COMBINE_RULE, ComponentsValue.CODEC, List.of(), ComponentsValue::new);
 
     private final ResourceLocation key;
     private final CombineRule<T, V> combineRule;

@@ -4,10 +4,7 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -49,5 +46,14 @@ public class EntityTypesValue implements PrimitiveValue<Set<EntityType<?>>> {
     @Override
     public Codec<EntityTypesValue> codec() {
         return CODEC;
+    }
+
+    @Override
+    public List<String> getDescription() {
+        List<String> list = new ArrayList<>();
+        for (EntityType<?> entityType : get()) {
+            list.add(BuiltInRegistries.ENTITY_TYPE.getKey(entityType).toString());
+        }
+        return list;
     }
 }

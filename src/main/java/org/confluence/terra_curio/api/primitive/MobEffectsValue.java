@@ -2,10 +2,12 @@ package org.confluence.terra_curio.api.primitive;
 
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public record MobEffectsValue(Set<Holder<MobEffect>> effects) implements PrimitiveValue<Set<Holder<MobEffect>>> {
@@ -27,5 +29,16 @@ public record MobEffectsValue(Set<Holder<MobEffect>> effects) implements Primiti
     @Override
     public Codec<MobEffectsValue> codec() {
         return CODEC;
+    }
+
+    @Override
+    public List<String> getDescription() {
+        List<String> list = new ArrayList<>();
+        list.add("[");
+        for (Holder<MobEffect> effect : effects) {
+            list.add("    " + BuiltInRegistries.MOB_EFFECT.getKey(effect.value()).toString());
+        }
+        list.add("]");
+        return list;
     }
 }

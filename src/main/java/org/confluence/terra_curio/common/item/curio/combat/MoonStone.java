@@ -12,16 +12,11 @@ import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
-import org.confluence.terra_curio.util.TCUtils;
 import top.theillusivec4.curios.api.SlotContext;
 
 public class MoonStone extends BaseCurioItem {
     public MoonStone() {
-        super(getBuilder());
-    }
-
-    private static Builder getBuilder() {
-        return TCUtils.forConfluence$ModifyExpression(builder("moon_stone").rarity(ModRarity.PINK) // todo mixin here
+        super(builder("moon_stone").rarity(ModRarity.PINK)
                 .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 .attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 .attribute(Attributes.ARMOR, "armor", 4.0, AttributeModifier.Operation.ADD_VALUE)

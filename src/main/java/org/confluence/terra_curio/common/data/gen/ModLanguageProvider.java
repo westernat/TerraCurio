@@ -7,7 +7,10 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.init.*;
+import org.confluence.terra_curio.common.init.TCBlocks;
+import org.confluence.terra_curio.common.init.TCEffects;
+import org.confluence.terra_curio.common.init.TCEntities;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
@@ -65,6 +68,18 @@ public class ModLanguageProvider extends LanguageProvider {
         add("info.terra_curio.weather_radio.thunder", "Weather: Thunder", "天气: 雷暴");
         add("info.terra_curio.fishermans_pocket_guide", "Fishing Power: %s", "渔力: %s");
 
+        add("attribute.name.generic.critical_chance", "Critical Chance", "暴击率");
+        add("attribute.name.generic.ranged_velocity", "Ranged Velocity", "远程速度");
+        add("attribute.name.generic.ranged_damage", "Ranged Damage", "远程伤害");
+        add("attribute.name.generic.dodge_chance", "Dodge Chance", "闪避率");
+        add("attribute.name.generic.mining_speed", "Mining Speed", "挖掘速率");
+        add("attribute.name.generic.aggro", "Aggro", "仇恨");
+        add("attribute.name.generic.magic_damage", "Magic Damage", "魔法伤害");
+        add("attribute.name.generic.armor_pass", "Armor Pass", "护甲穿透");
+        add("attribute.name.player.pickup_range", "Pickup Range", "拾取范围");
+
+        add("death.attack.star_cloak", "%1$s was squashed by a falling star", "%1%s 被坠星压扁了");
+
         add("key.terra_curio.metal_detector", "Detect Metal", "检测矿物");
         add("key.terra_curio.step_stool", "Step Stool", "上梯凳");
 
@@ -73,6 +88,8 @@ public class ModLanguageProvider extends LanguageProvider {
 
         add("container.terra_curio.workshop", "工匠作坊", "Workshop");
         add("title.terra_curio.workshop", "工匠作坊", "Workshop");
+
+        add("argument.terra_curio.unknown_type", "Unknown Value Type: %s", "未知的值类型: %s");
 
         add(TCItems.BASE_POINT.get().getDescriptionId(), "基点", "Base Point");
         add(TCItems.EVERLASTING.get().getDescriptionId(), "亘古", "Everlasting");
@@ -625,7 +642,6 @@ public class ModLanguageProvider extends LanguageProvider {
             });
             TCEntities.ENTITIES.getEntries().forEach(entity -> sidedAdd(entity.get().getDescriptionId(), toTitleCase(entity.getId().getPath()), enData));
             TCEffects.EFFECTS.getEntries().forEach(effect -> sidedAdd(effect.get().getDescriptionId(), toTitleCase(effect.getId().getPath()), enData));
-            TCAttributes.ATTRIBUTES.getEntries().forEach(attribute -> sidedAdd(attribute.get().getDescriptionId(), toTitleCase(attribute.getId().getPath()), enData));
         }
         add(TCBlocks.WORKSHOP.get().getDescriptionId(), "Workshop", "工匠作坊");
     }

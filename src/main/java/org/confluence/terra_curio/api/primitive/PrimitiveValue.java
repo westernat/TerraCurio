@@ -2,6 +2,7 @@ package org.confluence.terra_curio.api.primitive;
 
 import com.mojang.serialization.Codec;
 
+import java.util.List;
 import java.util.function.BiFunction;
 
 public interface PrimitiveValue<T> {
@@ -18,7 +19,11 @@ public interface PrimitiveValue<T> {
         return combineRule.combine(get(), other);
     }
 
-    static <T> BiFunction<T, T, T> getSelfFunction() {
+    default List<String> getDescription() {
+        return List.of(get().toString());
+    }
+
+    static <T> BiFunction<T, T, T> identity() {
         return (a, b) -> a;
     }
 }

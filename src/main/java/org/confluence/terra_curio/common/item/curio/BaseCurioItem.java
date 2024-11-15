@@ -13,6 +13,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
+import org.confluence.terra_curio.api.primitive.ComponentsValue;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
@@ -46,16 +47,22 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
-        AccessoriesComponent component;
+        AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         AttributeModifiersValue value;
-        if ((component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES)) != null && (value = component.get(ValueType.ATTRIBUTES)) != null) {
+        if (component != null && (value = component.get(ValueType.ATTRIBUTES)) != null) {
             return value.get();
         }
         return builder == null ? EMPTY_ATTRIBUTE : builder.attributes;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+        AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+        ComponentsValue value;
+        if (component != null && (value = component.get(ValueType.COMPONENTS)) != null) {
+            tooltipComponents.addAll(value.components());
+            return;
+        }
         boolean b = builder == null;
         if (b || builder.hasToolTip) {
             tooltipComponents.add(Component.translatable("tooltip." + stack.getDescriptionId() + ".0"));
@@ -154,6 +161,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
             }
             return this;
         }
+
         /**
          * 额外的工具提示
          */

@@ -1,7 +1,6 @@
 package org.confluence.terra_curio.common.event;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -18,6 +17,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
@@ -30,6 +30,7 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.event.AfterAccessoryAbilitiesFlushedEvent;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
+import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
 import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
@@ -46,6 +47,11 @@ import top.theillusivec4.curios.api.event.CurioChangeEvent;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = TerraCurio.MODID)
 public final class GameEvents {
+    @SubscribeEvent
+    public static void registerCommand(RegisterCommandsEvent event) {
+        AccessoriesValueCommand.register(event.getDispatcher());
+    }
+
     @SubscribeEvent
     public static void curios(CurioChangeEvent event) {
         LivingEntity living = event.getEntity();
@@ -70,7 +76,6 @@ public final class GameEvents {
     public static void livingIncomingDamage(LivingIncomingDamageEvent event) {
         DamageContainer container = event.getContainer();
         float invulnerableTicksMultiplier = TCUtils.getAccessoriesValue(event.getEntity(), ValueType.INVULNERABLE$TICKS$MULTIPLIER);
-        invulnerableTicksMultiplier = Mth.clamp(invulnerableTicksMultiplier, 0.0F, 100.0F);
         container.setPostAttackInvulnerabilityTicks((int) (container.getPostAttackInvulnerabilityTicks() * invulnerableTicksMultiplier));
     }
 

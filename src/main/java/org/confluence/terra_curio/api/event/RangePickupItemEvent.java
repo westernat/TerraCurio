@@ -35,17 +35,11 @@ public abstract class RangePickupItemEvent extends LivingEvent {
     }
 
     public static class Post extends RangePickupItemEvent implements ICancellableEvent {
-        private final float originalRange;
         private final ItemEntity itemEntity;
 
-        public Post(LivingEntity entity, ItemEntity itemEntity, float range) {
+        public Post(LivingEntity entity, ItemEntity itemEntity) {
             super(entity);
-            this.originalRange = range;
             this.itemEntity = itemEntity;
-        }
-
-        public float getOriginalRange() {
-            return originalRange;
         }
 
         public ItemEntity getItemEntity() {

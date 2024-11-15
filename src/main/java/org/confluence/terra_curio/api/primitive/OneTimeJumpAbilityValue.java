@@ -5,6 +5,8 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.util.ExtraCodecs;
 import net.minecraft.util.Tuple;
 
+import java.util.List;
+
 public record OneTimeJumpAbilityValue(Tuple<Float, Integer> value) implements PrimitiveValue<Tuple<Float, Integer>> {
     public static final Codec<OneTimeJumpAbilityValue> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ExtraCodecs.POSITIVE_FLOAT.fieldOf("jump_speed").forGetter(v -> v.value.getA()),
@@ -20,5 +22,15 @@ public record OneTimeJumpAbilityValue(Tuple<Float, Integer> value) implements Pr
     @Override
     public Codec<OneTimeJumpAbilityValue> codec() {
         return CODEC;
+    }
+
+    @Override
+    public List<String> getDescription() {
+        return List.of(
+                "{",
+                "    jump_speed=" + value.getA(),
+                "    jump_ticks=" + value.getB(),
+                "}"
+        );
     }
 }

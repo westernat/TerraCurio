@@ -6,7 +6,7 @@
             "entries": [
                 {
                     "type": "minecraft:item",
-                    "name": "confluence:paladins_shield",
+                    "name": "terra_curio:paladins_shield",
                     "conditions": [
                         {
                             "condition": "minecraft:random_chance",

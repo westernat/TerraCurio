@@ -19,10 +19,7 @@ import org.confluence.terra_curio.api.primitive.ValueType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Hashtable;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 @SuppressWarnings("unchecked")
 public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> types) implements DataComponentType<AccessoriesComponent> {
@@ -92,22 +89,24 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
         return STREAM_CODEC;
     }
 
-    public record Remover(ValueType<?, ? extends PrimitiveValue<?>> type) implements DataMapValueRemover<Item, AccessoriesComponent> {
-        public static final Codec<Remover> CODEC = ValueType.CODEC.xmap(Remover::new, Remover::type);
+    public record Remover(List<ValueType<?, ? extends PrimitiveValue<?>>> types) implements DataMapValueRemover<Item, AccessoriesComponent> {
+        public static final Codec<Remover> CODEC = ValueType.CODEC.listOf().xmap(Remover::new, Remover::types);
 
         @Override
-        public Optional<AccessoriesComponent> remove(AccessoriesComponent component, Registry<Item> registry, Either<TagKey<Item>, ResourceKey<Item>> source, Item item) {
+        public @NotNull Optional<AccessoriesComponent> remove(AccessoriesComponent component, @NotNull Registry<Item> registry, @NotNull Either<TagKey<Item>, ResourceKey<Item>> source, @NotNull Item item) {
             HashMap<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new HashMap<>(component.types());
-            map.remove(type);
+            for (ValueType<?, ? extends PrimitiveValue<?>> type : types) {
+                map.remove(type);
+            }
             return Optional.of(new AccessoriesComponent(map));
         }
     }
 
     public static class Merger implements DataMapValueMerger<Item, AccessoriesComponent> {
         @Override
-        public AccessoriesComponent merge(Registry<Item> registry, Either<TagKey<Item>, ResourceKey<Item>> either, AccessoriesComponent component, Either<TagKey<Item>, ResourceKey<Item>> either1, AccessoriesComponent component1) {
-            Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component.types());
-            map.putAll(component1.types());
+        public @NotNull AccessoriesComponent merge(@NotNull Registry<Item> registry, @NotNull Either<TagKey<Item>, ResourceKey<Item>> either, AccessoriesComponent component, @NotNull Either<TagKey<Item>, ResourceKey<Item>> either1, AccessoriesComponent component1) {
+            Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component1.types());
+            map.putAll(component.types());
             return new AccessoriesComponent(map);
         }
     }

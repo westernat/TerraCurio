@@ -6,7 +6,7 @@
             "entries": [
                 {
                     "type": "minecraft:item",
-                    "name": "confluence:frog_leg",
+                    "name": "terra_curio:frog_leg",
                     "conditions": [
                         {
                             "condition": "minecraft:random_chance",

@@ -5,6 +5,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
+import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
 import org.confluence.terra_curio.common.init.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,6 +31,7 @@ public class TerraCurio {
         TCRecipes.register(eventBus);
         TCBlocks.BLOCKS.register(eventBus);
         TCMenus.TYPES.register(eventBus);
+        AccessoriesValueCommand.INFOS.register(eventBus);
         eventBus.addListener(TCDataMaps::registerDataMapTypes);
     }
 

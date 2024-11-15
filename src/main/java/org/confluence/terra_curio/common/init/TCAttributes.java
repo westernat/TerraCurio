@@ -37,14 +37,14 @@ import java.util.function.BiConsumer;
 public final class TCAttributes {
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(BuiltInRegistries.ATTRIBUTE, TerraCurio.MODID);
 
-    public static final DeferredHolder<Attribute, Attribute> CRIT_CHANCE = ATTRIBUTES.register("crit_chance", () -> new RangedAttribute("attribute.name.generic.critical_chance", 0.0, 0.0, 10.0).setSyncable(true)); // ADDITION
-    public static final DeferredHolder<Attribute, Attribute> RANGED_VELOCITY = ATTRIBUTES.register("ranged_velocity", () -> new RangedAttribute("attribute.name.generic.ranged_velocity", 1.0, 0.0, 10.0).setSyncable(true)); // MULTIPLY_TOTAL
-    public static final DeferredHolder<Attribute, Attribute> RANGED_DAMAGE = ATTRIBUTES.register("ranged_damage", () -> new RangedAttribute("attribute.name.generic.ranged_damage", 1.0, 0.0, 10.0).setSyncable(true)); // MULTIPLY_TOTAL
-    public static final DeferredHolder<Attribute, Attribute> DODGE_CHANCE = ATTRIBUTES.register("dodge_chance", () -> new RangedAttribute("attribute.name.generic.dodge_chance", 0.0, 0.0, 1.0).setSyncable(true)); // ADDITION
-    public static final DeferredHolder<Attribute, Attribute> AGGRO = ATTRIBUTES.register("aggro", () -> new RangedAttribute("attribute.name.generic.aggro", 0.0, -10000.0, 10000.0).setSyncable(true).setSentiment(Attribute.Sentiment.POSITIVE)); // ADDITION
-    public static final DeferredHolder<Attribute, Attribute> MAGIC_DAMAGE = ATTRIBUTES.register("magic_damage", () -> new RangedAttribute("attribute.name.generic.magic_damage", 1.0, 0.0, 10.0).setSyncable(true)); // MULTIPLY_TOTAL
-    public static final DeferredHolder<Attribute, Attribute> ARMOR_PASS = ATTRIBUTES.register("armor_pass", () -> new RangedAttribute("attribute.name.generic.armor_pass", 0.0, 0.0, 10000).setSyncable(true)); // ADDITION
-    public static final DeferredHolder<Attribute, Attribute> PICKUP_RANGE = ATTRIBUTES.register("pickup_range", () -> new RangedAttribute("attribute.name.generic.pickup_range", 0.0, 0.0, 64.0).setSyncable(true)); // ADDITION
+    public static final DeferredHolder<Attribute, Attribute> CRIT_CHANCE = ATTRIBUTES.register("generic.crit_chance", () -> new RangedAttribute("attribute.name.generic.critical_chance", 0.0, 0.0, 10.0).setSyncable(true)); // ADDITION
+    public static final DeferredHolder<Attribute, Attribute> RANGED_VELOCITY = ATTRIBUTES.register("generic.ranged_velocity", () -> new RangedAttribute("attribute.name.generic.ranged_velocity", 1.0, 0.0, 10.0).setSyncable(true)); // MULTIPLY_TOTAL
+    public static final DeferredHolder<Attribute, Attribute> RANGED_DAMAGE = ATTRIBUTES.register("generic.ranged_damage", () -> new RangedAttribute("attribute.name.generic.ranged_damage", 1.0, 0.0, 10.0).setSyncable(true)); // MULTIPLY_TOTAL
+    public static final DeferredHolder<Attribute, Attribute> DODGE_CHANCE = ATTRIBUTES.register("generic.dodge_chance", () -> new RangedAttribute("attribute.name.generic.dodge_chance", 0.0, 0.0, 1.0).setSyncable(true)); // ADDITION
+    public static final DeferredHolder<Attribute, Attribute> AGGRO = ATTRIBUTES.register("generic.aggro", () -> new RangedAttribute("attribute.name.generic.aggro", 0.0, -10000.0, 10000.0).setSyncable(true).setSentiment(Attribute.Sentiment.POSITIVE)); // ADDITION
+    public static final DeferredHolder<Attribute, Attribute> MAGIC_DAMAGE = ATTRIBUTES.register("generic.magic_damage", () -> new RangedAttribute("attribute.name.generic.magic_damage", 1.0, 0.0, 10.0).setSyncable(true)); // MULTIPLY_TOTAL
+    public static final DeferredHolder<Attribute, Attribute> ARMOR_PASS = ATTRIBUTES.register("generic.armor_pass", () -> new RangedAttribute("attribute.name.generic.armor_pass", 0.0, 0.0, 10000).setSyncable(true)); // ADDITION
+    public static final DeferredHolder<Attribute, Attribute> PICKUP_RANGE = ATTRIBUTES.register("player.pickup_range", () -> new RangedAttribute("attribute.name.player.pickup_range", 0.0, 0.0, 64.0).setSyncable(true)); // ADDITION
 
     private static final Map<Holder<Attribute>, Holder<Attribute>> MAP = Util.make(new HashMap<>(), table -> {
         table.put(CRIT_CHANCE, null);
@@ -54,7 +54,6 @@ public final class TCAttributes {
         table.put(AGGRO, null);
         table.put(MAGIC_DAMAGE, null);
         table.put(ARMOR_PASS, null);
-        table.put(PICKUP_RANGE, null);
     });
 
     public static Holder<Attribute> getCriticalChance() {
@@ -155,10 +154,8 @@ public final class TCAttributes {
     }
 
     public static void applyPickupRange(LivingEntity living) {
-        if (hasCustomAttribute(PICKUP_RANGE)) return;
         AttributeInstance attributeInstance = living.getAttribute(PICKUP_RANGE);
-        if (attributeInstance == null) return;
-        float originalRange = (float) attributeInstance.getValue();
+        float originalRange = attributeInstance == null ? 0.0F : (float) attributeInstance.getValue();
         float range = NeoForge.EVENT_BUS.post(new RangePickupItemEvent.Pre(living, originalRange)).getRange();
         if (range <= 0.0F) return;
         living.level().getEntitiesOfClass(
@@ -166,7 +163,7 @@ public final class TCAttributes {
                 new AABB(living.getOnPos()).inflate(range),
                 itemEntity -> !itemEntity.hasPickUpDelay()
         ).forEach(itemEntity -> {
-            if (itemEntity.isRemoved() || NeoForge.EVENT_BUS.post(new RangePickupItemEvent.Post(living, itemEntity, originalRange)).isCanceled()) return;
+            if (itemEntity.isRemoved() || NeoForge.EVENT_BUS.post(new RangePickupItemEvent.Post(living, itemEntity)).isCanceled()) return;
             itemEntity.addDeltaMovement(living.position().subtract(itemEntity.getX(), itemEntity.getY(), itemEntity.getZ()).normalize().scale(0.05F).add(0, 0.04F, 0));
             itemEntity.move(MoverType.SELF, itemEntity.getDeltaMovement());
         });

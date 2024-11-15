@@ -1,5 +1,20 @@
 {
     "values": {
+        "terra_curio:ice_skates": {
+            "terra_curio:ice_speed": {}
+        },
+        "terra_curio:angler_earring": {
+            "terra_curio:attributes": {
+                "minecraft:generic.luck": [
+                    {
+                        "id": "terra_curio:angler_earring",
+                        "amount": 10.0,
+                        "operation": "add_value"
+                    }
+                ]
+            },
+            "terra_curio:components": []
+        },
         "terra_curio:magma_stone": {
             "terra_curio:fire_attack": {}
         },
@@ -69,7 +84,7 @@
             "terra_curio:totem_with_cooldown": 2400,
             "terra_curio:invulnerable_ticks_multiplier": 2.0,
             "terra_curio:attributes": {
-                "terra_curio:dodge_chance": [
+                "terra_curio:generic.dodge_chance": [
                     {
                         "id": "terra_curio:everlasting",
                         "amount": 0.1,
