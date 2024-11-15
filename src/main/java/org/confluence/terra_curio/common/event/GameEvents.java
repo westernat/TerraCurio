@@ -129,16 +129,16 @@ public final class GameEvents {
             self.level().players().stream()
                     .filter(player -> player.distanceToSqr(self) < rangeSqr && self.canAttack(player))
                     .max((playerA, playerB) -> {
-                        AttributeInstance instanceA = playerA.getAttribute(TCAttributes.getAggro());
-                        AttributeInstance instanceB = playerB.getAttribute(TCAttributes.getAggro());
+                        AttributeInstance instanceA = playerA.getAttribute(TCAttributes.AGGRO);
+                        AttributeInstance instanceB = playerB.getAttribute(TCAttributes.AGGRO);
                         if (instanceA != null && instanceB != null) {
                             return (int) (instanceA.getValue() - instanceB.getValue());
                         }
                         return 0;
                     }).ifPresent(player -> {
                         if (player == playerO) return;
-                        AttributeInstance instanceO = playerO.getAttribute(TCAttributes.getAggro());
-                        AttributeInstance instance = player.getAttribute(TCAttributes.getAggro());
+                        AttributeInstance instanceO = playerO.getAttribute(TCAttributes.AGGRO);
+                        AttributeInstance instance = player.getAttribute(TCAttributes.AGGRO);
                         if (instanceO != null && instance != null && instanceO.getValue() < instance.getValue()) {
                             event.setNewAboutToBeSetTarget(player); // 只有当新目标的仇恨值大于旧目标时，才设置新目标
                         }

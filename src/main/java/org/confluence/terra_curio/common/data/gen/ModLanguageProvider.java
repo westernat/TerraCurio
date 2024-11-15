@@ -72,11 +72,10 @@ public class ModLanguageProvider extends LanguageProvider {
         add("attribute.name.generic.ranged_velocity", "Ranged Velocity", "远程速度");
         add("attribute.name.generic.ranged_damage", "Ranged Damage", "远程伤害");
         add("attribute.name.generic.dodge_chance", "Dodge Chance", "闪避率");
-        add("attribute.name.generic.mining_speed", "Mining Speed", "挖掘速率");
-        add("attribute.name.generic.aggro", "Aggro", "仇恨");
         add("attribute.name.generic.magic_damage", "Magic Damage", "魔法伤害");
         add("attribute.name.generic.armor_pass", "Armor Pass", "护甲穿透");
         add("attribute.name.player.pickup_range", "Pickup Range", "拾取范围");
+        add("attribute.name.player.aggro", "Aggro", "仇恨");
 
         add("death.attack.star_cloak", "%1$s was squashed by a falling star", "%1%s 被坠星压扁了");
 

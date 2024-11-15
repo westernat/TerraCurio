@@ -41,17 +41,17 @@ public final class TCAttributes {
     public static final DeferredHolder<Attribute, Attribute> RANGED_VELOCITY = ATTRIBUTES.register("generic.ranged_velocity", () -> new RangedAttribute("attribute.name.generic.ranged_velocity", 1.0, 0.0, 10.0).setSyncable(true)); // MULTIPLY_TOTAL
     public static final DeferredHolder<Attribute, Attribute> RANGED_DAMAGE = ATTRIBUTES.register("generic.ranged_damage", () -> new RangedAttribute("attribute.name.generic.ranged_damage", 1.0, 0.0, 10.0).setSyncable(true)); // MULTIPLY_TOTAL
     public static final DeferredHolder<Attribute, Attribute> DODGE_CHANCE = ATTRIBUTES.register("generic.dodge_chance", () -> new RangedAttribute("attribute.name.generic.dodge_chance", 0.0, 0.0, 1.0).setSyncable(true)); // ADDITION
-    public static final DeferredHolder<Attribute, Attribute> AGGRO = ATTRIBUTES.register("generic.aggro", () -> new RangedAttribute("attribute.name.generic.aggro", 0.0, -10000.0, 10000.0).setSyncable(true).setSentiment(Attribute.Sentiment.POSITIVE)); // ADDITION
     public static final DeferredHolder<Attribute, Attribute> MAGIC_DAMAGE = ATTRIBUTES.register("generic.magic_damage", () -> new RangedAttribute("attribute.name.generic.magic_damage", 1.0, 0.0, 10.0).setSyncable(true)); // MULTIPLY_TOTAL
     public static final DeferredHolder<Attribute, Attribute> ARMOR_PASS = ATTRIBUTES.register("generic.armor_pass", () -> new RangedAttribute("attribute.name.generic.armor_pass", 0.0, 0.0, 10000).setSyncable(true)); // ADDITION
+
     public static final DeferredHolder<Attribute, Attribute> PICKUP_RANGE = ATTRIBUTES.register("player.pickup_range", () -> new RangedAttribute("attribute.name.player.pickup_range", 0.0, 0.0, 64.0).setSyncable(true)); // ADDITION
+    public static final DeferredHolder<Attribute, Attribute> AGGRO = ATTRIBUTES.register("player.aggro", () -> new RangedAttribute("attribute.name.generic.aggro", 0.0, -10000.0, 10000.0).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE)); // ADDITION
 
     private static final Map<Holder<Attribute>, Holder<Attribute>> MAP = Util.make(new HashMap<>(), table -> {
         table.put(CRIT_CHANCE, null);
         table.put(RANGED_DAMAGE, null);
         table.put(RANGED_VELOCITY, null);
         table.put(DODGE_CHANCE, null);
-        table.put(AGGRO, null);
         table.put(MAGIC_DAMAGE, null);
         table.put(ARMOR_PASS, null);
     });
@@ -72,20 +72,12 @@ public final class TCAttributes {
         return getCustomAttribute(DODGE_CHANCE);
     }
 
-    public static Holder<Attribute> getAggro() {
-        return getCustomAttribute(AGGRO);
-    }
-
     public static Holder<Attribute> getMagicDamage() {
         return getCustomAttribute(MAGIC_DAMAGE);
     }
 
     public static Holder<Attribute> getArmorPass() {
         return getCustomAttribute(ARMOR_PASS);
-    }
-
-    public static Holder<Attribute> getPickupRange() {
-        return getCustomAttribute(PICKUP_RANGE);
     }
 
     public static Holder<Attribute> getCustomAttribute(Holder<Attribute> attribute) {
@@ -175,10 +167,8 @@ public final class TCAttributes {
                 "ranged_velocity", RANGED_VELOCITY,
                 "ranged_damage", RANGED_DAMAGE,
                 "dodge_chance", DODGE_CHANCE,
-                "aggro", AGGRO,
                 "magic_damage", MAGIC_DAMAGE,
-                "armor_pass", ARMOR_PASS,
-                "pickup_range", PICKUP_RANGE
+                "armor_pass", ARMOR_PASS
         );
 
         ApothicHelper.preset(MAP);
