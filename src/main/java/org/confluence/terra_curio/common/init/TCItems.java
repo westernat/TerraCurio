@@ -256,7 +256,7 @@ public final class TCItems { // todo 全换成data map
             DUNERIDER_BOOTS = registerDirectly("dunerider_boots", DuneriderBoots::new), // 沙丘行者靴
             ROCKET_BOOTS = registerDirectly("rocket_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).accessories(of(ValueType.MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 36, false, false))))), // 火箭靴
             SPECTRE_BOOTS = registerDirectly("spectre_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIGHT_RED).accessories(of(ValueType.MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 36, false, false))))), // 幽灵靴
-            FAIRY_BOOTS = registerDirectly("fairy_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(PINK).accessories(units(ValueType.FLOWER$BOOTS), of(ValueType.MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 36, false, false))))), // 仙灵靴
+            FAIRY_BOOTS = registerDirectly("fairy_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).tooltips(1).rarity(PINK).accessories(units(ValueType.FLOWER$BOOTS), of(ValueType.MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 36, false, false))))), // 仙灵靴
             LIGHTNING_BOOTS = registerDirectly("lightning_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(PINK)
                     .accessories(of(ValueType.MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 36, false, false)))
                     .attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL))), // 闪电靴
@@ -264,15 +264,17 @@ public final class TCItems { // todo 全换成data map
                     .accessories(units(ValueType.ICE$SPEED), of(ValueType.MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 40, false, false)))
                     .attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL))), // 霜花靴
             WATER_WALKING_BOOTS = registerCurio("water_walking_boots", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK)))), // 水上漂靴
-            OBSIDIAN_WATER_WALKING_BOOTS = registerCurio("obsidian_water_walking_boots", builder -> builder.rarity(LIGHT_RED).accessories(
+            OBSIDIAN_WATER_WALKING_BOOTS = registerCurio("obsidian_water_walking_boots", builder -> builder.rarity(LIGHT_RED).tooltips(1).accessories(
                     units(ValueType.FIRE$IMMUNE),
                     of(ValueType.FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)))), // 黑曜石水上漂靴
-            LAVA_WADERS = registerCurio("lava_waders", builder -> builder.rarity(LIME).accessories(
+            LAVA_WADERS = registerCurio("lava_waders", builder -> builder.rarity(LIME).tooltips(1).accessories(
                     units(ValueType.FIRE$IMMUNE),
                     of(ValueType.FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)),
                     of(ValueType.LAVA$IMMUNE$TICKS, 140),
                     of(ValueType.LAVA$HURT$REDUCE, 0.5F))), // 熔岩靴
-            TERRASPARK_BOOTS = registerDirectly("terraspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIME).accessories(
+            TERRASPARK_BOOTS = registerDirectly("terraspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIME)
+                    .tooltips(3)
+                    .accessories(
                     units(ValueType.ICE$SPEED, ValueType.FIRE$IMMUNE),
                     of(ValueType.MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 40, false, false)),
                     of(ValueType.FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)),
@@ -315,9 +317,11 @@ public final class TCItems { // todo 全换成data map
                             of(ValueType.CLOUD, 1.3F)
                     ).attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)), // 气球束
             LUCKY_HORSESHOE = registerCurio("lucky_horseshoe", builder -> builder
+                    .tooltips(1)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 幸运马掌
             OBSIDIAN_HORSESHOE = registerCurio("obsidian_horseshoe", builder -> builder.rarity(LIGHT_RED)
+                    .tooltips(1)
                     .accessories(units(ValueType.FIRE$IMMUNE))
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 黑曜石马掌
