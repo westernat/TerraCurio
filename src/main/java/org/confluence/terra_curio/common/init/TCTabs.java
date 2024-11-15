@@ -17,8 +17,11 @@ public final class TCTabs {
                     .title(Component.translatable("creativetab.terra_curio"))
                     .displayItems((parameters, output) -> {
                         TCUtils.forConfluence$Inject();
+                        output.accept(TCItems.WORKSHOP.get());
+                        output.accept(TCItems.DEMON_HEART.get());
+                        output.accept(TCItems.MAGIC_MIRROR.get());
+                        output.accept(TCItems.CELL_PHONE.get());
                         TCItems.CURIOS.getEntries().forEach(entry -> output.accept(entry.get()));
-                    })
-                    .build()
+                    }).build()
     );
 }

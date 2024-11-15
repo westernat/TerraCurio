@@ -3,7 +3,6 @@ package org.confluence.terra_curio.common.item.curio.movement;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.Holder;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -12,16 +11,18 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
+import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.ClientConfigs;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
+import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.init.TCDataMaps;
 import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.confluence.terra_curio.util.TCUtils;
 import top.theillusivec4.curios.api.SlotContext;
-
-import java.util.List;
 
 public class BaseSpeedBoots extends BaseCurioItem {
     public static final String KEY = TerraCurio.MODID + ":boots_speed";
@@ -34,11 +35,6 @@ public class BaseSpeedBoots extends BaseCurioItem {
         super(builder);
         this.acceleration = acceleration;
         this.maxSpeed = maxSpeed;
-    }
-
-    @Override
-    public List<Component> getAttributesTooltip(List<Component> tooltips, ItemStack stack) {
-        return EMPTY_TOOLTIP;
     }
 
     @Override
@@ -82,6 +78,11 @@ public class BaseSpeedBoots extends BaseCurioItem {
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
         ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> builder1 = ImmutableMultimap.builder();
         builder1.putAll(builder.getAttributes());
+        AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+        AttributeModifiersValue value;
+        if (component != null && (value = component.get(ValueType.ATTRIBUTES)) != null) {
+            builder1.putAll(value.get());
+        }
         double speed = TCUtils.getItemStackNbt(stack).getInt(KEY) * 0.01;
         if (speed > 0.0) {
             builder1.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(ID, speed, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));

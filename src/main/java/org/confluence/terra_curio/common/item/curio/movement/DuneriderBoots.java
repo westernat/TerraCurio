@@ -1,9 +1,14 @@
 package org.confluence.terra_curio.common.item.curio.movement;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.SlotContext;
+
+import java.util.List;
 
 public class DuneriderBoots extends BaseSpeedBoots {
     public DuneriderBoots(String name) {
@@ -13,10 +18,16 @@ public class DuneriderBoots extends BaseSpeedBoots {
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
         LivingEntity living = slotContext.entity();
-        if (living.level().getBlockState(living.getOnPos()).is(BlockTags.SAND)) {
+        if (living.getBlockStateOn().is(BlockTags.SAND)) {
             speedUp(slotContext, stack, 2, 70);
         } else {
             speedUp(slotContext, stack, 1, 40);
         }
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.dunerider_boots.0"));
+        tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.dunerider_boots.1"));
     }
 }

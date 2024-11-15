@@ -6,35 +6,40 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
-public record FluidTagsValue(List<TagKey<Fluid>> tags) implements PrimitiveValue<List<TagKey<Fluid>>> {
-    public static final Codec<FluidTagsValue> CODEC = TagKey.codec(Registries.FLUID).listOf().xmap(FluidTagsValue::new, FluidTagsValue::get);
-    public static final CombineRule<List<TagKey<Fluid>>, FluidTagsValue> EXPANSION = CombineRule.register(new CombineRule<>() {
-        @Override
-        public List<TagKey<Fluid>> combine(List<TagKey<Fluid>> componentA, List<TagKey<Fluid>> componentB) {
-            Set<TagKey<Fluid>> combined = new HashSet<>(componentA);
-            combined.addAll(componentB);
-            return new ArrayList<>(combined);
-        }
-
-        @Override
-        public String name() {
-            return "fluid_tag_expansion";
-        }
-    });
+public record FluidTagsValue(Set<TagKey<Fluid>> tags) implements PrimitiveValue<Set<TagKey<Fluid>>> {
+    public static final Codec<FluidTagsValue> CODEC = TagKey.codec(Registries.FLUID).listOf().xmap(
+            values -> new FluidTagsValue(new HashSet<>(values)),
+            value -> new ArrayList<>(value.tags)
+    );
+    public static final CombineRule<Set<TagKey<Fluid>>, FluidTagsValue> EXPANSION = CombineRule.register((a, b) -> {
+        Set<TagKey<Fluid>> combined = new HashSet<>(a);
+        combined.addAll(b);
+        return combined;
+    }, "fluid_tags_expansion");
 
     @SafeVarargs
     public FluidTagsValue(TagKey<Fluid>... tags) {
-        this(Arrays.stream(tags).toList());
+        this(Arrays.stream(tags).collect(Collectors.toSet()));
     }
 
     @Override
-    public List<TagKey<Fluid>> get() {
+    public Set<TagKey<Fluid>> get() {
         return tags;
     }
 
     @Override
     public Codec<FluidTagsValue> codec() {
         return CODEC;
+    }
+
+    @Override
+    public List<String> getDescription() {
+        List<String> list = new ArrayList<>();
+        for (TagKey<Fluid> tag : tags) {
+            list.add(tag.toString());
+        }
+        return list;
     }
 }

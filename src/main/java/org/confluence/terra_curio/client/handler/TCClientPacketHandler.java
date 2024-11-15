@@ -1,8 +1,13 @@
 package org.confluence.terra_curio.client.handler;
 
+import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2IntMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterator;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -14,6 +19,7 @@ import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
 import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
 import org.confluence.terra_curio.network.s2c.RightClickSubtractorPacketS2C;
+import org.confluence.terra_curio.network.s2c.SetItemEntityPickupDelayPacketS2C;
 
 import static org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C.*;
 
@@ -24,6 +30,8 @@ public final class TCClientPacketHandler {
     private static boolean hasTabi = false;
     private static boolean hasMagiluminescence = false;
     private static int rightClickSubtractor = 0;
+    private static final Int2IntMap pickupDelayStorage = new Int2IntArrayMap();
+    private static final Int2IntMap pickupDelayCounter = Util.make(new Int2IntArrayMap(), map -> map.defaultReturnValue(0));
 
     public static boolean couldAutoAttack() {
         return autoAttack;
@@ -49,7 +57,48 @@ public final class TCClientPacketHandler {
         rightClickSubtractor = packet.amount();
     }
 
-    public static void applyAutoAttack(Minecraft minecraft, LocalPlayer localPlayer) {
+    public static void handleCurioExists(CurioExistsPacketS2C packet) {
+        int item = packet.item();
+        autoAttack = (item & AUTO_ATTACK) == AUTO_ATTACK;
+        hasCthulhu = (item & SHIELD_OF_CTHULHU) == SHIELD_OF_CTHULHU;
+        hasTabi = (item & TABI) == TABI;
+        ScopeFovHandler.hasScope = (item & SCOPE) == SCOPE;
+        GravitationHandler.hasGlobe = (item & GRAVITY_GLOBE) == GRAVITY_GLOBE;
+        hasMagiluminescence = (item & MAGILUMINESCENCE) == MAGILUMINESCENCE;
+    }
+
+    public static void handleItemPickupDelay(SetItemEntityPickupDelayPacketS2C packet) {
+        pickupDelayStorage.put(packet.id(), packet.delay());
+    }
+
+    public static void handle(Minecraft minecraft, LocalPlayer player) {
+        applyAutoAttack(minecraft, player);
+        setPickupDelay(player);
+    }
+
+    private static void setPickupDelay(LocalPlayer player) {
+        if (pickupDelayStorage.isEmpty()) return;
+        ObjectIterator<Int2IntMap.Entry> iterator = pickupDelayStorage.int2IntEntrySet().iterator();
+        while (iterator.hasNext()) {
+            Int2IntMap.Entry next = iterator.next();
+            int id = next.getIntKey();
+            if (player.level().getEntity(id) instanceof ItemEntity itemEntity) {
+                itemEntity.setPickUpDelay(next.getIntValue());
+                iterator.remove();
+                pickupDelayCounter.remove(id);
+            } else {
+                int count = pickupDelayCounter.get(id);
+                if (count == 20) {
+                    iterator.remove();
+                    pickupDelayCounter.remove(id);
+                } else {
+                    pickupDelayCounter.put(id, count + 1);
+                }
+            }
+        }
+    }
+
+    private static void applyAutoAttack(Minecraft minecraft, LocalPlayer localPlayer) {
         if (minecraft.gameMode == null || minecraft.gameMode.isDestroying()) return;
         if (BetterCombatHelper.isLoaded()) {
             ItemStack itemStack = localPlayer.getItemInHand(InteractionHand.MAIN_HAND);
@@ -74,21 +123,13 @@ public final class TCClientPacketHandler {
         }
     }
 
-    public static void handleCurioExists(CurioExistsPacketS2C packet) {
-        int item = packet.item();
-        autoAttack = (item & AUTO_ATTACK) == AUTO_ATTACK;
-        hasCthulhu = (item & SHIELD_OF_CTHULHU) == SHIELD_OF_CTHULHU;
-        hasTabi = (item & TABI) == TABI;
-        ScopeFovHandler.hasScope = (item & SCOPE) == SCOPE;
-        GravitationHandler.hasGlobe = (item & GRAVITY_GLOBE) == GRAVITY_GLOBE;
-        hasMagiluminescence = (item & MAGILUMINESCENCE) == MAGILUMINESCENCE;
-    }
-
     public static void reset() {
         autoAttack = false;
         hasCthulhu = false;
         hasTabi = false;
         hasMagiluminescence = false;
         rightClickSubtractor = 0;
+        pickupDelayStorage.clear();
+        pickupDelayCounter.clear();
     }
 }

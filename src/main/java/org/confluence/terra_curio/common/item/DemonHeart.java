@@ -45,7 +45,7 @@ public class DemonHeart extends Item {
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.demon_heart"));
+        tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.demon_heart.0"));
     }
 
     @Override

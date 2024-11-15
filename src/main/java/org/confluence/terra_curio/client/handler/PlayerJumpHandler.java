@@ -2,6 +2,8 @@ package org.confluence.terra_curio.client.handler;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.ai.attributes.AttributeMap;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -40,6 +42,7 @@ public final class PlayerJumpHandler {
     private static int maxFlyTicks = 0;
     private static int remainFlyTicks = 0;
     private static boolean couldGlide = false;
+    private static boolean horizontalFlight = false;
 
     public static boolean onFly = false;
 
@@ -57,14 +60,17 @@ public final class PlayerJumpHandler {
             if (couldGlide) {
                 if (remainFlyTicks-- > 0) {
                     onFly = true;
-                    fly(localPlayer, flySpeed);
+                    if (horizontalFlight && localPlayer.isShiftKeyDown()) {
+                        horizontalFlight(localPlayer);
+                    } else {
+                        fly(localPlayer, flySpeed);
+                    }
                 } else if (!localPlayer.getAbilities().flying && localPlayer.getDeltaMovement().y < -0.15) {
                     onFly = false;
-                    fly(localPlayer, -0.2);
+                    glide(localPlayer);
                 }
             }
-            if (jumpKeyDown) return;
-            if (couldGlide && remainFlyTicks > 0) return;
+            if (jumpKeyDown || (couldGlide && remainFlyTicks > 0)) return;
 
             if (!fartFinished && fartSpeed > 0.0) {
                 fartFinished = true;
@@ -134,14 +140,33 @@ public final class PlayerJumpHandler {
     }
 
     private static void fly(LocalPlayer localPlayer, double speed) {
-        Vec3 vec3 = localPlayer.getDeltaMovement();
-        double y = vec3.y;
+        double y = localPlayer.getDeltaMovement().y;
         if (y < speed) {
             y += speed / 2.5;
         } else {
             y = speed;
         }
-        localPlayer.setDeltaMovement(vec3.x, y, vec3.z);
+        airMove(localPlayer, y, (float) (localPlayer.getAttributeValue(Attributes.MOVEMENT_SPEED) + speed));
+    }
+
+    private static void glide(LocalPlayer localPlayer) {
+        airMove(localPlayer, -0.3, (float) localPlayer.getAttributeValue(Attributes.MOVEMENT_SPEED) + 0.4F);
+    }
+
+    private static void horizontalFlight(LocalPlayer localPlayer) {
+        AttributeMap attributes = localPlayer.getAttributes();
+        airMove(localPlayer, 0.0, (float) (attributes.getValue(Attributes.MOVEMENT_SPEED) * 4.0));
+    }
+
+    private static void airMove(LocalPlayer localPlayer, double y, float h) {
+        float rad = localPlayer.getYRot() * Mth.DEG_TO_RAD;
+        float cos = Mth.cos(rad);
+        float sin = Mth.sin(rad);
+        float x = localPlayer.xxa * h;
+        float z = localPlayer.zza * h;
+        double mx = x * cos + z * -sin;
+        double mz = x * sin + z * cos;
+        localPlayer.setDeltaMovement(mx, y, mz);
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
         PacketDistributor.sendToServer(new PlayerJumpPacketC2S(false, true, (float) y));
@@ -158,12 +183,13 @@ public final class PlayerJumpHandler {
     }
 
     public static void handleFlyPacket(PlayerFlyPacketS2C packet) {
-        maxFlyTicks = packet.maxFlyTicks();
         flySpeed = packet.flySpeed();
-        couldGlide = packet.glide();
+        maxFlyTicks = packet.flyTicks();
+        couldGlide = packet.couldGlide();
+        horizontalFlight = packet.horizontalFlight();
     }
 
-    public static boolean isOnGlide() {
-        return onFly;
+    public static boolean isOnHorizontalFlight() {
+        return onFly && horizontalFlight;
     }
 }

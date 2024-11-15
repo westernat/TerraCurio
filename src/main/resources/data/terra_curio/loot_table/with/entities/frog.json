@@ -6,16 +6,22 @@
             "entries": [
                 {
                     "type": "minecraft:item",
-                    "name": "terra_curio:frog_leg"
-                },
-                {
-                    "condition": "minecraft:damage_source_properties",
-                    "predicate": {
-                        "direct_entity": {
-                            "type": "minecraft:player"
+                    "name": "terra_curio:frog_leg",
+                    "conditions": [
+                        {
+                            "condition": "minecraft:random_chance",
+                            "chance": 1
                         },
-                        "is_direct": true
-                    }
+                        {
+                            "condition": "minecraft:damage_source_properties",
+                            "predicate": {
+                                "direct_entity": {
+                                    "type": "minecraft:player"
+                                },
+                                "is_direct": true
+                            }
+                        }
+                    ]
                 }
             ]
         }

@@ -7,7 +7,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.neoforged.fml.ModList;
 import org.confluence.terra_curio.common.init.TCAttributes;
 
-import java.util.Hashtable;
+import java.util.Map;
 
 public class ApothicHelper {
     private static Boolean isAttributesLoaded;
@@ -25,7 +25,7 @@ public class ApothicHelper {
         return isAttributesLoaded;
     }
 
-    public static void preset(Hashtable<Holder<Attribute>, Holder<Attribute>> map) {
+    public static void preset(Map<Holder<Attribute>, Holder<Attribute>> map) {
         if (isAttributesLoaded()) {
             map.put(TCAttributes.CRIT_CHANCE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.CRIT_CHANCE).get());
             map.put(TCAttributes.RANGED_VELOCITY, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARROW_VELOCITY).get());

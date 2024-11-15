@@ -5,6 +5,7 @@
     "compatibilityLevel": "JAVA_21",
     "refmap": "terra_curio.refmap.json",
     "mixins": [
+        "AbstractArrowMixin",
         "CrossbowItemMixin",
         "EntityMixin",
         "LivingEntityMixin",
@@ -13,6 +14,7 @@
         "ServerPlayer$ContainerListenerMixin",
         "SlimeBlockMixin",
         "TargetingConditionsMixin",
+        "accessor.ItemEntityAccessor",
         "accessor.LivingEntityAccessor",
         "accessor.RangedAttributeAccessor",
         "accessor.SmithingTransformRecipeAccessor"
@@ -20,7 +22,9 @@
     "client": [
         "client.ClientEntityMixin",
         "client.ClientLivingEntityMixin",
+        "client.ClientPacketListenerMixin",
         "client.ClientPlayerMixin",
+        "client.KeyboardInputMixin",
         "client.LivingEntityRendererMixin",
         "client.LocalPlayerMixin",
         "client.MouseHandlerMixin",

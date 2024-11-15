@@ -109,6 +109,16 @@ public class CuriosUtils {
         return atomic.get();
     }
 
+    public static Optional<ItemStack> findCurio(LivingEntity living, Predicate<ItemStack> predicate) {
+        AtomicReference<Optional<ItemStack>> atomic = new AtomicReference<>(Optional.empty());
+        CuriosApi.getCuriosInventory(living).ifPresent(handler -> {
+            Optional<SlotResult> results = handler.findFirstCurio(predicate);
+            if (results.isEmpty()) return;
+            atomic.set(Optional.of(results.get().stack()));
+        });
+        return atomic.get();
+    }
+
     public static <C extends Item & ICurioItem> Optional<ItemStack> findCurioAt(LivingEntity living, C curio, String id) {
         AtomicReference<Optional<ItemStack>> atomic = new AtomicReference<>(Optional.empty());
         CuriosApi.getCuriosInventory(living).ifPresent(handler -> {

@@ -2,7 +2,6 @@ package org.confluence.terra_curio.common.attachment;
 
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
@@ -15,11 +14,8 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.ModLoader;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
-import org.confluence.terra_curio.api.event.FishingPowerModificationEvent;
 import org.confluence.terra_curio.api.event.RegisterAccessoriesComponentUpdateEvent;
-import org.confluence.terra_curio.api.primitive.FloatValue;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
@@ -40,11 +36,10 @@ import static org.confluence.terra_curio.util.TCUtils.tryCast;
 
 @SuppressWarnings("unchecked")
 public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
-    private static final List<ValueType<Unit, UnitValue>> UNITS_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
+    public static final List<ValueType<Unit, UnitValue>> UNITS_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
         list.add(ValueType.FIRE$ATTACK);
         list.add(ValueType.BRAIN$OF$CONFUSION);
         list.add(ValueType.HIVE$PACK);
-        list.add(ValueType.STAR$CLOCK);
         list.add(ValueType.HONEY$COMB);
         list.add(ValueType.MAGIC$QUIVER);
         list.add(ValueType.IGNITE$ARROW);
@@ -55,8 +50,8 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         list.add(ValueType.ICE$SPEED);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.UnitType(list));
     });
-    private static final List<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
-        list.add(ValueType.FISHING$POWER);
+    public static final List<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
+        list.add(ValueType.STAR$CLOCK);
         list.add(ValueType.INJURY$FREE);
         list.add(ValueType.INVULNERABLE$TICKS$MULTIPLIER);
         list.add(ValueType.LAVA$HURT$REDUCE);
@@ -71,10 +66,11 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         list.add(ValueType.TSUNAMI);
         list.add(ValueType.CLOUD);
         list.add(ValueType.MAY$FLY);
+        list.add(ValueType.EFFECT$IMMUNITIES);
+        list.add(ValueType.TOTEM$WITH$COOLDOWN);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.OtherType(list));
     });
     private final Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> valueMap = new HashMap<>();
-    private final Set<EntityType<?>> ignores = new HashSet<>();
     private boolean panicNecklace;
     private transient int remainLavaImmuneTicks;
 
@@ -84,7 +80,6 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
 
     public void setToDefaultValue() {
         this.valueMap.clear();
-        this.ignores.clear();
         this.panicNecklace = false;
         this.remainLavaImmuneTicks = 0;
     }
@@ -94,12 +89,13 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         return value == null ? type.defaultValue() : (T) value.get();
     }
 
-    public <T, V extends PrimitiveValue<T>> boolean contains(ValueType<T, V> type) {
-        return valueMap.containsKey(type);
+    public <T, V extends PrimitiveValue<T>> List<String> getDescription(ValueType<T, V> type) {
+        PrimitiveValue<?> value = valueMap.get(type);
+        return value == null ? List.of("NONE") : value.getDescription();
     }
 
-    public Set<EntityType<?>> getIgnores() {
-        return ignores;
+    public <T, V extends PrimitiveValue<T>> boolean contains(ValueType<T, V> type) {
+        return valueMap.containsKey(type);
     }
 
     public boolean hasPanicNecklace() {
@@ -132,20 +128,15 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                     if (component == null && (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
                     Item item = stack.getItem();
 
-                    for (ValueType<Unit, UnitValue> type : UNITS_REQUIRE_UPDATE) {
-                        putUnitIfPresent(component, type);
-                    }
-                    for (ValueType<?, ? extends PrimitiveValue<?>> type : OTHER_REQUIRE_UPDATE) {
-                        combineValue(component, type);
+                    for (Map.Entry<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> entry : component.types().entrySet()) {
+                        putUnitIfPresent(entry.getKey());
+                        combineValue(entry.getKey(), tryCast(entry.getValue()));
                     }
 
                     if (!panicNecklace && item instanceof PanicNecklace) this.panicNecklace = true;
                 }
             }
-            float fishingPower = NeoForge.EVENT_BUS.post(new FishingPowerModificationEvent(living, getValue(ValueType.FISHING$POWER))).getNeoValue();
-            valueMap.put(ValueType.FISHING$POWER, new FloatValue(fishingPower));
-            List<EntityType<?>> ignores = getValue(ValueType.MOB$IGNORE);
-            this.ignores.addAll(ignores);
+            Set<EntityType<?>> ignores = getValue(ValueType.MOB$IGNORE);
             if (!ignores.isEmpty()) {
                 living.level().getEntities(new MobEntityTypesTest(ignores), new AABB(living.getOnPos()).inflate(31.5), mob -> true).forEach(mob -> {
                     if (mob.getTarget() == living) mob.setTarget(null);
@@ -154,20 +145,21 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         });
     }
 
-    private <T, V extends PrimitiveValue<T>> void putUnitIfPresent(AccessoriesComponent component, ValueType<T, V> type) {
-        if (component.contains(type)) {
+    private <T, V extends PrimitiveValue<T>> void putUnitIfPresent(ValueType<T, V> type) {
+        if (UNITS_REQUIRE_UPDATE.contains(type)) {
             valueMap.put(type, UnitValue.INSTANCE);
         }
     }
 
-    private <T, V extends PrimitiveValue<T>> void combineValue(AccessoriesComponent component, ValueType<T, V> type) {
-        V v = component.get(type);
-        if (v != null) {
-            if (!valueMap.containsKey(type)) {
-                valueMap.put(type, v);
+    private <T, V extends PrimitiveValue<T>> void combineValue(ValueType<T, V> type, V value) {
+        if (OTHER_REQUIRE_UPDATE.contains(type)) {
+            V other = (V) valueMap.get(type);
+            if (other == null) {
+                valueMap.put(type, value);
+            } else {
+                T t = value.combine(other, type.combineRule());
+                valueMap.put(type, type.newInstance(t));
             }
-            T t = v.combine((V) valueMap.get(type), type.combineRule());
-            valueMap.put(type, type.newInstance(t));
         }
     }
 
@@ -184,13 +176,6 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
             });
         }
         nbt.put("valueMap", listTag);
-        ListTag listTag1 = new ListTag();
-        for (EntityType<?> ignore : ignores) {
-            CompoundTag type = new CompoundTag();
-            type.putString("EntityType", BuiltInRegistries.ENTITY_TYPE.getKey(ignore).toString());
-            listTag1.add(type);
-        }
-        nbt.put("ignores", listTag1);
         nbt.putBoolean("panicNecklace", panicNecklace);
         return nbt;
     }
@@ -206,12 +191,6 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
             ValueType.VALUE_CODECS.get(location).parse(NbtOps.INSTANCE, compoundTag.get(key)).result().ifPresent(value -> {
                 valueMap.put(ValueType.TYPES.get(location), value);
             });
-        }
-        this.ignores.clear();
-        ListTag listTag1 = nbt.getList("ignores", Tag.TAG_COMPOUND);
-        for (Tag tag : listTag1) {
-            String type = ((CompoundTag) tag).getString("EntityType");
-            ignores.add(BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(type)));
         }
         this.panicNecklace = nbt.getBoolean("panicNecklace");
     }

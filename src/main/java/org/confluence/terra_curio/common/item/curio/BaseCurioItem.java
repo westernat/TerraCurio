@@ -6,7 +6,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
@@ -14,10 +13,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
+import org.confluence.terra_curio.api.primitive.ComponentsValue;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.terra_curio.common.component.EffectImmunities;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCDataMaps;
@@ -27,48 +26,52 @@ import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
-import java.util.*;
-import java.util.function.Consumer;
+import java.util.ArrayList;
+import java.util.Hashtable;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class BaseCurioItem extends Item implements ICurioItem {
-    protected static final List<Component> EMPTY_TOOLTIP = List.of();
     protected static final ImmutableMultimap<Holder<Attribute>, AttributeModifier> EMPTY_ATTRIBUTE = ImmutableMultimap.of();
-    protected static final Consumer<Builder> NO_BUILDER = builder -> {};
     protected Builder builder;
 
-    protected BaseCurioItem(Builder builder) {
+    public BaseCurioItem(Builder builder) {
         super(builder.initialize().properties);
         this.builder = builder;
     }
 
-    protected BaseCurioItem(Properties properties) {
+    public BaseCurioItem(Properties properties) {
         super(properties);
     }
 
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
-        if (slotContext.entity() != null) {
-            AccessoriesComponent component;
-            AttributeModifiersValue value;
-            if ((component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES)) != null && (value = component.get(ValueType.ATTRIBUTES)) != null) {
-                return value.get();
-            }
+        AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+        AttributeModifiersValue value;
+        if (component != null && (value = component.get(ValueType.ATTRIBUTES)) != null) {
+            return value.get();
         }
         return builder == null ? EMPTY_ATTRIBUTE : builder.attributes;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+        AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+        ComponentsValue value;
+        if (component != null && (value = component.get(ValueType.COMPONENTS)) != null) {
+            tooltipComponents.addAll(value.components());
+            return;
+        }
         boolean b = builder == null;
         if (b || builder.hasToolTip) {
-            tooltipComponents.add(Component.translatable("tooltip." + stack.getDescriptionId()));
+            tooltipComponents.add(Component.translatable("tooltip." + stack.getDescriptionId() + ".0"));
             if (!b) tooltipComponents.addAll(builder.additionTip);
         }
     }
 
     public int getJeiInformationCount() {
-        return builder.jeiInformationCount;
+        return builder == null ? 0 : builder.jeiInformationCount;
     }
 
     @Override
@@ -109,8 +112,8 @@ public class BaseCurioItem extends Item implements ICurioItem {
         private transient ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> attributesBuilder = ImmutableMultimap.builder();
         private ImmutableMultimap<Holder<Attribute>, AttributeModifier> attributes;
         private ModRarity rarity = ModRarity.BLUE;
-        private int jeiInformationCount = 0;
-        private boolean makePiglinsNeutral;
+        private int jeiInformationCount = 1;
+        private boolean makePiglinsNeutral = false;
 
         Builder(String name, Properties properties) {
             this.name = name;
@@ -138,12 +141,6 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
-        @SafeVarargs
-        public final Builder effectImmunities(Holder<MobEffect>... effectImmunities) {
-            properties.component(TCDataComponentTypes.EFFECT_IMMUNITIES, EffectImmunities.of(Set.of(effectImmunities).stream().toList()));
-            return this;
-        }
-
         public Builder rarity(ModRarity rarity) {
             this.rarity = rarity;
             if (rarity != ModRarity.GRAY && rarity != ModRarity.WHITE) {
@@ -165,13 +162,30 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
+        /**
+         * 额外的工具提示
+         */
         public Builder tooltip(String str) {
             if (!hasToolTip) throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
-            additionTip.add(Component.translatable("tooltip." + str));
+            additionTip.add(Component.translatable(str));
             return this;
         }
 
-        public Builder jeiInformationCount(int count) {
+        /**
+         * 额外的工具提示
+         *
+         * @param extra 额外的数量
+         */
+        public Builder tooltips(int extra) {
+            if (!hasToolTip) throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
+            extra += 1;
+            for (int i = 1; i < extra; i++) {
+                additionTip.add(Component.translatable("tooltip.item.terra_curio." + name + "." + i));
+            }
+            return this;
+        }
+
+        public Builder jeiInfos(int count) {
             this.jeiInformationCount = count;
             return this;
         }

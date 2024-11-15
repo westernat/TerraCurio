@@ -20,7 +20,7 @@ public class CellPhone extends MagicMirror {
 
     @Override
     public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+        tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.cell_phone.0"));
         tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.cell_phone.1"));
-        tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.cell_phone.2"));
     }
 }

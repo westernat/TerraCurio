@@ -3,14 +3,13 @@ package org.confluence.terra_curio.api.primitive;
 import com.google.common.collect.ImmutableListMultimap;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, AttributeModifier> value) implements PrimitiveValue<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>> {
     public static final Codec<AttributeModifiersValue> CODEC = Codec.unboundedMap(RegistryFixedCodec.create(Registries.ATTRIBUTE), AttributeModifier.MAP_CODEC.codec().listOf()).xmap(
@@ -29,17 +28,7 @@ public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, A
                 return map;
             }
     );
-    public static final CombineRule<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> GET_SELF = new CombineRule<>() {
-        @Override
-        public ImmutableListMultimap<Holder<Attribute>, AttributeModifier> combine(ImmutableListMultimap<Holder<Attribute>, AttributeModifier> componentA, ImmutableListMultimap<Holder<Attribute>, AttributeModifier> componentB) {
-            return componentA;
-        }
-
-        @Override
-        public String name() {
-            return "attributes_modifiers_get_self";
-        }
-    };
+    public static final CombineRule<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> GET_SELF = CombineRule.register(PrimitiveValue.identity(), "attributes_modifiers_get_self");
 
     @Override
     public ImmutableListMultimap<Holder<Attribute>, AttributeModifier> get() {
@@ -49,5 +38,17 @@ public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, A
     @Override
     public Codec<AttributeModifiersValue> codec() {
         return CODEC;
+    }
+
+    @Override
+    public List<String> getDescription() {
+        List<String> list = new ArrayList<>();
+        for (Map.Entry<Holder<Attribute>, Collection<AttributeModifier>> entry : value.asMap().entrySet()) {
+            list.add(BuiltInRegistries.ATTRIBUTE.getKey(entry.getKey().value()).toString());
+            for (AttributeModifier modifier : entry.getValue()) {
+                list.add("    " + modifier);
+            }
+        }
+        return list;
     }
 }

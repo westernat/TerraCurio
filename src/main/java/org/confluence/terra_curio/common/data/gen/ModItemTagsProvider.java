@@ -9,7 +9,6 @@ import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.init.TCTags;
-import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,11 +21,9 @@ public class ModItemTagsProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.@NotNull Provider provider) {
-        IntrinsicTagAppender<Item> appender = tag(TCTags.CURIO);
-        TCItems.CURIOS.getEntries().forEach(item -> {
-            if (item.get() instanceof BaseCurioItem) {
-                appender.add(item.get());
-            }
-        });
+        IntrinsicTagAppender<Item> accessory = tag(TCTags.ACCESSORY);
+        accessory.add(TCItems.BASE_POINT.get());
+        accessory.add(TCItems.EVERLASTING.get());
+        TCItems.CURIOS.getEntries().forEach(item -> accessory.add(item.get()));
     }
 }
