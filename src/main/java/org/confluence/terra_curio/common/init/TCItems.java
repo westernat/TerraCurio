@@ -78,8 +78,8 @@ public final class TCItems { // todo 全换成data map
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, "knockback_resistance", 1.0, ADD_VALUE)
                     .attribute(Attributes.ARMOR, "armor", 4.0, ADD_VALUE)), // 十字章护盾
             STAR_CLOAK = registerCurio("star_cloak", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.STAR$CLOCK, false))), // 星星斗篷
-            STAR_VEIL = registerCurio("star_veil", builder -> builder.rarity(LIGHT_PURPLE).accessories(of(ValueType.STAR$CLOCK, false), of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, 2.0F))), // 星星面纱
-            BEE_CLOAK = registerCurio("bee_cloak", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.HONEY$COMB), of(ValueType.STAR$CLOCK, false), of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, 2.0F))), // 蜜蜂斗篷
+            STAR_VEIL = registerCurio("star_veil", builder -> builder.rarity(LIGHT_PURPLE).accessories(of(ValueType.STAR$CLOCK, false), of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, 2.0F)).tooltips(1)), // 星星面纱
+            BEE_CLOAK = registerCurio("bee_cloak", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.HONEY$COMB), of(ValueType.STAR$CLOCK, false), of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, 2.0F)).tooltips(1)), // 蜜蜂斗篷
             BLACK_BELT = registerCurio("black_belt", builder -> builder.rarity(LIME).attribute(TCAttributes.getDodgeChance(), 0.1, ADD_VALUE)), // 黑腰带
     /* 月光护身符 */
     SUN_STONE = registerCurio("sun_stone", SunStone::new), // 太阳石
@@ -120,7 +120,7 @@ public final class TCItems { // todo 全换成data map
                     .attribute(Attributes.ATTACK_SPEED, 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, 1.0, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)), // 机械手套
-            FIRE_GAUNTLET = registerCurio("fire_gauntlet", builder -> builder.rarity(LIME)
+            FIRE_GAUNTLET = registerCurio("fire_gauntlet", builder -> builder.rarity(LIME).tooltips(1)
                     .accessories(units(ValueType.AUTO$ATTACK, ValueType.FIRE$ATTACK))
                     .attribute(Attributes.ATTACK_DAMAGE, 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_SPEED, 0.12, ADD_MULTIPLIED_TOTAL)
@@ -162,11 +162,11 @@ public final class TCItems { // todo 全换成data map
                     .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getRangedVelocity(), 0.2, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.AGGRO, -400, ADD_VALUE)), // 潜行者箭袋
-            RIFLE_SCOPE = registerCurio("rifle_scope", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.SCOPE))), // 步枪瞄准镜
-            SNIPER_SCOPE = registerCurio("sniper_scope", builder -> builder.rarity(LIME).accessories(units(ValueType.SCOPE))
+            RIFLE_SCOPE = registerCurio("rifle_scope", builder -> builder.rarity(LIGHT_RED).accessories(units(ValueType.SCOPE)).tooltips(1)), // 步枪瞄准镜
+            SNIPER_SCOPE = registerCurio("sniper_scope", builder -> builder.rarity(LIME).accessories(units(ValueType.SCOPE)).tooltips(1)
                     .attribute(TCAttributes.getCriticalChance(), 0.1, ADD_VALUE)
                     .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)), // 狙击镜
-            RECON_SCOPE = registerCurio("recon_scope", builder -> builder.rarity(PINK).accessories(units(ValueType.SCOPE))
+            RECON_SCOPE = registerCurio("recon_scope", builder -> builder.rarity(PINK).accessories(units(ValueType.SCOPE)).tooltips(2)
                     .attribute(TCAttributes.getCriticalChance(), 0.1, ADD_VALUE)
                     .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.AGGRO, -400, ADD_VALUE)), // 侦察镜
@@ -176,9 +176,9 @@ public final class TCItems { // todo 全换成data map
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)
                     .attribute(Attributes.ARMOR, 2.0, ADD_VALUE)), // 黑曜石护盾
             OBSIDIAN_SKULL = registerCurio("obsidian_skull", builder -> builder.rarity(GREEN).accessories(units(ValueType.FIRE$IMMUNE))), // 黑曜石骷髅头
-            MOLTEN_SKULL_ROSE = registerCurio("molten_skull_rose", builder -> builder.rarity(LIGHT_PURPLE)
+            MOLTEN_SKULL_ROSE = registerCurio("molten_skull_rose", builder -> builder.rarity(LIGHT_PURPLE).tooltips(2)
                     .accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.LAVA$IMMUNE$TICKS, 140), of(ValueType.LAVA$HURT$REDUCE, 0.5F))), // 熔火骷髅头玫瑰
-            OBSIDIAN_SKULL_ROSE = registerCurio("obsidian_skull_rose", builder -> builder.rarity(PINK).accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.LAVA$HURT$REDUCE, 0.5F))), // 黑曜石骷髅头玫瑰
+            OBSIDIAN_SKULL_ROSE = registerCurio("obsidian_skull_rose", builder -> builder.rarity(PINK).accessories(units(ValueType.FIRE$IMMUNE), of(ValueType.LAVA$HURT$REDUCE, 0.5F)).tooltips(1)), // 黑曜石骷髅头玫瑰
             HAND_WARMER = registerCurio("hand_warmer", builder -> builder.rarity(GREEN).accessories(units(ValueType.FROZEN$IMMUNE))), // 暖手宝
             PUTRID_SCENT = registerCurio("putrid_scent", builder -> builder.rarity(LIGHT_PURPLE)
                     .attribute(Attributes.ATTACK_DAMAGE, 0.05, ADD_MULTIPLIED_TOTAL)
