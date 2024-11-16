@@ -9,8 +9,8 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.mixin.client.accessor.LocalPlayerAccessor;
-import org.confluence.terra_curio.mixinauxi.IEntity;
 import org.confluence.terra_curio.network.c2s.GravitationPacketC2S;
 import org.confluence.terra_curio.network.s2c.BroadcastGravitationRotPacketS2C;
 

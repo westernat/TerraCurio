@@ -3,7 +3,7 @@ package org.confluence.terra_curio.mixin;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
-import org.confluence.terra_curio.mixinauxi.IEntity;
+import org.confluence.terra_curio.mixed.IEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 

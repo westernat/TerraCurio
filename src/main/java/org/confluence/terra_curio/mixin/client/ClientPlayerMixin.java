@@ -7,7 +7,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
-import org.confluence.terra_curio.mixinauxi.IEntity;
+import org.confluence.terra_curio.mixed.IEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;

@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.mixinauxi;
+package org.confluence.terra_curio.mixed;
 
 public interface IEntity {
     int terra_curio$getCthulhuSprintingTime();

@@ -3,7 +3,7 @@ package org.confluence.terra_curio.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import org.confluence.terra_curio.common.init.TCAttributes;
-import org.confluence.terra_curio.mixinauxi.SelfGetter;
+import org.confluence.terra_curio.mixed.SelfGetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 

@@ -13,7 +13,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.effect.beneficial.GravitationEffect;
-import org.confluence.terra_curio.mixinauxi.IEntity;
+import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.network.s2c.BroadcastGravitationRotPacketS2C;
 import org.jetbrains.annotations.NotNull;
 
