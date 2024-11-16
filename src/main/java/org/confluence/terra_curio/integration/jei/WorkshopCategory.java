@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class WorkshopCategory implements IRecipeCategory<WorkshopRecipe> {
     public static final RecipeType<WorkshopRecipe> TYPE = RecipeType.create(TerraCurio.MODID, "workshop", WorkshopRecipe.class);
-    private static final Component TITLE = Component.translatable("title.confluence.workshop");
+    private static final Component TITLE = Component.translatable("title.terra_curio.workshop");
     private final IDrawable icon;
 
     public WorkshopCategory(IJeiHelpers jeiHelpers) {
