@@ -12,6 +12,7 @@ import top.theillusivec4.curios.api.SlotContext;
 public class CelestialStone extends BaseCurioItem {
     public CelestialStone() {
         super(builder("celestial_stone").rarity(ModRarity.LIME)
+                .jeiInfos(0)
                 .attribute(Attributes.ATTACK_SPEED, "attack_speed", 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 .attribute(Attributes.ATTACK_DAMAGE, "attack_damage", 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 .attribute(Attributes.ARMOR, "armor", 4.0, AttributeModifier.Operation.ADD_VALUE)

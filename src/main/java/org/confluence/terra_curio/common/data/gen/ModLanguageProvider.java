@@ -87,6 +87,7 @@ public class ModLanguageProvider extends LanguageProvider {
 
         add("container.terra_curio.workshop", "工匠作坊", "Workshop");
         add("title.terra_curio.workshop", "工匠作坊", "Workshop");
+        add("title.confluence.workshop", "工匠作坊", "Workshop");
 
         add("argument.terra_curio.unknown_type", "Unknown Value Type: %s", "未知的值类型: %s");
 
@@ -387,7 +388,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "当生命值低于50%时，在主人周围放置一个外壳，使伤害降低25%"
                 }
         );
-        tooltipAndJeiInfo(TCItems.FROZEN_TURTLE_SHELL, "冰冻海龟壳", "Puts a shell around the owner when below 50% life that reduces damage by 25%", "当生命值低于50%时，在主人周围放置一个外壳，使伤害降低25%",  "When the Turtle died for Freezing chance to dropped this item.", "当海龟因冰冻而死时，有几率掉落这个饰品。。");
+        tooltipAndJeiInfo(TCItems.FROZEN_TURTLE_SHELL, "冰冻海龟壳", "Puts a shell around the owner when below 50% life that reduces damage by 25%", "当生命值低于50%时，在主人周围放置一个外壳，使伤害降低25%",  "When the Turtle died for Freezing chance to dropped this item.", "当海龟因冰冻而死时，有几率掉落这个饰品。");
         onlyZhName(TCItems.GOBLIN_TECH, "哥布林数据仪");
         onlyZhName(TCItems.GOLD_WATCH, "金表");
         onlyZhName(TCItems.GPS, "全球定位系统");
@@ -643,7 +644,7 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyTooltip(TCItems.SEARCHLIGHT, "探照灯", "Immunity to Blindness and Darkness",  "对失明和黑暗免疫");
         onlyJeiInfo(TCItems.SEXTANT, "六分仪", "This item can be located in the chests found within Fisherman Villagers' houses.",  "这件物品可以在渔夫村民家中的箱子中找到。");
         onlyJeiInfo(TCItems.SHACKLE, "脚镣", "It can be found in Chests in the Dungeon.",  "它可以在地牢中的宝箱中找到。");
-        onlyJeiInfo(TCItems.SHARK_TOOTH_NECKLACE, "鲨牙项链", "It has a chance to drop from Drowned.",  "它可以在地牢中的宝箱中找到。");
+        onlyJeiInfo(TCItems.SHARK_TOOTH_NECKLACE, "鲨牙项链", "It has a chance to drop from Drowned.",  "它有几率从溺尸身上掉落。");
         onlyTooltips(TCItems.SHARKRON_BALLOON, "鲨鱼龙气球",
                 new String[]{
                         "Allows the holder to double jump",
