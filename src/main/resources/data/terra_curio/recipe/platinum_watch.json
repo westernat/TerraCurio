@@ -10,7 +10,7 @@
             "item": "minecraft:chain"
         },
         "c": {
-            "tag": "forge:ingots/platinum"
+            "tag": "neoforge:ingots/platinum"
         },
         "R": {
             "item": "minecraft:redstone"
