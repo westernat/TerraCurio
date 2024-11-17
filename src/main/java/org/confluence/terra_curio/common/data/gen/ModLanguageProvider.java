@@ -91,8 +91,11 @@ public class ModLanguageProvider extends LanguageProvider {
 
         add("argument.terra_curio.unknown_type", "Unknown Value Type: %s", "未知的值类型: %s");
 
-        add(TCItems.BASE_POINT.get().getDescriptionId(), "基点", "Base Point");
-        add(TCItems.EVERLASTING.get().getDescriptionId(), "亘古", "Everlasting");
+        add(TCItems.BASE_POINT.get().getDescriptionId(), "Base Point", "基点");
+        add(TCItems.EVERLASTING.get().getDescriptionId(), "Everlasting", "亘古");
+        add(TCItems.CELL_PHONE.get().getDescriptionId(), "Cell Phone", "手机");
+        add(TCItems.MAGIC_MIRROR.get().getDescriptionId(), "Magic Mirror", "魔镜");
+        add(TCItems.DEMON_HEART.get().getDescriptionId(), "Demon Heart", "恶魔之心");
 
         onlyJeiInfo(TCItems.AGLET, "金属带扣", "It can be found in Shipwreck Chests.", "它出现在沉船宝箱中");
         onlyTooltips(TCItems.AMBER_HORSESHOE_BALLOON, "琥珀马掌气球",
