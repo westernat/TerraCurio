@@ -178,7 +178,9 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void playerTick$Post(PlayerTickEvent.Post event) {
-        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+        Player player = event.getEntity();
+        TCAttributes.applyPickupRange(player);
+        if (player instanceof ServerPlayer serverPlayer) {
             if (serverPlayer.level().getGameTime() % 200 == 0) {
                 // 每十秒向周围玩家共享一次信息配饰
                 InfoCurioCheckPacketS2C.sendToOthers(serverPlayer);
@@ -197,7 +199,7 @@ public final class GameEvents {
     @SubscribeEvent
     public static void attackEntity(AttackEntityEvent event) {
         Player player = event.getEntity();
-        if (TCUtils.isServerNotFake(player)) {
+        if (player instanceof ServerPlayer) {
             TCUtils.applyFireAttack(player, event.getTarget());
         }
     }

@@ -17,6 +17,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.ModList;
@@ -145,18 +146,18 @@ public final class TCAttributes {
         return amount;
     }
 
-    public static void applyPickupRange(LivingEntity living) {
-        AttributeInstance attributeInstance = living.getAttribute(PICKUP_RANGE);
+    public static void applyPickupRange(Player player) {
+        AttributeInstance attributeInstance = player.getAttribute(PICKUP_RANGE);
         float originalRange = attributeInstance == null ? 0.0F : (float) attributeInstance.getValue();
-        float range = NeoForge.EVENT_BUS.post(new RangePickupItemEvent.Pre(living, originalRange)).getRange();
+        float range = NeoForge.EVENT_BUS.post(new RangePickupItemEvent.Pre(player, originalRange)).getRange();
         if (range <= 0.0F) return;
-        living.level().getEntitiesOfClass(
+        player.level().getEntitiesOfClass(
                 ItemEntity.class,
-                new AABB(living.getOnPos()).inflate(range),
+                new AABB(player.getOnPos()).inflate(range),
                 itemEntity -> !itemEntity.hasPickUpDelay()
         ).forEach(itemEntity -> {
-            if (itemEntity.isRemoved() || NeoForge.EVENT_BUS.post(new RangePickupItemEvent.Post(living, itemEntity)).isCanceled()) return;
-            itemEntity.addDeltaMovement(living.position().subtract(itemEntity.getX(), itemEntity.getY(), itemEntity.getZ()).normalize().scale(0.05F).add(0, 0.04F, 0));
+            if (itemEntity.isRemoved() || NeoForge.EVENT_BUS.post(new RangePickupItemEvent.Post(player, itemEntity, range)).isCanceled()) return;
+            itemEntity.addDeltaMovement(player.position().subtract(itemEntity.getX(), itemEntity.getY(), itemEntity.getZ()).normalize().scale(0.05F).add(0, 0.04F, 0));
             itemEntity.move(MoverType.SELF, itemEntity.getDeltaMovement());
         });
     }

@@ -14,7 +14,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class TargetingConditionsMixin {
     @Inject(method = "test", at = @At(value = "RETURN", ordinal = 7), cancellable = true)
     private void unTest(@Nullable LivingEntity attacker, LivingEntity target, CallbackInfoReturnable<Boolean> cir) {
-        if (attacker != null && TCUtils.getAccessoriesValue(target, ValueType.MOB$IGNORE).contains(attacker.getType())) {
+        if (cir.getReturnValue() && attacker != null && TCUtils.getAccessoriesValue(target, ValueType.MOB$IGNORE).contains(attacker.getType())) {
             cir.setReturnValue(false);
         }
     }

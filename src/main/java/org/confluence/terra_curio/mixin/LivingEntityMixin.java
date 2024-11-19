@@ -12,19 +12,33 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.api.primitive.ValueType;
-import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.mixed.IEntity;
+import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.mixed.SelfGetter;
 import org.confluence.terra_curio.util.TCUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.*;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin implements SelfGetter<LivingEntity> {
+public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<LivingEntity> {
+    @Unique
+    private int terra_curio$totem_cooldown = -1;
+
+    @Override
+    public void terra_curio$setTotemCooldown(int cooldown) {
+        this.terra_curio$totem_cooldown = cooldown;
+    }
+
+    @Override
+    public int terra_curio$getTotemCooldown() {
+        return terra_curio$totem_cooldown;
+    }
+
     @Shadow
     public abstract boolean hasEffect(Holder<MobEffect> effect);
 
@@ -97,9 +111,16 @@ public abstract class LivingEntityMixin implements SelfGetter<LivingEntity> {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void tick(CallbackInfo ci) {
-        TCAttributes.applyPickupRange(self());
-        CompoundTag data = self().getPersistentData();
-        int cooldown = data.getInt("terra_curio:totem_cooldown");
-        if (cooldown > 0) data.putInt("terra_curio:totem_cooldown", cooldown - 1);
+        if (terra_curio$totem_cooldown > 0) this.terra_curio$totem_cooldown--;
+    }
+
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    private void saveData(CompoundTag compound, CallbackInfo ci) {
+        compound.putInt("terra_curio:totem_cooldown", terra_curio$totem_cooldown);
+    }
+
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    private void readData(CompoundTag compound, CallbackInfo ci) {
+        this.terra_curio$totem_cooldown = compound.getInt("terra_curio:totem_cooldown");
     }
 }

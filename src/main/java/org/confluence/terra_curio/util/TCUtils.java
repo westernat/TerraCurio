@@ -26,8 +26,8 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.EffectCures;
 import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.common.util.FakePlayer;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
@@ -38,6 +38,7 @@ import org.confluence.terra_curio.common.entity.projectile.BeeProjectile;
 import org.confluence.terra_curio.common.entity.projectile.StarCloakEntity;
 import org.confluence.terra_curio.common.init.*;
 import org.confluence.terra_curio.mixed.IEntity;
+import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.network.s2c.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -70,10 +71,6 @@ public final class TCUtils {
         } else {
             return origin + randomSource.nextFloat() * (bound - origin);
         }
-    }
-
-    public static boolean isServerNotFake(Player player) {
-        return player instanceof ServerPlayer && !(player instanceof FakePlayer);
     }
 
     public static void applyFireAttack(Player player, Entity entity) {
@@ -287,21 +284,21 @@ public final class TCUtils {
     }
 
     public static boolean applyTotemAbility(LivingEntity living) {
-        int cooldown = getAccessoriesValue(living, ValueType.TOTEM$WITH$COOLDOWN);
-        CompoundTag data = living.getPersistentData();
-        if (cooldown > 0) {
-            if (data.getInt("terra_curio:totem_cooldown") <= 0) {
+        ILivingEntity iLiving = (ILivingEntity) living;
+        if (iLiving.terra_curio$getTotemCooldown() == 0) {
+            int cooldown = getAccessoriesValue(living, ValueType.TOTEM$WITH$COOLDOWN);
+            if (cooldown > 0) {
                 living.setHealth(1.0F);
-                living.removeEffectsCuredBy(net.neoforged.neoforge.common.EffectCures.PROTECTED_BY_TOTEM);
+                living.removeEffectsCuredBy(EffectCures.PROTECTED_BY_TOTEM);
                 living.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
                 living.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
                 living.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
                 living.level().broadcastEntityEvent(living, EntityEvent.TALISMAN_ACTIVATE);
-                data.putInt("terra_curio:totem_cooldown", cooldown);
+                iLiving.terra_curio$setTotemCooldown(cooldown);
                 return true;
+            } else {
+                iLiving.terra_curio$setTotemCooldown(-1);
             }
-        } else {
-            data.putInt("terra_curio:totem_cooldown", -1);
         }
         return false;
     }
