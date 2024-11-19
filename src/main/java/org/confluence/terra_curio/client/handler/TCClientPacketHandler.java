@@ -29,6 +29,8 @@ public final class TCClientPacketHandler {
     private static boolean hasCthulhu = false;
     private static boolean hasTabi = false;
     private static boolean hasMagiluminescence = false;
+    private static boolean canFloating = false;
+    public static boolean floating = false;
     private static int rightClickSubtractor = 0;
     private static final Int2IntMap pickupDelayStorage = new Int2IntArrayMap();
     private static final Int2IntMap pickupDelayCounter = Util.make(new Int2IntArrayMap(), map -> map.defaultReturnValue(0));
@@ -49,6 +51,10 @@ public final class TCClientPacketHandler {
         return hasMagiluminescence;
     }
 
+    public static boolean isCanFloating() {
+        return canFloating;
+    }
+
     public static int getRightClickSubtractor() {
         return rightClickSubtractor;
     }
@@ -65,6 +71,7 @@ public final class TCClientPacketHandler {
         ScopeFovHandler.hasScope = (item & SCOPE) == SCOPE;
         GravitationHandler.hasGlobe = (item & GRAVITY_GLOBE) == GRAVITY_GLOBE;
         hasMagiluminescence = (item & MAGILUMINESCENCE) == MAGILUMINESCENCE;
+        canFloating = (item & FLOAT_ON_LIQUID_SURFACE) == FLOAT_ON_LIQUID_SURFACE;
     }
 
     public static void handleItemPickupDelay(SetItemEntityPickupDelayPacketS2C packet) {

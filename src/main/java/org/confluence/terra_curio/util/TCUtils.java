@@ -33,6 +33,7 @@ import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
+import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.component.NbtComponent;
 import org.confluence.terra_curio.common.entity.projectile.BeeProjectile;
 import org.confluence.terra_curio.common.entity.projectile.StarCloakEntity;
@@ -42,6 +43,7 @@ import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.network.s2c.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
@@ -50,6 +52,7 @@ import static org.confluence.terra_curio.api.primitive.ValueType.*;
 
 public final class TCUtils {
     public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(TerraCurio.asResource("ice_speed"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    public static final Vec3 FLOAT_UP = new Vec3(0.0, 1.0, 0.0);
 
     @ApiStatus.Internal
     public static void forConfluence$Inject() {}
@@ -309,5 +312,13 @@ public final class TCUtils {
 
     public static <T, V extends PrimitiveValue<T>> T getAccessoriesValue(LivingEntity living, ValueType<T, V> type) {
         return living.getData(TCAttachments.ACCESSORIES).getValue(type);
+    }
+
+    public static @Nullable AccessoriesComponent getAccessoriesComponent(ItemStack itemStack) {
+        AccessoriesComponent component = itemStack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+        if (component != null || (component = itemStack.get(TCDataComponentTypes.ACCESSORIES)) != null) {
+            return component;
+        }
+        return null;
     }
 }

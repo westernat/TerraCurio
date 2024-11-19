@@ -19,9 +19,8 @@ import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
-import org.confluence.terra_curio.common.init.TCDataMaps;
 import org.confluence.terra_curio.util.CuriosUtils;
+import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -33,6 +32,7 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     public static final int SCOPE = 1 << 3;
     public static final int GRAVITY_GLOBE = 1 << 4;
     public static final int MAGILUMINESCENCE = 1 << 5;
+    public static final int FLOAT_ON_LIQUID_SURFACE = 1 << 6;
     public static final Object2IntMap<ValueType<Unit, UnitValue>> MAP = Util.make(new Object2IntArrayMap<>(), map -> {
         map.put(ValueType.AUTO$ATTACK, AUTO_ATTACK);
         map.put(ValueType.SHIELD$OF$CTHULHU, SHIELD_OF_CTHULHU);
@@ -40,6 +40,7 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
         map.put(ValueType.SCOPE, SCOPE);
         map.put(ValueType.GRAVITY$GLOBE, GRAVITY_GLOBE);
         map.put(ValueType.MAGILUMINESCENCE, MAGILUMINESCENCE);
+        map.put(ValueType.FLOAT$ON$LIQUID$SURFACE, FLOAT_ON_LIQUID_SURFACE);
     });
 
     public static final Type<CurioExistsPacketS2C> TYPE = new Type<>(TerraCurio.asResource("curio_exists"));
@@ -67,8 +68,8 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     public static void sendToClient(ServerPlayer player) {
         int item = 0;
         for (ItemStack itemStack : CuriosUtils.getCurios(player)) {
-            AccessoriesComponent component = itemStack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
-            if (component != null || (component = itemStack.get(TCDataComponentTypes.ACCESSORIES)) != null) {
+            AccessoriesComponent component = TCUtils.getAccessoriesComponent(itemStack);
+            if (component != null) {
                 Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> types = component.types();
                 for (Object2IntMap.Entry<ValueType<Unit, UnitValue>> entry : MAP.object2IntEntrySet()) {
                     if (types.containsKey(entry.getKey())) item |= entry.getIntValue();

@@ -20,10 +20,9 @@ import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
-import org.confluence.terra_curio.common.init.TCDataMaps;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.util.MobEntityTypesTest;
+import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -124,8 +123,8 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                 for (int i = 0; i < stackHandler.getSlots(); i++) {
                     ItemStack stack = stackHandler.getStackInSlot(i);
                     if (stack.isEmpty()) continue;
-                    AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
-                    if (component == null && (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
+                    AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
+                    if (component == null) continue;
                     Item item = stack.getItem();
 
                     for (Map.Entry<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> entry : component.types().entrySet()) {

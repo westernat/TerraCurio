@@ -15,9 +15,8 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.InformationHandler;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
-import org.confluence.terra_curio.common.init.TCDataMaps;
 import org.confluence.terra_curio.util.CuriosUtils;
+import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -65,8 +64,8 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         byte compass = 0;
         byte depthMeter = 0;
         for (ItemStack stack : itemStacks) {
-            AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
-            if (component == null && (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
+            AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
+            if (component == null) continue;
             if (component.contains(ValueType.FULL$INFORMATION)) {
                 PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), FULL_MYSELF_ARRAY));
                 return;
@@ -109,8 +108,8 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         byte compass = -128;
         byte depthMeter = -128;
         for (ItemStack stack : itemStacks) {
-            AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
-            if (component == null && (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
+            AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
+            if (component == null) continue;
             if (component.contains(ValueType.FULL$INFORMATION)) {
                 PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), FULL_REMOTE_ARRAY));
                 return;

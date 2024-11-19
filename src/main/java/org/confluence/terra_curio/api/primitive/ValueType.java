@@ -49,6 +49,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Unit, UnitValue> SCOPE = ofUnit("scope");
     public static final ValueType<Unit, UnitValue> GRAVITY$GLOBE = ofUnit("gravity_globe");
     public static final ValueType<Unit, UnitValue> MAGILUMINESCENCE = ofUnit("magiluminescence");
+    public static final ValueType<Unit, UnitValue> FLOAT$ON$LIQUID$SURFACE = ofUnit("float_on_liquid_surface");
     // require updates
     public static final ValueType<Unit, UnitValue> FIRE$ATTACK = ofUnit("fire_attack");
     public static final ValueType<Unit, UnitValue> BRAIN$OF$CONFUSION = ofUnit("brain_of_confusion");

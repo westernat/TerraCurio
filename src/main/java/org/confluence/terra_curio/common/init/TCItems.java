@@ -226,8 +226,6 @@ public final class TCItems { // todo 全换成data map
             GOBLIN_TECH = registerCurio("goblin_tech", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(units(ValueType.METAL$DETECTOR, ValueType.STOPWATCH, ValueType.DPS$METER))), // 哥布林数据仪
             FISH_FINDER = registerCurio("fish_finder", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(units(ValueType.FISHERMANS$POCKET$GUIDE, ValueType.WEATHER$RADIO, ValueType.SEXTANT))), // 探鱼器
             PDA = registerCurio("pda", builder -> builder.rarity(PINK).jeiInfos(0).tooltips(11).accessories(units(ValueType.FULL$INFORMATION))); // 个人数字助手
-            /* 标尺 */
-            /* 机械标尺 */
 
     public static final Supplier<BaseCurioItem> STEP_STOOL = registerDirectly("step_stool", name -> new StepStool(BaseCurioItem.builder(name))), // 梯凳
             /* 飞毯 */
@@ -384,7 +382,7 @@ public final class TCItems { // todo 全换成data map
                     ).attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 马掌气球束
-            /* 浮游圈 */
+            INNER_TUBE = registerCurio("inner_tube", builder -> builder.rarity(WHITE).accessories(units(ValueType.FLOAT$ON$LIQUID$SURFACE))),
             FLIPPER = registerCurio("flipper", builder -> builder.noTooltip().attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)), // 脚蹼
             /* 潜水装备 */
             /* 水母潜水装备 */

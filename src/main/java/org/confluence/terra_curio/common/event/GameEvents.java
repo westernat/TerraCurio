@@ -101,10 +101,10 @@ public final class GameEvents {
         amount = TCUtils.applyBrainOfConfusion(living, random, damageSource, amount);
 
         if (TCCommonConfigs.RANDOM_ATTACK_DAMAGE.get()) {
-            amount *= TCUtils.forConfluence$ModifyExpression(TCUtils.nextFloat(random,
+            amount *= TCUtils.nextFloat(random,
                     TCCommonConfigs.RANDOM_ATTACK_DAMAGE_MIN.get().floatValue(),
-                    TCCommonConfigs.RANDOM_ATTACK_DAMAGE_MAX.get().floatValue())
-            ); // todo mixin here
+                    TCCommonConfigs.RANDOM_ATTACK_DAMAGE_MAX.get().floatValue()
+            );
         }
         AttackDamagePacketS2C.sendToClient(amount, damageSource.getEntity());
         event.setNewDamage(amount);
