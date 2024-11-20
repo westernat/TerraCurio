@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
@@ -52,7 +53,6 @@ import static org.confluence.terra_curio.api.primitive.ValueType.*;
 
 public final class TCUtils {
     public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(TerraCurio.asResource("ice_speed"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-    public static final Vec3 FLOAT_UP = new Vec3(0.0, 1.0, 0.0);
 
     @ApiStatus.Internal
     public static void forConfluence$Inject() {}
@@ -93,12 +93,12 @@ public final class TCUtils {
 
     public static boolean isInvulnerableTo(Entity self, DamageSource damageSource) {
         if (!(self instanceof LivingEntity living)) return false;
-        AccessoriesAttachment attachment = self.getData(TCAttachments.ACCESSORIES);
+        AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
         Entity attacker = damageSource.getEntity();
         if (attacker != null && attachment.getValue(MOB$IGNORE).contains(attacker.getType())) {
             return true;
         }
-        if (attachment.contains(SHIELD$OF$CTHULHU) && ((IEntity) living).terra_curio$isOnCthulhuSprinting()) {
+        if (((IEntity) living).terra_curio$isOnCthulhuSprinting() && attachment.contains(SHIELD$OF$CTHULHU)) {
             return true;
         }
         if (attachment.contains(FIRE$IMMUNE) && damageSource.is(DamageTypes.IN_FIRE) ||
@@ -305,6 +305,40 @@ public final class TCUtils {
             }
         }
         return false;
+    }
+
+    public static void applyCthulhuTouch(Player player, Entity touched) {
+        if (((IEntity) player).terra_curio$isOnCthulhuSprinting()) {
+            Vec3 vector = player.getDeltaMovement();
+            touched.addDeltaMovement(new Vec3(vector.x * 1.6, 0.6, vector.z * 1.6));
+            touched.hurt(player.damageSources().playerAttack(player), 7.8F);
+            player.setDeltaMovement(vector.scale(-0.9));
+            ((IEntity) player).terra_curio$setCthulhuSprintingTime(20);
+        }
+    }
+
+    public static void applyCthulhuSprinting(boolean bool, Level level, Entity self) {
+        if (bool && !level.isClientSide && self instanceof LivingEntity living) {
+            if (((IEntity) self).terra_curio$getCthulhuSprintingTime() == 0 && TCUtils.hasAccessoriesType(living, ValueType.SHIELD$OF$CTHULHU)) {
+                float f = living.getYRot() * Mth.DEG_TO_RAD;
+                double factor = living.onGround() ? 1.6 : 1.2;
+                living.setDeltaMovement(living.getDeltaMovement().add(-Mth.sin(f) * factor, 0.0D, Mth.cos(f) * factor));
+                ((IEntity) self).terra_curio$setCthulhuSprintingTime(32);
+            }
+        }
+    }
+
+    public static boolean applyLavaImmune(boolean original, Entity self) {
+        if (!self.level().isClientSide) {
+            if (original) {
+                if (self.getData(TCAttachments.ACCESSORIES).decreaseLavaImmuneTicks()) {
+                    return false;
+                }
+            } else {
+                self.getData(TCAttachments.ACCESSORIES).increaseLavaImmuneTicks();
+            }
+        }
+        return original;
     }
 
     public static boolean hasAccessoriesType(LivingEntity living, ValueType<Unit, UnitValue> type) {
