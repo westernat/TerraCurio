@@ -65,7 +65,7 @@ public abstract class RangePickupItemEvent extends PlayerEvent {
         }
 
         public boolean canPickupWithin(float range) {
-            return range >= distanceTo;
+            return range >= getDistanceTo();
         }
     }
 }
