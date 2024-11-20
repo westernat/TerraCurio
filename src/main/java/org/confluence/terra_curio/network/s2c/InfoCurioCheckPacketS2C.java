@@ -48,7 +48,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         });
     }
 
-    public static void sendToPlayer(ServerPlayer serverPlayer, Inventory inventory) {
+    public static void sendToClient(ServerPlayer serverPlayer, Inventory inventory) {
         ArrayList<ItemStack> itemStacks = CuriosUtils.getCurios(serverPlayer);
         itemStacks.addAll(inventory.items);
         byte watch = 0;

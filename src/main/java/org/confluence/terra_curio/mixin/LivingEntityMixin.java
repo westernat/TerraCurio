@@ -9,7 +9,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.init.TCEffects;
@@ -20,7 +19,10 @@ import org.confluence.terra_curio.util.TCUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.*;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -56,37 +58,6 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
         if (cir.getReturnValue() && TCUtils.hasAccessoriesType(self(), ValueType.FROZEN$IMMUNE)) {
             cir.setReturnValue(false);
         }
-    }
-
-    @Inject(method = "canStandOnFluid", at = @At("RETURN"), cancellable = true)
-    private void standOnFluid(FluidState fluidState, CallbackInfoReturnable<Boolean> cir) {
-        if (fluidState.isEmpty()) return;
-        LivingEntity self = self();
-        if (self.isCrouching()) {
-            cir.setReturnValue(false);
-        } else if (TCUtils.getAccessoriesValue(self, ValueType.FLUID$WALK).stream().anyMatch(fluidState::is)) {
-            cir.setReturnValue(true);
-        }
-    }
-
-    @Redirect(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canStandOnFluid(Lnet/minecraft/world/level/material/FluidState;)Z"))
-    private boolean onFluid(LivingEntity instance, FluidState fluidState) {
-        return false;
-    }
-
-    @ModifyArg(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 0))
-    private Vec3 waterWalk(Vec3 par1) {
-        return TCUtils.getWalkVec(self(), par1);
-    }
-
-    @ModifyArg(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 2))
-    private Vec3 lavaJump(Vec3 par1) {
-        return TCUtils.getWalkVec(self(), par1);
-    }
-
-    @ModifyArg(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 4))
-    private Vec3 lavaWalk(Vec3 par1) {
-        return TCUtils.getWalkVec(self(), par1);
     }
 
     @WrapOperation(method = "getDamageAfterArmorAbsorb", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(Lnet/minecraft/world/entity/LivingEntity;FLnet/minecraft/world/damagesource/DamageSource;FF)F"))

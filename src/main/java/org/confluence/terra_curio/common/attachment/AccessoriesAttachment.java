@@ -57,7 +57,6 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         list.add(ValueType.LAVA$IMMUNE$TICKS);
         list.add(ValueType.RIGHT$CLICK$DELAY$SUBSTRACTOR);
         list.add(ValueType.MOB$IGNORE);
-        list.add(ValueType.FLUID$WALK);
         list.add(ValueType.WALL$CLIMB);
         list.add(ValueType.FART);
         list.add(ValueType.SAND$STORM);

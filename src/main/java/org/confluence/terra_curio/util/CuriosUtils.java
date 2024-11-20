@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.util;
 
-import com.google.common.util.concurrent.AtomicDouble;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -20,7 +19,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
 import java.util.function.Predicate;
 
 public class CuriosUtils {
@@ -72,21 +70,24 @@ public class CuriosUtils {
         return !noSameCurio(living, curio);
     }
 
-    public static <C> double calculateValue(LivingEntity living, Class<C> clazz, Function<C, Number> function, double baseValue) {
-        AtomicDouble atomic = new AtomicDouble(baseValue);
+    public static <T, V extends PrimitiveValue<T>> T calculateValue(LivingEntity living, ValueType<T, V> type) {
+        AtomicReference<V> atomic = new AtomicReference<>(type.newInstance(type.defaultValue()));
         CuriosApi.getCuriosInventory(living).ifPresent(handler -> {
             for (ICurioStacksHandler curioStacksHandler : handler.getCurios().values()) {
                 IDynamicStackHandler stackHandler = curioStacksHandler.getStacks();
                 for (int i = 0; i < stackHandler.getSlots(); i++) {
                     ItemStack stack = stackHandler.getStackInSlot(i);
-                    Item item = stack.getItem();
-                    if (!stack.isEmpty() && clazz.isInstance(item)) {
-                        atomic.addAndGet(function.apply(clazz.cast(item)).doubleValue());
-                    }
+                    if (stack.isEmpty()) continue;
+                    AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
+                    if (component == null) continue;
+                    V other = component.get(type);
+                    if (other == null) continue;
+                    T t = atomic.get().combine(other, type.combineRule());
+                    atomic.set(type.newInstance(t));
                 }
             }
         });
-        return atomic.get();
+        return atomic.get().get();
     }
 
     public static <C> Optional<C> findCurio(LivingEntity living, Class<C> clazz) {

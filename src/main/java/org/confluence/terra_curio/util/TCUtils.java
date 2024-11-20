@@ -111,7 +111,7 @@ public final class TCUtils {
     }
 
     public static float applyInjuryFree(LivingEntity living, float amount) {
-        float injuryFree = TCUtils.getAccessoriesValue(living, INJURY$FREE);
+        float injuryFree = getAccessoriesValue(living, INJURY$FREE);
         return amount * (1.0F - injuryFree);
     }
 
@@ -194,12 +194,13 @@ public final class TCUtils {
     }
 
     public static void resetClientPacket(ServerPlayer serverPlayer) {
-        InfoCurioCheckPacketS2C.sendToPlayer(serverPlayer, serverPlayer.getInventory());
+        InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
         CurioExistsPacketS2C.sendToClient(serverPlayer);
         PlayerClimbPacketS2C.sendToClient(serverPlayer);
         PlayerJumpPacketS2C.sendToClient(serverPlayer);
         PlayerFlyPacketS2C.sendToClient(serverPlayer);
         RightClickSubtractorPacketS2C.sendToClient(serverPlayer);
+        FluidWalkUpdatePacketS2C.sendToClient(serverPlayer);
     }
 
     public static @NotNull CompoundTag getItemStackNbt(ItemStack itemStack) {
@@ -264,16 +265,16 @@ public final class TCUtils {
         }
     }
 
-    public static Vec3 getWalkVec(LivingEntity living, Vec3 par1) {
-        if (living instanceof Player && living.getEyeInFluidType() == NeoForgeMod.EMPTY_TYPE.value()) {
-            if (living.canStandOnFluid(living.level().getFluidState(living.blockPosition()))) {
-                AttributeInstance instance = living.getAttribute(Attributes.MOVEMENT_SPEED);
-                if (instance == null) return par1;
-                double horizon = Math.min(0.91 * living.getSpeed() / instance.getBaseValue(), 0.93);
-                return living.getDeltaMovement().multiply(horizon, 1.0, horizon);
+    public static void applyFluidWalk(Player player) {
+        if (player.getEyeInFluidType() == NeoForgeMod.EMPTY_TYPE.value()) {
+            BlockPos pos = player.blockPosition();
+            Level level = player.level();
+            if (level.getFluidState(pos.above()).isEmpty() && player.canStandOnFluid(level.getFluidState(pos))) {
+                Vec3 motion = player.getDeltaMovement();
+                player.setDeltaMovement(motion.x, Math.max(0.0, motion.y), motion.z);
+                player.setOnGround(true);
             }
         }
-        return par1;
     }
 
     public static float applyArmorPass(DamageSource damageSource, float armorValue) {

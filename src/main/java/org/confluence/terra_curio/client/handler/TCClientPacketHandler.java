@@ -6,20 +6,30 @@ import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
 import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
 import org.confluence.terra_curio.network.s2c.RightClickSubtractorPacketS2C;
 import org.confluence.terra_curio.network.s2c.SetItemEntityPickupDelayPacketS2C;
+import org.confluence.terra_curio.util.CuriosUtils;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import static org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C.*;
 
@@ -34,6 +44,7 @@ public final class TCClientPacketHandler {
     private static int rightClickSubtractor = 0;
     private static final Int2IntMap pickupDelayStorage = new Int2IntArrayMap();
     private static final Int2IntMap pickupDelayCounter = Util.make(new Int2IntArrayMap(), map -> map.defaultReturnValue(0));
+    private static final Set<FluidState> walkableFluidStates = new HashSet<>();
 
     public static boolean couldAutoAttack() {
         return autoAttack;
@@ -76,6 +87,10 @@ public final class TCClientPacketHandler {
 
     public static void handleItemPickupDelay(SetItemEntityPickupDelayPacketS2C packet) {
         pickupDelayStorage.put(packet.id(), packet.delay());
+    }
+
+    public static Set<FluidState> getWalkableFluidStates() {
+        return walkableFluidStates;
     }
 
     public static void handle(Minecraft minecraft, LocalPlayer player) {
@@ -130,13 +145,26 @@ public final class TCClientPacketHandler {
         }
     }
 
+    public static void handleFluidWalk(Player player) {
+        walkableFluidStates.clear();
+        Set<TagKey<Fluid>> tagKeys = CuriosUtils.calculateValue(player, ValueType.FLUID$WALK);
+        BuiltInRegistries.FLUID.stream().flatMap(fluid -> fluid.getStateDefinition().getPossibleStates().stream()).forEach(state -> {
+            if (tagKeys.stream().anyMatch(state::is)) {
+                walkableFluidStates.add(state);
+            }
+        });
+    }
+
     public static void reset() {
         autoAttack = false;
         hasCthulhu = false;
         hasTabi = false;
         hasMagiluminescence = false;
         rightClickSubtractor = 0;
+        canFloating = false;
+        floating = false;
         pickupDelayStorage.clear();
         pickupDelayCounter.clear();
+        walkableFluidStates.clear();
     }
 }

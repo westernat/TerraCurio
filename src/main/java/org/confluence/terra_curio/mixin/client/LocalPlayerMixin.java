@@ -3,7 +3,7 @@ package org.confluence.terra_curio.mixin.client;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.NeoForgeMod;
@@ -11,6 +11,7 @@ import net.neoforged.neoforge.common.extensions.ILivingEntityExtension;
 import net.neoforged.neoforge.fluids.FluidType;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
+import org.confluence.terra_curio.util.TCUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -38,7 +39,7 @@ public abstract class LocalPlayerMixin implements ILivingEntityExtension {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void floating(CallbackInfo ci) {
-        LivingEntity self = self();
+        Player self = (Player) self();
         if (TCClientPacketHandler.isCanFloating() && !self.isCrouching()) {
             FluidType water = NeoForgeMod.WATER_TYPE.value();
             if (isEyeInFluidType(water)) {
@@ -55,6 +56,7 @@ public abstract class LocalPlayerMixin implements ILivingEntityExtension {
             }
         } else {
             TCClientPacketHandler.floating = false;
+            TCUtils.applyFluidWalk(self);
         }
     }
 }

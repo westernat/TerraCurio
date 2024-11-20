@@ -40,9 +40,11 @@ public class BasePoint extends BaseSpeedBoots {
                 if (actually > 0) {
                     PacketDistributor.sendToServer(new SpeedBootsNBTPacketC2S(slotContext.index(), value));
                 }
-                float ratio = (float) value / maxSpeed;
-                if (ClientConfigs.playShoesSound && player.level().getGameTime() % (ratio < 0.5F ? 6L : 4L) == 0) {
-                    player.playSound(TCSoundEvents.SHOES_WALK.get());
+                if (player.onGround()) {
+                    float ratio = (float) value / maxSpeed;
+                    if (ClientConfigs.playShoesSound && player.level().getGameTime() % (ratio < 0.5F ? 6L : 4L) == 0) {
+                        player.playSound(TCSoundEvents.SHOES_WALK.get());
+                    }
                 }
                 if (ClientConfigs.showShoesParticle) {
                     // todo particle

@@ -166,7 +166,7 @@ public final class GameEvents {
         player.getData(TCAttachments.ACCESSORIES).flushAbility(player);
         ServerPlayer serverPlayer = (ServerPlayer) player;
         TCUtils.resetClientPacket(serverPlayer);
-        InfoCurioCheckPacketS2C.sendToPlayer(serverPlayer, serverPlayer.getInventory());
+        InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
     }
 
     @SubscribeEvent

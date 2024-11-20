@@ -5,7 +5,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.InformationHandler;
 import org.jetbrains.annotations.NotNull;
@@ -32,5 +34,11 @@ public record WindSpeedPacketS2C(float x, float z) implements CustomPacketPayloa
             context.disconnect(Component.translatable("neoforge.network.invalid_flow", e.getMessage()));
             return null;
         });
+    }
+
+    public static void sendToAll(float x, float z) {
+        if (ServerLifecycleHooks.getCurrentServer() != null) {
+            PacketDistributor.sendToAllPlayers(new WindSpeedPacketS2C(x, z));
+        }
     }
 }

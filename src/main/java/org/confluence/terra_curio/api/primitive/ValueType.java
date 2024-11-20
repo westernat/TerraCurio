@@ -42,7 +42,8 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Unit, UnitValue> STOPWATCH = ofUnit("stopwatch");
     public static final ValueType<Unit, UnitValue> COMPASS = ofUnit("compass");
     public static final ValueType<Unit, UnitValue> DEPTH$METER = ofUnit("depth_meter");
-    // client side curio_exits
+    // client side
+    public static final ValueType<Set<TagKey<Fluid>>, FluidTagsValue> FLUID$WALK = create("fluid_walk", FluidTagsValue.EXPANSION, FluidTagsValue.CODEC, Set.of(), FluidTagsValue::new);
     public static final ValueType<Unit, UnitValue> AUTO$ATTACK = ofUnit("auto_attack");
     public static final ValueType<Unit, UnitValue> SHIELD$OF$CTHULHU = ofUnit("shield_of_cthulhu");
     public static final ValueType<Unit, UnitValue> SPRINTING = ofUnit("sprinting");
@@ -71,7 +72,6 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Integer, IntegerValue> LAVA$IMMUNE$TICKS = ofInteger("lava_immune_ticks", IntegerValue.GET_MAX, 0);
     public static final ValueType<Integer, IntegerValue> RIGHT$CLICK$DELAY$SUBSTRACTOR = ofInteger("right_click_delay_substractor", IntegerValue.GET_MAX, 0);
     public static final ValueType<Set<EntityType<?>>, EntityTypesValue> MOB$IGNORE = create("mob_ignore", EntityTypesValue.EXPANSION, EntityTypesValue.CODEC, Set.of(), EntityTypesValue::new);
-    public static final ValueType<Set<TagKey<Fluid>>, FluidTagsValue> FLUID$WALK = create("fluid_walk", FluidTagsValue.EXPANSION, FluidTagsValue.CODEC, Set.of(), FluidTagsValue::new);
     public static final ValueType<Byte, ByteValue> WALL$CLIMB = create("wall_climb", ByteValue.ADDITION_WITHIN_0_TO_2, ByteValue.CODEC, (byte) 0, ByteValue::new);
     public static final ValueType<Float, FloatValue> FART = ofFloat("fart", FloatValue.GET_SELF, 0.0F);
     public static final ValueType<Tuple<Float, Integer>, OneTimeJumpAbilityValue> SAND$STORM = create("sand_storm", OneTimeJumpAbilityValue.COMBINE_RULE, OneTimeJumpAbilityValue.CODEC, new Tuple<>(0.0F, 0), OneTimeJumpAbilityValue::new);
