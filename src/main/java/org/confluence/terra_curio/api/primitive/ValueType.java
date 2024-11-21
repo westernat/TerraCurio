@@ -42,6 +42,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Unit, UnitValue> STOPWATCH = ofUnit("stopwatch");
     public static final ValueType<Unit, UnitValue> COMPASS = ofUnit("compass");
     public static final ValueType<Unit, UnitValue> DEPTH$METER = ofUnit("depth_meter");
+    public static final ValueType<Unit, UnitValue> MECHANICAL$LENS = ofUnit("mechanical_lens");
     // client side
     public static final ValueType<Set<TagKey<Fluid>>, FluidTagsValue> FLUID$WALK = create("fluid_walk", FluidTagsValue.EXPANSION, FluidTagsValue.CODEC, Set.of(), FluidTagsValue::new);
     public static final ValueType<Unit, UnitValue> AUTO$ATTACK = ofUnit("auto_attack");

@@ -46,6 +46,7 @@ public final class TCItems { // todo 全换成data map
     public static final Supplier<MasterItem> ICON = OTHERS.register("icon", MasterItem::new);
     public static final Supplier<BasePoint> BASE_POINT = OTHERS.register("base_point", BasePoint::new);
     public static final Supplier<Everlasting> EVERLASTING = OTHERS.register("everlasting", Everlasting::new);
+    public static final Supplier<BaseCurioItem> MECHANICAL_LENS = OTHERS.register("mechanical_lens", () -> BaseCurioItem.builder("mechanical_lens").rarity(ORANGE).accessories(units(ValueType.MECHANICAL$LENS)).build()); //机械晶状体
 
     public static final Supplier<BlockItem> WORKSHOP = OTHERS.register("workshop", () -> new BlockItem(TCBlocks.WORKSHOP.get(), new Item.Properties()));
     public static final Supplier<DemonHeart> DEMON_HEART = OTHERS.register("demon_heart", DemonHeart::new);

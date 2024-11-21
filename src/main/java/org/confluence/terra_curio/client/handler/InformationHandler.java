@@ -46,6 +46,7 @@ public final class InformationHandler {
     public static final int STOPWATCH = 9;
     public static final int COMPASS = 10;
     public static final int DEPTH_METER = 11;
+    public static final int MECHANICAL_LENS = 12;
 
     private static final ArrayList<Component> INFORMATION = new ArrayList<>();
     private static final byte[] INFO_DATA = new byte[InfoCurioCheckPacketS2C.ARRAY_LENGTH];
@@ -231,6 +232,10 @@ public final class InformationHandler {
         return Component.translatable("info.terra_curio.depth_meter." + (y > 63 ? "surface" : "underground"), "%.2f".formatted(y));
     }
 
+    public static boolean hasMechanicalView() {
+        return INFO_DATA[MECHANICAL_LENS] != 0;
+    }
+
     public static ArrayList<Component> getInformation() {
         return INFORMATION;
     }
@@ -262,6 +267,7 @@ public final class InformationHandler {
         setInfoData(enabled, STOPWATCH);
         setInfoData(enabled, COMPASS);
         setInfoData(enabled, DEPTH_METER);
+        setInfoData(enabled, MECHANICAL_LENS);
     }
 
     private static Component wrapHour(long dayTime) {
@@ -299,8 +305,7 @@ public final class InformationHandler {
 
     public static void handleEntityKilled(EntityKilledPacketS2C packet) {
         EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(packet.entityType());
-        tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter")
-                .append(entityType.getDescription()).append("': " + (packet.amount() + 1));
+        tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter").append(entityType.getDescription()).append("': " + (packet.amount() + 1));
     }
 
     public static void handleAttackDamage(AttackDamagePacketS2C packet, Player player) {

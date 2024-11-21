@@ -28,9 +28,9 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
             ByteBufCodecs.BYTE_ARRAY, p -> p.enabled,
             InfoCurioCheckPacketS2C::new
     );
-    public static final int ARRAY_LENGTH = 12;
-    public static final byte[] FULL_MYSELF_ARRAY = new byte[]{3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-    public static final byte[] FULL_REMOTE_ARRAY = new byte[]{-128, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+    public static final int ARRAY_LENGTH = 13;
+    public static final byte[] FULL_MYSELF_ARRAY = new byte[]{3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
+    public static final byte[] FULL_REMOTE_ARRAY = new byte[]{-128, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
 
     @Override
     public @NotNull Type<InfoCurioCheckPacketS2C> type() {
@@ -63,6 +63,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         byte stopwatch = 0;
         byte compass = 0;
         byte depthMeter = 0;
+        byte mechanicalView = 0;
         for (ItemStack stack : itemStacks) {
             AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
             if (component == null) continue;
@@ -74,21 +75,22 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
             if (watch < 1 && component.contains(ValueType.HOUR$WATCH)) watch = 1;
             else if (watch < 2 && component.contains(ValueType.HALF$HOUR$WATCH)) watch = 2;
             else if (watch < 3 && component.contains(ValueType.MINUTE$WATCH)) watch = 3;
-            if (component.contains(ValueType.WEATHER$RADIO)) weatherRadio = 1;
-            if (component.contains(ValueType.SEXTANT)) sextant = 1;
-            if (component.contains(ValueType.FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = 1;
-            if (component.contains(ValueType.METAL$DETECTOR)) metalDetector = 1;
-            if (component.contains(ValueType.LIFE$FORM$ANALYZER)) lifeFormAnalyzer = 1;
-            if (component.contains(ValueType.RADAR)) radar = 1;
-            if (component.contains(ValueType.TALLY$COUNTER)) tallyCounter = 1;
-            if (component.contains(ValueType.DPS$METER)) dpsMeter = 1;
-            if (component.contains(ValueType.STOPWATCH)) stopwatch = 1;
-            if (component.contains(ValueType.COMPASS)) compass = 1;
-            if (component.contains(ValueType.DEPTH$METER)) depthMeter = 1;
+            if (weatherRadio == 0 && component.contains(ValueType.WEATHER$RADIO)) weatherRadio = 1;
+            if (sextant == 0 && component.contains(ValueType.SEXTANT)) sextant = 1;
+            if (fishermansPocketGuide == 0 && component.contains(ValueType.FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = 1;
+            if (metalDetector == 0 && component.contains(ValueType.METAL$DETECTOR)) metalDetector = 1;
+            if (lifeFormAnalyzer == 0 && component.contains(ValueType.LIFE$FORM$ANALYZER)) lifeFormAnalyzer = 1;
+            if (radar == 0 && component.contains(ValueType.RADAR)) radar = 1;
+            if (tallyCounter == 0 && component.contains(ValueType.TALLY$COUNTER)) tallyCounter = 1;
+            if (dpsMeter == 0 && component.contains(ValueType.DPS$METER)) dpsMeter = 1;
+            if (stopwatch == 0 && component.contains(ValueType.STOPWATCH)) stopwatch = 1;
+            if (compass == 0 && component.contains(ValueType.COMPASS)) compass = 1;
+            if (depthMeter == 0 && component.contains(ValueType.DEPTH$METER)) depthMeter = 1;
+            if (mechanicalView == 0 && component.contains(ValueType.MECHANICAL$LENS)) mechanicalView = 1;
         }
         PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), new byte[]{
-                watch, weatherRadio, sextant, fishermansPocketGuide, metalDetector,
-                lifeFormAnalyzer, radar, tallyCounter, dpsMeter, stopwatch, compass, depthMeter
+                watch, weatherRadio, sextant, fishermansPocketGuide, metalDetector, lifeFormAnalyzer,
+                radar, tallyCounter, dpsMeter, stopwatch, compass, depthMeter, mechanicalView
         }));
     }
 
@@ -107,6 +109,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         byte stopwatch = -128;
         byte compass = -128;
         byte depthMeter = -128;
+        byte mechanicalView = -128;
         for (ItemStack stack : itemStacks) {
             AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
             if (component == null) continue;
@@ -118,24 +121,25 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
             if (watch > -126 && component.contains(ValueType.HOUR$WATCH)) watch = -126;
             else if (watch > -127 && component.contains(ValueType.HALF$HOUR$WATCH)) watch = -127;
             else if (watch > -128 && component.contains(ValueType.MINUTE$WATCH)) watch = -128;
-            if (component.contains(ValueType.WEATHER$RADIO)) weatherRadio = -1;
-            if (component.contains(ValueType.SEXTANT)) sextant = -1;
-            if (component.contains(ValueType.FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = -1;
-            if (component.contains(ValueType.METAL$DETECTOR)) metalDetector = -1;
-            if (component.contains(ValueType.LIFE$FORM$ANALYZER)) lifeFormAnalyzer = -1;
-            if (component.contains(ValueType.RADAR)) radar = -1;
-            if (component.contains(ValueType.TALLY$COUNTER)) tallyCounter = -1;
-            if (component.contains(ValueType.DPS$METER)) dpsMeter = -1;
-            if (component.contains(ValueType.STOPWATCH)) stopwatch = -1;
-            if (component.contains(ValueType.COMPASS)) compass = -1;
-            if (component.contains(ValueType.DEPTH$METER)) depthMeter = -1;
+            if (weatherRadio == -128 && component.contains(ValueType.WEATHER$RADIO)) weatherRadio = -1;
+            if (sextant == -128 && component.contains(ValueType.SEXTANT)) sextant = -1;
+            if (fishermansPocketGuide == -128 && component.contains(ValueType.FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = -1;
+            if (metalDetector == -128 && component.contains(ValueType.METAL$DETECTOR)) metalDetector = -1;
+            if (lifeFormAnalyzer == -128 && component.contains(ValueType.LIFE$FORM$ANALYZER)) lifeFormAnalyzer = -1;
+            if (radar == -128 && component.contains(ValueType.RADAR)) radar = -1;
+            if (tallyCounter == -128 && component.contains(ValueType.TALLY$COUNTER)) tallyCounter = -1;
+            if (dpsMeter == -128 && component.contains(ValueType.DPS$METER)) dpsMeter = -1;
+            if (stopwatch == -128 && component.contains(ValueType.STOPWATCH)) stopwatch = -1;
+            if (compass == -128 && component.contains(ValueType.COMPASS)) compass = -1;
+            if (depthMeter == -128 && component.contains(ValueType.DEPTH$METER)) depthMeter = -1;
+            if (mechanicalView == -128 && component.contains(ValueType.MECHANICAL$LENS)) mechanicalView = -1;
         }
-        boolean equals = watch == -125 && weatherRadio == -128 && sextant == -128 && fishermansPocketGuide == -128 && metalDetector == -128 &&
-                lifeFormAnalyzer == -128 && radar == -128 && tallyCounter == -128 && dpsMeter == -128 && stopwatch == -128 && compass == -128 && depthMeter == -128;
+        boolean equals = watch == -125 && weatherRadio == -128 && sextant == -128 && fishermansPocketGuide == -128 && metalDetector == -128 && lifeFormAnalyzer == -128 &&
+                radar == -128 && tallyCounter == -128 && dpsMeter == -128 && stopwatch == -128 && compass == -128 && depthMeter == -128 && mechanicalView == -128;
         if (equals) return; // 如果不需要发送, 则返回
         InfoCurioCheckPacketS2C packet = new InfoCurioCheckPacketS2C(serverPlayer.getId(), new byte[]{
-                watch, weatherRadio, sextant, fishermansPocketGuide, metalDetector,
-                lifeFormAnalyzer, radar, tallyCounter, dpsMeter, stopwatch, compass, depthMeter
+                watch, weatherRadio, sextant, fishermansPocketGuide, metalDetector, lifeFormAnalyzer,
+                radar, tallyCounter, dpsMeter, stopwatch, compass, depthMeter, mechanicalView
         });
         Team team = serverPlayer.getTeam();
         serverPlayer.serverLevel().players().forEach(player -> {
