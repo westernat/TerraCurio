@@ -17,6 +17,7 @@ import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.item.*;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
+import org.confluence.terra_curio.common.item.curio.RequiresModLoadedCurioItem;
 import org.confluence.terra_curio.common.item.curio.combat.*;
 import org.confluence.terra_curio.common.item.curio.health.BandOfRegeneration;
 import org.confluence.terra_curio.common.item.curio.master.BasePoint;
@@ -384,9 +385,14 @@ public final class TCItems { // todo 全换成data map
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 马掌气球束
             INNER_TUBE = registerCurio("inner_tube", builder -> builder.rarity(WHITE).accessories(units(ValueType.FLOAT$ON$LIQUID$SURFACE))),
             FLIPPER = registerCurio("flipper", builder -> builder.noTooltip().attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)), // 脚蹼
-            DIVING_GEAR = registerCurio("diving_gear", builder -> builder.rarity(LIGHT_RED).equipable(EquipmentSlot.HEAD).accessories(units(ValueType.DIVING)).attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)), // 潜水装备
-            /* 水母潜水装备 */
-            /* 北极潜水装备 */
+            DIVING_GEAR = registerCurio("diving_gear", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).equipable(EquipmentSlot.HEAD).accessories(units(ValueType.DIVING)).attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)), // 潜水装备
+            JELLYFISH_NECKLACE = registerDirectly("jellyfish_necklace", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(GREEN).accessories(of(ValueType.LUMINANCE, 12)), "sodiumdynamiclights")), // 水母项链
+            JELLYFISH_DIVING_GEAR = registerDirectly("jellyfish_diving_gear", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(PINK).tooltips(1).jeiInfos(0)
+                    .accessories(units(ValueType.DIVING), of(ValueType.LUMINANCE, 12), of(ValueType.EFFECT$IMMUNITIES, Set.of()))
+                    .attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE), "sodiumdynamiclights")), // 水母潜水装备
+            ARCTIC_DIVING_GEAR = registerDirectly("arctic_diving_gear", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(LIGHT_PURPLE).tooltips(2)
+                    .accessories(units(ValueType.DIVING, ValueType.ICE$SPEED, ValueType.FROZEN$IMMUNE), of(ValueType.LUMINANCE, 12))
+                    .attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE), "sodiumdynamiclights")), // 北极潜水装备
             FROG_LEG = registerCurio("frog_leg", builder -> builder
                     .tooltips(1)
                     .attribute(Attributes.SAFE_FALL_DISTANCE, 7.0, ADD_VALUE)

@@ -29,7 +29,8 @@
         "client.LocalPlayerMixin",
         "client.MouseHandlerMixin",
         "client.accessor.LocalPlayerAccessor",
-        "client.accessor.MinecraftAccessor"
+        "client.accessor.MinecraftAccessor",
+        "sodiumdynamiclights.DynamicLightHandlersMixin"
     ],
     "injectors": {
         "defaultRequire": 1

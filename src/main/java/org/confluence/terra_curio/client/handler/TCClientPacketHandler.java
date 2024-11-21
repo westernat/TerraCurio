@@ -9,6 +9,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
@@ -20,10 +21,12 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
 import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
+import org.confluence.terra_curio.network.s2c.LuminancePacketS2C;
 import org.confluence.terra_curio.network.s2c.RightClickSubtractorPacketS2C;
 import org.confluence.terra_curio.network.s2c.SetItemEntityPickupDelayPacketS2C;
 import org.confluence.terra_curio.util.CuriosUtils;
@@ -42,6 +45,8 @@ public final class TCClientPacketHandler {
     private static boolean canFloating = false;
     public static boolean floating = false;
     private static int rightClickSubtractor = 0;
+    private static int luminance = 0;
+    private static final Int2IntMap remoteLuminance = new Int2IntArrayMap();
     private static final Int2IntMap pickupDelayStorage = new Int2IntArrayMap();
     private static final Int2IntMap pickupDelayCounter = Util.make(new Int2IntArrayMap(), map -> map.defaultReturnValue(0));
     private static final Set<FluidState> walkableFluidStates = new HashSet<>();
@@ -68,6 +73,14 @@ public final class TCClientPacketHandler {
 
     public static int getRightClickSubtractor() {
         return rightClickSubtractor;
+    }
+
+    public static int getWaterLuminance(Entity entity) {
+        if (entity.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value())) {
+            if (entity == Minecraft.getInstance().player) return luminance;
+            return remoteLuminance.getOrDefault(entity.getId(), 0);
+        }
+        return 0;
     }
 
     public static void handleSubstractor(RightClickSubtractorPacketS2C packet) {
@@ -155,6 +168,14 @@ public final class TCClientPacketHandler {
         });
     }
 
+    public static void handleLuminance(LuminancePacketS2C packet, Player player) {
+        if (packet.playerId() == player.getId()) {
+            luminance = packet.luminance();
+        } else {
+            remoteLuminance.put(packet.playerId(), packet.luminance());
+        }
+    }
+
     public static void reset() {
         autoAttack = false;
         hasCthulhu = false;
@@ -163,8 +184,10 @@ public final class TCClientPacketHandler {
         rightClickSubtractor = 0;
         canFloating = false;
         floating = false;
+        luminance = 0;
         pickupDelayStorage.clear();
         pickupDelayCounter.clear();
         walkableFluidStates.clear();
+        remoteLuminance.clear();
     }
 }

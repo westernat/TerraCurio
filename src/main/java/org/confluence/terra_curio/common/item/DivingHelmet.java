@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.item;
 
+import net.minecraft.network.chat.Component;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -27,6 +28,11 @@ public class DivingHelmet extends ArmorItem {
     @Override
     public boolean isEnderMask(@NotNull ItemStack stack, @NotNull Player player, @NotNull EnderMan endermanEntity) {
         return true;
+    }
+
+    @Override
+    public @NotNull Component getName(@NotNull ItemStack stack) {
+        return Component.translatable(getDescriptionId()).withStyle(style -> style.withColor(ModRarity.GREEN.getColor()));
     }
 
     public static float apply(LivingEntity living, DamageSource damageSource, float amount) {

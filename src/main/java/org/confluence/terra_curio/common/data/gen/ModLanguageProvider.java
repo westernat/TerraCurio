@@ -36,6 +36,7 @@ public class ModLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add("creativetab.terra_curio", "Terra Curio", "泰拉饰品");
+        add("tooltip.terra_curio.requires_mod_loaded", "This accessory requires any of the following mods: %s", "该配饰需要以下任意模组：%s");
 
         add("info.terra_curio.time", "Time: [%s:%s]", "时间: [%s:%s]");
         add("info.terra_curio.radar", "Enemies: %s", "敌人: %s");
@@ -122,7 +123,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "增加抗坠落性"
                 }
         );
-        tooltipAndJeiInfo(TCItems.ANCIENT_CHISEL, "远古凿子", "“Age-old problems require age-old solutions”", "“古老的问题需要古老的解决方案”", "The item can be pass the Archaeology to obtained.", "该物品可以通过考古获得。");
+        tooltipAndJeiInfo(TCItems.ANCIENT_CHISEL, "远古凿子", "“Age-old problems require age-old solutions”", "“古老的问题需要古老的解决方案”", "The item can be obtained through Archaeology.", "该物品可以通过考古获得。");
         onlyJeiInfo(TCItems.ANGLER_EARRING, "渔夫耳环", "This item can be located in the chests found within Fisherman Villagers' houses.", "这件物品可以在渔夫村民家中的箱子中找到。");
         onlyTooltip(TCItems.ANKH_CHARM, "十字章护身符", "Grants immunity to most debuffs.", "对大部分减益免疫。");
         onlyTooltips(TCItems.ANKH_SHIELD, "十字章护盾", new String[]{"Grants immunity to most debuffs.", "Grants immunity to fire blocks"}, new String[]{"对大部分减益免疫。", "对火块免疫"});
@@ -130,7 +131,7 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyTooltip(TCItems.ARCHITECT_GIZMO_PACK, "建筑师发明背包", "Decreased 'Right Click Delay' by 2, cannot stack the decrease of its materials", "右键点击延迟降低2，且降低效果不能与其材料的降低效果叠加。");
         onlyZhName(TCItems.AVENGER_EMBLEM, "复仇者勋章");
         onlyTooltip(TCItems.BALLOON_PUFFERFISH, "气球河豚鱼", "Increases jump height", "增加跳跃高度");
-        tooltipAndJeiInfo(TCItems.BAND_OF_REGENERATION, "再生手环", "Slowly regenerates life", "缓慢再生生命", "The Band of Regeneration is an accessory that have a Chance to be dropped from Witch", "它有几率从女巫身上掉落。");
+        tooltipAndJeiInfo(TCItems.BAND_OF_REGENERATION, "再生手环", "Slowly regenerates life", "缓慢再生生命", "The Band of Regeneration is an accessory that has a Chance to be dropped from Witch", "它有几率从女巫身上掉落。");
         onlyTooltips(TCItems.BEE_CLOAK, "蜜蜂斗篷",
                 new String[]{
                         "Causes stars to fall after taking damage",
@@ -150,7 +151,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "多人模式时，敌人更可能以你为目标"
                 }
         );
-        tooltipAndJeiInfo(TCItems.BEZOAR, "牛黄", "Immunity to Poison", "对中毒免疫", "It have a Chance to be dropped from Cave Spider.", "它有几率从洞穴蜘蛛身上掉落。");
+        tooltipAndJeiInfo(TCItems.BEZOAR, "牛黄", "Immunity to Poison", "对中毒免疫", "It has a Chance to be dropped from Cave Spider.", "它有几率从洞穴蜘蛛身上掉落。");
         tooltipsAndJeiInfo(TCItems.BLACK_BELT, "黑腰带",
                 new String[]{
                         "Gives a chance to dodge attacks"
@@ -158,7 +159,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 new String[]{
                         "有几率避开攻击"
                 },
-                "It have a Chance to be dropped from Wither Skeleton.",
+                "It has a Chance to be dropped from Wither Skeleton.",
                 "它有几率从凋零骷髅身上掉落。"
         );
         tooltipAndJeiInfo(TCItems.BLINDFOLD, "蒙眼布", "Immunity to Blindness", "对失明免疫", "It can be discovered in chests found within Ancient City.", "它可以在古代城内的箱子中找到。");
@@ -208,7 +209,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "闪避后暂时增加暴击几率",
                         "被击中后可能会迷惑附近的敌人"
                 },
-                "It have a Chance to be dropped from Zombie Villager.",
+                "It has a Chance to be dropped from Zombie Villager.",
                 "它有几率从僵尸村民身上掉落。"
         );
         tooltipAndJeiInfo(TCItems.BRICK_LAYER, "砌砖刀", "Decreased 'Right Click Delay' by 1", "右键点击延迟降低1", "This item can be located in the chests found within Toolsmith Villagers' houses.", "这件物品可以在工具匠村民家中的箱子中找到。");
@@ -252,7 +253,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 }, new String[]{
                         "可沿墙滑下，按住shift键可更快地下滑",
                         "结合鞋钉使用时能力还会有所提升"
-                }, "It have a Chance to be dropped from Spider.", "它有几率从蜘蛛身上掉落。");
+                }, "It has a Chance to be dropped from Spider.", "它有几率从蜘蛛身上掉落。");
         onlyTooltips(TCItems.CLOUD_IN_A_BALLOON, "云朵气球",
                 new String[]{
                         "Allows the holder to double jump",
@@ -264,18 +265,18 @@ public class ModLanguageProvider extends LanguageProvider {
                 }
         );
         tooltipAndJeiInfo(TCItems.CLOUD_IN_A_BOTTLE, "云朵瓶", "Allows the holder to double jump", "可让持有者二连跳", "It can be found in Chests in the Mineshaft and Dungeon.", "它可以在矿井和地牢的宝箱中找到。");
-        tooltipAndJeiInfo(TCItems.COBALT_SHIELD, "钴护盾", "Grants immunity to knockback", "对击退免疫", "It have a Chance to be dropped from Ravager.", "它有几率从劫掠兽身上掉落。");
-        tooltipAndJeiInfo(TCItems.COMPASS, "罗盘", "Displays horizontal position", "显示水平位置", "The Compass have a Chance to be dropped from Bats.", "它有几率从蝙蝠身上掉落。");
+        tooltipAndJeiInfo(TCItems.COBALT_SHIELD, "钴护盾", "Grants immunity to knockback", "对击退免疫", "It has a Chance to be dropped from Ravager.", "它有几率从劫掠兽身上掉落。");
+        tooltipAndJeiInfo(TCItems.COMPASS, "罗盘", "Displays horizontal position", "显示水平位置", "The Compass has a Chance to be dropped from Bats.", "它有几率从蝙蝠身上掉落。");
         onlyTooltip(TCItems.COPPER_WATCH, "铜表", "Tell the time", "报时");
         onlyTooltip(TCItems.TIN_WATCH, "锡表", "Tell the time", "报时");
         onlyTooltip(TCItems.TUNGSTEN_WATCH, "钨表", "Tell the time", "报时");
         onlyZhName(TCItems.WEATHER_RADIO, "天气收音机");
-        tooltipAndJeiInfo(TCItems.CROSS_NECKLACE, "十字项链", "Increases length of invincibility after taking damage", "增加受到伤害后的无敌时间", "It have a Chance to be dropped from Evoker.", "它有几率从唤魔者身上掉落。");
-        tooltipAndJeiInfo(TCItems.DEMON_HEART, "恶魔之心", "Permanently increases the number of accessory slots", "永久增加配饰栏数量", "It to be dropped from Wither.", "它必定从凋零身上掉落。");
-        tooltipAndJeiInfo(TCItems.DEPTH_METER, "深度计", "Displays depth", "显示深度", "The Compass have a Chance to be dropped from Bats.", "它有几率从蝙蝠身上掉落。");
+        tooltipAndJeiInfo(TCItems.CROSS_NECKLACE, "十字项链", "Increases length of invincibility after taking damage", "增加受到伤害后的无敌时间", "It has a Chance to be dropped from Evoker.", "它有几率从唤魔者身上掉落。");
+        tooltipAndJeiInfo(TCItems.DEMON_HEART, "恶魔之心", "Permanently increases the number of accessory slots", "永久增加配饰栏数量", "It is dropped by the Wither.", "它必定从凋零身上掉落。");
+        tooltipAndJeiInfo(TCItems.DEPTH_METER, "深度计", "Displays depth", "显示深度", "The Compass has a Chance to be dropped from Bats.", "它有几率从蝙蝠身上掉落。");
         onlyZhName(TCItems.DESTROYER_EMBLEM, "毁灭者勋章");
         onlyTooltip(TCItems.DETOXIFICATION_CAPSULE, "解毒囊", "Immunity to Poison and Wither", "对中毒和凋零免疫");
-        tooltipAndJeiInfo(TCItems.DPS_METER, "每秒伤害计数器", "Displays your damage per second", "显示你的每秒伤害", "The DPS Meter have a Chance to be dropped from Creeper.", "它有几率从苦力怕身上掉落。");
+        tooltipAndJeiInfo(TCItems.DPS_METER, "每秒伤害计数器", "Displays your damage per second", "显示你的每秒伤害", "The DPS Meter has a Chance to be dropped from Creeper.", "它有几率从苦力怕身上掉落。");
         tooltipsAndJeiInfo(TCItems.DUNERIDER_BOOTS, "沙丘行者靴",
                 new String[]{
                         "The wearer can run super fast, and even faster on sand",
@@ -285,10 +286,10 @@ public class ModLanguageProvider extends LanguageProvider {
                         "穿戴者可飞速奔跑，在沙地上还能跑得更快",
                         "“无节律行走就不会引来蠕虫”"
                 },
-                "It have a Chance to be dropped from Husk.",
+                "It has a Chance to be dropped from Husk.",
                 "它有几率从尸壳身上掉落。"
         );
-        tooltipAndJeiInfo(TCItems.ENERGY_BAR, "能量棒", "Immunity to Hunger", "对饥饿免疫", "It have a Chance to be dropped from Zombified Piglin.", "它有几率从僵尸猪灵身上掉落。");
+        tooltipAndJeiInfo(TCItems.ENERGY_BAR, "能量棒", "Immunity to Hunger", "对饥饿免疫", "It has a Chance to be dropped from Zombified Piglin.", "它有几率从僵尸猪灵身上掉落。");
         onlyTooltip(TCItems.EXPLORERS_EQUIPMENT, "探险家宝具", "Immunity to Mining Fatigue and Levitation", "对挖掘疲劳和漂浮免疫");
         onlyJeiInfo(TCItems.EXTENDO_GRIP, "加长握爪", "It can be discovered in chests found within Desert Pyramids.", "它可以在沙漠神殿内的箱子中找到");
         onlyJeiInfo(TCItems.EYE_OF_THE_GOLEM, "石巨人之眼", "It can be discovered in chests found within Jungle Pyramids.", "它可以在丛林神庙内的箱子中找到");
@@ -312,8 +313,8 @@ public class ModLanguageProvider extends LanguageProvider {
                         "增加跳跃高度"
                 }
         );
-        tooltipAndJeiInfo(TCItems.FART_IN_A_JAR, "罐中臭屁", "Allows the holder to double jump", "可让持有者二连跳", "It have a Chance to be dropped from Ghost.", "它有几率从恶魂身上掉落");
-        tooltipAndJeiInfo(TCItems.FAST_CLOCK, "快走时钟", "Immunity to Slow", "对缓慢免疫", "It have a Chance to be dropped from Stray.", "它有几率从流浪者身上掉落。");
+        tooltipAndJeiInfo(TCItems.FART_IN_A_JAR, "罐中臭屁", "Allows the holder to double jump", "可让持有者二连跳", "It has a Chance to be dropped from Ghost.", "它有几率从恶魂身上掉落");
+        tooltipAndJeiInfo(TCItems.FAST_CLOCK, "快走时钟", "Immunity to Slow", "对缓慢免疫", "It has a Chance to be dropped from Stray.", "它有几率从流浪者身上掉落。");
         tooltipsAndJeiInfo(TCItems.FERAL_CLAWS, "狂爪手套",
                 new String[]{
                         "Enables auto swing for melee weapons"
@@ -355,7 +356,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 new String[]{
                         "多人模式时，敌人更可能以你为目标"
                 },
-                "It have a Chance to be dropped from Piglin Brute.",
+                "It has a Chance to be dropped from Piglin Brute.",
                 "它有几率从猪灵蛮兵身上掉落"
         );
         onlyJeiInfo(TCItems.FLIPPER, "脚蹼", "It can be found in Chests in the Shipwreck.", "它出现在沉船宝箱中");
@@ -394,7 +395,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "增加跳跃高度",
                         "增加抗坠落性",
                 },
-                "The Frog Leg have a Chance to be dropped from Frog.", "它有几率从青蛙身上掉落。");
+                "The Frog Leg has a Chance to be dropped from Frog.", "它有几率从青蛙身上掉落。");
         onlyTooltips(TCItems.FROG_WEBBING, "青蛙蹼",
                 new String[]{
                         "Increases jump height",
@@ -453,7 +454,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "可让持有者反转重力",
                         "按跳跃键可改变重力"
                 },
-                "It have a Chance to be dropped from Shulker.",
+                "It has a Chance to be dropped from Shulker.",
                 "它有几率从潜影贝身上掉落。"
         );
         onlyTooltips(TCItems.GREEN_HORSESHOE_BALLOON, "绿马掌气球",
@@ -468,7 +469,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "消除掉落伤害"
                 }
         );
-        tooltipAndJeiInfo(TCItems.HAND_DRILL, "手钻", "Immunity to Mining Fatigue", "对挖掘疲劳免疫", "It have a Chance to be dropped from Elder Guardian.", "它有几率从远古守卫者身上掉落。");
+        tooltipAndJeiInfo(TCItems.HAND_DRILL, "手钻", "Immunity to Mining Fatigue", "对挖掘疲劳免疫", "It has a Chance to be dropped from Elder Guardian.", "它有几率从远古守卫者身上掉落。");
         onlyTooltips(TCItems.HAND_OF_CREATION, "创造之手",
                 new String[]{
                         "Decreased 'Right Click Delay' by 3, cannot stack the decrease of its material",
@@ -480,11 +481,11 @@ public class ModLanguageProvider extends LanguageProvider {
                         "按↑键站得更高，按Shift键下来"
                 }
         );
-        onlyTooltip(TCItems.HAND_WARMER, "暖手宝", "Provides immunity to chill and freezing effects", "对寒冷和冰冻效果免疫");
+        onlyTooltip(TCItems.HAND_WARMER, "暖手宝", "Provides immunity to powder snow", "对细雪免疫");
         tooltipAndJeiInfo(TCItems.HERMES_BOOTS, "赫尔墨斯靴", "The wearer can run super fast", "穿戴者可飞速奔跑", "It can be found in Chests in the Village Armorer.", "它可以在村庄盔甲匠的宝箱中找到");
         onlyTooltip(TCItems.HERO_SHIELD, "英雄护盾", "Enemies are more likely to target you", "多人模式时，敌人更可能以你为目标");
-        tooltipAndJeiInfo(TCItems.HIVE_PACK, "蜂巢背包", "Increases the strength of friendly bees", "增加友好蜜蜂的力量", "It have a Chance to be dropped from Bee.", "它有几率从蜜蜂身上掉落。");
-        tooltipAndJeiInfo(TCItems.HOLY_WATER, "圣水", "Immunity to Wither", "对凋零免疫", "It have a Chance to be dropped from Wither Skeleton.", "它有几率从凋零骷髅身上掉落。");
+        tooltipAndJeiInfo(TCItems.HIVE_PACK, "蜂巢背包", "Increases the strength of friendly bees", "增加友好蜜蜂的力量", "It has a Chance to be dropped from Bee.", "它有几率从蜜蜂身上掉落。");
+        tooltipAndJeiInfo(TCItems.HOLY_WATER, "圣水", "Immunity to Wither", "对凋零免疫", "It has a Chance to be dropped from Wither Skeleton.", "它有几率从凋零骷髅身上掉落。");
         onlyTooltips(TCItems.HONEY_BALLOON, "蜂蜜气球",
                 new String[]{
                         "Releases bees and douses the user in honey when damaged",
@@ -495,9 +496,9 @@ public class ModLanguageProvider extends LanguageProvider {
                         "增加跳跃高度"
                 }
         );
-        tooltipAndJeiInfo(TCItems.HONEY_COMB, "蜂窝", "Releases bees and douses the user in honey when damaged", "受到伤害后释放蜜蜂并将使用者浸入蜂蜜中", "It have a Chance to be dropped from Bee.", "它有几率从蜜蜂身上掉落。");
+        tooltipAndJeiInfo(TCItems.HONEY_COMB, "蜂窝", "Releases bees and douses the user in honey when damaged", "受到伤害后释放蜜蜂并将使用者浸入蜂蜜中", "It has a Chance to be dropped from Bee.", "它有几率从蜜蜂身上掉落。");
         onlyTooltip(TCItems.ICE_SKATES, "溜冰鞋", "Provides extra mobility on ice", "提供额外冰面行动力");
-        tooltipAndJeiInfo(TCItems.LAVA_CHARM, "熔岩护身符", "Provides 7 seconds of immunity to lava", "对岩浆免疫7秒", "It have a Chance to be dropped from Blaze.", "它有几率从烈焰人掉落");
+        tooltipAndJeiInfo(TCItems.LAVA_CHARM, "熔岩护身符", "Provides 7 seconds of immunity to lava", "对岩浆免疫7秒", "It has a Chance to be dropped from Blaze.", "它有几率从烈焰人掉落");
         onlyTooltips(TCItems.LAVA_WADERS, "熔岩靴",
                 new String[]{
                         "Allows flight, super fast running, and extra mobility on ice",
@@ -508,7 +509,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "对火块免疫、对岩浆免疫7秒"
                 }
         );
-        tooltipAndJeiInfo(TCItems.LIFE_FORM_ANALYZER, "生命体分析机", "Displays the name of rare creatures around you", "显示您周围稀有生物的名称", "The Lifeform Analyzer have a Chance to be dropped from Glow Squid.", "它有几率从发光鱿鱼身上掉落。");
+        tooltipAndJeiInfo(TCItems.LIFE_FORM_ANALYZER, "生命体分析机", "Displays the name of rare creatures around you", "显示您周围稀有生物的名称", "The Lifeform Analyzer has a Chance to be dropped from Glow Squid.", "它有几率从发光鱿鱼身上掉落。");
         onlyTooltip(TCItems.LIGHTNING_BOOTS, "闪电靴", "Allows flight, super fast running", "可飞行、可飞速奔跑");
         tooltipsAndJeiInfo(TCItems.LUCKY_HORSESHOE, "幸运马掌",
                 new String[]{
@@ -523,7 +524,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 },
                 "It can be discovered in chests found within Desert Pyramids, End City, Jungle Pyramids, or Ancient Cities.", "它可以在沙漠神殿，末地城，丛林遗迹或古代城市的箱子中找到。");
         onlyTooltip(TCItems.MAGIC_MIRROR, "魔镜", "Gaze in the mirror to return home", "盯着镜子便可回家");
-        tooltipAndJeiInfo(TCItems.MAGIC_QUIVER, "魔法箭袋", "20% chance to not consume arrows", "20%几率不消耗箭", "This item have a Chance to be dropped from Skeleton.", "这件物品有几率从骷髅身上掉落");
+        tooltipAndJeiInfo(TCItems.MAGIC_QUIVER, "魔法箭袋", "20% chance to not consume arrows", "20%几率不消耗箭", "This item has a Chance to be dropped from Skeleton.", "这件物品有几率从骷髅身上掉落");
         tooltipsAndJeiInfo(TCItems.MAGILUMINESCENCE, "魔光护符",
                 new String[]{
                         "Increases movement speed and acceleration",
@@ -553,7 +554,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 new String[]{
                         "近战攻击造成火焰伤害"
                 },
-                "It have a Chance to be dropped from Blaze.",
+                "It has a Chance to be dropped from Blaze.",
                 "它有几率从烈焰人掉落"
         );
         onlyTooltips(TCItems.MASTER_NINJA_GEAR, "忍者大师装备",
@@ -569,7 +570,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 }
         );
         onlyTooltip(TCItems.MECHANICAL_GLOVE, "机械手套", "Enables auto swing for melee weapons", "启用近战武器自动挥动");
-        tooltipAndJeiInfo(TCItems.METAL_DETECTOR, "金属探测器", "Displays the most valuable ore around you", "显示你周围最贵重的矿石", "The Metal Detector have a Chance to be dropped from Warden.", "它必定从监守者身上掉落。");
+        tooltipAndJeiInfo(TCItems.METAL_DETECTOR, "金属探测器", "Displays the most valuable ore around you", "显示你周围最贵重的矿石", "The Metal Detector has a Chance to be dropped from Warden.", "它必定从监守者身上掉落。");
         onlyTooltips(TCItems.MOLTEN_CHARM, "熔火护身符",
                 new String[]{
                         "Grants immunity to fire blocks",
@@ -602,7 +603,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "对岩浆免疫7秒",
                         "减少因触碰熔岩而造成的伤害"
                 });
-        tooltipAndJeiInfo(TCItems.MOON_STONE, "月亮石", "It have a Chance to be dropped from Phantom.", "在夜晚时略微增强属性值", "It have a Chance to be dropped from Phantom.", "它有几率从幻翼身上掉落。");
+        tooltipAndJeiInfo(TCItems.MOON_STONE, "月亮石", "It has a Chance to be dropped from Phantom.", "在夜晚时略微增强属性值", "It has a Chance to be dropped from Phantom.", "它有几率从幻翼身上掉落。");
         onlyTooltip(TCItems.NUTRIENT_SOLUTION, "营养液", "Immunity to Weakness and Hunger", "对虚弱和饥饿免疫");
         onlyTooltips(TCItems.OBSIDIAN_HORSESHOE, "黑曜石马掌",
                 new String[]{
@@ -652,7 +653,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 new String[]{
                         "当生命值超过25%时，吸收对团队中玩家造成的25%伤害"
                 },
-                "It to be dropped from Ender Dragon.",
+                "It is dropped by the Ender Dragon.",
                 "它必定从末影龙身上掉落。");
         tooltipAndJeiInfo(TCItems.PANIC_NECKLACE, "恐慌项链", "Increases movement speed after taking damage", "受到伤害后增加移动速度", "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。");
         onlyTooltips(TCItems.PDA, "个人数字助手",
@@ -713,8 +714,8 @@ public class ModLanguageProvider extends LanguageProvider {
         tooltipAndJeiInfo(TCItems.PORTABLE_CEMENT_MIXER, "便携式水泥搅拌机", "Decreased 'Right Click Delay' by 1", "右键点击延迟降低1", "This item can be located in the chests found within Toolsmith Villagers' houses.", "这件物品可以在工具匠村民家中的箱子中找到。");
         onlyTooltip(TCItems.POWER_GLOVE, "强力手套", "Enables auto swing for melee weapons", "启用近战武器自动挥动");
         tooltipAndJeiInfo(TCItems.PUTRID_SCENT, "腐香囊", "Enemies are less likely to target you", "多人模式下，敌怪不太可能以你为目标", "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。");
-        tooltipAndJeiInfo(TCItems.RADAR, "雷达", "Detects enemies around you", "探测你周围的敌人", "The Radar have a Chance to be dropped from Bats.", "它有几率从蝙蝠身上掉落。");
-        onlyJeiInfo(TCItems.RANGER_EMBLEM, "游侠徽章", "It have a Chance to be dropped from Skeleton.", "它有几率从凋零骷髅身上掉落。");
+        tooltipAndJeiInfo(TCItems.RADAR, "雷达", "Detects enemies around you", "探测你周围的敌人", "The Radar has a Chance to be dropped from Bats.", "它有几率从蝙蝠身上掉落。");
+        onlyJeiInfo(TCItems.RANGER_EMBLEM, "游侠徽章", "It has a Chance to be dropped from Skeleton.", "它有几率从凋零骷髅身上掉落。");
         onlyTooltips(TCItems.RECON_SCOPE, "侦察镜",
                 new String[]{
                         "Increases view range for ranged weapons",
@@ -758,11 +759,11 @@ public class ModLanguageProvider extends LanguageProvider {
                         "扩大远程武器的视野范围",
                         "手持远程武器并潜行可拉远视野"
                 },
-                "It have a Chance to be dropped from Enderman.",
+                "It has a Chance to be dropped from Enderman.",
                 "它有几率从末影人身上掉落。"
         );
         onlyTooltip(TCItems.ROCKET_BOOTS, "火箭靴", "Allows flight", "可飞行");
-        tooltipAndJeiInfo(TCItems.ROYAL_GEL, "皇家凝胶", "Slimes become friendly", "史莱姆将变成友好生物", "It have a Chance to be dropped from Slime.", "有几率从史莱姆身上掉落。");
+        tooltipAndJeiInfo(TCItems.ROYAL_GEL, "皇家凝胶", "Slimes become friendly", "史莱姆将变成友好生物", "It has a Chance to be dropped from Slime.", "有几率从史莱姆身上掉落。");
         tooltipAndJeiInfo(TCItems.SAILFISH_BOOTS, "旗鱼靴", "The wearer can run super fast", "穿戴者可飞速奔跑", "It can be found in Shipwreck Chests.", "它可以在沉船宝箱中找到。");
         onlyTooltips(TCItems.SANDSTORM_IN_A_BALLOON, "沙暴气球",
                 new String[]{
@@ -789,7 +790,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "增加跳跃高度"
                 }
         );
-        tooltipAndJeiInfo(TCItems.SHIELD_OF_CTHULHU, "克苏鲁护盾", "Allows the player to dash into the enemy, sprinting to dsh", "允许冲刺，疾跑以冲刺", "It have a Chance to be dropped from Ravager.", "它有几率从劫掠兽身上掉落。");
+        tooltipAndJeiInfo(TCItems.SHIELD_OF_CTHULHU, "克苏鲁护盾", "Allows the player to dash into the enemy, sprinting to dsh", "允许冲刺，疾跑以冲刺", "It has a Chance to be dropped from Ravager.", "它有几率从劫掠兽身上掉落。");
         tooltipAndJeiInfo(TCItems.SHINY_RED_BALLOON, "闪亮红气球", "Allows the holder to double jump", "增加跳跃高度", "When the player has the Hero of the Village effect, the librarian has a chance to give the player this item.It can be found in chests in plains villages.", "它可以在平原村庄中的宝箱中找到。当玩家拥有村庄英雄效果时，图书管理员有几率将此物品交给玩家。");
         tooltipsAndJeiInfo(TCItems.SHOE_SPIKES, "鞋钉",
                 new String[]{
@@ -798,11 +799,11 @@ public class ModLanguageProvider extends LanguageProvider {
                 }, new String[]{
                         "可沿墙滑下，按住shift键可更快地下滑",
                         "结合攀爬爪使用时能力还会有所提升"
-                }, "It have a Chance to be dropped from Cave Spider.", "它有几率从蜘蛛身上掉落。");
+                }, "It has a Chance to be dropped from Cave Spider.", "它有几率从蜘蛛身上掉落。");
         tooltipAndJeiInfo(TCItems.SHOT_PUT, "铅球", "Immunity to Levitation", "对漂浮免疫", "It can be found in Chests in the Stronghold.", "它可以在要塞的宝箱中找到。");
         onlyTooltip(TCItems.SILVER_WATCH, "银表", "Tell the time", "报时");
 
-        onlyJeiInfo(TCItems.SORCERER_EMBLEM, "巫师徽章", "It have a Chance to be dropped from Evoker.", "它有几率从唤魔者身上掉落。");
+        onlyJeiInfo(TCItems.SORCERER_EMBLEM, "巫师徽章", "It has a Chance to be dropped from Evoker.", "它有几率从唤魔者身上掉落。");
         onlyTooltip(TCItems.SPECTRE_BOOTS, "幽灵靴", "Allows flight, super fast running", "可飞行、可飞速奔跑");
         onlyTooltips(TCItems.STALKERS_QUIVER, "潜行者箭袋",
                 new String[]{
@@ -857,7 +858,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 new String[]{
                         "在白天时略微增强属性值"
                 },
-                "It have a Chance to be dropped from Blaze.",
+                "It has a Chance to be dropped from Blaze.",
                 "它有几率由烈焰人掉落。");
         onlyTooltip(TCItems.SWEETHEART_NECKLACE, "甜心项链", "When damaged, the bee is released and the user is immersed in honey and increases movement speed.", "受到伤害后释放蜜蜂并将使用者浸入蜂蜜中、并提高移动速度。");
         tooltipsAndJeiInfo(TCItems.TABI, "分趾厚底袜",
@@ -926,10 +927,10 @@ public class ModLanguageProvider extends LanguageProvider {
                 new String[]{
                         "对虚弱免疫"
                 },
-                "It have a Chance to be dropped from Witch.",
+                "It has a Chance to be dropped from Witch.",
                 "它有几率从女巫身上掉落。"
         );
-        onlyJeiInfo(TCItems.WARRIOR_EMBLEM, "战士徽章", "It have a Chance to be dropped from Vindicator.", "它有几率从卫道士身上掉落。");
+        onlyJeiInfo(TCItems.WARRIOR_EMBLEM, "战士徽章", "It has a Chance to be dropped from Vindicator.", "它有几率从卫道士身上掉落。");
         tooltipsAndJeiInfo(TCItems.WATER_WALKING_BOOTS, "水上漂靴",
                 new String[]{
                         "Provides the ability to walk on water & honey"
@@ -960,6 +961,32 @@ public class ModLanguageProvider extends LanguageProvider {
                 "When a player has a tamed cat, the cat may give the player this item when they wake up.",
                 "当玩家有一只被驯服的猫时，猫可能会在玩家醒来时给玩家这个物品。"
         );
+        tooltipAndJeiInfo(TCItems.DIVING_HELMET, "潜水头盔", "Greatly extends underwater breathing", "大大延长水下呼吸时间", "When equipped, it causes the breath meter to deplete much slower and slows the rate at which drowning damage is taken.", "当装备时，它会让呼吸计以慢得多的速度消耗，并且还能减慢溺水伤害的速度。");
+        onlyTooltip(TCItems.DIVING_GEAR, "潜水装备", "Greatly extends underwater breathing", "大大延长水下呼吸时间");
+        tooltipAndJeiInfo(TCItems.JELLYFISH_NECKLACE, "水母项链", "Generates a very subtle glow which becomes more vibrant underwater", "发出非常微弱的光芒，这种光芒在水下会变得更醒目", "It has a Chance to be dropped from Glow Squid.", "它有几率从发光鱿鱼身上掉落。");
+        onlyTooltips(TCItems.JELLYFISH_DIVING_GEAR, "水母潜水装备",
+                new String[]{
+                        "Greatly extends underwater breathing",
+                        "Generates a very subtle glow which becomes more vibrant underwater"
+                },
+                new String[]{
+                        "大大延长水下呼吸时间",
+                        "发出非常微弱的光芒，这种光芒在水下会变得更醒目"
+                });
+        tooltipsAndJeiInfo(TCItems.ARCTIC_DIVING_GEAR, "北极潜水装备",
+                new String[]{
+                        "Greatly extends underwater breathing",
+                        "Provides extra mobility on ice",
+                        "Generates a very subtle glow which becomes more vibrant underwater"
+                },
+                new String[]{
+                        "大大延长水下呼吸时间",
+                        "提供额外冰面行动力",
+                        "发出非常微弱的光芒，这种光芒在水下会变得更醒目"
+                },
+                "Provides immunity to powder snow",
+                "对细雪免疫");
+        onlyTooltip(TCItems.INNER_TUBE, "浮游圈", "Grants the ability to float in water", "可让人浮在水面");
 
         if (locale.equals("en_us")) {
             sidedAdd(TCItems.EXPLORERS_EQUIPMENT.get().getDescriptionId(), "Explorer's Equipment", enData);

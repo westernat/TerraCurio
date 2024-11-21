@@ -67,7 +67,6 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Unit, UnitValue> DIVING = ofUnit("diving");
 
     public static final ValueType<Boolean, BooleanValue> STAR$CLOCK = create("star_clock", BooleanValue.OR, BooleanValue.CODEC, false, BooleanValue::new);
-
     public static final ValueType<Float, FloatValue> INJURY$FREE = ofFloat("injury_free", FloatValue.ADDITION_WITHIN_0_TO_1, 0.0F);
     public static final ValueType<Float, FloatValue> INVULNERABLE$TICKS$MULTIPLIER = ofFloat("invulnerable_ticks_multiplier", FloatValue.GET_MAX_WITHIN_0_TO_100, 1.0F);
     public static final ValueType<Float, FloatValue> LAVA$HURT$REDUCE = ofFloat("lava_hurt_reduce", FloatValue.GET_MAX_WITHIN_0_TO_1, 0.0F);
@@ -83,6 +82,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<MayFlyAbilityValue.Storage, MayFlyAbilityValue> MAY$FLY = create("may_fly", MayFlyAbilityValue.COMBINE_RULE, MayFlyAbilityValue.CODEC, new MayFlyAbilityValue.Storage(0.0F, 0, false, false), MayFlyAbilityValue::new);
     public static final ValueType<Set<Holder<MobEffect>>, MobEffectsValue> EFFECT$IMMUNITIES = create("effect_immunities", MobEffectsValue.EXPANSION, MobEffectsValue.CODEC, Set.of(), MobEffectsValue::new);
     public static final ValueType<Integer, IntegerValue> TOTEM$WITH$COOLDOWN = ofInteger("totem_with_cooldown", IntegerValue.GET_MIN_GREAT_EQUAL_THAN_0, -1);
+    public static final ValueType<Integer, IntegerValue> LUMINANCE = ofInteger("luminance", IntegerValue.GET_MAX, 0);
     // no updates
     public static final ValueType<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> ATTRIBUTES = create("attributes", AttributeModifiersValue.GET_SELF, AttributeModifiersValue.CODEC, ImmutableListMultimap.of(), AttributeModifiersValue::new);
     public static final ValueType<List<Component>, ComponentsValue> COMPONENTS = create("components", ComponentsValue.COMBINE_RULE, ComponentsValue.CODEC, List.of(), ComponentsValue::new);
