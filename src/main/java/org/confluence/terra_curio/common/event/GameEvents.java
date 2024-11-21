@@ -11,6 +11,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
@@ -37,6 +38,7 @@ import org.confluence.terra_curio.common.item.DivingHelmet;
 import org.confluence.terra_curio.common.item.curio.combat.PaladinsShield;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.mixin.accessor.ItemEntityAccessor;
+import org.confluence.terra_curio.mixin.accessor.MobAccessor;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
@@ -230,6 +232,14 @@ public final class GameEvents {
             if (living.getItemBySlot(EquipmentSlot.HEAD).is(TCTags.DIVING) || TCUtils.hasAccessoriesType(living, ValueType.DIVING)) {
                 event.setConsumeAirAmount(0);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void finalizeSpawn(FinalizeSpawnEvent event) {
+        if (event.getEntity() instanceof Drowned drowned && drowned.getItemBySlot(EquipmentSlot.HEAD).isEmpty() && drowned.getRandom().nextFloat() < 0.05F) {
+            drowned.setItemSlot(EquipmentSlot.HEAD, TCItems.DIVING_HELMET.get().getDefaultInstance());
+            ((MobAccessor) drowned).getArmorDropChances()[EquipmentSlot.HEAD.getIndex()] = 1.0F;
         }
     }
 }

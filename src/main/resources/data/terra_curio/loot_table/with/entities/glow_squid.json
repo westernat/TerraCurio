@@ -22,6 +22,25 @@
                             }
                         }
                     ]
+                },
+                {
+                    "type": "minecraft:item",
+                    "name": "terra_curio:jellyfish_necklace",
+                    "conditions": [
+                        {
+                            "condition": "minecraft:random_chance",
+                            "chance": 0.08
+                        },
+                        {
+                            "condition": "minecraft:damage_source_properties",
+                            "predicate": {
+                                "direct_entity": {
+                                    "type": "minecraft:player"
+                                },
+                                "is_direct": true
+                            }
+                        }
+                    ]
                 }
             ]
         }
