@@ -31,6 +31,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
     public static final int ARRAY_LENGTH = 13;
     public static final byte[] FULL_MYSELF_ARRAY = new byte[]{3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
     public static final byte[] FULL_REMOTE_ARRAY = new byte[]{-128, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+    public static final double MAX_SHARE_DISTANCE_SQR = 1024.0;
 
     @Override
     public @NotNull Type<InfoCurioCheckPacketS2C> type() {
@@ -143,7 +144,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         });
         Team team = serverPlayer.getTeam();
         serverPlayer.serverLevel().players().forEach(player -> {
-            if (player != serverPlayer && player.getTeam() == team && player.distanceToSqr(serverPlayer) < 1024.0) {
+            if (player != serverPlayer && player.getTeam() == team && player.distanceToSqr(serverPlayer) < MAX_SHARE_DISTANCE_SQR) {
                 PacketDistributor.sendToPlayer(player, packet);
             }
         });

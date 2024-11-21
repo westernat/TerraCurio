@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.client.handler;
 
-import com.google.common.collect.EvictingQueue;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -62,7 +61,7 @@ public final class InformationHandler {
     private static Component radarInfo = Component.translatable("info.terra_curio.radar", 0);
     private static Component tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter.unknown");
     private static long lastAttackTime = 0;
-    private static final EvictingQueue<Float> ATTACK_DAMAGE = EvictingQueue.create(5);
+    private static float cachedDamage = 0.0F;
     private static Component dpsMeterInfo = Component.translatable("info.terra_curio.dps_meter", 0.00F);
 
     public static void handle(LocalPlayer localPlayer) {
@@ -117,15 +116,6 @@ public final class InformationHandler {
         }
 
         if (INFO_DATA[DPS_METER] != 0) {
-            long delta = gameTime - lastAttackTime;
-            if (delta % 20 == 0) {
-                float sum = 0.0F;
-                for (float value : ATTACK_DAMAGE) sum += value;
-                dpsMeterInfo = Component.translatable(
-                        "info.terra_curio.dps_meter",
-                        "%.2f".formatted(sum / (ATTACK_DAMAGE.size() + 1))
-                );
-            }
             INFORMATION.add(dpsMeterInfo);
         }
 
@@ -153,7 +143,7 @@ public final class InformationHandler {
                 if (INFO_DATA[i] >= 0) continue;
                 boolean match = false;
                 for (Player player : localPlayer.level().players()) {
-                    if (player == localPlayer || player.distanceToSqr(localPlayer) > 1024.0) continue;
+                    if (player == localPlayer || player.distanceToSqr(localPlayer) > InfoCurioCheckPacketS2C.MAX_SHARE_DISTANCE_SQR) continue;
                     byte[] data = REMOTE_DATA.get(player.getId());
                     if (data == null) continue;
                     if (data[i] > -125) {
@@ -309,8 +299,18 @@ public final class InformationHandler {
     }
 
     public static void handleAttackDamage(AttackDamagePacketS2C packet, Player player) {
-        ATTACK_DAMAGE.add(packet.amount());
-        lastAttackTime = player.level().getGameTime();
+        long gameTime = player.level().getGameTime();
+        long delta = gameTime - lastAttackTime;
+        if (delta == gameTime) { // 防止第一次攻击
+            delta = 20L;
+        }
+        if (delta > 100) { // 大于五秒重置
+            cachedDamage = 0.0F;
+            delta = 20L;
+        }
+        lastAttackTime = gameTime;
+        cachedDamage += packet.amount();
+        dpsMeterInfo = Component.translatable("info.terra_curio.dps_meter", "%.2f".formatted(cachedDamage / delta));
     }
 
     public static void handleWindSpeed(WindSpeedPacketS2C packet) {
