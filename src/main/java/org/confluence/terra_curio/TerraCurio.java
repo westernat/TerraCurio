@@ -32,6 +32,7 @@ public class TerraCurio {
         TCBlocks.BLOCKS.register(eventBus);
         TCMenus.TYPES.register(eventBus);
         AccessoriesValueCommand.INFOS.register(eventBus);
+        TCArmorMaterials.MATERIALS.register(eventBus);
         eventBus.addListener(TCDataMaps::registerDataMapTypes);
     }
 

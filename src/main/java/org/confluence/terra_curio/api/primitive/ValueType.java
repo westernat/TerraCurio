@@ -64,6 +64,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final ValueType<Unit, UnitValue> FLOWER$BOOTS = ofUnit("flower_boots");
     public static final ValueType<Unit, UnitValue> FROZEN$IMMUNE = ofUnit("frozen_immune");
     public static final ValueType<Unit, UnitValue> ICE$SPEED = ofUnit("ice_speed");
+    public static final ValueType<Unit, UnitValue> DIVING = ofUnit("diving");
 
     public static final ValueType<Boolean, BooleanValue> STAR$CLOCK = create("star_clock", BooleanValue.OR, BooleanValue.CODEC, false, BooleanValue::new);
 

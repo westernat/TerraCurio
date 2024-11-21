@@ -6,12 +6,14 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.model.entity.BeeProjectileModel;
 import org.confluence.terra_curio.client.model.entity.StepStoolModel;
 import org.confluence.terra_curio.client.renderer.entity.BeeProjectileRenderer;
 import org.confluence.terra_curio.client.renderer.entity.StarCloakEntityRenderer;
 import org.confluence.terra_curio.client.renderer.entity.StepStoolRenderer;
+import org.confluence.terra_curio.client.renderer.gui.DivingHelmetOverlay;
 import org.confluence.terra_curio.client.renderer.gui.InfoHudOverlay;
 import org.confluence.terra_curio.client.renderer.gui.WorkshopScreen;
 import org.confluence.terra_curio.common.init.TCEntities;
@@ -35,6 +37,7 @@ public final class ModClientEvent {
     @SubscribeEvent
     public static void registerGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAboveAll(TerraCurio.asResource("info_hud"), new InfoHudOverlay());
+        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, TerraCurio.asResource("diving_helmet"), new DivingHelmetOverlay());
     }
 
     @SubscribeEvent

@@ -6,6 +6,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
@@ -114,11 +115,17 @@ public class BaseCurioItem extends Item implements ICurioItem {
         private ModRarity rarity = ModRarity.BLUE;
         private int jeiInformationCount = 1;
         private boolean makePiglinsNeutral = false;
+        private EquipmentSlot equipmentSlot = null;
 
         Builder(String name, Properties properties) {
             this.name = name;
             this.properties = properties;
             this.defaultId = TerraCurio.asResource(name);
+        }
+
+        public Builder equipable(EquipmentSlot slot) {
+            this.equipmentSlot = slot;
+            return this;
         }
 
         public Builder makesPiglinsNeutral() {
@@ -210,7 +217,21 @@ public class BaseCurioItem extends Item implements ICurioItem {
         }
 
         public BaseCurioItem build() {
+            if (equipmentSlot != null) {
+                return new Equipable(this);
+            }
             return new BaseCurioItem(this);
+        }
+    }
+
+    public static class Equipable extends BaseCurioItem implements net.minecraft.world.item.Equipable {
+        public Equipable(Builder builder) {
+            super(builder);
+        }
+
+        @Override
+        public @NotNull EquipmentSlot getEquipmentSlot() {
+            return builder.equipmentSlot;
         }
     }
 }

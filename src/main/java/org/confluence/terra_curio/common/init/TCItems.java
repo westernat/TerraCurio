@@ -3,6 +3,7 @@ package org.confluence.terra_curio.common.init;
 import net.minecraft.util.Tuple;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -14,10 +15,7 @@ import org.confluence.terra_curio.api.primitive.EntityTypesValue;
 import org.confluence.terra_curio.api.primitive.MayFlyAbilityValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.ModRarity;
-import org.confluence.terra_curio.common.item.CellPhone;
-import org.confluence.terra_curio.common.item.DemonHeart;
-import org.confluence.terra_curio.common.item.MagicMirror;
-import org.confluence.terra_curio.common.item.MasterItem;
+import org.confluence.terra_curio.common.item.*;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.common.item.curio.combat.*;
 import org.confluence.terra_curio.common.item.curio.health.BandOfRegeneration;
@@ -52,6 +50,7 @@ public final class TCItems { // todo 全换成data map
     public static final Supplier<DemonHeart> DEMON_HEART = OTHERS.register("demon_heart", DemonHeart::new);
     public static final Supplier<MagicMirror> MAGIC_MIRROR = OTHERS.register("magic_mirror", () -> new MagicMirror(BLUE));
     public static final Supplier<CellPhone> CELL_PHONE = OTHERS.register("cell_phone", CellPhone::new);
+    public static final Supplier<DivingHelmet> DIVING_HELMET = OTHERS.register("diving_helmet", DivingHelmet::new);
 
     public static final Supplier<BaseCurioItem> BEZOAR = registerCurio("bezoar", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.POISON)))), // 牛黄 中毒
             HOLY_WATER = registerCurio("holy_water", builder -> builder.rarity(LIGHT_RED).accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.WITHER)))), // 圣水 凋零
@@ -76,8 +75,8 @@ public final class TCItems { // todo 全换成data map
                     MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))), // 十字章护身符
             ANKH_SHIELD = registerCurio("ankh_shield", builder -> builder.jeiInfos(0).tooltips(1).rarity(LIME)
                     .accessories(of(ValueType.EFFECT$IMMUNITIES, Set.of(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))
-                    .attribute(Attributes.KNOCKBACK_RESISTANCE, "knockback_resistance", 1.0, ADD_VALUE)
-                    .attribute(Attributes.ARMOR, "armor", 4.0, ADD_VALUE)), // 十字章护盾
+                    .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)
+                    .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)), // 十字章护盾
             STAR_CLOAK = registerCurio("star_cloak", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).accessories(of(ValueType.STAR$CLOCK, false))), // 星星斗篷
             STAR_VEIL = registerCurio("star_veil", builder -> builder.rarity(LIGHT_PURPLE).jeiInfos(0).accessories(of(ValueType.STAR$CLOCK, false), of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, 2.0F)).tooltips(1)), // 星星面纱
             BEE_CLOAK = registerCurio("bee_cloak", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).accessories(units(ValueType.HONEY$COMB), of(ValueType.STAR$CLOCK, false), of(ValueType.INVULNERABLE$TICKS$MULTIPLIER, 2.0F)).tooltips(1)), // 蜜蜂斗篷
@@ -385,7 +384,7 @@ public final class TCItems { // todo 全换成data map
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 马掌气球束
             INNER_TUBE = registerCurio("inner_tube", builder -> builder.rarity(WHITE).accessories(units(ValueType.FLOAT$ON$LIQUID$SURFACE))),
             FLIPPER = registerCurio("flipper", builder -> builder.noTooltip().attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)), // 脚蹼
-            /* 潜水装备 */
+            DIVING_GEAR = registerCurio("diving_gear", builder -> builder.rarity(LIGHT_RED).equipable(EquipmentSlot.HEAD).accessories(units(ValueType.DIVING)).attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)), // 潜水装备
             /* 水母潜水装备 */
             /* 北极潜水装备 */
             FROG_LEG = registerCurio("frog_leg", builder -> builder

@@ -6,6 +6,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -31,10 +32,8 @@ import org.confluence.terra_curio.api.event.AfterAccessoryAbilitiesFlushedEvent;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
-import org.confluence.terra_curio.common.init.TCAttachments;
-import org.confluence.terra_curio.common.init.TCAttributes;
-import org.confluence.terra_curio.common.init.TCCommonConfigs;
-import org.confluence.terra_curio.common.init.TCTriggers;
+import org.confluence.terra_curio.common.init.*;
+import org.confluence.terra_curio.common.item.DivingHelmet;
 import org.confluence.terra_curio.common.item.curio.combat.PaladinsShield;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.mixin.accessor.ItemEntityAccessor;
@@ -92,6 +91,7 @@ public final class GameEvents {
         TCUtils.applyStarClock(living, random);
         PanicNecklace.apply(living);
 
+        amount = DivingHelmet.apply(living, damageSource, amount);
         amount = TCAttributes.applyMagicDamage(damageSource, amount);
         amount = TCAttributes.applyRangedDamage(living, damageSource, amount);
         amount = PaladinsShield.apply(living, damageSource, amount);
@@ -221,5 +221,15 @@ public final class GameEvents {
     public static void itemToss(ItemTossEvent event) {
         ItemEntity itemEntity = event.getEntity();
         SetItemEntityPickupDelayPacketS2C.sendToAll(itemEntity.getId(), ((ItemEntityAccessor) itemEntity).getPickupDelay());
+    }
+
+    @SubscribeEvent
+    public static void livingBreathe(LivingBreatheEvent event) {
+        LivingEntity living = event.getEntity();
+        if (!event.canBreathe() && living.getAirSupply() > 0 && living.level().getGameTime() % 8 != 0) { //延长至120秒
+            if (living.getItemBySlot(EquipmentSlot.HEAD).is(TCTags.DIVING) || TCUtils.hasAccessoriesType(living, ValueType.DIVING)) {
+                event.setConsumeAirAmount(0);
+            }
+        }
     }
 }

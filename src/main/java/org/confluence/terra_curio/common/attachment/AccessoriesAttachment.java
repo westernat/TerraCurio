@@ -47,6 +47,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         list.add(ValueType.FLOWER$BOOTS);
         list.add(ValueType.FROZEN$IMMUNE);
         list.add(ValueType.ICE$SPEED);
+        list.add(ValueType.DIVING);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.UnitType(list));
     });
     public static final List<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
