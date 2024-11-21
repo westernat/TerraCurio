@@ -26,6 +26,11 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         accessory.add(TCItems.EVERLASTING.get());
         accessory.add(TCItems.MECHANICAL_LENS.get());
         TCItems.CURIOS.getEntries().forEach(item -> accessory.add(item.get()));
-        tag(TCTags.DIVING).add(TCItems.DIVING_HELMET.get(), TCItems.DIVING_GEAR.get());
+        tag(TCTags.DIVING).add(
+                TCItems.DIVING_HELMET.get(),
+                TCItems.DIVING_GEAR.get(),
+                TCItems.JELLYFISH_DIVING_GEAR.get(),
+                TCItems.ARCTIC_DIVING_GEAR.get()
+        );
     }
 }

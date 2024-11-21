@@ -961,7 +961,17 @@ public class ModLanguageProvider extends LanguageProvider {
                 "When a player has a tamed cat, the cat may give the player this item when they wake up.",
                 "当玩家有一只被驯服的猫时，猫可能会在玩家醒来时给玩家这个物品。"
         );
-        tooltipAndJeiInfo(TCItems.DIVING_HELMET, "潜水头盔", "Greatly extends underwater breathing", "大大延长水下呼吸时间", "When equipped, it causes the breath meter to deplete much slower and slows the rate at which drowning damage is taken.", "当装备时，它会让呼吸计以慢得多的速度消耗，并且还能减慢溺水伤害的速度。");
+        tooltipAndJeiInfos(TCItems.DIVING_HELMET, "潜水头盔",
+                "Greatly extends underwater breathing",
+                "大大延长水下呼吸时间",
+                new String[]{
+                        "When equipped, it causes the breath meter to deplete much slower and slows the rate at which drowning damage is taken.",
+                        "When the drowned wears it, you can take it away."
+                },
+                new String[]{
+                        "当装备时，它会让呼吸计以慢得多的速度消耗，并且还能减慢溺水伤害的速度。",
+                        "当溺尸穿戴它时，你可以夺走它。"
+                });
         onlyTooltip(TCItems.DIVING_GEAR, "潜水装备", "Greatly extends underwater breathing", "大大延长水下呼吸时间");
         tooltipAndJeiInfo(TCItems.JELLYFISH_NECKLACE, "水母项链", "Generates a very subtle glow which becomes more vibrant underwater", "发出非常微弱的光芒，这种光芒在水下会变得更醒目", "It has a Chance to be dropped from Glow Squid.", "它有几率从发光鱿鱼身上掉落。");
         onlyTooltips(TCItems.JELLYFISH_DIVING_GEAR, "水母潜水装备",
@@ -1051,6 +1061,13 @@ public class ModLanguageProvider extends LanguageProvider {
         sidedAdd(key, zhName, zhData);
         add("tooltip." + key + ".0", enTooltip, zhTooltip);
         add("jei.tooltip." + key + ".0", enJeiInfo, zhJeiInfo);
+    }
+
+    private void tooltipAndJeiInfos(Supplier<? extends Item> item, String zhName, String enTooltip, String zhTooltip, String[] enJeiInfo, String[] zhJeiInfo) {
+        String key = item.get().getDescriptionId();
+        sidedAdd(key, zhName, zhData);
+        add("tooltip." + key + ".0", enTooltip, zhTooltip);
+        addJeiInfos(key, enJeiInfo, zhJeiInfo);
     }
 
     private void onlyTooltips(Supplier<? extends Item> item, String zhName, String[] enTooltip, String[] zhTooltip) {
