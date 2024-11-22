@@ -997,6 +997,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 "Provides immunity to powder snow",
                 "对细雪免疫");
         onlyTooltip(TCItems.INNER_TUBE, "浮游圈", "Grants the ability to float in water", "可让人浮在水面");
+        tooltipAndJeiInfo(TCItems.FLYING_CARPET, "飞毯", "Allows the owner to float for a few seconds", "可让持有者漂浮几秒钟", "It can be discovered in chests found within Desert Pyramids.", "它可以在沙漠神殿内的箱子中找到");
 
         if (locale.equals("en_us")) {
             sidedAdd(TCItems.EXPLORERS_EQUIPMENT.get().getDescriptionId(), "Explorer's Equipment", enData);

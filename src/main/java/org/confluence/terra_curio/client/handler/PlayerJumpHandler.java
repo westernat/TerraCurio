@@ -15,6 +15,9 @@ import org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S;
 import org.confluence.terra_curio.network.s2c.PlayerFlyPacketS2C;
 import org.confluence.terra_curio.network.s2c.PlayerJumpPacketS2C;
 
+import static org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S.JUMP_BY_SELF;
+import static org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S.RESET_FALL_DISTANCE;
+
 @OnlyIn(Dist.CLIENT)
 public final class PlayerJumpHandler {
     private static boolean jumpKeyDown = true;
@@ -94,7 +97,12 @@ public final class PlayerJumpHandler {
                 multiJump(localPlayer, cloudSpeed);
                 localPlayer.playSound(TCSoundEvents.DOUBLE_JUMP.get());
             } else if (remainFlyTicks-- > 0) {
-                fly(localPlayer, flySpeed);
+                onFly = true;
+                if (horizontalFlight) {
+                    horizontalFlight(localPlayer);
+                } else {
+                    fly(localPlayer, flySpeed);
+                }
             } else {
                 jumpKeyDown = true;
             }
@@ -128,7 +136,7 @@ public final class PlayerJumpHandler {
         }
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
-        PacketDistributor.sendToServer(new PlayerJumpPacketC2S(true, true, (float) speed));
+        PacketDistributor.sendToServer(new PlayerJumpPacketC2S((byte) (JUMP_BY_SELF | RESET_FALL_DISTANCE), (float) speed));
     }
 
     private static void oneTimeJump(LocalPlayer localPlayer, double speed) {
@@ -136,7 +144,7 @@ public final class PlayerJumpHandler {
         localPlayer.setDeltaMovement(vec3.x, speed, vec3.z);
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
-        PacketDistributor.sendToServer(new PlayerJumpPacketC2S(false, true, (float) speed));
+        PacketDistributor.sendToServer(new PlayerJumpPacketC2S(RESET_FALL_DISTANCE, (float) speed));
     }
 
     private static void fly(LocalPlayer localPlayer, double speed) {
@@ -169,7 +177,7 @@ public final class PlayerJumpHandler {
         localPlayer.setDeltaMovement(mx, y, mz);
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
-        PacketDistributor.sendToServer(new PlayerJumpPacketC2S(false, true, (float) y));
+        PacketDistributor.sendToServer(new PlayerJumpPacketC2S(RESET_FALL_DISTANCE, (float) y));
     }
 
     public static void handleJumpPacket(PlayerJumpPacketS2C packet) {

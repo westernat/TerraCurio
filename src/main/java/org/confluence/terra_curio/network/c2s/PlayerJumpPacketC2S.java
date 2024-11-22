@@ -12,11 +12,13 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.jetbrains.annotations.NotNull;
 
-public record PlayerJumpPacketC2S(boolean jumpBySelf, boolean resetFallDistance, float motionY) implements CustomPacketPayload {
+public record PlayerJumpPacketC2S(byte jumpState, float motionY) implements CustomPacketPayload {
+    public static final byte JUMP_BY_SELF = 1;
+    public static final byte RESET_FALL_DISTANCE = 2;
+
     public static final Type<PlayerJumpPacketC2S> TYPE = new Type<>(TerraCurio.asResource("player_jump_c2s"));
     public static final StreamCodec<ByteBuf, PlayerJumpPacketC2S> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.BOOL, p -> p.jumpBySelf,
-            ByteBufCodecs.BOOL, p -> p.resetFallDistance,
+            ByteBufCodecs.BYTE, p -> p.jumpState,
             ByteBufCodecs.FLOAT, p -> p.motionY,
             PlayerJumpPacketC2S::new
     );
@@ -30,11 +32,11 @@ public record PlayerJumpPacketC2S(boolean jumpBySelf, boolean resetFallDistance,
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer serverPlayer) {
                 serverPlayer.hasImpulse = true;
-                if (jumpBySelf) {
+                if ((jumpState & JUMP_BY_SELF) == JUMP_BY_SELF) {
                     serverPlayer.awardStat(Stats.JUMP);
                     serverPlayer.causeFoodExhaustion(serverPlayer.isSprinting() ? 0.2F : 0.05F);
                 }
-                if (resetFallDistance) {
+                if ((jumpState & RESET_FALL_DISTANCE) == RESET_FALL_DISTANCE) {
                     serverPlayer.resetFallDistance();
                 }
                 Vec3 motion = serverPlayer.getDeltaMovement();
