@@ -30,6 +30,7 @@ import org.confluence.terra_curio.common.item.curio.expert.ShinnyStone;
 import org.confluence.terra_curio.common.item.curio.health.BandOfRegeneration;
 import org.confluence.terra_curio.common.item.curio.master.BasePoint;
 import org.confluence.terra_curio.common.item.curio.movement.BaseSpeedBoots;
+import org.confluence.terra_curio.common.item.curio.movement.CloudInABottle;
 import org.confluence.terra_curio.common.item.curio.movement.DuneriderBoots;
 import org.confluence.terra_curio.common.item.curio.movement.StepStool;
 
@@ -357,7 +358,7 @@ public final class TCItems { // todo 全换成data map
                             of(LAVA$IMMUNE$TICKS, 140),
                             of(LAVA$HURT$REDUCE, 0.5F)
                     ).attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL))), // 泰拉闪耀靴
-            CLOUD_IN_A_BOTTLE = registerCurio("cloud_in_a_bottle", builder -> builder.accessories(of(CLOUD, 1.3F))), // 云朵瓶
+            CLOUD_IN_A_BOTTLE = registerDirectly("cloud_in_a_bottle", name -> new CloudInABottle(BaseCurioItem.builder(name).particle(TerraCurio.asResource("cloud")).accessories(of(CLOUD, 1.3F)))), // 云朵瓶
             BLIZZARD_IN_A_BOTTLE = registerCurio("blizzard_in_a_bottle", builder -> builder.jeiInfos(0).accessories(of(BLIZZARD, new Tuple<>(0.4F, 14)))), // 暴雪瓶
             SANDSTORM_IN_A_BOTTLE = registerCurio("sandstorm_in_a_bottle", builder -> builder.rarity(GREEN).accessories(of(SAND$STORM, new Tuple<>(0.45F, 17)))), // 沙暴瓶
             FART_IN_A_JAR = registerCurio("fart_in_a_jar", builder -> builder.rarity(GREEN).accessories(of(FART, 1.7F))), // 罐中臭屁

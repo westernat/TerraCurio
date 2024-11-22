@@ -13,6 +13,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.api.primitive.ComponentsValue;
@@ -58,18 +60,24 @@ public class BaseCurioItem extends Item implements ICurioItem {
         LivingEntity living = slotContext.entity();
         if (living.level().isClientSide) {
             ILivingEntity iLiving = (ILivingEntity) living;
-            if (iLiving.terra_curio$getParticleEmitters() == null) {
+            ParticleEmitter emitter = iLiving.terra_curio$getOrCreateParticleEmitters().get(builder.particle);
+            if (emitter == null) {
                 Map<ResourceLocation, ParticleEmitter> emitters = iLiving.terra_curio$getOrCreateParticleEmitters();
-                ParticleEmitter emitter = new ParticleEmitter(living.level(), living.position(), builder.particle);
+                emitter = new ParticleEmitter(living.level(), living.position(), builder.particle);
                 emitter.attached = living;
                 PSGameClient.LOADER.addEmitter(emitter, false);
                 emitters.put(builder.particle, emitter);
             }
-            particleTick(living, iLiving.terra_curio$getOrCreateParticleEmitters().get(builder.particle));
+            particleTick(living, emitter);
         }
     }
 
-    protected void particleTick(LivingEntity living, ParticleEmitter emitter) {}
+    @OnlyIn(Dist.CLIENT)
+    protected void particleTick(LivingEntity living, ParticleEmitter emitter) {
+        if (emitter.isRemoved()) {
+            ((ILivingEntity) living).terra_curio$getOrCreateParticleEmitters().remove(builder.particle);
+        }
+    }
 
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {

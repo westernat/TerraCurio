@@ -41,6 +41,7 @@ public final class PlayerJumpHandler {
 
     private static double cloudSpeed = 0.0;
     private static boolean cloudFinished = false;
+    public static boolean isOnCloudJump = false;
 
     private static double flySpeed = 0.0;
     private static int maxFlyTicks = 0;
@@ -95,6 +96,7 @@ public final class PlayerJumpHandler {
                 localPlayer.playSound(TCSoundEvents.DOUBLE_JUMP.get());
             } else if (!cloudFinished && cloudSpeed > 0.0) {
                 cloudFinished = true;
+                isOnCloudJump = true;
                 jumpKeyDown = true;
                 multiJump(localPlayer, cloudSpeed);
                 localPlayer.playSound(TCSoundEvents.DOUBLE_JUMP.get());
