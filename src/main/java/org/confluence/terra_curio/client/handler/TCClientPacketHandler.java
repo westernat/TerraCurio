@@ -22,7 +22,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForgeMod;
-import org.confluence.terra_curio.api.primitive.ValueType;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
 import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
@@ -160,7 +160,7 @@ public final class TCClientPacketHandler {
 
     public static void handleFluidWalk(Player player) {
         walkableFluidStates.clear();
-        Set<TagKey<Fluid>> tagKeys = CuriosUtils.calculateValue(player, ValueType.FLUID$WALK);
+        Set<TagKey<Fluid>> tagKeys = CuriosUtils.calculateValue(player, TCItems.FLUID$WALK);
         BuiltInRegistries.FLUID.stream().flatMap(fluid -> fluid.getStateDefinition().getPossibleStates().stream()).forEach(state -> {
             if (tagKeys.stream().anyMatch(state::is)) {
                 walkableFluidStates.add(state);

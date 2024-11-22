@@ -10,8 +10,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.MayFlyAbilityValue;
-import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -42,7 +42,7 @@ public record PlayerFlyPacketS2C(float flySpeed, int flyTicks, boolean couldGlid
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        MayFlyAbilityValue.Storage ability = TCUtils.getAccessoriesValue(serverPlayer, ValueType.MAY$FLY);
+        MayFlyAbilityValue.Storage ability = TCUtils.getAccessoriesValue(serverPlayer, TCItems.MAY$FLY);
         PacketDistributor.sendToPlayer(serverPlayer, new PlayerFlyPacketS2C(
                 ability.flySpeed(),
                 ability.flyTicks(),

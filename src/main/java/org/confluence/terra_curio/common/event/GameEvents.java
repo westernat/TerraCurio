@@ -30,7 +30,6 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.event.AfterAccessoryAbilitiesFlushedEvent;
-import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
 import org.confluence.terra_curio.common.init.*;
@@ -76,7 +75,7 @@ public final class GameEvents {
     @SubscribeEvent
     public static void livingIncomingDamage(LivingIncomingDamageEvent event) {
         DamageContainer container = event.getContainer();
-        float invulnerableTicksMultiplier = TCUtils.getAccessoriesValue(event.getEntity(), ValueType.INVULNERABLE$TICKS$MULTIPLIER);
+        float invulnerableTicksMultiplier = TCUtils.getAccessoriesValue(event.getEntity(), TCItems.INVULNERABLE$TICKS$MULTIPLIER);
         container.setPostAttackInvulnerabilityTicks((int) (container.getPostAttackInvulnerabilityTicks() * invulnerableTicksMultiplier));
     }
 
@@ -193,7 +192,7 @@ public final class GameEvents {
     @SubscribeEvent
     public static void effectApplicable(MobEffectEvent.Applicable event) {
         MobEffectInstance effectInstance = event.getEffectInstance();
-        if (effectInstance != null && TCUtils.getAccessoriesValue(event.getEntity(), ValueType.EFFECT$IMMUNITIES).contains(effectInstance.getEffect())) {
+        if (effectInstance != null && TCUtils.getAccessoriesValue(event.getEntity(), TCItems.EFFECT$IMMUNITIES).contains(effectInstance.getEffect())) {
             event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
         }
     }
@@ -229,7 +228,7 @@ public final class GameEvents {
     public static void livingBreathe(LivingBreatheEvent event) {
         LivingEntity living = event.getEntity();
         if (!event.canBreathe() && living.getAirSupply() > 0 && living.level().getGameTime() % 8 != 0) { //延长至120秒
-            if (living.getItemBySlot(EquipmentSlot.HEAD).is(TCTags.DIVING) || TCUtils.hasAccessoriesType(living, ValueType.DIVING)) {
+            if (living.getItemBySlot(EquipmentSlot.HEAD).is(TCTags.DIVING) || TCUtils.hasAccessoriesType(living, TCItems.DIVING)) {
                 event.setConsumeAirAmount(0);
             }
         }

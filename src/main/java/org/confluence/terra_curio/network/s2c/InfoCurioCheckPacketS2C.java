@@ -12,9 +12,9 @@ import net.minecraft.world.scores.Team;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.InformationHandler;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
@@ -68,26 +68,26 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         for (ItemStack stack : itemStacks) {
             AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
             if (component == null) continue;
-            if (component.contains(ValueType.FULL$INFORMATION)) {
+            if (component.contains(TCItems.FULL$INFORMATION)) {
                 PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), FULL_MYSELF_ARRAY));
                 return;
             }
 
-            if (watch < 1 && component.contains(ValueType.HOUR$WATCH)) watch = 1;
-            else if (watch < 2 && component.contains(ValueType.HALF$HOUR$WATCH)) watch = 2;
-            else if (watch < 3 && component.contains(ValueType.MINUTE$WATCH)) watch = 3;
-            if (weatherRadio == 0 && component.contains(ValueType.WEATHER$RADIO)) weatherRadio = 1;
-            if (sextant == 0 && component.contains(ValueType.SEXTANT)) sextant = 1;
-            if (fishermansPocketGuide == 0 && component.contains(ValueType.FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = 1;
-            if (metalDetector == 0 && component.contains(ValueType.METAL$DETECTOR)) metalDetector = 1;
-            if (lifeFormAnalyzer == 0 && component.contains(ValueType.LIFE$FORM$ANALYZER)) lifeFormAnalyzer = 1;
-            if (radar == 0 && component.contains(ValueType.RADAR)) radar = 1;
-            if (tallyCounter == 0 && component.contains(ValueType.TALLY$COUNTER)) tallyCounter = 1;
-            if (dpsMeter == 0 && component.contains(ValueType.DPS$METER)) dpsMeter = 1;
-            if (stopwatch == 0 && component.contains(ValueType.STOPWATCH)) stopwatch = 1;
-            if (compass == 0 && component.contains(ValueType.COMPASS)) compass = 1;
-            if (depthMeter == 0 && component.contains(ValueType.DEPTH$METER)) depthMeter = 1;
-            if (mechanicalView == 0 && component.contains(ValueType.MECHANICAL$LENS)) mechanicalView = 1;
+            if (watch < 1 && component.contains(TCItems.HOUR$WATCH)) watch = 1;
+            else if (watch < 2 && component.contains(TCItems.HALF$HOUR$WATCH)) watch = 2;
+            else if (watch < 3 && component.contains(TCItems.MINUTE$WATCH)) watch = 3;
+            if (weatherRadio == 0 && component.contains(TCItems.WEATHER$RADIO)) weatherRadio = 1;
+            if (sextant == 0 && component.contains(TCItems.$SEXTANT)) sextant = 1;
+            if (fishermansPocketGuide == 0 && component.contains(TCItems.FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = 1;
+            if (metalDetector == 0 && component.contains(TCItems.METAL$DETECTOR)) metalDetector = 1;
+            if (lifeFormAnalyzer == 0 && component.contains(TCItems.LIFE$FORM$ANALYZER)) lifeFormAnalyzer = 1;
+            if (radar == 0 && component.contains(TCItems.$RADAR)) radar = 1;
+            if (tallyCounter == 0 && component.contains(TCItems.TALLY$COUNTER)) tallyCounter = 1;
+            if (dpsMeter == 0 && component.contains(TCItems.DPS$METER)) dpsMeter = 1;
+            if (stopwatch == 0 && component.contains(TCItems.$STOPWATCH)) stopwatch = 1;
+            if (compass == 0 && component.contains(TCItems.$COMPASS)) compass = 1;
+            if (depthMeter == 0 && component.contains(TCItems.DEPTH$METER)) depthMeter = 1;
+            if (mechanicalView == 0 && component.contains(TCItems.MECHANICAL$LENS)) mechanicalView = 1;
         }
         PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), new byte[]{
                 watch, weatherRadio, sextant, fishermansPocketGuide, metalDetector, lifeFormAnalyzer,
@@ -114,26 +114,26 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         for (ItemStack stack : itemStacks) {
             AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
             if (component == null) continue;
-            if (component.contains(ValueType.FULL$INFORMATION)) {
+            if (component.contains(TCItems.FULL$INFORMATION)) {
                 PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), FULL_REMOTE_ARRAY));
                 return;
             }
 
-            if (watch > -126 && component.contains(ValueType.HOUR$WATCH)) watch = -126;
-            else if (watch > -127 && component.contains(ValueType.HALF$HOUR$WATCH)) watch = -127;
-            else if (watch > -128 && component.contains(ValueType.MINUTE$WATCH)) watch = -128;
-            if (weatherRadio == -128 && component.contains(ValueType.WEATHER$RADIO)) weatherRadio = -1;
-            if (sextant == -128 && component.contains(ValueType.SEXTANT)) sextant = -1;
-            if (fishermansPocketGuide == -128 && component.contains(ValueType.FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = -1;
-            if (metalDetector == -128 && component.contains(ValueType.METAL$DETECTOR)) metalDetector = -1;
-            if (lifeFormAnalyzer == -128 && component.contains(ValueType.LIFE$FORM$ANALYZER)) lifeFormAnalyzer = -1;
-            if (radar == -128 && component.contains(ValueType.RADAR)) radar = -1;
-            if (tallyCounter == -128 && component.contains(ValueType.TALLY$COUNTER)) tallyCounter = -1;
-            if (dpsMeter == -128 && component.contains(ValueType.DPS$METER)) dpsMeter = -1;
-            if (stopwatch == -128 && component.contains(ValueType.STOPWATCH)) stopwatch = -1;
-            if (compass == -128 && component.contains(ValueType.COMPASS)) compass = -1;
-            if (depthMeter == -128 && component.contains(ValueType.DEPTH$METER)) depthMeter = -1;
-            if (mechanicalView == -128 && component.contains(ValueType.MECHANICAL$LENS)) mechanicalView = -1;
+            if (watch > -126 && component.contains(TCItems.HOUR$WATCH)) watch = -126;
+            else if (watch > -127 && component.contains(TCItems.HALF$HOUR$WATCH)) watch = -127;
+            else if (watch > -128 && component.contains(TCItems.MINUTE$WATCH)) watch = -128;
+            if (weatherRadio == -128 && component.contains(TCItems.WEATHER$RADIO)) weatherRadio = -1;
+            if (sextant == -128 && component.contains(TCItems.$SEXTANT)) sextant = -1;
+            if (fishermansPocketGuide == -128 && component.contains(TCItems.FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = -1;
+            if (metalDetector == -128 && component.contains(TCItems.METAL$DETECTOR)) metalDetector = -1;
+            if (lifeFormAnalyzer == -128 && component.contains(TCItems.LIFE$FORM$ANALYZER)) lifeFormAnalyzer = -1;
+            if (radar == -128 && component.contains(TCItems.$RADAR)) radar = -1;
+            if (tallyCounter == -128 && component.contains(TCItems.TALLY$COUNTER)) tallyCounter = -1;
+            if (dpsMeter == -128 && component.contains(TCItems.DPS$METER)) dpsMeter = -1;
+            if (stopwatch == -128 && component.contains(TCItems.$STOPWATCH)) stopwatch = -1;
+            if (compass == -128 && component.contains(TCItems.$COMPASS)) compass = -1;
+            if (depthMeter == -128 && component.contains(TCItems.DEPTH$METER)) depthMeter = -1;
+            if (mechanicalView == -128 && component.contains(TCItems.MECHANICAL$LENS)) mechanicalView = -1;
         }
         boolean equals = watch == -125 && weatherRadio == -128 && sextant == -128 && fishermansPocketGuide == -128 && metalDetector == -128 && lifeFormAnalyzer == -128 &&
                 radar == -128 && tallyCounter == -128 && dpsMeter == -128 && stopwatch == -128 && compass == -128 && depthMeter == -128 && mechanicalView == -128;

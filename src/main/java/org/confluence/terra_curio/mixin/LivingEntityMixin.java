@@ -10,8 +10,8 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.init.TCEffects;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.mixed.SelfGetter;
@@ -55,7 +55,7 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
 
     @Inject(method = "canFreeze", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
     private void checkFreeze(CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValue() && TCUtils.hasAccessoriesType(self(), ValueType.FROZEN$IMMUNE)) {
+        if (cir.getReturnValue() && TCUtils.hasAccessoriesType(self(), TCItems.FROZEN$IMMUNE)) {
             cir.setReturnValue(false);
         }
     }

@@ -10,8 +10,8 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -41,7 +41,7 @@ public record LuminancePacketS2C(int playerId, int luminance) implements CustomP
 
     public static void sendToAll(ServerPlayer serverPlayer) {
         if (ServerLifecycleHooks.getCurrentServer() != null) {
-            Integer luminance = TCUtils.getAccessoriesValue(serverPlayer, ValueType.LUMINANCE);
+            Integer luminance = TCUtils.getAccessoriesValue(serverPlayer, TCItems.LUMINANCE);
             PacketDistributor.sendToAllPlayers(new LuminancePacketS2C(serverPlayer.getId(), luminance));
         }
     }

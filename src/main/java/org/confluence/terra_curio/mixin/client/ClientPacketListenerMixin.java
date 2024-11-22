@@ -5,8 +5,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.confluence.terra_curio.util.TCUtils;
 import org.spongepowered.asm.mixin.Mixin;
@@ -22,7 +22,7 @@ public abstract class ClientPacketListenerMixin {
         Optional<ItemStack> curio = CuriosUtils.findCurio(player, (Predicate<ItemStack>) itemStack -> {
             AccessoriesComponent component = TCUtils.getAccessoriesComponent(itemStack);
             if (component != null) {
-                return component.contains(ValueType.TOTEM$WITH$COOLDOWN);
+                return component.contains(TCItems.TOTEM$WITH$COOLDOWN);
             }
             return false;
         });

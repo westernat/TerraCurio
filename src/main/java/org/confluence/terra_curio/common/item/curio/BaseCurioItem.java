@@ -21,6 +21,7 @@ import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCDataMaps;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -50,7 +51,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
         AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         AttributeModifiersValue value;
-        if (component != null && (value = component.get(ValueType.ATTRIBUTES)) != null) {
+        if (component != null && (value = component.get(TCItems.ATTRIBUTES)) != null) {
             return value.get();
         }
         return builder == null ? EMPTY_ATTRIBUTE : builder.attributes;
@@ -60,7 +61,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
     public void appendHoverText(ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
         AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         ComponentsValue value;
-        if (component != null && (value = component.get(ValueType.COMPONENTS)) != null) {
+        if (component != null && (value = component.get(TCItems.COMPONENTS)) != null) {
             tooltipComponents.addAll(value.components());
             return;
         }

@@ -12,11 +12,11 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
-import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.ClientConfigs;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.init.TCDataMaps;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
@@ -80,7 +80,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
         builder1.putAll(builder.getAttributes());
         AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         AttributeModifiersValue value;
-        if (component != null && (value = component.get(ValueType.ATTRIBUTES)) != null) {
+        if (component != null && (value = component.get(TCItems.ATTRIBUTES)) != null) {
             builder1.putAll(value.get());
         }
         double speed = TCUtils.getItemStackNbt(stack).getInt(KEY) * 0.01;
