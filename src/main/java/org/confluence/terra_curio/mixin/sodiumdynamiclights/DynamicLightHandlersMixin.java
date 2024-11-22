@@ -13,7 +13,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class DynamicLightHandlersMixin {
     @Inject(method = "getLuminanceFrom(Lnet/minecraft/world/entity/Entity;)I", at = @At("RETURN"), cancellable = true)
     private static <T extends Entity> void getAccessoryLuminance(T entity, CallbackInfoReturnable<Integer> cir) {
-        int luminance = TCClientPacketHandler.getWaterLuminance(entity);
+        int luminance = TCClientPacketHandler.getLuminance(entity);
         if (luminance > cir.getReturnValue()) {
             cir.setReturnValue(luminance);
         }

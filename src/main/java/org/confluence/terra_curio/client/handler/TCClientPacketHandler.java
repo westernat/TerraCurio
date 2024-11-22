@@ -75,12 +75,12 @@ public final class TCClientPacketHandler {
         return rightClickSubtractor;
     }
 
-    public static int getWaterLuminance(Entity entity) {
-        if (entity.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value())) {
-            if (entity == Minecraft.getInstance().player) return luminance;
-            return remoteLuminance.getOrDefault(entity.getId(), 0);
+    public static int getLuminance(Entity entity) {
+        int ret = entity == Minecraft.getInstance().player ? luminance : remoteLuminance.getOrDefault(entity.getId(), 0);
+        if (ret < 0) { // 只能在水下发光
+            return entity.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value()) ? -ret : 0;
         }
-        return 0;
+        return ret;
     }
 
     public static void handleSubstractor(RightClickSubtractorPacketS2C packet) {
@@ -169,7 +169,7 @@ public final class TCClientPacketHandler {
     }
 
     public static void handleLuminance(LuminancePacketS2C packet, Player player) {
-        if (packet.playerId() == player.getId()) {
+        if (player == Minecraft.getInstance().player) {
             luminance = packet.luminance();
         } else {
             remoteLuminance.put(packet.playerId(), packet.luminance());

@@ -306,9 +306,9 @@ public final class TCItems { // todo 全换成data map
             FLYING_CARPET = registerCurio("flying_carpet", builder -> builder.rarity(GREEN).accessories(of(MAY$FLY, new MayFlyAbilityValue.Storage(0.5625F, 100, false, true)))), // 飞毯
             AGLET = registerCurio("aglet", builder -> builder.noTooltip().attribute(Attributes.MOVEMENT_SPEED, 0.05, ADD_MULTIPLIED_TOTAL)), // 金属带扣
             ANKLET_OF_THE_WIND = registerCurio("anklet_of_the_wind", builder -> builder.jeiInfos(0).noTooltip().attribute(Attributes.MOVEMENT_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)), // 疾风脚镯
-            MAGILUMINESCENCE = registerCurio("magiluminescence", builder -> builder
-                    .accessories(units($MAGILUMINESCENCE), of(LUMINANCE, 12)).tooltips(1)
-                    .attribute(Attributes.MOVEMENT_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)), // 魔光护符
+            MAGILUMINESCENCE = registerDirectly("magiluminescence", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).tooltips(1)
+                    .accessories(units($MAGILUMINESCENCE), of(LUMINANCE, 14))
+                    .attribute(Attributes.MOVEMENT_SPEED, 0.15, ADD_MULTIPLIED_TOTAL), "sodiumdynamiclights")), // 魔光护符
             LAVA_CHARM = registerCurio("lava_charm", builder -> builder.rarity(ORANGE).accessories(of(LAVA$IMMUNE$TICKS, 140))), // 熔岩护身符
             MAGMA_SKULL = registerCurio("magma_skull", builder -> builder.jeiInfos(0).tooltips(1).rarity(PINK).accessories(
                     units(FIRE$IMMUNE),
@@ -460,12 +460,12 @@ public final class TCItems { // todo 全换成data map
             INNER_TUBE = registerCurio("inner_tube", builder -> builder.rarity(WHITE).accessories(units(FLOAT$ON$LIQUID$SURFACE))),
             FLIPPER = registerCurio("flipper", builder -> builder.noTooltip().attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)), // 脚蹼
             DIVING_GEAR = registerCurio("diving_gear", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).equipable(EquipmentSlot.HEAD).accessories(units(DIVING)).attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)), // 潜水装备
-            JELLYFISH_NECKLACE = registerDirectly("jellyfish_necklace", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(GREEN).accessories(of(LUMINANCE, 12)), "sodiumdynamiclights")), // 水母项链
+            JELLYFISH_NECKLACE = registerDirectly("jellyfish_necklace", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(GREEN).accessories(of(LUMINANCE, -12)), "sodiumdynamiclights")), // 水母项链
             JELLYFISH_DIVING_GEAR = registerDirectly("jellyfish_diving_gear", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(PINK).tooltips(1).jeiInfos(0)
-                    .accessories(units(DIVING), of(LUMINANCE, 12), of(EFFECT$IMMUNITIES, Set.of()))
+                    .accessories(units(DIVING), of(LUMINANCE, -12), of(EFFECT$IMMUNITIES, Set.of()))
                     .attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE), "sodiumdynamiclights")), // 水母潜水装备
             ARCTIC_DIVING_GEAR = registerDirectly("arctic_diving_gear", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(LIGHT_PURPLE).tooltips(2)
-                    .accessories(units(DIVING, ICE$SPEED, FROZEN$IMMUNE), of(LUMINANCE, 12))
+                    .accessories(units(DIVING, ICE$SPEED, FROZEN$IMMUNE), of(LUMINANCE, -12))
                     .attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE), "sodiumdynamiclights")), // 北极潜水装备
             FROG_LEG = registerCurio("frog_leg", builder -> builder
                     .tooltips(1)

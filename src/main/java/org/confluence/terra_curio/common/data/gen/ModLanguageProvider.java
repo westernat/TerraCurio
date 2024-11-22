@@ -532,7 +532,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 },
                 new String[]{
                         "提高移动速度和加速度",
-                        "我黑暗生命中的一道短暂曙光"
+                        "“我黑暗生命中的一道短暂曙光”"
                 },
                 "It can be found in End City Chests.",
                 "它可以在末地城的宝箱中找到。"
@@ -1008,6 +1008,7 @@ public class ModLanguageProvider extends LanguageProvider {
             sidedAdd(TCItems.GPS.get().getDescriptionId(), "GPS", enData);
             sidedAdd(TCItems.PDA.get().getDescriptionId(), "PDA", enData);
             sidedAdd(TCItems.REK_3000.get().getDescriptionId(), "R.E.K.3000", enData);
+            sidedAdd(TCItems.DIVING_HELMET.get().getDescriptionId(), "Diving Helmet", enData);
             TCItems.CURIOS.getEntries().forEach(item -> {
                 Item item1 = item.get();
                 sidedAdd(item1.getDescriptionId(), toTitleCase(item.getId().getPath()), enData);
