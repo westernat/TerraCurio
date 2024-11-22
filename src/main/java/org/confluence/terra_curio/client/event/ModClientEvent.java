@@ -37,7 +37,7 @@ public final class ModClientEvent {
     @SubscribeEvent
     public static void registerGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAboveAll(TerraCurio.asResource("info_hud"), new InfoHudOverlay());
-        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, TerraCurio.asResource("diving_helmet"), new DivingHelmetOverlay());
+        event.registerBelow(VanillaGuiLayers.CAMERA_OVERLAYS, TerraCurio.asResource("diving_helmet"), new DivingHelmetOverlay());
     }
 
     @SubscribeEvent
