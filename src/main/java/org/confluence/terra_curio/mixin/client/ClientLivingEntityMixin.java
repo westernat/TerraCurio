@@ -43,10 +43,13 @@ public abstract class ClientLivingEntityMixin implements SelfGetter<LivingEntity
         return vec3;
     }
 
-    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;"))
-    private Vec3 notSlowdownY(Vec3 instance, double factorX, double factorY, double factorZ, Operation<Vec3> original) {
-        if (TCClientPacketHandler.floating && TCClientPacketHandler.isCanFloating() && self() instanceof LocalPlayer) {
-            return original.call(instance, factorX, 1.0, factorZ);
+    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
+    private Vec3 notSlowdown(Vec3 instance, double factorX, double factorY, double factorZ, Operation<Vec3> original) {
+        if (TCClientPacketHandler.floating && TCClientPacketHandler.isCanFloating()) {
+            if (self() instanceof LocalPlayer) return original.call(instance, factorX, 1.0, factorZ);
+        }
+        if (terra_curio$checkCanWalk(self(), self().getInBlockState().getFluidState())) {
+            return original.call(instance, 0.94, factorY, 0.94);
         }
         return original.call(instance, factorX, factorY, factorZ);
     }
