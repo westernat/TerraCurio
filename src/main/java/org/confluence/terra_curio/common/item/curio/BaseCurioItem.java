@@ -7,6 +7,7 @@ import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
@@ -22,9 +23,13 @@ import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCDataMaps;
 import org.confluence.terra_curio.common.init.TCItems;
+import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mesdag.particlestorm.PSGameClient;
+import org.mesdag.particlestorm.particle.ParticleEmitter;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
@@ -46,6 +51,25 @@ public class BaseCurioItem extends Item implements ICurioItem {
     public BaseCurioItem(Properties properties) {
         super(properties);
     }
+
+    @Override
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
+        if (builder.particle == null) return;
+        LivingEntity living = slotContext.entity();
+        if (living.level().isClientSide) {
+            ILivingEntity iLiving = (ILivingEntity) living;
+            if (iLiving.terra_curio$getParticleEmitters() == null) {
+                Map<ResourceLocation, ParticleEmitter> emitters = iLiving.terra_curio$getOrCreateParticleEmitters();
+                ParticleEmitter emitter = new ParticleEmitter(living.level(), living.position(), builder.particle);
+                emitter.attached = living;
+                PSGameClient.LOADER.addEmitter(emitter, false);
+                emitters.put(builder.particle, emitter);
+            }
+            particleTick(living, iLiving.terra_curio$getOrCreateParticleEmitters().get(builder.particle));
+        }
+    }
+
+    protected void particleTick(LivingEntity living, ParticleEmitter emitter) {}
 
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
@@ -118,10 +142,17 @@ public class BaseCurioItem extends Item implements ICurioItem {
         private boolean makePiglinsNeutral = false;
         private EquipmentSlot equipmentSlot = null;
 
+        private ResourceLocation particle = null;
+
         Builder(String name, Properties properties) {
             this.name = name;
             this.properties = properties;
             this.defaultId = TerraCurio.asResource(name);
+        }
+
+        public Builder particle(ResourceLocation particle) {
+            this.particle = particle;
+            return this;
         }
 
         public Builder equipable(EquipmentSlot slot) {
@@ -215,6 +246,11 @@ public class BaseCurioItem extends Item implements ICurioItem {
         @ApiStatus.Internal
         public ImmutableMultimap<Holder<Attribute>, AttributeModifier> getAttributes() {
             return attributes;
+        }
+
+        @ApiStatus.Internal
+        public @Nullable ResourceLocation getParticle() {
+            return particle;
         }
 
         public BaseCurioItem build() {

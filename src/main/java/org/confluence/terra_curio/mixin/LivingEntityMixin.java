@@ -5,6 +5,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -16,6 +17,9 @@ import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.mixed.SelfGetter;
 import org.confluence.terra_curio.util.TCUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mesdag.particlestorm.particle.ParticleEmitter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -26,10 +30,15 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Hashtable;
+import java.util.Map;
+
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<LivingEntity> {
     @Unique
     private int terra_curio$totem_cooldown = -1;
+    @Unique
+    private Map<ResourceLocation, ParticleEmitter> terra_curio$emitters;
 
     @Override
     public void terra_curio$setTotemCooldown(int cooldown) {
@@ -39,6 +48,19 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
     @Override
     public int terra_curio$getTotemCooldown() {
         return terra_curio$totem_cooldown;
+    }
+
+    @Override
+    public @Nullable Map<ResourceLocation, ParticleEmitter> terra_curio$getParticleEmitters() {
+        return terra_curio$emitters;
+    }
+
+    @Override
+    public @NotNull Map<ResourceLocation, ParticleEmitter> terra_curio$getOrCreateParticleEmitters() {
+        if (terra_curio$emitters == null) {
+            this.terra_curio$emitters = new Hashtable<>();
+        }
+        return terra_curio$emitters;
     }
 
     @Shadow
