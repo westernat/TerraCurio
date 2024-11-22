@@ -199,6 +199,7 @@ public final class TCUtils {
         PlayerFlyPacketS2C.sendToClient(serverPlayer);
         RightClickSubtractorPacketS2C.sendToClient(serverPlayer);
         FluidWalkUpdatePacketS2C.sendToClient(serverPlayer);
+        InfiniteFlightPacketS2C.sendToClient(serverPlayer);
         LuminancePacketS2C.sendToAll(serverPlayer);
     }
 

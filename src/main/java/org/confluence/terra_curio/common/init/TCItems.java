@@ -29,7 +29,6 @@ import org.confluence.terra_curio.common.item.curio.combat.*;
 import org.confluence.terra_curio.common.item.curio.expert.ShinnyStone;
 import org.confluence.terra_curio.common.item.curio.health.BandOfRegeneration;
 import org.confluence.terra_curio.common.item.curio.master.BasePoint;
-import org.confluence.terra_curio.common.item.curio.master.Everlasting;
 import org.confluence.terra_curio.common.item.curio.movement.BaseSpeedBoots;
 import org.confluence.terra_curio.common.item.curio.movement.DuneriderBoots;
 import org.confluence.terra_curio.common.item.curio.movement.StepStool;
@@ -92,6 +91,7 @@ public final class TCItems { // todo 全换成data map
     public static final ValueType<Unit, UnitValue> DIVING = ofUnit("diving");
     public static final ValueType<Unit, UnitValue> BRAIN$OF$CONFUSION = ofUnit("brain_of_confusion");
     public static final ValueType<Unit, UnitValue> HIVE$PACK = ofUnit("hive_pack");
+    public static final ValueType<Unit, UnitValue> INFINITE$FLIGHT = ofUnit("infinite_flight");
 
     public static final ValueType<Set<Holder<MobEffect>>, MobEffectsValue> EFFECT$IMMUNITIES = ValueType.create("effect_immunities", MobEffectsValue.EXPANSION, MobEffectsValue.CODEC, Set.of(), MobEffectsValue::new);
     public static final ValueType<Boolean, BooleanValue> STAR$CLOCK = ValueType.create("star_clock", BooleanValue.OR, BooleanValue.CODEC, false, BooleanValue::new);
@@ -119,7 +119,7 @@ public final class TCItems { // todo 全换成data map
     public static final Supplier<MasterItem> STAR = OTHERS.register("star", MasterItem::new);
     public static final Supplier<MasterItem> ICON = OTHERS.register("icon", MasterItem::new);
     public static final Supplier<BasePoint> BASE_POINT = OTHERS.register("base_point", BasePoint::new);
-    public static final Supplier<Everlasting> EVERLASTING = OTHERS.register("everlasting", Everlasting::new);
+    public static final Supplier<BaseCurioItem> EVERLASTING = OTHERS.register("everlasting", () -> BaseCurioItem.builder("everlasting").rarity(ModRarity.MASTER).build());
     public static final Supplier<BaseCurioItem> MECHANICAL_LENS = OTHERS.register("mechanical_lens", () -> BaseCurioItem.builder("mechanical_lens").rarity(ORANGE).accessories(units(MECHANICAL$LENS)).build()); //机械晶状体
 
     public static final Supplier<BlockItem> WORKSHOP = OTHERS.register("workshop", () -> new BlockItem(TCBlocks.WORKSHOP.get(), new Item.Properties()));
@@ -511,8 +511,12 @@ public final class TCItems { // todo 全换成data map
     /* 挥发明胶 */
     /* 孢子囊 */
     SHINNY_STONE = registerDirectly("shinny_stone", name -> new ShinnyStone(BaseCurioItem.builder(name).rarity(EXPERT))), // 闪亮石
-    /* 翱翔徽章 */
-    GRAVITY_GLOBE = registerCurio("gravity_globe", builder -> builder.rarity(EXPERT).accessories(units(GRAVITY$GLOBE)).tooltips(1)); // 重力球
+    SOARING_INSIGNIA = registerCurio("soaring_insignia", builder -> builder.rarity(EXPERT)
+            .accessories(units(INFINITE$FLIGHT))
+            .attribute(Attributes.MOVEMENT_SPEED, 0.075, ADD_MULTIPLIED_TOTAL)
+            .attribute(Attributes.JUMP_STRENGTH, 0.8, ADD_MULTIPLIED_TOTAL)), // 翱翔徽章
+    GRAVITY_GLOBE = registerCurio("gravity_globe", builder -> builder.rarity(EXPERT).accessories(units(GRAVITY$GLOBE)).tooltips(1)), // 重力球
+    CELESCIAL_STARBOARD = registerCurio("celescial_starboard", builder -> builder.rarity(EXPERT).accessories(of(MAY$FLY, new MayFlyAbilityValue.Storage(1.0F, 60, true, true)))); // 天界星盘
 
     public static Supplier<BaseCurioItem> registerCurio(String name, Consumer<BaseCurioItem.Builder> consumer) {
         return CURIOS.register(name, () -> {

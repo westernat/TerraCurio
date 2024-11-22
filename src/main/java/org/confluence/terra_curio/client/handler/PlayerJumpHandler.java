@@ -12,6 +12,7 @@ import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.integration.airhop.AirHopHelper;
 import org.confluence.terra_curio.mixin.accessor.LivingEntityAccessor;
 import org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S;
+import org.confluence.terra_curio.network.s2c.InfiniteFlightPacketS2C;
 import org.confluence.terra_curio.network.s2c.PlayerFlyPacketS2C;
 import org.confluence.terra_curio.network.s2c.PlayerJumpPacketS2C;
 
@@ -46,6 +47,7 @@ public final class PlayerJumpHandler {
     private static int remainFlyTicks = 0;
     private static boolean couldGlide = false;
     private static boolean horizontalFlight = false;
+    static boolean infiniteFlight = false;
 
     public static boolean onFly = false;
 
@@ -61,7 +63,7 @@ public final class PlayerJumpHandler {
             }
 
             if (couldGlide) {
-                if (remainFlyTicks-- > 0) {
+                if (infiniteFlight || remainFlyTicks-- > 0) {
                     onFly = true;
                     if (horizontalFlight && localPlayer.isShiftKeyDown()) {
                         horizontalFlight(localPlayer);
@@ -96,7 +98,7 @@ public final class PlayerJumpHandler {
                 jumpKeyDown = true;
                 multiJump(localPlayer, cloudSpeed);
                 localPlayer.playSound(TCSoundEvents.DOUBLE_JUMP.get());
-            } else if (remainFlyTicks-- > 0) {
+            } else if (infiniteFlight || remainFlyTicks-- > 0) {
                 onFly = true;
                 if (horizontalFlight) {
                     horizontalFlight(localPlayer);
@@ -163,7 +165,7 @@ public final class PlayerJumpHandler {
 
     private static void horizontalFlight(LocalPlayer localPlayer) {
         AttributeMap attributes = localPlayer.getAttributes();
-        airMove(localPlayer, 0.0, (float) (attributes.getValue(Attributes.MOVEMENT_SPEED) * 4.0));
+        airMove(localPlayer, 0.0, (float) (attributes.getValue(Attributes.MOVEMENT_SPEED) * 4.0 + flySpeed - 0.5));
     }
 
     private static void airMove(LocalPlayer localPlayer, double y, float h) {
@@ -197,7 +199,15 @@ public final class PlayerJumpHandler {
         horizontalFlight = packet.horizontalFlight();
     }
 
+    public static void handleInfiniteFlight(InfiniteFlightPacketS2C packet) {
+        infiniteFlight = packet.enable();
+    }
+
     public static boolean isOnHorizontalFlight() {
         return onFly && horizontalFlight;
+    }
+
+    public static boolean isInfiniteFlight() {
+        return infiniteFlight;
     }
 }

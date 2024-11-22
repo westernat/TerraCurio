@@ -13,6 +13,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.client.ClientConfigs;
+import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.init.TCDataMaps;
@@ -54,7 +55,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
             int speed = TCUtils.getItemStackNbt(stack).getInt(KEY);
             if (player.zza > 0) {
                 if (player.onGround()) {
-                    if (TCClientPacketHandler.isHasMagiluminescence()) acceleration *= 2;
+                    if (TCClientPacketHandler.isHasMagiluminescence() || PlayerJumpHandler.isInfiniteFlight()) acceleration *= 2;
                     int actually = Math.min(maxSpeed - speed, acceleration);
                     int value = speed + actually;
                     if (actually > 0) {
