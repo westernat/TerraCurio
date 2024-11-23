@@ -9,6 +9,7 @@ import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
+import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.c2s.GravitationPacketC2S;
 import org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
@@ -63,5 +64,7 @@ public final class ModEvents {
         registrar.playToClient(FluidWalkUpdatePacketS2C.TYPE, FluidWalkUpdatePacketS2C.STREAM_CODEC, FluidWalkUpdatePacketS2C::handle);
         registrar.playToClient(LuminancePacketS2C.TYPE, LuminancePacketS2C.STREAM_CODEC, LuminancePacketS2C::handle);
         registrar.playToClient(InfiniteFlightPacketS2C.TYPE, InfiniteFlightPacketS2C.STREAM_CODEC, InfiniteFlightPacketS2C::handle);
+
+        registrar.playBidirectional(InfoDisablePacket.TYPE, InfoDisablePacket.STREAM_CODEC, InfoDisablePacket::handle);
     }
 }

@@ -12,6 +12,7 @@ import net.minecraft.util.Mth;
 import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.client.handler.InformationHandler;
 import org.confluence.terra_curio.common.item.IFunctionCouldEnable;
+import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
@@ -56,7 +57,9 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
     public void renderImage(@NotNull Font font, int x, int y, @NotNull GuiGraphics guiGraphics) {
         if (InputConstants.isKeyDown(Minecraft.getInstance().getWindow().getWindow(), 340)) {
             for (int i = 0; i < storages.size(); i++) {
-                guiGraphics.blit(storages.get(i).texture(), x, y + i * 10, 0, 0, 10, 10);
+                if (!InformationHandler.DISABLE[i]) {
+                    guiGraphics.blit(storages.get(i).texture(), x, y + i * 10, 0, 0, 10, 10);
+                }
             }
             if (mouseScrolledY >= 0) {
                 guiGraphics.fill(x + 1, y - 1 + mouseScrolledY * 10, x + 128, y + mouseScrolledY * 10, 0xFFFF0000);
@@ -68,6 +71,7 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
             if (mouseScrollY > 0) {
                 int index = IFunctionCouldEnable.Multi.INDEX_MAP.getOrDefault(storages.get(mouseScrollY - 1), -1);
                 InformationHandler.DISABLE[index] = !InformationHandler.DISABLE[index];
+                InfoDisablePacket.sendToServer(InformationHandler.DISABLE);
             }
             mouseScrollY = 0;
         }

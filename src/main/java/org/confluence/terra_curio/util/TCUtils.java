@@ -41,6 +41,7 @@ import org.confluence.terra_curio.common.entity.projectile.StarCloakEntity;
 import org.confluence.terra_curio.common.init.*;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.mixed.ILivingEntity;
+import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.s2c.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -193,6 +194,7 @@ public final class TCUtils {
 
     public static void resetClientPacket(ServerPlayer serverPlayer) {
         InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
+        InfoDisablePacket.sendToClient(serverPlayer);
         CurioExistsPacketS2C.sendToClient(serverPlayer);
         PlayerClimbPacketS2C.sendToClient(serverPlayer);
         PlayerJumpPacketS2C.sendToClient(serverPlayer);

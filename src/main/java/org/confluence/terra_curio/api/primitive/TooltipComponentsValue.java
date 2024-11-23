@@ -60,7 +60,7 @@ public class TooltipComponentsValue implements PrimitiveValue<List<TooltipCompon
     }
 
     public static Storage create(String path) {
-        return new Storage(TerraCurio.asResource("textures/gui/accessory/" + path + ".png"), Component.translatable("tooltip.terra_curio." + path));
+        return new Storage(TerraCurio.asResource("textures/gui/information/" + path + ".png"), Component.translatable("tooltip.terra_curio." + path));
     }
 
     public record Storage(ResourceLocation texture, Component text) {
