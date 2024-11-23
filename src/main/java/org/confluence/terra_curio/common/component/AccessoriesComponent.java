@@ -57,9 +57,9 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
         return new AccessoriesComponent(map);
     }
 
-    public static AccessoriesComponent units(ValueType<Unit, UnitValue> type, ValueType<Unit, UnitValue>... types) {
+    public static AccessoriesComponent units(ValueType<Unit, ? extends UnitValue> type, ValueType<Unit, ? extends UnitValue>... types) {
         Hashtable<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> table = new Hashtable<>(Map.of(type, UnitValue.INSTANCE));
-        for (ValueType<Unit, UnitValue> type1 : types) {
+        for (ValueType<Unit, ? extends UnitValue> type1 : types) {
             table.put(type1, UnitValue.INSTANCE);
         }
         return new AccessoriesComponent(table);

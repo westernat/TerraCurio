@@ -24,7 +24,6 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         IntrinsicTagAppender<Item> accessory = tag(TCTags.ACCESSORY);
         accessory.add(TCItems.BASE_POINT.get());
         accessory.add(TCItems.EVERLASTING.get());
-        accessory.add(TCItems.MECHANICAL_LENS.get());
         TCItems.CURIOS.getEntries().forEach(item -> accessory.add(item.get()));
         tag(TCTags.DIVING).add(
                 TCItems.DIVING_HELMET.get(),

@@ -28,6 +28,7 @@ import org.confluence.terra_curio.common.item.curio.RequiresModLoadedCurioItem;
 import org.confluence.terra_curio.common.item.curio.combat.*;
 import org.confluence.terra_curio.common.item.curio.expert.ShinnyStone;
 import org.confluence.terra_curio.common.item.curio.health.BandOfRegeneration;
+import org.confluence.terra_curio.common.item.curio.information.PDA;
 import org.confluence.terra_curio.common.item.curio.master.BasePoint;
 import org.confluence.terra_curio.common.item.curio.movement.BaseSpeedBoots;
 import org.confluence.terra_curio.common.item.curio.movement.CloudInABottle;
@@ -42,6 +43,7 @@ import java.util.function.Supplier;
 
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE;
+import static org.confluence.terra_curio.api.primitive.ValueType.create;
 import static org.confluence.terra_curio.api.primitive.ValueType.ofUnit;
 import static org.confluence.terra_curio.common.component.AccessoriesComponent.*;
 import static org.confluence.terra_curio.common.component.ModRarity.*;
@@ -52,22 +54,23 @@ public final class TCItems { // todo 全换成data map
     public static final DeferredRegister.Items CURIOS = DeferredRegister.createItems(TerraCurio.MODID);
 
     // client side info_check
-    public static final ValueType<Unit, UnitValue> FULL$INFORMATION = ofUnit("full_information");
-    public static final ValueType<Unit, UnitValue> HOUR$WATCH = ofUnit("hour_watch");
-    public static final ValueType<Unit, UnitValue> HALF$HOUR$WATCH = ofUnit("half_hour_watch");
-    public static final ValueType<Unit, UnitValue> MINUTE$WATCH = ofUnit("minute_watch");
-    public static final ValueType<Unit, UnitValue> WEATHER$RADIO = ofUnit("weather_radio");
-    public static final ValueType<Unit, UnitValue> $SEXTANT = ofUnit("sextant");
-    public static final ValueType<Unit, UnitValue> FISHERMANS$POCKET$GUIDE = ofUnit("fishermans_pocket_guide");
-    public static final ValueType<Unit, UnitValue> METAL$DETECTOR = ofUnit("metal_detector");
-    public static final ValueType<Unit, UnitValue> LIFE$FORM$ANALYZER = ofUnit("life_form_analyzer");
-    public static final ValueType<Unit, UnitValue> $RADAR = ofUnit("radar");
-    public static final ValueType<Unit, UnitValue> TALLY$COUNTER = ofUnit("tally_counter");
-    public static final ValueType<Unit, UnitValue> DPS$METER = ofUnit("dps_meter");
-    public static final ValueType<Unit, UnitValue> $STOPWATCH = ofUnit("stopwatch");
-    public static final ValueType<Unit, UnitValue> $COMPASS = ofUnit("compass");
-    public static final ValueType<Unit, UnitValue> DEPTH$METER = ofUnit("depth_meter");
-    public static final ValueType<Unit, UnitValue> MECHANICAL$LENS = ofUnit("mechanical_lens");
+    public static final ValueType<List<TooltipComponentsValue.Storage>, TooltipComponentsValue> INFORMATION = create("information", TooltipComponentsValue.EXPANSION, TooltipComponentsValue.CODEC, List.of(), TooltipComponentsValue::new);
+    public static final TooltipComponentsValue.Storage HOUR$WATCH = TooltipComponentsValue.create("hour_watch");
+    public static final TooltipComponentsValue.Storage HALF$HOUR$WATCH = TooltipComponentsValue.create("half_hour_watch");
+    public static final TooltipComponentsValue.Storage MINUTE$WATCH = TooltipComponentsValue.create("minute_watch");
+    public static final TooltipComponentsValue.Storage WEATHER$RADIO = TooltipComponentsValue.create("weather_radio");
+    public static final TooltipComponentsValue.Storage $SEXTANT = TooltipComponentsValue.create("sextant");
+    public static final TooltipComponentsValue.Storage FISHERMANS$POCKET$GUIDE = TooltipComponentsValue.create("fishermans_pocket_guide");
+    public static final TooltipComponentsValue.Storage METAL$DETECTOR = TooltipComponentsValue.create("metal_detector");
+    public static final TooltipComponentsValue.Storage LIFE$FORM$ANALYZER = TooltipComponentsValue.create("life_form_analyzer");
+    public static final TooltipComponentsValue.Storage $RADAR = TooltipComponentsValue.create("radar");
+    public static final TooltipComponentsValue.Storage TALLY$COUNTER = TooltipComponentsValue.create("tally_counter");
+    public static final TooltipComponentsValue.Storage DPS$METER = TooltipComponentsValue.create("dps_meter");
+    public static final TooltipComponentsValue.Storage $STOPWATCH = TooltipComponentsValue.create("stopwatch");
+    public static final TooltipComponentsValue.Storage $COMPASS = TooltipComponentsValue.create("compass");
+    public static final TooltipComponentsValue.Storage DEPTH$METER = TooltipComponentsValue.create("depth_meter");
+    public static final TooltipComponentsValue.Storage MECHANICAL$LENS = TooltipComponentsValue.create("mechanical_lens");
+
 
     // client side
     public static final ValueType<Set<TagKey<Fluid>>, FluidTagsValue> FLUID$WALK = ValueType.create("fluid_walk", FluidTagsValue.EXPANSION, FluidTagsValue.CODEC, Set.of(), FluidTagsValue::new);
@@ -121,7 +124,6 @@ public final class TCItems { // todo 全换成data map
     public static final Supplier<MasterItem> ICON = OTHERS.register("icon", MasterItem::new);
     public static final Supplier<BasePoint> BASE_POINT = OTHERS.register("base_point", BasePoint::new);
     public static final Supplier<BaseCurioItem> EVERLASTING = OTHERS.register("everlasting", () -> BaseCurioItem.builder("everlasting").rarity(ModRarity.MASTER).build());
-    public static final Supplier<BaseCurioItem> MECHANICAL_LENS = OTHERS.register("mechanical_lens", () -> BaseCurioItem.builder("mechanical_lens").rarity(ORANGE).accessories(units(MECHANICAL$LENS)).build()); //机械晶状体
 
     public static final Supplier<BlockItem> WORKSHOP = OTHERS.register("workshop", () -> new BlockItem(TCBlocks.WORKSHOP.get(), new Item.Properties()));
     public static final Supplier<DemonHeart> DEMON_HEART = OTHERS.register("demon_heart", DemonHeart::new);
@@ -281,28 +283,41 @@ public final class TCItems { // todo 全换成data map
 
     public static final Supplier<BaseCurioItem> BAND_OF_REGENERATION = registerDirectly("band_of_regeneration", name -> new BandOfRegeneration(BaseCurioItem.builder(name)));
 
-    public static final Supplier<BaseCurioItem> COPPER_WATCH = registerCurio("copper_watch", builder -> builder.rarity(WHITE).jeiInfos(0).accessories(units(HOUR$WATCH))), // 铜表
-            TIN_WATCH = registerCurio("tin_watch", builder -> builder.jeiInfos(0).rarity(WHITE).accessories(units(HOUR$WATCH))), // 锡表
-            SILVER_WATCH = registerCurio("silver_watch", builder -> builder.jeiInfos(0).rarity(WHITE).accessories(units(HALF$HOUR$WATCH))), // 银表
-            TUNGSTEN_WATCH = registerCurio("tungsten_watch", builder -> builder.jeiInfos(0).rarity(WHITE).accessories(units(HALF$HOUR$WATCH))), // 钨表
-            GOLD_WATCH = registerCurio("gold_watch", builder -> builder.makesPiglinsNeutral().jeiInfos(0).accessories(units(MINUTE$WATCH))), // 金表
-            PLATINUM_WATCH = registerCurio("platinum_watch", builder -> builder.jeiInfos(0).accessories(units(MINUTE$WATCH))), // 铂金表
-            DEPTH_METER = registerCurio("depth_meter", builder -> builder.accessories(units(DEPTH$METER))), // 深度计
-            COMPASS = registerCurio("compass", builder -> builder.accessories(units($COMPASS))), // 罗盘
-            RADAR = registerCurio("radar", builder -> builder.accessories(units($RADAR))), // 雷达
-            LIFE_FORM_ANALYZER = registerCurio("life_form_analyzer", builder -> builder.accessories(units(LIFE$FORM$ANALYZER))), // 生命体分析机
-            TALLY_COUNTER = registerCurio("tally_counter", builder -> builder.accessories(units(TALLY$COUNTER))), // 杀怪计数器
-            METAL_DETECTOR = registerCurio("metal_detector", builder -> builder.accessories(units(METAL$DETECTOR))), // 金属探测器
-            STOPWATCH = registerCurio("stopwatch", builder -> builder.jeiInfos(0).accessories(units($STOPWATCH))), // 秒表
-            DPS_METER = registerCurio("dps_meter", builder -> builder.accessories(units(DPS$METER))), // 每秒伤害计数器
-            FISHERMANS_POCKET_GUIDE = registerCurio("fishermans_pocket_guide", builder -> builder.accessories(units(FISHERMANS$POCKET$GUIDE))), // 渔民袖珍宝典
-            WEATHER_RADIO = registerCurio("weather_radio", builder -> builder.accessories(units(WEATHER$RADIO))), // 天气收音机
-            SEXTANT = registerCurio("sextant", builder -> builder.accessories(units($SEXTANT))), // 六分仪
-            GPS = registerCurio("gps", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(units(MINUTE$WATCH, DEPTH$METER, $COMPASS))), // 全球定位系统
-            REK_3000 = registerCurio("rek_3000", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(units($RADAR, LIFE$FORM$ANALYZER, TALLY$COUNTER))), // R.E.K.3000
-            GOBLIN_TECH = registerCurio("goblin_tech", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(units(METAL$DETECTOR, $STOPWATCH, DPS$METER))), // 哥布林数据仪
-            FISH_FINDER = registerCurio("fish_finder", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(units(FISHERMANS$POCKET$GUIDE, WEATHER$RADIO, $SEXTANT))), // 探鱼器
-            PDA = registerCurio("pda", builder -> builder.rarity(PINK).jeiInfos(0).tooltips(11).accessories(units(FULL$INFORMATION))); // 个人数字助手
+    public static final Supplier<BaseCurioItem> COPPER_WATCH = registerCurio("copper_watch", builder -> builder.rarity(WHITE).jeiInfos(0).accessories(of(INFORMATION, List.of(HOUR$WATCH)))), // 铜表
+            TIN_WATCH = registerCurio("tin_watch", builder -> builder.jeiInfos(0).rarity(WHITE).accessories(of(INFORMATION, List.of(HOUR$WATCH)))), // 锡表
+            SILVER_WATCH = registerCurio("silver_watch", builder -> builder.jeiInfos(0).rarity(WHITE).accessories(of(INFORMATION, List.of(HALF$HOUR$WATCH)))), // 银表
+            TUNGSTEN_WATCH = registerCurio("tungsten_watch", builder -> builder.jeiInfos(0).rarity(WHITE).accessories(of(INFORMATION, List.of(HALF$HOUR$WATCH)))), // 钨表
+            GOLD_WATCH = registerCurio("gold_watch", builder -> builder.makesPiglinsNeutral().jeiInfos(0).accessories(of(INFORMATION, List.of(MINUTE$WATCH)))), // 金表
+            PLATINUM_WATCH = registerCurio("platinum_watch", builder -> builder.jeiInfos(0).accessories(of(INFORMATION, List.of(MINUTE$WATCH)))), // 铂金表
+            DEPTH_METER = registerCurio("depth_meter", builder -> builder.accessories(of(INFORMATION, List.of(DEPTH$METER)))), // 深度计
+            COMPASS = registerCurio("compass", builder -> builder.accessories(of(INFORMATION, List.of($COMPASS)))), // 罗盘
+            RADAR = registerCurio("radar", builder -> builder.accessories(of(INFORMATION, List.of($RADAR)))), // 雷达
+            LIFE_FORM_ANALYZER = registerCurio("life_form_analyzer", builder -> builder.accessories(of(INFORMATION, List.of(LIFE$FORM$ANALYZER)))), // 生命体分析机
+            TALLY_COUNTER = registerCurio("tally_counter", builder -> builder.accessories(of(INFORMATION, List.of(TALLY$COUNTER)))), // 杀怪计数器
+            METAL_DETECTOR = registerCurio("metal_detector", builder -> builder.accessories(of(INFORMATION, List.of(METAL$DETECTOR)))), // 金属探测器
+            STOPWATCH = registerCurio("stopwatch", builder -> builder.jeiInfos(0).accessories(of(INFORMATION, List.of($STOPWATCH)))), // 秒表
+            DPS_METER = registerCurio("dps_meter", builder -> builder.accessories(of(INFORMATION, List.of(DPS$METER)))), // 每秒伤害计数器
+            FISHERMANS_POCKET_GUIDE = registerCurio("fishermans_pocket_guide", builder -> builder.accessories(of(INFORMATION, List.of(FISHERMANS$POCKET$GUIDE)))), // 渔民袖珍宝典
+            WEATHER_RADIO = registerCurio("weather_radio", builder -> builder.accessories(of(INFORMATION, List.of(WEATHER$RADIO)))), // 天气收音机
+            SEXTANT = registerCurio("sextant", builder -> builder.accessories(of(INFORMATION, List.of($SEXTANT)))), // 六分仪
+            GPS = registerCurio("gps", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of(MINUTE$WATCH, DEPTH$METER, $COMPASS)))), // 全球定位系统
+            REK_3000 = registerCurio("rek_3000", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of($RADAR, LIFE$FORM$ANALYZER, TALLY$COUNTER)))), // R.E.K.3000
+            GOBLIN_TECH = registerCurio("goblin_tech", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of(METAL$DETECTOR, $STOPWATCH, DPS$METER)))), // 哥布林数据仪
+            FISH_FINDER = registerCurio("fish_finder", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of(FISHERMANS$POCKET$GUIDE, WEATHER$RADIO, $SEXTANT)))), // 探鱼器
+            PDA = registerDirectly("pda", name -> new PDA(BaseCurioItem.builder(name).rarity(PINK).jeiInfos(0).tooltips(11).accessories(of(INFORMATION, List.of(
+                    MINUTE$WATCH,
+                    WEATHER$RADIO,
+                    $SEXTANT,
+                    FISHERMANS$POCKET$GUIDE,
+                    METAL$DETECTOR,
+                    LIFE$FORM$ANALYZER,
+                    $RADAR,
+                    TALLY$COUNTER,
+                    DPS$METER,
+                    $STOPWATCH,
+                    $COMPASS,
+                    DEPTH$METER
+            ))))); // 个人数字助手
 
     public static final Supplier<BaseCurioItem> STEP_STOOL = registerDirectly("step_stool", name -> new StepStool(BaseCurioItem.builder(name))), // 梯凳
             FLYING_CARPET = registerCurio("flying_carpet", builder -> builder.rarity(GREEN).accessories(of(MAY$FLY, new MayFlyAbilityValue.Storage(0.5625F, 100, false, true)))), // 飞毯
@@ -512,12 +527,12 @@ public final class TCItems { // todo 全换成data map
     /* 挥发明胶 */
     /* 孢子囊 */
     SHINNY_STONE = registerDirectly("shinny_stone", name -> new ShinnyStone(BaseCurioItem.builder(name).rarity(EXPERT))), // 闪亮石
-    SOARING_INSIGNIA = registerCurio("soaring_insignia", builder -> builder.rarity(EXPERT)
-            .accessories(units(INFINITE$FLIGHT))
-            .attribute(Attributes.MOVEMENT_SPEED, 0.075, ADD_MULTIPLIED_TOTAL)
-            .attribute(Attributes.JUMP_STRENGTH, 0.8, ADD_MULTIPLIED_TOTAL)), // 翱翔徽章
-    GRAVITY_GLOBE = registerCurio("gravity_globe", builder -> builder.rarity(EXPERT).accessories(units(GRAVITY$GLOBE)).tooltips(1)), // 重力球
-    CELESCIAL_STARBOARD = registerCurio("celescial_starboard", builder -> builder.rarity(EXPERT).accessories(of(MAY$FLY, new MayFlyAbilityValue.Storage(1.0F, 60, true, true)))); // 天界星盘
+            SOARING_INSIGNIA = registerCurio("soaring_insignia", builder -> builder.rarity(EXPERT)
+                    .accessories(units(INFINITE$FLIGHT))
+                    .attribute(Attributes.MOVEMENT_SPEED, 0.075, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.JUMP_STRENGTH, 0.8, ADD_MULTIPLIED_TOTAL)), // 翱翔徽章
+            GRAVITY_GLOBE = registerCurio("gravity_globe", builder -> builder.rarity(EXPERT).accessories(units(GRAVITY$GLOBE)).tooltips(1)), // 重力球
+            CELESCIAL_STARBOARD = registerCurio("celescial_starboard", builder -> builder.rarity(EXPERT).accessories(of(MAY$FLY, new MayFlyAbilityValue.Storage(1.0F, 60, true, true)))); // 天界星盘
 
     public static Supplier<BaseCurioItem> registerCurio(String name, Consumer<BaseCurioItem.Builder> consumer) {
         return CURIOS.register(name, () -> {

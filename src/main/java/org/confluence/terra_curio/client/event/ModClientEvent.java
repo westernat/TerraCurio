@@ -4,10 +4,12 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.client.model.entity.BeeProjectileModel;
 import org.confluence.terra_curio.client.model.entity.StepStoolModel;
 import org.confluence.terra_curio.client.renderer.entity.BeeProjectileRenderer;
@@ -16,6 +18,7 @@ import org.confluence.terra_curio.client.renderer.entity.StepStoolRenderer;
 import org.confluence.terra_curio.client.renderer.gui.DivingHelmetOverlay;
 import org.confluence.terra_curio.client.renderer.gui.InfoHudOverlay;
 import org.confluence.terra_curio.client.renderer.gui.WorkshopScreen;
+import org.confluence.terra_curio.client.renderer.tooltip.MultiFunctionTooltip;
 import org.confluence.terra_curio.common.init.TCEntities;
 import org.confluence.terra_curio.common.init.TCMenus;
 
@@ -43,5 +46,10 @@ public final class ModClientEvent {
     @SubscribeEvent
     public static void registerMenuScreens(RegisterMenuScreensEvent event) {
         event.register(TCMenus.WORKSHOP.get(), WorkshopScreen::new);
+    }
+
+    @SubscribeEvent
+    public static void registerClientTooltipComponentFactories(RegisterClientTooltipComponentFactoriesEvent event) {
+        event.register(TooltipComponentsValue.Multi.class, multi -> new MultiFunctionTooltip(multi.storages()));
     }
 }

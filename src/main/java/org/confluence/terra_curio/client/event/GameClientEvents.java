@@ -14,6 +14,7 @@ import org.confluence.terra_curio.api.event.PerformJumpingEvent;
 import org.confluence.terra_curio.client.animate.ExpertColorAnimation;
 import org.confluence.terra_curio.client.animate.MasterColorAnimation;
 import org.confluence.terra_curio.client.handler.*;
+import org.confluence.terra_curio.client.renderer.tooltip.MultiFunctionTooltip;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
 
@@ -85,11 +86,17 @@ public final class GameClientEvents {
     }
 
     @SubscribeEvent
-    public static void mouseScrolling(InputEvent.MouseScrollingEvent event) {
+    public static void input$MouseScrolling(InputEvent.MouseScrollingEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && ScopeFovHandler.isScoping()) {
             ScopeFovHandler.handleScroll(player, event.getScrollDeltaY());
             event.setCanceled(true);
         }
+    }
+
+    @SubscribeEvent
+    public static void screen$MouseScrolled$Pre(ScreenEvent.MouseScrolled.Pre event) {
+        MultiFunctionTooltip.mouseScrollY -= (int) event.getScrollDeltaY();
+        if (MultiFunctionTooltip.mouseScrollY < 0) MultiFunctionTooltip.mouseScrollY = 0;
     }
 }
