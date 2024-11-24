@@ -1,12 +1,8 @@
 package org.confluence.terra_curio.network;
 
 import io.netty.buffer.ByteBuf;
-import it.unimi.dsi.fastutil.booleans.BooleanArrayList;
-import it.unimi.dsi.fastutil.booleans.BooleanList;
+import net.minecraft.nbt.ByteArrayTag;
 import net.minecraft.nbt.ByteTag;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.NbtOps;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
@@ -15,26 +11,31 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.InformationHandler;
-import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
 import org.jetbrains.annotations.NotNull;
+
+import static org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C.ARRAY_LENGTH;
 
 public record InfoDisablePacket(boolean[] disables) implements CustomPacketPayload {
     public static final Type<InfoDisablePacket> TYPE = new Type<>(TerraCurio.asResource("info_disable"));
     public static final StreamCodec<ByteBuf, InfoDisablePacket> STREAM_CODEC = new StreamCodec<>() {
         @Override
-        public InfoDisablePacket decode(ByteBuf buffer) {
-            BooleanList list = new BooleanArrayList();
-            for (int i = 0; i < InfoCurioCheckPacketS2C.ARRAY_LENGTH; i++) {
-                list.add(buffer.readBoolean());
+        public @NotNull InfoDisablePacket decode(@NotNull ByteBuf buffer) {
+            byte[] bytes = new byte[ARRAY_LENGTH];
+            buffer.readBytes(bytes);
+            boolean[] disables = new boolean[ARRAY_LENGTH];
+            for (int i = 0; i < ARRAY_LENGTH; i++) {
+                disables[i] = bytes[i] != 0;
             }
-            return new InfoDisablePacket(list.toArray(new boolean[InfoCurioCheckPacketS2C.ARRAY_LENGTH]));
+            return new InfoDisablePacket(disables);
         }
 
         @Override
-        public void encode(ByteBuf buffer, InfoDisablePacket value) {
-            for (int i = 0; i < InfoCurioCheckPacketS2C.ARRAY_LENGTH; i++) {
-                buffer.writeBoolean(value.disables[i]);
+        public void encode(@NotNull ByteBuf buffer, @NotNull InfoDisablePacket value) {
+            byte[] bytes = new byte[ARRAY_LENGTH];
+            for (int i = 0; i < ARRAY_LENGTH; i++) {
+                bytes[i] = (byte) (value.disables[i] ? 1 : 0);
             }
+            buffer.writeBytes(bytes);
         }
     };
 
@@ -46,13 +47,13 @@ public record InfoDisablePacket(boolean[] disables) implements CustomPacketPaylo
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player().isLocalPlayer()) {
-                System.arraycopy(disables, 0, InformationHandler.DISABLE, 0, InfoCurioCheckPacketS2C.ARRAY_LENGTH);
+                System.arraycopy(disables, 0, InformationHandler.DISABLE, 0, ARRAY_LENGTH);
             } else if (context.player() instanceof ServerPlayer serverPlayer) {
-                ListTag listTag = new ListTag();
-                for (int i = 0; i < InfoCurioCheckPacketS2C.ARRAY_LENGTH; i++) {
-                    listTag.add(NbtOps.INSTANCE.createBoolean(disables[i]));
+                ByteArrayTag arrayTag = new ByteArrayTag(new byte[ARRAY_LENGTH]);
+                for (int i = 0; i < ARRAY_LENGTH; i++) {
+                    arrayTag.set(i, ByteTag.valueOf(disables[i]));
                 }
-                serverPlayer.getPersistentData().put("terra_curio:info_disable", listTag);
+                serverPlayer.getPersistentData().put("terra_curio:info_disable", arrayTag);
             }
         }).exceptionally(e -> {
             context.disconnect(Component.translatable("neoforge.network.invalid_flow", e.getMessage()));
@@ -61,11 +62,11 @@ public record InfoDisablePacket(boolean[] disables) implements CustomPacketPaylo
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        boolean[] disables = new boolean[InfoCurioCheckPacketS2C.ARRAY_LENGTH];
-        ListTag listTag = serverPlayer.getPersistentData().getList("terra_curio:info_disable", Tag.TAG_BYTE);
-        if (listTag.size() != InfoCurioCheckPacketS2C.ARRAY_LENGTH) return;
-        for (int i = 0; i < InfoCurioCheckPacketS2C.ARRAY_LENGTH; i++) {
-            disables[i] = listTag.get(i) != ByteTag.ZERO;
+        byte[] bytes = serverPlayer.getPersistentData().getByteArray("terra_curio:info_disable");
+        if (bytes.length != ARRAY_LENGTH) return;
+        boolean[] disables = new boolean[ARRAY_LENGTH];
+        for (int i = 0; i < ARRAY_LENGTH; i++) {
+            disables[i] = bytes[i] != 0;
         }
         PacketDistributor.sendToPlayer(serverPlayer, new InfoDisablePacket(disables));
     }

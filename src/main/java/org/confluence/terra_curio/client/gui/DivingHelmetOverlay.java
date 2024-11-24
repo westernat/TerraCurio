@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.client.renderer.gui;
+package org.confluence.terra_curio.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.DeltaTracker;

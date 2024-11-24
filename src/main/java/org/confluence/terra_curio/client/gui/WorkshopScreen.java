@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.client.renderer.gui;
+package org.confluence.terra_curio.client.gui;
 
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
