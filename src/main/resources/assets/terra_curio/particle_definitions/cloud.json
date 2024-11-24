@@ -5,7 +5,7 @@
             "identifier": "terra_curio:cloud",
             "basic_render_parameters": {
                 "material": "particles_alpha",
-                "texture": "terra_curio:bottle_in_the_cloud_big"
+                "texture": "terra_curio:big_cloud"
             }
         },
         "components": {
@@ -24,17 +24,17 @@
                 "direction": "outwards"
             },
             "minecraft:particle_initialization": {
-                "per_render_expression": "variable.size = (variable.particle_lifetime - variable.particle_age) / variable.particle_lifetime * 0.2 + 0.2;"
+                "per_render_expression": "variable.size=(variable.particle_lifetime-variable.particle_age)/variable.particle_lifetime*0.2+0.2;"
             },
             "minecraft:particle_lifetime_expression": {
-                "max_lifetime": "variable.particle_random_1 + 0.4"
+                "max_lifetime": "variable.particle_random_1+0.4"
             },
             "minecraft:particle_initial_spin": {
-                "rotation": "math.random_integer(-180, 180)"
+                "rotation": "math.random_integer(-180,180)"
             },
             "minecraft:particle_initial_speed": 0.6,
             "minecraft:particle_motion_dynamic": {
-                "linear_acceleration": [0, "variable.particle_random_2 * -1 -1", 0],
+                "linear_acceleration": [0, "-variable.particle_random_2-1", 0],
                 "linear_drag_coefficient": 0.5
             },
             "minecraft:particle_appearance_billboard": {

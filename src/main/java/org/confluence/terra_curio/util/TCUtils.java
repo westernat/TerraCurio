@@ -100,11 +100,11 @@ public final class TCUtils {
         if (((IEntity) living).terra_curio$isOnCthulhuSprinting() && attachment.contains(TCItems.SHIELD$OF$CTHULHU)) {
             return true;
         }
-        if (attachment.contains(TCItems.FIRE$IMMUNE) && damageSource.is(DamageTypes.IN_FIRE) ||
+        if (attachment.contains(TCItems.FIRE$IMMUNE) && (damageSource.is(DamageTypes.IN_FIRE) ||
                 damageSource.is(DamageTypes.ON_FIRE) ||
                 damageSource.is(DamageTypes.HOT_FLOOR) ||
                 damageSource.is(DamageTypes.UNATTRIBUTED_FIREBALL) ||
-                damageSource.is(DamageTypes.FIREBALL)
+                damageSource.is(DamageTypes.FIREBALL))
         ) return true;
         return TCAttributes.applyDodge(living, living.getRandom());
     }
