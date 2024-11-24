@@ -175,10 +175,17 @@ public final class InformationHandler {
         Level level = player.level();
         String weather = level.dimension() == Level.OVERWORLD ? "clear" : "cloudy";
         if (level.isRaining()) {
-            if (level.getBiome(player.getOnPos()).is(Tags.Biomes.IS_COLD)) {
+            if (level.getBiome(player.blockPosition()).is(Tags.Biomes.IS_COLD)) {
                 weather = "snow";
             } else {
                 weather = "rain";
+            }
+            if (level.isThundering()) {
+                if ("snow".equals(weather)) {
+                    weather = "thunder_snow";
+                } else {
+                    weather = "thunder";
+                }
             }
         } else if (level.isThundering()) {
             weather = "thunder";

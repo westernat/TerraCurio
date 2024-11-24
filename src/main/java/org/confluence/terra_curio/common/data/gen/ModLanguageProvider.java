@@ -114,6 +114,7 @@ public class ModLanguageProvider extends LanguageProvider {
         add("info.terra_curio.weather_radio.rain", "Weather: Rain", "天气: 下雨");
         add("info.terra_curio.weather_radio.snow", "Weather: Snow", "天气: 下雪");
         add("info.terra_curio.weather_radio.thunder", "Weather: Thunder", "天气: 雷暴");
+        add("info.terra_curio.weather_radio.thunder_snow", "Weather: Thunder Snow", "天气: 雷打雪");
         add("info.terra_curio.fishermans_pocket_guide", "Fishing Power: %s", "渔力: %s");
 
         add("attribute.name.generic.critical_chance", "Critical Chance", "暴击率");

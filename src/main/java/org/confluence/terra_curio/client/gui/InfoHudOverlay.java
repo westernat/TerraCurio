@@ -54,7 +54,7 @@ public class InfoHudOverlay implements LayeredDraw.Layer {
             }
             pose.pushPose();
             pose.translate(iconLeft, top - 0.5F, 0);
-            float scale = font.lineHeight / 18.0F;
+            float scale = font.lineHeight * 0.0555556F;
             pose.scale(scale, scale, scale);
             guiGraphics.blit(INFO_ICON[entry.getIntKey()], 0, 0, 0, 0, 18, 18, 18, 18);
             pose.popPose();
