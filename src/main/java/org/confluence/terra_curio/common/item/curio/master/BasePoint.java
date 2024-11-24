@@ -5,7 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.terra_curio.client.ClientConfigs;
+import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCSoundEvents;
@@ -42,11 +42,11 @@ public class BasePoint extends BaseSpeedBoots {
                 }
                 if (player.onGround()) {
                     float ratio = (float) value / maxSpeed;
-                    if (ClientConfigs.playShoesSound && player.level().getGameTime() % (ratio < 0.5F ? 6L : 4L) == 0) {
+                    if (TCClientConfigs.playShoesSound && player.level().getGameTime() % (ratio < 0.5F ? 6L : 4L) == 0) {
                         player.playSound(TCSoundEvents.SHOES_WALK.get());
                     }
                 }
-                if (ClientConfigs.showShoesParticle) {
+                if (TCClientConfigs.showShoesParticle) {
                     // todo particle
                 }
             } else if (speed != 0) {

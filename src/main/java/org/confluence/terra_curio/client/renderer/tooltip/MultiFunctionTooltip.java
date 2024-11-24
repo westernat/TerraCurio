@@ -1,6 +1,7 @@
 package org.confluence.terra_curio.client.renderer.tooltip;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
@@ -74,16 +75,15 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
         }
         if (isShiftKeyDown()) {
             for (int i = 0; i < size; i++) {
-                guiGraphics.pose().pushPose();
-                int x1 = x - 2;
-                int y1 = y - 1 + i * 10;
-                guiGraphics.pose().translate(x1, y1,0);
-                guiGraphics.pose().scale(SCALE, SCALE, SCALE);
+                PoseStack pose = guiGraphics.pose();
+                pose.pushPose();
+                pose.translate(x - 2.0F, y - 1.0F + i * 10.0F,0.0F);
+                pose.scale(SCALE, SCALE, SCALE);
                 guiGraphics.blit(storages.get(i).texture(), 2, 2, 0, 0, 14, 14, 14, 14);
                 if (!InformationHandler.DISABLE[i]) {
                     guiGraphics.blit(ENABLED, 0, 0, 0,0 , 18, 18, 18, 18);
                 }
-                guiGraphics.pose().popPose();
+                pose.popPose();
             }
             if (mouseScrolledY >= 0) {
                 guiGraphics.renderOutline(x - 2, y - 2 + mouseScrolledY * 10, width + 2, 12, 0xFFFF0000);

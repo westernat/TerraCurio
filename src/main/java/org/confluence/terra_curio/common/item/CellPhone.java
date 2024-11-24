@@ -12,26 +12,14 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.confluence.terra_curio.common.component.AccessoriesComponent.of;
-import static org.confluence.terra_curio.common.init.TCItems.*;
+import static org.confluence.terra_curio.common.init.TCItems.FULL_INFO;
+import static org.confluence.terra_curio.common.init.TCItems.INFORMATION;
 
 public class CellPhone extends MagicMirror implements IFunctionCouldEnable.Multi {
     public CellPhone() {
         super(new Properties().fireResistant().stacksTo(1)
                 .component(TCDataComponentTypes.MOD_RARITY, ModRarity.LIME)
-                .component(TCDataComponentTypes.ACCESSORIES, of(INFORMATION, List.of(
-                        MINUTE$WATCH,
-                        WEATHER$RADIO,
-                        $SEXTANT,
-                        FISHERMANS$POCKET$GUIDE,
-                        METAL$DETECTOR,
-                        LIFE$FORM$ANALYZER,
-                        $RADAR,
-                        TALLY$COUNTER,
-                        DPS$METER,
-                        $STOPWATCH,
-                        $COMPASS,
-                        DEPTH$METER
-                ))));
+                .component(TCDataComponentTypes.ACCESSORIES, of(INFORMATION, FULL_INFO)));
     }
 
     @Override

@@ -3,6 +3,7 @@ package org.confluence.terra_curio.client.event;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
 import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
@@ -10,6 +11,7 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
+import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.gui.DivingHelmetOverlay;
 import org.confluence.terra_curio.client.gui.InfoHudOverlay;
 import org.confluence.terra_curio.client.gui.WorkshopScreen;
@@ -24,6 +26,11 @@ import org.confluence.terra_curio.common.init.TCMenus;
 
 @EventBusSubscriber(bus = EventBusSubscriber.Bus.MOD, modid = TerraCurio.MODID, value = Dist.CLIENT)
 public final class ModClientEvent {
+    @SubscribeEvent
+    public static void clientSetup(FMLClientSetupEvent event) {
+        event.enqueueWork(TCClientConfigs::onLoad);
+    }
+
     @SubscribeEvent
     public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(BeeProjectileModel.LAYER_LOCATION, BeeProjectileModel::createBodyLayer);

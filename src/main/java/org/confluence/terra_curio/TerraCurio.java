@@ -5,6 +5,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
+import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
 import org.confluence.terra_curio.common.init.*;
 import org.slf4j.Logger;
@@ -19,6 +20,7 @@ public class TerraCurio {
     public TerraCurio(IEventBus eventBus, ModContainer modContainer) {
         TCStartupConfigs.register(modContainer);
         TCCommonConfigs.register(modContainer);
+        TCClientConfigs.register(modContainer);
         TCSoundEvents.SOUNDS.register(eventBus);
         TCEffects.EFFECTS.register(eventBus);
         TCAttributes.ATTRIBUTES.register(eventBus);

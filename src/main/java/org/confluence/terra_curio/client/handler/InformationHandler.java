@@ -1,5 +1,7 @@
 package org.confluence.terra_curio.client.handler;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -25,7 +27,6 @@ import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicReference;
@@ -49,7 +50,7 @@ public final class InformationHandler {
 
     public static final boolean[] DISABLE = new boolean[InfoCurioCheckPacketS2C.ARRAY_LENGTH];
 
-    private static final ArrayList<Component> INFORMATION = new ArrayList<>();
+    private static final Int2ObjectMap<Component> INFORMATION = new Int2ObjectArrayMap<>();
     private static final byte[] INFO_DATA = new byte[InfoCurioCheckPacketS2C.ARRAY_LENGTH];
     private static final Int2ObjectOpenHashMap<byte[]> REMOTE_DATA = new Int2ObjectOpenHashMap<>();
 
@@ -73,22 +74,22 @@ public final class InformationHandler {
         byte b = INFO_DATA[WATCH];
         if (!DISABLE[WATCH]) {
             if (b != 0 && timeInfo != null) {
-                INFORMATION.add(timeInfo.apply(localPlayer.level().dayTime()));
+                INFORMATION.put(WATCH, timeInfo.apply(localPlayer.level().dayTime()));
             }
         }
 
         long tenSec = gameTime % 200;
         if (!DISABLE[WEATHER_RADIO] && INFO_DATA[WEATHER_RADIO] != 0) {
             if (tenSec == WEATHER_RADIO) weatherRadioInfo = getWeatherInfo(localPlayer);
-            INFORMATION.add(weatherRadioInfo);
+            INFORMATION.put(WEATHER_RADIO, weatherRadioInfo);
         }
 
         if (!DISABLE[SEXTANT] && INFO_DATA[SEXTANT] != 0) {
-            INFORMATION.add(Component.translatable("info.terra_curio.sextant." + localPlayer.level().getMoonPhase()));
+            INFORMATION.put(SEXTANT, Component.translatable("info.terra_curio.sextant." + localPlayer.level().getMoonPhase()));
         }
 
         if (!DISABLE[FISHERMANS_POCKET_GUIDE] && INFO_DATA[FISHERMANS_POCKET_GUIDE] != 0) {
-            INFORMATION.add(getFishingPowerInfo(localPlayer));
+            INFORMATION.put(FISHERMANS_POCKET_GUIDE, getFishingPowerInfo(localPlayer));
         }
 
         if (!DISABLE[METAL_DETECTOR]) {
@@ -100,13 +101,13 @@ public final class InformationHandler {
                 }
             } else detectorPressed = false;
             if (b != 0) {
-                INFORMATION.add(metalDetectorInfo);
+                INFORMATION.put(METAL_DETECTOR, metalDetectorInfo);
             }
         }
 
         if (!DISABLE[LIFE_FORM_ANALYZER] && INFO_DATA[LIFE_FORM_ANALYZER] != 0) {
             if (tenSec == LIFE_FORM_ANALYZER) lifeFormAnalyzerInfo = getLifeFormAnalyzerInfo(localPlayer);
-            INFORMATION.add(lifeFormAnalyzerInfo);
+            INFORMATION.put(LIFE_FORM_ANALYZER, lifeFormAnalyzerInfo);
         }
 
         if (!DISABLE[RADAR] && INFO_DATA[RADAR] != 0) {
@@ -114,19 +115,19 @@ public final class InformationHandler {
                     "info.terra_curio.radar",
                     localPlayer.level().getEntities(localPlayer, new AABB(localPlayer.getOnPos()).inflate(63.5), entity -> entity instanceof Enemy).size()
             );
-            INFORMATION.add(radarInfo);
+            INFORMATION.put(RADAR, radarInfo);
         }
 
         if (!DISABLE[TALLY_COUNTER] && INFO_DATA[TALLY_COUNTER] != 0) {
-            INFORMATION.add(tallyCounterInfo);
+            INFORMATION.put(TALLY_COUNTER, tallyCounterInfo);
         }
 
         if (!DISABLE[DPS_METER] && INFO_DATA[DPS_METER] != 0) {
-            INFORMATION.add(dpsMeterInfo);
+            INFORMATION.put(DPS_METER, dpsMeterInfo);
         }
 
         if (!DISABLE[STOPWATCH] && INFO_DATA[STOPWATCH] != 0) {
-            INFORMATION.add(Component.translatable(
+            INFORMATION.put(STOPWATCH, Component.translatable(
                     "info.terra_curio.stopwatch",
                     "%.2f".formatted(Mth.length(
                             localPlayer.getX() - localPlayer.xOld,
@@ -137,11 +138,11 @@ public final class InformationHandler {
         }
 
         if (!DISABLE[COMPASS] && INFO_DATA[COMPASS] != 0) {
-            INFORMATION.add(getCompassInfo(localPlayer));
+            INFORMATION.put(COMPASS, getCompassInfo(localPlayer));
         }
 
         if (!DISABLE[DEPTH_METER] && INFO_DATA[DEPTH_METER] != 0) {
-            INFORMATION.add(getDepthMeterInfo(localPlayer));
+            INFORMATION.put(DEPTH_METER, getDepthMeterInfo(localPlayer));
         }
 
         if (tenSec == 0) {
@@ -232,7 +233,7 @@ public final class InformationHandler {
         return INFO_DATA[MECHANICAL_LENS] != 0;
     }
 
-    public static ArrayList<Component> getInformation() {
+    public static Int2ObjectMap<Component> getInformation() {
         return INFORMATION;
     }
 

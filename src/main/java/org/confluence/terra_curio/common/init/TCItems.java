@@ -71,6 +71,21 @@ public final class TCItems { // todo 全换成data map
     public static final TooltipComponentsValue.Storage DEPTH$METER = TooltipComponentsValue.create("depth_meter");
     public static final TooltipComponentsValue.Storage MECHANICAL$LENS = TooltipComponentsValue.create("mechanical_lens");
 
+    public static final List<TooltipComponentsValue.Storage> FULL_INFO = List.of(
+            MINUTE$WATCH,
+            WEATHER$RADIO,
+            $SEXTANT,
+            FISHERMANS$POCKET$GUIDE,
+            METAL$DETECTOR,
+            LIFE$FORM$ANALYZER,
+            $RADAR,
+            TALLY$COUNTER,
+            DPS$METER,
+            $STOPWATCH,
+            $COMPASS,
+            DEPTH$METER
+    );
+
 
     // client side
     public static final ValueType<Set<TagKey<Fluid>>, FluidTagsValue> FLUID$WALK = ValueType.create("fluid_walk", FluidTagsValue.EXPANSION, FluidTagsValue.CODEC, Set.of(), FluidTagsValue::new);
@@ -304,20 +319,7 @@ public final class TCItems { // todo 全换成data map
             REK_3000 = registerCurio("rek_3000", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of($RADAR, LIFE$FORM$ANALYZER, TALLY$COUNTER)))), // R.E.K.3000
             GOBLIN_TECH = registerCurio("goblin_tech", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of(METAL$DETECTOR, $STOPWATCH, DPS$METER)))), // 哥布林数据仪
             FISH_FINDER = registerCurio("fish_finder", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of(FISHERMANS$POCKET$GUIDE, WEATHER$RADIO, $SEXTANT)))), // 探鱼器
-            PDA = registerDirectly("pda", name -> new PDA(BaseCurioItem.builder(name).rarity(PINK).jeiInfos(0).tooltips(11).accessories(of(INFORMATION, List.of(
-                    MINUTE$WATCH,
-                    WEATHER$RADIO,
-                    $SEXTANT,
-                    FISHERMANS$POCKET$GUIDE,
-                    METAL$DETECTOR,
-                    LIFE$FORM$ANALYZER,
-                    $RADAR,
-                    TALLY$COUNTER,
-                    DPS$METER,
-                    $STOPWATCH,
-                    $COMPASS,
-                    DEPTH$METER
-            ))))); // 个人数字助手
+            PDA = registerDirectly("pda", name -> new PDA(BaseCurioItem.builder(name).rarity(PINK).jeiInfos(0).tooltips(11).accessories(of(INFORMATION, FULL_INFO)))); // 个人数字助手
 
     public static final Supplier<BaseCurioItem> STEP_STOOL = registerDirectly("step_stool", name -> new StepStool(BaseCurioItem.builder(name))), // 梯凳
             FLYING_CARPET = registerCurio("flying_carpet", builder -> builder.rarity(GREEN).accessories(of(MAY$FLY, new MayFlyAbilityValue.Storage(0.5625F, 100, false, true)))), // 飞毯
