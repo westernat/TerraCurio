@@ -240,6 +240,14 @@ public final class InformationHandler {
         return INFO_DATA[MECHANICAL_LENS] != 0;
     }
 
+    public static float getWindSpeedX() {
+        return WIND_SPEED.x;
+    }
+
+    public static float getWindSpeedZ() {
+        return WIND_SPEED.y;
+    }
+
     public static Int2ObjectMap<Component> getInformation() {
         return INFORMATION;
     }
