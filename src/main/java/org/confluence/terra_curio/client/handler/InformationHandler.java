@@ -338,5 +338,6 @@ public final class InformationHandler {
     public static void handleWindSpeed(WindSpeedPacketS2C packet) {
         WIND_SPEED.set(packet.x(), packet.z());
         windSpeedInfo = "%.2f".formatted(WIND_SPEED.length());
+        TCUtils.forConfluence$Inject();
     }
 }

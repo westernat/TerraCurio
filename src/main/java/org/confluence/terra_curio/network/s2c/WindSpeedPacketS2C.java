@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
@@ -40,5 +41,9 @@ public record WindSpeedPacketS2C(float x, float z) implements CustomPacketPayloa
         if (ServerLifecycleHooks.getCurrentServer() != null) {
             PacketDistributor.sendToAllPlayers(new WindSpeedPacketS2C(x, z));
         }
+    }
+
+    public static void sendToClient(ServerPlayer serverPlayer, float windSpeedX, float windSpeedZ) {
+        PacketDistributor.sendToPlayer(serverPlayer, new WindSpeedPacketS2C(windSpeedX, windSpeedZ));
     }
 }
