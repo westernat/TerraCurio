@@ -773,7 +773,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 }, new String[]{
                         "可沿墙滑下，按住shift键可更快地下滑",
                         "结合攀爬爪使用时能力还会有所提升"
-                }, "It has a Chance to be dropped from Cave Spider.", "它有几率从蜘蛛身上掉落。");
+                }, "It has a Chance to be dropped from Cave Spider.", "它有几率从洞穴蜘蛛身上掉落。");
         tooltipAndJeiInfo(TCItems.SHOT_PUT, "铅球", "Immunity to Levitation", "对漂浮免疫", "It can be found in Chests in the Stronghold.", "它可以在要塞的宝箱中找到。");
         onlyTooltip(TCItems.SILVER_WATCH, "银表", "Tell the time", "报时");
 
