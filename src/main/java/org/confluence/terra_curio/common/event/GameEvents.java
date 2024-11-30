@@ -1,6 +1,7 @@
 package org.confluence.terra_curio.common.event;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -107,7 +108,7 @@ public final class GameEvents {
         amount = TCUtils.applyBrainOfConfusion(living, random, damageSource, amount);
 
         if (TCCommonConfigs.RANDOM_ATTACK_DAMAGE.get()) {
-            amount *= TCUtils.nextFloat(random,
+            amount *= Mth.nextFloat(random,
                     TCCommonConfigs.RANDOM_ATTACK_DAMAGE_MIN.get().floatValue(),
                     TCCommonConfigs.RANDOM_ATTACK_DAMAGE_MAX.get().floatValue()
             );

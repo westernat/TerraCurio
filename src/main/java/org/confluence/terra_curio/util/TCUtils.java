@@ -67,14 +67,6 @@ public final class TCUtils {
         return (V) primitiveValue;
     }
 
-    public static float nextFloat(RandomSource randomSource, float origin, float bound) {
-        if (origin >= bound) {
-            throw new IllegalArgumentException("bound - origin is non positive");
-        } else {
-            return origin + randomSource.nextFloat() * (bound - origin);
-        }
-    }
-
     public static void applyFireAttack(Player player, Entity entity) {
         if (hasAccessoriesType(player, TCItems.FIRE$ATTACK)) {
             float f = player.getRandom().nextFloat();
@@ -173,7 +165,7 @@ public final class TCUtils {
             else if (amount <= 46.6F) rangeMax = amount * 1.5F + 350;
             else if (amount <= 100) rangeMax = amount * 0.75F + 525;
             else rangeMax = amount * 0.1875F + 806.25F;
-            float range = nextFloat(randomSource, rangeMin, rangeMax) / 24;
+            float range = Mth.nextFloat(randomSource, rangeMin, rangeMax) / 24;
             int duration = randomSource.nextInt((int) (90 + amount / 3), (int) (300 + amount / 2));
             living.level().getEntities(living, new AABB(living.getOnPos()).inflate(range), entity -> entity instanceof Enemy).forEach(enemy -> {
                 if (enemy instanceof LivingEntity living1) {
