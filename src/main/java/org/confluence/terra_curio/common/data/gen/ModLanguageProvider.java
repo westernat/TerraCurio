@@ -689,7 +689,7 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyTooltip(TCItems.POWER_GLOVE, "强力手套", "Enables auto swing for melee weapons", "启用近战武器自动挥动");
         tooltipAndJeiInfo(TCItems.PUTRID_SCENT, "腐香囊", "Enemies are less likely to target you", "多人模式下，敌怪不太可能以你为目标", "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。");
         tooltipAndJeiInfo(TCItems.RADAR, "雷达", "Detects enemies around you", "探测你周围的敌人", "The Radar has a Chance to be dropped from Bats.", "它有几率从蝙蝠身上掉落。");
-        onlyJeiInfo(TCItems.RANGER_EMBLEM, "游侠徽章", "It has a Chance to be dropped from Skeleton.", "它有几率从凋零骷髅身上掉落。");
+        onlyJeiInfo(TCItems.RANGER_EMBLEM, "游侠徽章", "It has a Chance to be dropped from Skeleton.", "它有几率从骷髅身上掉落。");
         onlyTooltips(TCItems.RECON_SCOPE, "侦察镜",
                 new String[]{
                         "Increases view range for ranged weapons",
