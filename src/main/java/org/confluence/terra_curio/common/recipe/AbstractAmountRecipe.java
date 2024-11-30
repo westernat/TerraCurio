@@ -13,8 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
-    protected final ItemStack result;
-    protected final NonNullList<Ingredient> ingredients;
+    public final ItemStack result;
+    public final NonNullList<Ingredient> ingredients;
 
     protected AbstractAmountRecipe(ItemStack pResult, NonNullList<Ingredient> pIngredients) {
         this.result = pResult;
