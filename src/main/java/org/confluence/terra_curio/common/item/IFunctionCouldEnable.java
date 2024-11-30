@@ -12,17 +12,19 @@ import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.Nullable;
 
 public interface IFunctionCouldEnable {
-    default String getEnableKey() {
-        return "enable";
+    String DISABLE = "disable";
+
+    default String getDisableKey() {
+        return DISABLE;
     }
 
     default boolean isEnabled(ItemStack itemStack, @Nullable TooltipComponentsValue.Storage storage) {
-        return !TCUtils.getItemStackNbt(itemStack).getBoolean(getEnableKey());
+        return !TCUtils.getItemStackNbt(itemStack).getBoolean(getDisableKey());
     }
 
     default void cycleEnable(ItemStack itemStack) {
         TCUtils.updateItemStackNbt(itemStack, tag -> {
-            String key = getEnableKey();
+            String key = getDisableKey();
             tag.putBoolean(key, !tag.getBoolean(key));
         });
     }
