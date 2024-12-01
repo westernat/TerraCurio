@@ -16,14 +16,10 @@ import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
-import net.minecraft.world.inventory.ClickAction;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
-import net.neoforged.neoforge.event.ItemStackedOnOtherEvent;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -39,7 +35,6 @@ import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
 import org.confluence.terra_curio.common.init.*;
 import org.confluence.terra_curio.common.item.DivingHelmet;
-import org.confluence.terra_curio.common.item.IFunctionCouldEnable;
 import org.confluence.terra_curio.common.item.curio.combat.PaladinsShield;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.mixin.accessor.ItemEntityAccessor;
@@ -245,21 +240,6 @@ public final class GameEvents {
         if (event.getEntity() instanceof Drowned drowned && drowned.getItemBySlot(EquipmentSlot.HEAD).isEmpty() && drowned.getRandom().nextFloat() < 0.05F) {
             drowned.setItemSlot(EquipmentSlot.HEAD, TCItems.DIVING_HELMET.get().getDefaultInstance());
             ((MobAccessor) drowned).getArmorDropChances()[EquipmentSlot.HEAD.getIndex()] = 1.0F;
-        }
-    }
-
-    @SubscribeEvent
-    public static void itemStackedOnOther(ItemStackedOnOtherEvent event) {
-        ItemStack onSlot = event.getCarriedItem();
-        ItemStack carried = event.getStackedOnItem(); // 非常奇怪,但事实如此
-        Item item = onSlot.getItem();
-        if (event.getClickAction() == ClickAction.SECONDARY) {
-            if (carried.isEmpty() && item instanceof IFunctionCouldEnable couldEnable) {
-                if (!event.getPlayer().level().isClientSide) { // 需要注意创造模式物品栏是仅客户端的，所以创造模式无法正常使用
-                    couldEnable.cycleEnable(onSlot);
-                }
-                event.setCanceled(true);
-            }
         }
     }
 }

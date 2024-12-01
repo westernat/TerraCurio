@@ -79,8 +79,10 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
                 pose.pushPose();
                 pose.translate(x - 2.0F, y - 1.0F + i * 10.0F,0.0F);
                 pose.scale(SCALE, SCALE, SCALE);
-                guiGraphics.blit(storages.get(i).texture(), 2, 2, 0, 0, 14, 14, 14, 14);
-                if (!InformationHandler.DISABLE[i]) {
+                TooltipComponentsValue.Storage storage = storages.get(i);
+                guiGraphics.blit(storage.texture(), 2, 2, 0, 0, 14, 14, 14, 14);
+                int index = IFunctionCouldEnable.Multi.INDEX_MAP.getOrDefault(storage, -1);
+                if (index != -1 && !InformationHandler.DISABLE[index]) {
                     guiGraphics.blit(ENABLED, 0, 0, 0,0 , 18, 18, 18, 18);
                 }
                 pose.popPose();
@@ -91,7 +93,9 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
         } else {
             if (mouseScrollY > 0) {
                 int index = IFunctionCouldEnable.Multi.INDEX_MAP.getOrDefault(storages.get(mouseScrollY - 1), -1);
-                InformationHandler.DISABLE[index] = !InformationHandler.DISABLE[index];
+                if (index != -1) {
+                    InformationHandler.DISABLE[index] = !InformationHandler.DISABLE[index];
+                }
                 InfoDisablePacket.sendToServer(InformationHandler.DISABLE);
             }
             mouseScrollY = 0;

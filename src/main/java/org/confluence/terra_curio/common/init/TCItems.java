@@ -28,7 +28,7 @@ import org.confluence.terra_curio.common.item.curio.RequiresModLoadedCurioItem;
 import org.confluence.terra_curio.common.item.curio.combat.*;
 import org.confluence.terra_curio.common.item.curio.expert.ShinnyStone;
 import org.confluence.terra_curio.common.item.curio.health.BandOfRegeneration;
-import org.confluence.terra_curio.common.item.curio.information.PDA;
+import org.confluence.terra_curio.common.item.curio.information.MultiInfoCurioItem;
 import org.confluence.terra_curio.common.item.curio.master.BasePoint;
 import org.confluence.terra_curio.common.item.curio.movement.BaseSpeedBoots;
 import org.confluence.terra_curio.common.item.curio.movement.CloudInABottle;
@@ -37,6 +37,7 @@ import org.confluence.terra_curio.common.item.curio.movement.StepStool;
 
 import java.util.List;
 import java.util.Set;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -302,24 +303,24 @@ public final class TCItems { // todo 全换成data map
             TIN_WATCH = registerCurio("tin_watch", builder -> builder.jeiInfos(0).rarity(WHITE).accessories(of(INFORMATION, List.of(HOUR$WATCH)))), // 锡表
             SILVER_WATCH = registerCurio("silver_watch", builder -> builder.jeiInfos(0).rarity(WHITE).accessories(of(INFORMATION, List.of(HALF$HOUR$WATCH)))), // 银表
             TUNGSTEN_WATCH = registerCurio("tungsten_watch", builder -> builder.jeiInfos(0).rarity(WHITE).accessories(of(INFORMATION, List.of(HALF$HOUR$WATCH)))), // 钨表
-            GOLD_WATCH = registerCurio("gold_watch", builder -> builder.makesPiglinsNeutral().jeiInfos(0).accessories(of(INFORMATION, List.of(MINUTE$WATCH)))), // 金表
-            PLATINUM_WATCH = registerCurio("platinum_watch", builder -> builder.jeiInfos(0).accessories(of(INFORMATION, List.of(MINUTE$WATCH)))), // 铂金表
-            DEPTH_METER = registerCurio("depth_meter", builder -> builder.accessories(of(INFORMATION, List.of(DEPTH$METER)))), // 深度计
-            COMPASS = registerCurio("compass", builder -> builder.accessories(of(INFORMATION, List.of($COMPASS)))), // 罗盘
-            RADAR = registerCurio("radar", builder -> builder.accessories(of(INFORMATION, List.of($RADAR)))), // 雷达
-            LIFE_FORM_ANALYZER = registerCurio("life_form_analyzer", builder -> builder.accessories(of(INFORMATION, List.of(LIFE$FORM$ANALYZER)))), // 生命体分析机
-            TALLY_COUNTER = registerCurio("tally_counter", builder -> builder.accessories(of(INFORMATION, List.of(TALLY$COUNTER)))), // 杀怪计数器
-            METAL_DETECTOR = registerCurio("metal_detector", builder -> builder.accessories(of(INFORMATION, List.of(METAL$DETECTOR)))), // 金属探测器
-            STOPWATCH = registerCurio("stopwatch", builder -> builder.jeiInfos(0).accessories(of(INFORMATION, List.of($STOPWATCH)))), // 秒表
-            DPS_METER = registerCurio("dps_meter", builder -> builder.accessories(of(INFORMATION, List.of(DPS$METER)))), // 每秒伤害计数器
-            FISHERMANS_POCKET_GUIDE = registerCurio("fishermans_pocket_guide", builder -> builder.accessories(of(INFORMATION, List.of(FISHERMANS$POCKET$GUIDE)))), // 渔民袖珍宝典
-            WEATHER_RADIO = registerCurio("weather_radio", builder -> builder.accessories(of(INFORMATION, List.of(WEATHER$RADIO)))), // 天气收音机
-            SEXTANT = registerCurio("sextant", builder -> builder.accessories(of(INFORMATION, List.of($SEXTANT)))), // 六分仪
-            GPS = registerCurio("gps", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of(MINUTE$WATCH, DEPTH$METER, $COMPASS)))), // 全球定位系统
-            REK_3000 = registerCurio("rek_3000", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of($RADAR, LIFE$FORM$ANALYZER, TALLY$COUNTER)))), // R.E.K.3000
-            GOBLIN_TECH = registerCurio("goblin_tech", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of(METAL$DETECTOR, $STOPWATCH, DPS$METER)))), // 哥布林数据仪
-            FISH_FINDER = registerCurio("fish_finder", builder -> builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of(FISHERMANS$POCKET$GUIDE, WEATHER$RADIO, $SEXTANT)))), // 探鱼器
-            PDA = registerDirectly("pda", name -> new PDA(BaseCurioItem.builder(name).rarity(PINK).jeiInfos(0).tooltips(11).accessories(of(INFORMATION, FULL_INFO)))); // 个人数字助手
+            GOLD_WATCH = registerDirectly("gold_watch", (name, builder) -> new MultiInfoCurioItem(builder.makesPiglinsNeutral().jeiInfos(0).accessories(of(INFORMATION, List.of(MINUTE$WATCH))))), // 金表
+            PLATINUM_WATCH = registerDirectly("platinum_watch", (name, builder) -> new MultiInfoCurioItem(builder.jeiInfos(0).accessories(of(INFORMATION, List.of(MINUTE$WATCH))))), // 铂金表
+            DEPTH_METER = registerDirectly("depth_meter", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of(DEPTH$METER))))), // 深度计
+            COMPASS = registerDirectly("compass", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of($COMPASS))))), // 罗盘
+            RADAR = registerDirectly("radar", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of($RADAR))))), // 雷达
+            LIFE_FORM_ANALYZER = registerDirectly("life_form_analyzer", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of(LIFE$FORM$ANALYZER))))), // 生命体分析机
+            TALLY_COUNTER = registerDirectly("tally_counter", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of(TALLY$COUNTER))))), // 杀怪计数器
+            METAL_DETECTOR = registerDirectly("metal_detector", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of(METAL$DETECTOR))))), // 金属探测器
+            STOPWATCH = registerDirectly("stopwatch", (name, builder) -> new MultiInfoCurioItem(builder.jeiInfos(0).accessories(of(INFORMATION, List.of($STOPWATCH))))), // 秒表
+            DPS_METER = registerDirectly("dps_meter", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of(DPS$METER))))), // 每秒伤害计数器
+            FISHERMANS_POCKET_GUIDE = registerDirectly("fishermans_pocket_guide", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of(FISHERMANS$POCKET$GUIDE))))), // 渔民袖珍宝典
+            WEATHER_RADIO = registerDirectly("weather_radio", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of(WEATHER$RADIO))))), // 天气收音机
+            SEXTANT = registerDirectly("sextant", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of($SEXTANT))))), // 六分仪
+            GPS = registerDirectly("gps", (name, builder) -> new MultiInfoCurioItem(builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of(MINUTE$WATCH, DEPTH$METER, $COMPASS))))), // 全球定位系统
+            REK_3000 = registerDirectly("rek_3000", (name, builder) -> new MultiInfoCurioItem(builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of($RADAR, LIFE$FORM$ANALYZER, TALLY$COUNTER))))), // R.E.K.3000
+            GOBLIN_TECH = registerDirectly("goblin_tech", (name, builder) -> new MultiInfoCurioItem(builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of(METAL$DETECTOR, $STOPWATCH, DPS$METER))))), // 哥布林数据仪
+            FISH_FINDER = registerDirectly("fish_finder", (name, builder) -> new MultiInfoCurioItem(builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of(FISHERMANS$POCKET$GUIDE, WEATHER$RADIO, $SEXTANT))))), // 探鱼器
+            PDA = registerDirectly("pda", (name, builder) -> new MultiInfoCurioItem(builder.rarity(PINK).jeiInfos(0).tooltips(11).accessories(of(INFORMATION, FULL_INFO)))); // 个人数字助手
 
     public static final Supplier<BaseCurioItem> STEP_STOOL = registerDirectly("step_stool", name -> new StepStool(BaseCurioItem.builder(name))), // 梯凳
             FLYING_CARPET = registerCurio("flying_carpet", builder -> builder.rarity(GREEN).accessories(of(MAY$FLY, new MayFlyAbilityValue.Storage(0.5625F, 100, false, true)))), // 飞毯
@@ -558,6 +559,10 @@ public final class TCItems { // todo 全换成data map
 
     public static Supplier<BaseCurioItem> registerDirectly(String name, Function<String, BaseCurioItem> function) {
         return CURIOS.register(name, () -> function.apply(name));
+    }
+
+    public static Supplier<BaseCurioItem> registerDirectly(String name, BiFunction<String, BaseCurioItem.Builder, BaseCurioItem> function) {
+        return CURIOS.register(name, () -> function.apply(name, BaseCurioItem.builder(name)));
     }
 
     public static void register(IEventBus eventBus) {

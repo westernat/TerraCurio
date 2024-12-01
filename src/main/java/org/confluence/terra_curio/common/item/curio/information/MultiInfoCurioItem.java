@@ -11,8 +11,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-public class PDA extends BaseCurioItem implements IFunctionCouldEnable.Multi {
-    public PDA(Builder builder) {
+public class MultiInfoCurioItem extends BaseCurioItem implements IFunctionCouldEnable.Multi {
+    public MultiInfoCurioItem(Builder builder) {
         super(builder);
     }
 

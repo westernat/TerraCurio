@@ -29,6 +29,14 @@ public interface IFunctionCouldEnable {
         });
     }
 
+    default @Nullable TooltipComponent getTooltipComponent(ItemStack itemStack) {
+        AccessoriesComponent component = TCUtils.getAccessoriesComponent(itemStack);
+        if (component == null) return null;
+        TooltipComponentsValue value = component.get(TCItems.INFORMATION);
+        if (value == null) return null;
+        return new TooltipComponentsValue.Multi(value.get());
+    }
+
     interface Multi extends IFunctionCouldEnable {
         Object2IntMap<TooltipComponentsValue.Storage> INDEX_MAP = Util.make(new Object2IntArrayMap<>(), map -> {
             map.put(TCItems.MINUTE$WATCH, 0);
@@ -55,13 +63,5 @@ public interface IFunctionCouldEnable {
 
         @Override
         default void cycleEnable(ItemStack itemStack) {}
-
-        default @Nullable TooltipComponent getTooltipComponent(ItemStack itemStack) {
-            AccessoriesComponent component = TCUtils.getAccessoriesComponent(itemStack);
-            if (component == null) return null;
-            TooltipComponentsValue value = component.get(TCItems.INFORMATION);
-            if (value == null) return null;
-            return new TooltipComponentsValue.Multi(value.get());
-        }
     }
 }

@@ -81,6 +81,7 @@ public class ModLanguageProvider extends LanguageProvider {
 
         add("tooltip.terra_curio.requires_mod_loaded", "This accessory requires any of the following mods: %s", "该配饰需要以下任意模组：%s");
         add("tooltip.terra_curio.hold_and_scroll", "Hold [Left Shift] and scroll the mouse wheel", "按住[左Shift]并滚动鼠标滚轮");
+        add("tooltip.terra_curio.right_click", "Right click it on inventory to toggle", "在物品栏内右键以开关");
         for (int i = 0; i < ALL_INFO_EN.length; i++) {
             add("tooltip.terra_curio." + ALL_INFO_NAME[i], ALL_INFO_EN[i], ALL_INFO_ZH[i]);
         }
