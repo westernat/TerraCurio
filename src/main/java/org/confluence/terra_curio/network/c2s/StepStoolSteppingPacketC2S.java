@@ -37,32 +37,31 @@ public record StepStoolSteppingPacketC2S(int slot, byte step) implements CustomP
 
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
+            if (slot == -1) return;
             if (context.player() instanceof ServerPlayer serverPlayer) {
-                if (slot == -1) return;
+                ItemStack itemStack = CuriosUtils.getSlot(serverPlayer, PREDICATE, slot);
+                if (itemStack == null) return;
                 int actualStep = step & STEP_MASK;
                 boolean increase = (step & INCREASE) == INCREASE;
+
                 if (actualStep == 1 && increase) {
                     StepStoolEntity pEntity = new StepStoolEntity(serverPlayer);
                     serverPlayer.level().addFreshEntity(pEntity);
                     serverPlayer.teleportRelative(0.0, 1.001, 0.0);
-                    CuriosUtils.getSlot(serverPlayer, PREDICATE, slot).ifPresent(itemStack -> {
-                        TCUtils.updateItemStackNbt(itemStack, nbt -> nbt.putInt("id", pEntity.getId()));
-                    });
+                    TCUtils.updateItemStackNbt(itemStack, nbt -> nbt.putInt("id", pEntity.getId()));
                 } else {
-                    CuriosUtils.getSlot(serverPlayer, PREDICATE, slot).ifPresent(itemStack -> {
-                        int id = TCUtils.getItemStackNbt(itemStack).getInt("id");
-                        Entity entity = serverPlayer.level().getEntity(id);
-                        if (entity instanceof StepStoolEntity stepStool) {
-                            if (actualStep == 0) {
-                                stepStool.setOwner(null);
-                            } else {
-                                stepStool.setStep(actualStep);
-                                if (increase) {
-                                    serverPlayer.teleportRelative(0.0, 1.001, 0.0);
-                                }
+                    int id = TCUtils.getItemStackNbt(itemStack).getInt("id");
+                    Entity entity = serverPlayer.level().getEntity(id);
+                    if (entity instanceof StepStoolEntity stepStool) {
+                        if (actualStep == 0) {
+                            stepStool.setOwner(null);
+                        } else {
+                            stepStool.setStep(actualStep);
+                            if (increase) {
+                                serverPlayer.teleportRelative(0.0, 1.001, 0.0);
                             }
                         }
-                    });
+                    }
                 }
             }
         }).exceptionally(e -> {

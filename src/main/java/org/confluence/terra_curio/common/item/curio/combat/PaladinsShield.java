@@ -12,6 +12,7 @@ import org.apache.commons.lang3.mutable.MutableFloat;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.util.CuriosUtils;
+import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.SlotContext;
 
 public class PaladinsShield extends BaseCurioItem {
@@ -31,7 +32,7 @@ public class PaladinsShield extends BaseCurioItem {
     }
 
     @Override
-    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
+    public boolean canEquip(@NotNull ItemStack stack, @NotNull EquipmentSlot armorType, @NotNull LivingEntity entity) {
         return CuriosUtils.noSameCurio(entity, PaladinsShield.class);
     }
 

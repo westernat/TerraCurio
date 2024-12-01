@@ -33,9 +33,10 @@ public record SpeedBootsNBTPacketC2S(int slot, int value) implements CustomPacke
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer serverPlayer) {
-                CuriosUtils.getSlot(serverPlayer, PREDICATE, slot).ifPresent(itemStack -> {
+                ItemStack itemStack = CuriosUtils.getSlot(serverPlayer, PREDICATE, slot);
+                if (itemStack != null) {
                     TCUtils.updateItemStackNbt(itemStack, nbt -> nbt.putInt(BaseSpeedBoots.KEY, value));
-                });
+                }
             }
         }).exceptionally(e -> {
             context.disconnect(Component.translatable("neoforge.network.invalid_flow", e.getMessage()));
