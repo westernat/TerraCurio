@@ -14,7 +14,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.ModLoader;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.confluence.terra_curio.api.event.AfterAccessoryAbilitiesFlushedEvent;
 import org.confluence.terra_curio.api.event.RegisterAccessoriesComponentUpdateEvent;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
@@ -136,6 +138,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                     }
 
                     if (!panicNecklace && item instanceof PanicNecklace) this.panicNecklace = true;
+                    TCUtils.forConfluence$Inject();
                 }
             }
             Set<EntityType<?>> ignores = getValue(TCItems.MOB$IGNORE);
@@ -145,6 +148,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                 });
             }
         });
+        NeoForge.EVENT_BUS.post(new AfterAccessoryAbilitiesFlushedEvent(living));
     }
 
     private <T, V extends PrimitiveValue<T>> void putUnitIfPresent(ValueType<T, V> type) {

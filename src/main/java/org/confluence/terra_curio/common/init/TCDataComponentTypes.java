@@ -11,9 +11,9 @@ import org.confluence.terra_curio.common.component.NbtComponent;
 import java.util.function.Supplier;
 
 public final class TCDataComponentTypes {
-    public static final DeferredRegister<DataComponentType<?>> TYPES = DeferredRegister.create(Registries.DATA_COMPONENT_TYPE, TerraCurio.MODID);
+    public static final DeferredRegister.DataComponents TYPES = DeferredRegister.createDataComponents(Registries.DATA_COMPONENT_TYPE, TerraCurio.MODID);
 
-    public static final Supplier<DataComponentType<ModRarity>> MOD_RARITY = TYPES.register("mod_rarity", () -> DataComponentType.<ModRarity>builder().persistent(ModRarity.CODEC).networkSynchronized(ModRarity.STREAM_CODEC).cacheEncoding().build());
-    public static final Supplier<DataComponentType<AccessoriesComponent>> ACCESSORIES = TYPES.register("accessories", () -> DataComponentType.<AccessoriesComponent>builder().persistent(AccessoriesComponent.CODEC).networkSynchronized(AccessoriesComponent.STREAM_CODEC).cacheEncoding().build());
-    public static final Supplier<DataComponentType<NbtComponent>> NBT = TYPES.register("nbt", () -> DataComponentType.<NbtComponent>builder().persistent(NbtComponent.CODEC).networkSynchronized(NbtComponent.STREAM_CODEC).cacheEncoding().build());
+    public static final Supplier<DataComponentType<ModRarity>> MOD_RARITY = TYPES.registerComponentType("mod_rarity", builder -> builder.persistent(ModRarity.CODEC).networkSynchronized(ModRarity.STREAM_CODEC));
+    public static final Supplier<DataComponentType<AccessoriesComponent>> ACCESSORIES = TYPES.registerComponentType("accessories", builder -> builder.persistent(AccessoriesComponent.CODEC).networkSynchronized(AccessoriesComponent.STREAM_CODEC));
+    public static final Supplier<DataComponentType<NbtComponent>> NBT = TYPES.registerComponentType("nbt", builder -> builder.persistent(NbtComponent.CODEC).networkSynchronized(NbtComponent.STREAM_CODEC));
 }
