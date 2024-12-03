@@ -169,7 +169,7 @@ public final class TCItems { // todo 全换成data map
                     MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION,
                     MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))), // 十字章护身符
             ANKH_SHIELD = registerCurio("ankh_shield", builder -> builder.jeiInfos(0).tooltips(1).rarity(LIME)
-                    .accessories(of(EFFECT$IMMUNITIES, Set.of(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))
+                    .accessories(units(FROZEN$IMMUNE), of(EFFECT$IMMUNITIES, Set.of(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)
                     .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)), // 十字章护盾
             STAR_CLOAK = registerCurio("star_cloak", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).accessories(of(STAR$CLOCK, false))), // 星星斗篷
