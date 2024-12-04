@@ -529,13 +529,13 @@ public final class TCItems { // todo 全换成data map
     /* 骸骨头盔 */
     /* 挥发明胶 */
     /* 孢子囊 */
-    SHINNY_STONE = registerDirectly("shinny_stone", name -> new ShinnyStone(BaseCurioItem.builder(name).rarity(EXPERT))), // 闪亮石
+    SHINY_STONE = registerDirectly("shiny_stone", name -> new ShinnyStone(BaseCurioItem.builder(name).rarity(EXPERT))), // 闪亮石
             SOARING_INSIGNIA = registerCurio("soaring_insignia", builder -> builder.rarity(EXPERT)
                     .accessories(units(INFINITE$FLIGHT))
                     .attribute(Attributes.MOVEMENT_SPEED, 0.075, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.JUMP_STRENGTH, 0.8, ADD_MULTIPLIED_TOTAL)), // 翱翔徽章
             GRAVITY_GLOBE = registerCurio("gravity_globe", builder -> builder.rarity(EXPERT).accessories(units(GRAVITY$GLOBE)).tooltips(1)), // 重力球
-            CELESCIAL_STARBOARD = registerCurio("celescial_starboard", builder -> builder.rarity(EXPERT).accessories(of(MAY$FLY, new MayFlyAbilityValue.Storage(1.0F, 60, true, true)))); // 天界星盘
+            CELESTIAL_STARBOARD = registerCurio("celestial_starboard", builder -> builder.rarity(EXPERT).tooltips(2).accessories(of(MAY$FLY, new MayFlyAbilityValue.Storage(1.0F, 60, true, true)))); // 天界星盘
 
     public static Supplier<BaseCurioItem> registerCurio(String name, Consumer<BaseCurioItem.Builder> consumer) {
         return CURIOS.register(name, () -> {

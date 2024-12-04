@@ -11,6 +11,7 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.StepStoolHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
+import org.confluence.terra_curio.mixed.IClientLivingEntity;
 import org.confluence.terra_curio.mixed.SelfGetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -21,9 +22,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class ClientLivingEntityMixin implements SelfGetter<LivingEntity> {
+public abstract class ClientLivingEntityMixin implements IClientLivingEntity, SelfGetter<LivingEntity> {
     @Unique
     private FluidState terra_curio$lastWalkedFluidState = null;
+
+    @Override
+    public void terra_curio$resetLastWalkedFluidState() {
+        this.terra_curio$lastWalkedFluidState = null;
+    }
 
     @Inject(method = "checkFallDamage", at = @At("HEAD"))
     private void fall(double motionY, boolean onGround, BlockState blockState, BlockPos blockPos, CallbackInfo ci) {

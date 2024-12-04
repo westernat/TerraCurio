@@ -174,11 +174,13 @@ public final class PlayerJumpHandler {
         float rad = localPlayer.getYRot() * Mth.DEG_TO_RAD;
         float cos = Mth.cos(rad);
         float sin = Mth.sin(rad);
-        float x = localPlayer.xxa * h;
-        float z = localPlayer.zza * h;
+        float v = h * 0.15F;
+        float x = localPlayer.xxa * v;
+        float z = localPlayer.zza * v;
         double mx = x * cos + z * -sin;
         double mz = x * sin + z * cos;
-        localPlayer.setDeltaMovement(mx, y, mz);
+        Vec3 motion = localPlayer.getDeltaMovement();
+        localPlayer.setDeltaMovement(motion.x + mx, y, motion.z + mz);
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
         PacketDistributor.sendToServer(new PlayerJumpPacketC2S(RESET_FALL_DISTANCE, (float) y));

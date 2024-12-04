@@ -267,6 +267,8 @@ public final class TCUtils {
                 Vec3 motion = player.getDeltaMovement();
                 player.setDeltaMovement(motion.x, Math.max(0.0, motion.y), motion.z);
                 player.setOnGround(true);
+                float f = Math.min(0.1F, (float) motion.horizontalDistance());
+                player.bob = player.bob + (f - player.bob) * 0.8F;
             }
         }
     }

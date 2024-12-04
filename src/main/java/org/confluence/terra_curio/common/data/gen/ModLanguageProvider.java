@@ -288,10 +288,10 @@ public class ModLanguageProvider extends LanguageProvider {
         );
         tooltipsAndJeiInfo(TCItems.CLIMBING_CLAWS, "攀爬爪",
                 new String[]{
-                        "Allows the ability to slide down walls, hold shift key to slide down quickly",
+                        "Allows the ability to slide down walls, hold Crouch key to slide down quickly",
                         "Improved ability if combined with Shoe Spikes"
                 }, new String[]{
-                        "可沿墙滑下，按住shift键可更快地下滑",
+                        "可沿墙滑下，按住潜行键可更快地下滑",
                         "结合鞋钉使用时能力还会有所提升"
                 }, "It has a Chance to be dropped from Spider.", "它有几率从蜘蛛身上掉落。");
         onlyTooltips(TCItems.CLOUD_IN_A_BALLOON, "云朵气球",
@@ -353,7 +353,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 }
         );
         tooltipAndJeiInfo(TCItems.FART_IN_A_JAR, "罐中臭屁", "Allows the holder to double jump", "可让持有者二连跳", "It has a Chance to be dropped from Ghost.", "它有几率从恶魂身上掉落");
-        tooltipAndJeiInfo(TCItems.FAST_CLOCK, "快走时钟", "Immunity to Slow", "对缓慢免疫", "It has a Chance to be dropped from Stray.", "它有几率从流浪者身上掉落。");
+        tooltipAndJeiInfo(TCItems.FAST_CLOCK, "快走时钟", "Immunity to Slowness", "对缓慢免疫", "It has a Chance to be dropped from Stray.", "它有几率从流浪者身上掉落。");
         tooltipAndJeiInfo(TCItems.FERAL_CLAWS, "狂爪手套", "Enables auto swing for melee weapons", "启用近战武器自动挥动", "It can be discovered in chests found within Jungle Pyramids.", "它可以在丛林神庙内的箱子中找到");
         onlyTooltips(TCItems.FIRE_GAUNTLET, "烈火手套",
                 new String[]{
@@ -376,7 +376,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "显示天气"
                 }
         );
-        onlyTooltip(TCItems.TIGER_CLIMBING_GEAR, "猛虎攀爬装备", "Allows the ability to climb walls, hold shift key to slide down", "可爬墙，按住shift键可快速下滑");
+        onlyTooltip(TCItems.TIGER_CLIMBING_GEAR, "猛虎攀爬装备", "Allows the ability to climb walls, hold Crouch key to slide down", "可爬墙，按住潜行键可快速下滑");
         tooltipAndJeiInfo(TCItems.FISHERMANS_POCKET_GUIDE, "渔民袖珍宝典", "Displays fishing information", "显示钓鱼信息", "This item can be located in the chests found within Fisherman Villagers' houses.", "这件物品可以在渔夫村民家中的箱子中找到。");
         tooltipAndJeiInfo(TCItems.FLASHLIGHT, "手电筒", "Immunity to Darkness", "对黑暗免疫", "It can be discovered in chests found within Stronghold.", "它可以在要塞内的箱子中找到。");
         tooltipsAndJeiInfo(TCItems.FLESH_KNUCKLES, "血肉指虎",
@@ -407,13 +407,13 @@ public class ModLanguageProvider extends LanguageProvider {
                         "'It ain't easy being green'",
                         "Increases jump height",
                         "Increases fall resistance",
-                        "Allows the ability to climb walls, hold shift key to slide down"
+                        "Allows the ability to climb walls, hold Crouch key to slide down"
                 },
                 new String[]{
                         "“身为绿皮生物可太难了”",
                         "增加跳跃高度",
                         "增加抗坠落性",
-                        "可爬墙，按住shift键可快速下滑"
+                        "可爬墙，按住潜行键可快速下滑"
                 }
         );
         tooltipsAndJeiInfo(TCItems.FROG_LEG, "蛙腿",
@@ -430,12 +430,12 @@ public class ModLanguageProvider extends LanguageProvider {
                 new String[]{
                         "Increases jump height",
                         "Increases fall resistance",
-                        "Allows the ability to climb walls, hold shift key to slide down"
+                        "Allows the ability to climb walls, hold Crouch key to slide down"
                 },
                 new String[]{
                         "增加跳跃高度",
                         "增加抗坠落性",
-                        "可爬墙，按住shift键可快速下滑"
+                        "可爬墙，按住潜行键可快速下滑"
                 }
         );
         onlyTooltip(TCItems.FROSTSPARK_BOOTS, "霜花靴", "Allows flight, super fast running, and extra mobility on ice", "可飞行、飞速奔跑、并提供额外冰面行动力");
@@ -503,12 +503,12 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyTooltips(TCItems.HAND_OF_CREATION, "创造之手",
                 new String[]{
                         "Decreased 'Right Click Delay' by 3, cannot stack the decrease of its material",
-                        "Press ↑ key to stand higher, and press Shift key to down"
+                        "Press ↑ key to stand higher, and press Crouch key to down"
 
                 },
                 new String[]{
                         "右键点击延迟降低3，且降低效果不能与其材料的降低效果叠加",
-                        "按↑键站得更高，按Shift键下来"
+                        "按↑键站得更高，按潜行键下来"
                 }
         );
         onlyTooltip(TCItems.HAND_WARMER, "暖手宝", "Provides immunity to powder snow", "对细雪免疫");
@@ -580,12 +580,12 @@ public class ModLanguageProvider extends LanguageProvider {
         tooltipAndJeiInfo(TCItems.MAGMA_STONE, "岩浆石", "Melee attacks inflict fire damage", "近战攻击造成火焰伤害", "It has a Chance to be dropped from Blaze.", "它有几率从烈焰人掉落");
         onlyTooltips(TCItems.MASTER_NINJA_GEAR, "忍者大师装备",
                 new String[]{
-                        "Allows the ability to climb walls, hold shift key to slide down",
+                        "Allows the ability to climb walls, hold Crouch key to slide down",
                         "Allows the ability to dash while double tap a direction",
                         "Gives a chance to dodge attacks"
                 },
                 new String[]{
-                        "可爬墙，按住shift键可快速下滑",
+                        "可爬墙，按住潜行键可快速下滑",
                         "双击一个方向可猛冲",
                         "有几率避开攻击"
                 }
@@ -765,14 +765,14 @@ public class ModLanguageProvider extends LanguageProvider {
                         "增加跳跃高度"
                 }
         );
-        tooltipAndJeiInfo(TCItems.SHIELD_OF_CTHULHU, "克苏鲁护盾", "Allows the player to dash into the enemy, sprinting to dsh", "允许冲刺，疾跑以冲刺", "It has a Chance to be dropped from Ravager.", "它有几率从劫掠兽身上掉落。");
+        tooltipAndJeiInfo(TCItems.SHIELD_OF_CTHULHU, "克苏鲁护盾", "Allows the player to dash into the enemy, sprint to dash", "允许冲刺，疾跑以冲刺", "It has a Chance to be dropped from Ravager.", "它有几率从劫掠兽身上掉落。");
         tooltipAndJeiInfo(TCItems.SHINY_RED_BALLOON, "闪亮红气球", "Allows the holder to double jump", "增加跳跃高度", "When the player has the Hero of the Village effect, the librarian has a chance to give the player this item.It can be found in chests in plains villages.", "它可以在平原村庄中的宝箱中找到。当玩家拥有村庄英雄效果时，图书管理员有几率将此物品交给玩家。");
         tooltipsAndJeiInfo(TCItems.SHOE_SPIKES, "鞋钉",
                 new String[]{
-                        "Allows the ability to slide down walls, hold shift key to slide down quickly",
+                        "Allows the ability to slide down walls, hold Crouch key to slide down quickly",
                         "Improved ability if combined with Climbing Claws"
                 }, new String[]{
-                        "可沿墙滑下，按住shift键可更快地下滑",
+                        "可沿墙滑下，按住潜行键可更快地下滑",
                         "结合攀爬爪使用时能力还会有所提升"
                 }, "It has a Chance to be dropped from Cave Spider.", "它有几率从洞穴蜘蛛身上掉落。");
         tooltipAndJeiInfo(TCItems.SHOT_PUT, "铅球", "Immunity to Levitation", "对漂浮免疫", "It can be found in Chests in the Stronghold.", "它可以在要塞的宝箱中找到。");
@@ -814,11 +814,11 @@ public class ModLanguageProvider extends LanguageProvider {
         );
         tooltipsAndJeiInfo(TCItems.STEP_STOOL, "梯凳",
                 new String[]{
-                        "Press ↑ key to stand higher, and press Shift key to down",
+                        "Press ↑ key to stand higher, and press Crouch key to down",
                         "Extra Step: %s"
                 },
                 new String[]{
-                        "按↑键站得更高，按Shift键下来",
+                        "按↑键站得更高，按潜行键下来",
                         "额外高度：%s"
                 },
                 "You can use Step Stool to upgrade its Extra Step from Smithing Table.",
@@ -844,7 +844,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "减少因触碰熔岩而造成的伤害"
                 }
         );
-        onlyTooltip(TCItems.THE_PLAN, "计划书", "Immunity to Slow and Nausea", "对缓慢和反胃免疫");
+        onlyTooltip(TCItems.THE_PLAN, "计划书", "Immunity to Slowness and Nausea", "对缓慢和反胃免疫");
         onlyJeiInfo(TCItems.TITAN_GLOVE, "泰坦手套", "It can be found in Chests in the Mineshaft.", "它可以在废弃矿井的宝箱中找到。");
         onlyJeiInfo(TCItems.TOOLBELT, "工具腰带", "It can be located in the chests found within Toolsmith Villagers' houses.", "它可以在工具匠村民家中的箱子中找到。");
         onlyJeiInfo(TCItems.TOOLBOX, "工具箱", "It can be located in the chests found within Toolsmith Villagers' houses.", "它可以在工具匠村民家中的箱子中找到");
@@ -893,6 +893,22 @@ public class ModLanguageProvider extends LanguageProvider {
                 "对细雪免疫");
         onlyTooltip(TCItems.INNER_TUBE, "浮游圈", "Grants the ability to float in water", "可让人浮在水面");
         tooltipAndJeiInfo(TCItems.FLYING_CARPET, "飞毯", "Allows the owner to float for a few seconds", "可让持有者漂浮几秒钟", "It can be discovered in chests found within Desert Pyramids.", "它可以在沙漠神殿内的箱子中找到");
+        tooltipAndJeiInfo(TCItems.SHINY_STONE, "闪亮石", "Greatly increases life regen when not moving", "不移动时，大大提高生命再生速度", "", "");
+        tooltipAndJeiInfo(TCItems.SOARING_INSIGNIA, "翱翔徽章", "Grants infinite wing and rocket boot flight", "给予无限翅膀飞行时间和无限火箭靴飞行时间", "", "");
+        tooltipsAndJeiInfo(TCItems.CELESTIAL_STARBOARD, "天界星盘",
+                new String[]{
+                        "Allows flight and slow fall",
+                        "Hold Crouch and Jump key to horizontal flight",
+                        "'The more you know'"
+                },
+                new String[]{
+                        "可飞行和缓慢坠落",
+                        "按住潜行与跳跃键以水平飞行",
+                        "“你懂得越多”"
+                },
+                "",
+                ""
+        );
 
         if (locale.equals("en_us")) {
             sidedAdd(TCItems.EXPLORERS_EQUIPMENT.get().getDescriptionId(), "Explorer's Equipment", enData);

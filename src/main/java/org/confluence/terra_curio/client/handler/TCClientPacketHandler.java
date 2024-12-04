@@ -24,6 +24,7 @@ import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
+import org.confluence.terra_curio.mixed.IClientLivingEntity;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
 import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
 import org.confluence.terra_curio.network.s2c.LuminancePacketS2C;
@@ -160,6 +161,7 @@ public final class TCClientPacketHandler {
 
     public static void handleFluidWalk(Player player) {
         walkableFluidStates.clear();
+        ((IClientLivingEntity) player).terra_curio$resetLastWalkedFluidState();
         Set<TagKey<Fluid>> tagKeys = CuriosUtils.calculateValue(player, TCItems.FLUID$WALK);
         BuiltInRegistries.FLUID.stream().flatMap(fluid -> fluid.getStateDefinition().getPossibleStates().stream()).forEach(state -> {
             if (tagKeys.stream().anyMatch(state::is)) {
