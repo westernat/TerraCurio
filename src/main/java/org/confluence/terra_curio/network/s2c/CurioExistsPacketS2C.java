@@ -3,7 +3,6 @@ package org.confluence.terra_curio.network.s2c;
 import io.netty.buffer.ByteBuf;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.Util;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -27,22 +26,22 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Map;
 
 public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
-    public static final int AUTO_ATTACK = 1;
-    public static final int SHIELD_OF_CTHULHU = 1 << 1;
-    public static final int TABI = 1 << 2;
-    public static final int SCOPE = 1 << 3;
-    public static final int GRAVITY_GLOBE = 1 << 4;
-    public static final int MAGILUMINESCENCE = 1 << 5;
-    public static final int FLOAT_ON_LIQUID_SURFACE = 1 << 6;
-    public static final Object2IntMap<ValueType<Unit, UnitValue>> MAP = Util.make(new Object2IntArrayMap<>(), map -> {
-        map.put(TCItems.AUTO$ATTACK, AUTO_ATTACK);
-        map.put(TCItems.SHIELD$OF$CTHULHU, SHIELD_OF_CTHULHU);
-        map.put(TCItems.SPRINTING, TABI);
-        map.put(TCItems.SCOPE, SCOPE);
-        map.put(TCItems.GRAVITY$GLOBE, GRAVITY_GLOBE);
-        map.put(TCItems.$MAGILUMINESCENCE, MAGILUMINESCENCE);
-        map.put(TCItems.FLOAT$ON$LIQUID$SURFACE, FLOAT_ON_LIQUID_SURFACE);
-    });
+    public static final Object2IntMap<ValueType<Unit, UnitValue>> MAP = new Object2IntArrayMap<>();
+
+    public static final int AUTO_ATTACK = register(TCItems.AUTO$ATTACK);
+    public static final int SHIELD_OF_CTHULHU = register(TCItems.SHIELD$OF$CTHULHU);
+    public static final int TABI = register(TCItems.SPRINTING);
+    public static final int SCOPE = register(TCItems.SCOPE);
+    public static final int GRAVITY_GLOBE = register(TCItems.GRAVITY$GLOBE);
+    public static final int MAGILUMINESCENCE = register(TCItems.$MAGILUMINESCENCE);
+    public static final int FLOAT_ON_LIQUID_SURFACE = register(TCItems.FLOAT$ON$LIQUID$SURFACE);
+    public static final int NEPTUNES_SHELL = register(TCItems.NEPTUNES$SHELL);
+
+    private static int register(ValueType<Unit, UnitValue> type) {
+        int i = 1 << MAP.size();
+        MAP.put(type, i);
+        return i;
+    }
 
     public static final Type<CurioExistsPacketS2C> TYPE = new Type<>(TerraCurio.asResource("curio_exists"));
     public static final StreamCodec<ByteBuf, CurioExistsPacketS2C> STREAM_CODEC = StreamCodec.composite(

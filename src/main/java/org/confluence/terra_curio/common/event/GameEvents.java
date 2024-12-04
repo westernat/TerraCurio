@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.event;
 
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -30,6 +31,7 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
+import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
 import org.confluence.terra_curio.common.init.*;
 import org.confluence.terra_curio.common.item.DivingHelmet;
@@ -225,9 +227,20 @@ public final class GameEvents {
     @SubscribeEvent
     public static void livingBreathe(LivingBreatheEvent event) {
         LivingEntity living = event.getEntity();
-        if (!event.canBreathe() && living.getAirSupply() > 0 && living.level().getGameTime() % 8 != 0) { //延长至120秒
-            if (living.getItemBySlot(EquipmentSlot.HEAD).is(TCTags.DIVING) || TCUtils.hasAccessoriesType(living, TCItems.DIVING)) {
-                event.setConsumeAirAmount(0);
+        if (event.canBreathe()) return;
+        if (living.level().isClientSide) {
+            if (living.getClass() == LocalPlayer.class && TCClientPacketHandler.isHasNeptunesShell()) {
+                event.setCanBreathe(true);
+                event.setRefillAirAmount(4);
+            }
+        } else {
+            if (TCUtils.hasAccessoriesType(living, TCItems.NEPTUNES$SHELL)) {
+                event.setCanBreathe(true);
+                event.setRefillAirAmount(4);
+            } else if (living.getAirSupply() > 0 && living.level().getGameTime() % 8 != 0) { // 延长至120秒
+                if (living.getItemBySlot(EquipmentSlot.HEAD).is(TCTags.DIVING) || TCUtils.hasAccessoriesType(living, TCItems.DIVING)) {
+                    event.setConsumeAirAmount(0);
+                }
             }
         }
     }

@@ -28,14 +28,14 @@ public abstract class ClientEntityMixin implements SelfGetter<Entity> {
 
     @Inject(method = "getEyeHeight()F", at = @At("RETURN"), cancellable = true)
     private void eyeHeight(CallbackInfoReturnable<Float> cir) {
-        if (self() instanceof LocalPlayer localPlayer && GravitationHandler.isShouldRot()) {
-            cir.setReturnValue(((IEntity) localPlayer).terra_curio$getDimensionHeight() * 0.15F);
+        if (self().getClass() == LocalPlayer.class && GravitationHandler.isShouldRot()) {
+            cir.setReturnValue(((IEntity) self()).terra_curio$getDimensionHeight() * 0.15F);
         }
     }
 
     @ModifyVariable(method = "setOnGroundWithMovement", at = @At("HEAD"), argsOnly = true)
     private boolean checkVertical(boolean bool) {
-        if (!bool) return verticalCollision && self() instanceof LocalPlayer && GravitationHandler.isShouldRot();
+        if (!bool) return verticalCollision && self().getClass() == LocalPlayer.class && GravitationHandler.isShouldRot();
         return true;
     }
 

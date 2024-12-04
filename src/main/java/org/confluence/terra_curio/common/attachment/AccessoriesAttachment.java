@@ -55,6 +55,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.UnitType(list));
     });
     public static final List<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
+        list.add(TCItems.NEPTUNES$SHELL);
         list.add(TCItems.STAR$CLOCK);
         list.add(TCItems.INJURY$FREE);
         list.add(TCItems.INVULNERABLE$TICKS$MULTIPLIER);

@@ -24,6 +24,8 @@ import org.confluence.terra_curio.api.primitive.*;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.item.*;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
+import org.confluence.terra_curio.common.item.curio.HealPerSecondCurioItem;
+import org.confluence.terra_curio.common.item.curio.NightBonusCurioItem;
 import org.confluence.terra_curio.common.item.curio.RequiresModLoadedCurioItem;
 import org.confluence.terra_curio.common.item.curio.combat.*;
 import org.confluence.terra_curio.common.item.curio.expert.ShinnyStone;
@@ -97,6 +99,9 @@ public final class TCItems { // todo 全换成data map
     public static final ValueType<Unit, UnitValue> GRAVITY$GLOBE = ofUnit("gravity_globe");
     public static final ValueType<Unit, UnitValue> $MAGILUMINESCENCE = ofUnit("magiluminescence");
     public static final ValueType<Unit, UnitValue> FLOAT$ON$LIQUID$SURFACE = ofUnit("float_on_liquid_surface");
+
+    // both client and updates
+    public static final ValueType<Unit, UnitValue> NEPTUNES$SHELL = ofUnit("neptunes_shell");
 
     // require updates
     public static final ValueType<Unit, UnitValue> FIRE$ATTACK = ofUnit("fire_attack");
@@ -176,12 +181,51 @@ public final class TCItems { // todo 全换成data map
             STAR_VEIL = registerCurio("star_veil", builder -> builder.rarity(LIGHT_PURPLE).jeiInfos(0).accessories(of(STAR$CLOCK, false), of(INVULNERABLE$TICKS$MULTIPLIER, 2.0F)).tooltips(1)), // 星星面纱
             BEE_CLOAK = registerCurio("bee_cloak", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).accessories(units(HONEY$COMB), of(STAR$CLOCK, false), of(INVULNERABLE$TICKS$MULTIPLIER, 2.0F)).tooltips(1)), // 蜜蜂斗篷
             BLACK_BELT = registerCurio("black_belt", builder -> builder.rarity(LIME).attribute(TCAttributes.getDodgeChance(), 0.1, ADD_VALUE)), // 黑腰带
-    /* 月光护身符 */
-    SUN_STONE = registerCurio("sun_stone", SunStone::new), // 太阳石
-            MOON_STONE = registerCurio("moon_stone", MoonStone::new), // 月亮石
-            CELESTIAL_STONE = registerCurio("celestial_stone", CelestialStone::new), // 天界石
-    /* 月亮贝壳 */
-    /* 天界贝壳 */
+            SUN_STONE = registerCurio("sun_stone", SunStone::new), // 太阳石
+            MOON_STONE = registerDirectly("moon_stone", (name, builder) -> new NightBonusCurioItem(1.0F, builder.rarity(ModRarity.PINK)
+                    .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ATTACK_DAMAGE, 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
+                    .attribute(Attributes.BLOCK_BREAK_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)
+                    .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
+                    .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(TCAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 月亮石
+            CELESTIAL_STONE = registerDirectly("celestial_stone", (name, builder) -> new HealPerSecondCurioItem(1.0F, builder.rarity(ModRarity.LIME).jeiInfos(0)
+                    .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ATTACK_DAMAGE, 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
+                    .attribute(Attributes.BLOCK_BREAK_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)
+                    .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
+                    .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(TCAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 天界石
+            MOON_CHARM = registerDirectly("moon_charm", (name, builder) -> new NightBonusCurioItem(0.5F, builder.rarity(LIGHT_RED)
+                    .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
+                    .attribute(Attributes.ATTACK_DAMAGE, 0.051, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ATTACK_SPEED, 0.051, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.MOVEMENT_SPEED, 0.05, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
+                    .attribute(Attributes.JUMP_STRENGTH, 0.1, ADD_MULTIPLIED_TOTAL))), // 月光护身符 todo 模型
+            NEPTUNES_SHELL = registerCurio("neptunes_shell", builder -> builder.rarity(PINK)
+                    .accessories(units(NEPTUNES$SHELL))
+                    .attribute(Attributes.SUBMERGED_MINING_SPEED, 0.8, ADD_VALUE)), // 海神贝壳 todo 模型
+            MOON_SHELL = registerDirectly("moon_shell", (name, builder) -> new MoonShell(builder.rarity(LIGHT_PURPLE)
+                    .accessories(units(NEPTUNES$SHELL))
+                    .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
+                    .attribute(Attributes.ATTACK_DAMAGE, 0.051, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ATTACK_SPEED, 0.051, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.MOVEMENT_SPEED, 0.05, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
+                    .attribute(Attributes.JUMP_STRENGTH, 0.1, ADD_MULTIPLIED_TOTAL))), // 月亮贝壳
+            CELESTIAL_SHELL = registerDirectly("celestial_shell", (name, builder) -> new CelestialShell(builder.rarity(YELLOW)
+                    .accessories(units(NEPTUNES$SHELL))
+                    .attribute(Attributes.SUBMERGED_MINING_SPEED, 0.8, ADD_VALUE)
+                    .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ATTACK_DAMAGE, 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
+                    .attribute(Attributes.BLOCK_BREAK_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)
+                    .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
+                    .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(TCAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 天界贝壳
     COBALT_SHIELD = registerCurio("cobalt_shield", builder -> builder.rarity(GREEN).attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)), // 钴护盾
             CROSS_NECKLACE = registerCurio("cross_necklace", builder -> builder.rarity(LIGHT_RED).accessories(of(INVULNERABLE$TICKS$MULTIPLIER, 2.0F))), // 十字项链
             RANGER_EMBLEM = registerCurio("ranger_emblem", builder -> builder.rarity(LIGHT_RED).noTooltip().attribute(TCAttributes.getRangedDamage(), 0.15, ADD_MULTIPLIED_TOTAL)), // 游侠徽章

@@ -45,6 +45,7 @@ public final class TCClientPacketHandler {
     private static boolean hasMagiluminescence = false;
     private static boolean canFloating = false;
     public static boolean floating = false;
+    private static boolean hasNeptunesShell = false;
     private static int rightClickSubtractor = 0;
     private static int luminance = 0;
     private static final Int2IntMap remoteLuminance = new Int2IntArrayMap();
@@ -72,6 +73,10 @@ public final class TCClientPacketHandler {
         return canFloating;
     }
 
+    public static boolean isHasNeptunesShell() {
+        return hasNeptunesShell;
+    }
+
     public static int getRightClickSubtractor() {
         return rightClickSubtractor;
     }
@@ -97,6 +102,7 @@ public final class TCClientPacketHandler {
         GravitationHandler.hasGlobe = (item & GRAVITY_GLOBE) == GRAVITY_GLOBE;
         hasMagiluminescence = (item & MAGILUMINESCENCE) == MAGILUMINESCENCE;
         canFloating = (item & FLOAT_ON_LIQUID_SURFACE) == FLOAT_ON_LIQUID_SURFACE;
+        hasNeptunesShell = (item & NEPTUNES_SHELL) == NEPTUNES_SHELL;
     }
 
     public static void handleItemPickupDelay(SetItemEntityPickupDelayPacketS2C packet) {
@@ -185,6 +191,7 @@ public final class TCClientPacketHandler {
         hasMagiluminescence = false;
         rightClickSubtractor = 0;
         canFloating = false;
+        hasNeptunesShell = false;
         floating = false;
         luminance = 0;
         pickupDelayStorage.clear();

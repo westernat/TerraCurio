@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.player.LocalPlayer;
@@ -34,7 +35,7 @@ public abstract class ClientLivingEntityMixin implements IClientLivingEntity, Se
     @Inject(method = "checkFallDamage", at = @At("HEAD"))
     private void fall(double motionY, boolean onGround, BlockState blockState, BlockPos blockPos, CallbackInfo ci) {
         LivingEntity self = self();
-        if (motionY > 0.0 && GravitationHandler.isShouldRot() && self instanceof LocalPlayer) {
+        if (motionY > 0.0 && GravitationHandler.isShouldRot() && self().getClass() == LocalPlayer.class) {
             self.fallDistance += (float) motionY;
         }
     }
@@ -42,9 +43,9 @@ public abstract class ClientLivingEntityMixin implements IClientLivingEntity, Se
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3 confused(Vec3 vec3) {
         if (GravitationHandler.isShouldRot()) {
-            return self() instanceof LocalPlayer ? new Vec3(-vec3.x, vec3.y, vec3.z) : vec3;
+            return self().getClass() == LocalPlayer.class ? new Vec3(-vec3.x, vec3.y, vec3.z) : vec3;
         } else if (StepStoolHandler.onStool()) {
-            return self() instanceof LocalPlayer ? Vec3.ZERO : vec3;
+            return self().getClass() == LocalPlayer.class ? Vec3.ZERO : vec3;
         }
         return vec3;
     }
@@ -52,7 +53,7 @@ public abstract class ClientLivingEntityMixin implements IClientLivingEntity, Se
     @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
     private Vec3 notSlowdown(Vec3 instance, double factorX, double factorY, double factorZ, Operation<Vec3> original) {
         if (TCClientPacketHandler.floating && TCClientPacketHandler.isCanFloating()) {
-            if (self() instanceof LocalPlayer) return original.call(instance, factorX, 1.0, factorZ);
+            if (self().getClass() == LocalPlayer.class) return original.call(instance, factorX, 1.0, factorZ);
         }
         if (terra_curio$checkCanWalk(self(), self().getInBlockState().getFluidState())) {
             return original.call(instance, 0.94, factorY, 0.94);
@@ -68,6 +69,11 @@ public abstract class ClientLivingEntityMixin implements IClientLivingEntity, Se
         return original.call(instance, fluidState);
     }
 
+    @ModifyExpressionValue(method = "travel", at= @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1))
+    private boolean neptunesShell(boolean original) {
+        return original || (self().getClass() == LocalPlayer.class && TCClientPacketHandler.isHasNeptunesShell());
+    }
+
     @Inject(method = "canStandOnFluid", at = @At("RETURN"), cancellable = true)
     private void standOnFluid(FluidState fluidState, CallbackInfoReturnable<Boolean> cir) {
         if (!cir.getReturnValue() && terra_curio$checkCanWalk(self(), fluidState)) {
@@ -77,7 +83,7 @@ public abstract class ClientLivingEntityMixin implements IClientLivingEntity, Se
 
     @Unique
     private boolean terra_curio$checkCanWalk(LivingEntity living, FluidState fluidState) {
-        if (living.isCrouching() || fluidState.isEmpty() || !(living instanceof LocalPlayer)) return false;
+        if (living.isCrouching() || fluidState.isEmpty() || self().getClass() != LocalPlayer.class) return false;
         if (terra_curio$lastWalkedFluidState == fluidState) {
             return true;
         } else if (TCClientPacketHandler.getWalkableFluidStates().contains(fluidState)) {
