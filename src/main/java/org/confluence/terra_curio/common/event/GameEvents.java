@@ -67,7 +67,10 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void entityInvulnerabilityCheck(EntityInvulnerabilityCheckEvent event) {
-        if (!event.isInvulnerable() && TCUtils.isInvulnerableTo(event.getEntity(), event.getSource())) {
+        DamageSource damageSource = event.getSource();
+        if (damageSource.is(DamageTypes.GENERIC_KILL)) return;
+
+        if (!event.isInvulnerable() && TCUtils.isInvulnerableTo(event.getEntity(), damageSource)) {
             event.setInvulnerable(true);
         }
     }
