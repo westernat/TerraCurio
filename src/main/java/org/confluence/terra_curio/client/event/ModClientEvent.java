@@ -11,6 +11,7 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
+import org.confluence.terra_curio.client.CuriosClient;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.gui.DivingHelmetOverlay;
 import org.confluence.terra_curio.client.gui.InfoHudOverlay;
@@ -28,11 +29,15 @@ import org.confluence.terra_curio.common.init.TCMenus;
 public final class ModClientEvent {
     @SubscribeEvent
     public static void clientSetup(FMLClientSetupEvent event) {
-        event.enqueueWork(TCClientConfigs::onLoad);
+        event.enqueueWork(() -> {
+            TCClientConfigs.onLoad();
+            CuriosClient.registerRenderers();
+        });
     }
 
     @SubscribeEvent
     public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
+        CuriosClient.registerLayers(event::registerLayerDefinition);
         event.registerLayerDefinition(BeeProjectileModel.LAYER_LOCATION, BeeProjectileModel::createBodyLayer);
         event.registerLayerDefinition(StepStoolModel.LAYER_LOCATION, StepStoolModel::createBodyLayer);
     }
