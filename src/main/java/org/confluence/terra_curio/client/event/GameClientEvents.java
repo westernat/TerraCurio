@@ -1,9 +1,11 @@
 package org.confluence.terra_curio.client.event;
 
 
+import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -11,12 +13,17 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.common.NeoForge;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.event.PerformJumpingEvent;
+import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.animate.ExpertColorAnimation;
 import org.confluence.terra_curio.client.animate.MasterColorAnimation;
 import org.confluence.terra_curio.client.handler.*;
 import org.confluence.terra_curio.client.renderer.tooltip.MultiFunctionTooltip;
+import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.common.init.TCEffects;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
 @EventBusSubscriber(modid = TerraCurio.MODID, value = Dist.CLIENT)
 public final class GameClientEvents {
@@ -78,7 +85,7 @@ public final class GameClientEvents {
 
     @SubscribeEvent
     public static void interactionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
-        if (event.isUseItem()) {
+        if (TCClientConfigs.rightClickDelay && event.isUseItem()) {
             MinecraftAccessor instance = (MinecraftAccessor) Minecraft.getInstance();
             int delay = instance.getRightClickDelay() - TCClientPacketHandler.getRightClickSubtractor();
             instance.setRightClickDelay(Math.max(0, delay));
@@ -100,6 +107,21 @@ public final class GameClientEvents {
             MultiFunctionTooltip.mouseScrollY -= (int) event.getScrollDeltaY();
         } else {
             MultiFunctionTooltip.mouseScrollY = 0;
+        }
+    }
+
+    @SubscribeEvent
+    public static void renderTooltip$GatherComponents(RenderTooltipEvent.GatherComponents event) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player != null && event.getItemStack().is(TCItems.DEMON_HEART.get())) {
+            CuriosApi.getCuriosInventory(player).ifPresent(iCuriosItemHandler -> {
+                ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get("accessory");
+                Component remainingTimes = Component.translatable(
+                        "tooltip.item.terra_curio.demon_heart.1",
+                        TCCommonConfigs.MAX_ACCESSORIES.get() - iCurioStacksHandler.getSlots()
+                ).withColor(0xAAAAAA);
+                event.getTooltipElements().add(Either.left(remainingTimes));
+            });
         }
     }
 }

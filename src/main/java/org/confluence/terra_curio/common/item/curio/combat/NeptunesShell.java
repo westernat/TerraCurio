@@ -6,7 +6,7 @@ import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.util.CuriosUtils;
 import top.theillusivec4.curios.api.SlotContext;
 
-public class NeptunesShell extends BaseCurioItem implements ICosmetic{
+public class NeptunesShell extends BaseCurioItem implements ICosmetic {
     public NeptunesShell(Builder builder) {
         super(builder);
     }
