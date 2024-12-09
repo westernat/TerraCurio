@@ -62,6 +62,8 @@
         "terra_curio:entities/shulker",
         "terra_curio:entities/bat",
         "terra_curio:entities/wither",
+        "terra_curio:entities/guardian",
+        "terra_curio:entities/iron_golem",
         "terra_curio:blocks/moss_block",
         "terra_curio:gameplay/cat_morning_gift",
         "terra_curio:gameplay/hero_of_the_village/librarian_gift"

@@ -24,6 +24,30 @@
                     ]
                 }
             ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "terra_curio:moon_charm",
+                    "conditions": [
+                        {
+                            "condition": "minecraft:random_chance",
+                            "chance": 0.1
+                        },
+                        {
+                            "condition": "minecraft:damage_source_properties",
+                            "predicate": {
+                                "direct_entity": {
+                                    "type": "minecraft:wolf"
+                                },
+                                "is_direct": true
+                            }
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }
