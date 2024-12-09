@@ -120,7 +120,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public boolean makesPiglinsNeutral(SlotContext slotContext, ItemStack stack) {
-        return builder.makePiglinsNeutral;
+        return builder != null && builder.makePiglinsNeutral;
     }
 
     @Override
