@@ -141,6 +141,8 @@ public class ModLanguageProvider extends LanguageProvider {
 
         add("argument.terra_curio.unknown_type", "Unknown Value Type: %s", "未知的值类型: %s");
 
+        add("tooltip.item.terra_curio.demon_heart.1", "Remaining Times: %s", "剩余次数: %s");
+
         add(TCItems.BASE_POINT.get().getDescriptionId(), "Base Point", "基点");
         add(TCItems.EVERLASTING.get().getDescriptionId(), "Everlasting", "亘古");
         add(TCItems.CELL_PHONE.get().getDescriptionId(), "Cell Phone", "手机");
@@ -366,6 +368,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 });
         onlyTooltips(TCItems.FISH_FINDER, "探鱼器",
                 new String[]{
+                        "Displays fishing information",
                         "Displays fishing information",
                         "Displays the phase of the moon",
                         "Displays the weather"
@@ -923,6 +926,7 @@ public class ModLanguageProvider extends LanguageProvider {
             sidedAdd(TCItems.GPS.get().getDescriptionId(), "GPS", enData);
             sidedAdd(TCItems.PDA.get().getDescriptionId(), "PDA", enData);
             sidedAdd(TCItems.REK_3000.get().getDescriptionId(), "R.E.K.3000", enData);
+            sidedAdd(TCItems.NEPTUNES_SHELL.get().getDescriptionId(), "Neptune's Shell", enData);
             sidedAdd(TCItems.DIVING_HELMET.get().getDescriptionId(), "Diving Helmet", enData);
             TCItems.CURIOS.getEntries().forEach(item -> {
                 Item item1 = item.get();
