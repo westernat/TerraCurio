@@ -205,7 +205,7 @@ public final class TCItems { // todo 全换成data map
             NEPTUNES_SHELL = registerDirectly("neptunes_shell", (name, builder) -> new NeptunesShell(builder.rarity(PINK)
                     .accessories(units(NEPTUNES$SHELL))
                     .attribute(Attributes.SUBMERGED_MINING_SPEED, 0.8, ADD_VALUE))), // 海神贝壳
-            MOON_SHELL = registerDirectly("moon_shell", (name, builder) -> new MoonShell(builder.rarity(LIGHT_PURPLE)
+            MOON_SHELL = registerDirectly("moon_shell", (name, builder) -> new MoonShell(builder.rarity(LIGHT_PURPLE).jeiInfos(0)
                     .accessories(units(NEPTUNES$SHELL))
                     .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
                     .attribute(Attributes.ATTACK_DAMAGE, 0.051, ADD_MULTIPLIED_TOTAL)
@@ -213,7 +213,7 @@ public final class TCItems { // todo 全换成data map
                     .attribute(Attributes.MOVEMENT_SPEED, 0.05, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
                     .attribute(Attributes.JUMP_STRENGTH, 0.1, ADD_MULTIPLIED_TOTAL))), // 月亮贝壳
-            CELESTIAL_SHELL = registerDirectly("celestial_shell", (name, builder) -> new CelestialShell(builder.rarity(YELLOW)
+            CELESTIAL_SHELL = registerDirectly("celestial_shell", (name, builder) -> new CelestialShell(builder.rarity(YELLOW).jeiInfos(0)
                     .accessories(units(NEPTUNES$SHELL))
                     .attribute(Attributes.SUBMERGED_MINING_SPEED, 0.8, ADD_VALUE)
                     .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)

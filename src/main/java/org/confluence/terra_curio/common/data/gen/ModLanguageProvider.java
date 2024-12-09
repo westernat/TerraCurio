@@ -894,10 +894,10 @@ public class ModLanguageProvider extends LanguageProvider {
                 },
                 "Provides immunity to powder snow",
                 "对细雪免疫");
-        onlyTooltip(TCItems.INNER_TUBE, "浮游圈", "Grants the ability to float in water", "可让人浮在水面");
+        tooltipAndJeiInfo(TCItems.INNER_TUBE, "浮游圈", "Grants the ability to float in water", "可让人浮在水面", "It has a Chance to be dropped from Slime.", "它有几率从史莱姆身上掉落。");
         tooltipAndJeiInfo(TCItems.FLYING_CARPET, "飞毯", "Allows the owner to float for a few seconds", "可让持有者漂浮几秒钟", "It can be discovered in chests found within Desert Pyramids.", "它可以在沙漠神殿内的箱子中找到");
-        tooltipAndJeiInfo(TCItems.SHINY_STONE, "闪亮石", "Greatly increases life regen when not moving", "不移动时，大大提高生命再生速度", "", "");
-        tooltipAndJeiInfo(TCItems.SOARING_INSIGNIA, "翱翔徽章", "Grants infinite wing and rocket boot flight", "给予无限翅膀飞行时间和无限火箭靴飞行时间", "", "");
+        tooltipAndJeiInfo(TCItems.SHINY_STONE, "闪亮石", "Greatly increases life regen when not moving", "不移动时，大大提高生命再生速度", "When an Iron Golem is killed by an explosion", "铁傀儡被爆炸击杀时");
+        tooltipAndJeiInfo(TCItems.SOARING_INSIGNIA, "翱翔徽章", "Grants infinite wing and rocket boot flight", "给予无限翅膀飞行时间和无限火箭靴飞行时间", "Kill Wither with elytra", "使用鞘翅的情况下击杀凋零");
         tooltipsAndJeiInfo(TCItems.CELESTIAL_STARBOARD, "天界星盘",
                 new String[]{
                         "Allows flight and slow fall",
@@ -909,13 +909,13 @@ public class ModLanguageProvider extends LanguageProvider {
                         "按住潜行与跳跃键以水平飞行",
                         "“你懂得越多”"
                 },
-                "",
-                ""
+                "Kill the Ender Dragon with elytra",
+                "使用鞘翅的情况下击杀末影龙"
         );
-        tooltipAndJeiInfo(TCItems.NEPTUNES_SHELL, "海神贝壳", "Transforms the holder into merfolk when entering water", "入水时将持有者变成人鱼", "", "");
-        tooltipAndJeiInfo(TCItems.MOON_CHARM, "月光护身符", "Turns the holder into a werewolf at night", "在晚上将持有者变成狼人", "", "");
-        tooltipAndJeiInfo(TCItems.MOON_SHELL, "月亮贝壳", "Turns the holder into a werewolf at night and a merfolk when entering water", "在晚上将持有者变成狼人，入水时将持有者变成人鱼", "", "");
-        tooltipAndJeiInfo(TCItems.CELESTIAL_SHELL, "天界壳", "Turns the holder into a werewolf at night and a merfolk when entering water", "在晚上将持有者变成狼人，入水时将持有者变成人鱼", "", "");
+        tooltipAndJeiInfo(TCItems.NEPTUNES_SHELL, "海神贝壳", "Transforms the holder into merfolk when entering water", "入水时将持有者变成人鱼", "It has a Chance to be dropped from Guardian.", "它有几率从守卫者身上掉落。");
+        tooltipAndJeiInfo(TCItems.MOON_CHARM, "月光护身符", "Turns the holder into a werewolf at night", "在晚上将持有者变成狼人", "When zombies are killed by wolves.", "僵尸被狼击杀时");
+        onlyTooltip(TCItems.MOON_SHELL, "月亮贝壳", "Turns the holder into a werewolf at night and a merfolk when entering water", "在晚上将持有者变成狼人，入水时将持有者变成人鱼");
+        onlyTooltip(TCItems.CELESTIAL_SHELL, "天界壳", "Turns the holder into a werewolf at night and a merfolk when entering water", "在晚上将持有者变成狼人，入水时将持有者变成人鱼");
 
         if (locale.equals("en_us")) {
             sidedAdd(TCItems.EXPLORERS_EQUIPMENT.get().getDescriptionId(), "Explorer's Equipment", enData);
