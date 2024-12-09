@@ -68,14 +68,14 @@ public class BaseCurioItem extends Item implements ICurioItem {
                 PSGameClient.LOADER.addEmitter(emitter, false);
                 emitters.put(builder.particle, emitter);
             }
-            particleTick(living, emitter);
+            particleTick(living, emitter, builder.particle);
         }
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected void particleTick(LivingEntity living, ParticleEmitter emitter) {
-        if (builder != null && builder.particle != null && emitter.isRemoved()) {
-            ((ILivingEntity) living).terra_curio$getOrCreateParticleEmitters().remove(builder.particle);
+    protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
+        if (emitter.isRemoved()) {
+            ((ILivingEntity) living).terra_curio$getOrCreateParticleEmitters().remove(particle);
         }
     }
 
