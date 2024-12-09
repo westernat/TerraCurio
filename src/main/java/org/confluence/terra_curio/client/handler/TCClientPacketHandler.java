@@ -26,6 +26,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForgeMod;
+import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
 import org.confluence.terra_curio.mixed.IClientLivingEntity;
@@ -151,7 +152,7 @@ public final class TCClientPacketHandler {
     }
 
     private static void applyAutoAttack(Minecraft minecraft, LocalPlayer localPlayer) {
-        if (minecraft.gameMode == null || minecraft.gameMode.isDestroying()) return;
+        if (!TCClientConfigs.autoAttack || minecraft.gameMode == null || minecraft.gameMode.isDestroying()) return;
         if (BetterCombatHelper.isLoaded()) {
             ItemStack itemStack = localPlayer.getItemInHand(InteractionHand.MAIN_HAND);
             if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;

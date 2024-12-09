@@ -11,6 +11,7 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.common.NeoForge;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.event.PerformJumpingEvent;
+import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.animate.ExpertColorAnimation;
 import org.confluence.terra_curio.client.animate.MasterColorAnimation;
 import org.confluence.terra_curio.client.handler.*;
@@ -78,7 +79,7 @@ public final class GameClientEvents {
 
     @SubscribeEvent
     public static void interactionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
-        if (event.isUseItem()) {
+        if (TCClientConfigs.rightClickDelay && event.isUseItem()) {
             MinecraftAccessor instance = (MinecraftAccessor) Minecraft.getInstance();
             int delay = instance.getRightClickDelay() - TCClientPacketHandler.getRightClickSubtractor();
             instance.setRightClickDelay(Math.max(0, delay));
