@@ -24,7 +24,6 @@ import org.confluence.terra_curio.api.primitive.*;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.item.*;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
-import org.confluence.terra_curio.common.item.curio.HealPerSecondCurioItem;
 import org.confluence.terra_curio.common.item.curio.NightBonusCurioItem;
 import org.confluence.terra_curio.common.item.curio.RequiresModLoadedCurioItem;
 import org.confluence.terra_curio.common.item.curio.combat.*;
@@ -100,9 +99,6 @@ public final class TCItems { // todo 全换成data map
     public static final ValueType<Unit, UnitValue> $MAGILUMINESCENCE = ofUnit("magiluminescence");
     public static final ValueType<Unit, UnitValue> FLOAT$ON$LIQUID$SURFACE = ofUnit("float_on_liquid_surface");
 
-    // both client and updates
-    public static final ValueType<Unit, UnitValue> NEPTUNES$SHELL = ofUnit("neptunes_shell");
-
     // require updates
     public static final ValueType<Unit, UnitValue> FIRE$ATTACK = ofUnit("fire_attack");
     public static final ValueType<Unit, UnitValue> HONEY$COMB = ofUnit("honey_comb");
@@ -126,6 +122,7 @@ public final class TCItems { // todo 全换成data map
     public static final ValueType<Integer, IntegerValue> RIGHT$CLICK$DELAY$SUBSTRACTOR = ValueType.ofInteger("right_click_delay_substractor", IntegerValue.GET_MAX, 0);
     public static final ValueType<MayFlyAbilityValue.Storage, MayFlyAbilityValue> MAY$FLY = ValueType.create("may_fly", MayFlyAbilityValue.COMBINE_RULE, MayFlyAbilityValue.CODEC, new MayFlyAbilityValue.Storage(0.0F, 0, false, false), MayFlyAbilityValue::new);
     public static final ValueType<Integer, IntegerValue> LUMINANCE = ValueType.ofInteger("luminance", IntegerValue.GET_ABS_MAX, 0);
+    public static final ValueType<Unit, UnitValue> NEPTUNES$SHELL = ofUnit("neptunes_shell");
     public static final ValueType<Byte, ByteValue> WALL$CLIMB = ValueType.create("wall_climb", ByteValue.ADDITION_WITHIN_0_TO_2, ByteValue.CODEC, (byte) 0, ByteValue::new);
     public static final ValueType<Float, FloatValue> CLOUD = ValueType.ofFloat("cloud", FloatValue.GET_SELF, 0.0F);
     public static final ValueType<Tuple<Float, Integer>, OneTimeJumpAbilityValue> BLIZZARD = ValueType.create("blizzard", OneTimeJumpAbilityValue.COMBINE_RULE, OneTimeJumpAbilityValue.CODEC, new Tuple<>(0.0F, 0), OneTimeJumpAbilityValue::new);
@@ -182,7 +179,7 @@ public final class TCItems { // todo 全换成data map
             BEE_CLOAK = registerCurio("bee_cloak", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).accessories(units(HONEY$COMB), of(STAR$CLOCK, false), of(INVULNERABLE$TICKS$MULTIPLIER, 2.0F)).tooltips(1)), // 蜜蜂斗篷
             BLACK_BELT = registerCurio("black_belt", builder -> builder.rarity(LIME).attribute(TCAttributes.getDodgeChance(), 0.1, ADD_VALUE)), // 黑腰带
             SUN_STONE = registerCurio("sun_stone", SunStone::new), // 太阳石
-            MOON_STONE = registerDirectly("moon_stone", (name, builder) -> new NightBonusCurioItem(1.0F, builder.rarity(ModRarity.PINK)
+            MOON_STONE = registerDirectly("moon_stone", (name, builder) -> new NightBonusCurioItem(1.0F, builder.rarity(PINK)
                     .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_DAMAGE, 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
@@ -190,7 +187,7 @@ public final class TCItems { // todo 全换成data map
                     .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
                     .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 月亮石
-            CELESTIAL_STONE = registerDirectly("celestial_stone", (name, builder) -> new HealPerSecondCurioItem(1.0F, builder.rarity(ModRarity.LIME).jeiInfos(0)
+            CELESTIAL_STONE = registerDirectly("celestial_stone", (name, builder) -> new CelestialStone(builder.rarity(LIME).jeiInfos(0)
                     .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_DAMAGE, 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
@@ -198,16 +195,16 @@ public final class TCItems { // todo 全换成data map
                     .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
                     .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 天界石
-            MOON_CHARM = registerDirectly("moon_charm", (name, builder) -> new NightBonusCurioItem(0.5F, builder.rarity(LIGHT_RED)
+            MOON_CHARM = registerDirectly("moon_charm", (name, builder) -> new MoonCharm(builder.rarity(LIGHT_RED)
                     .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
                     .attribute(Attributes.ATTACK_DAMAGE, 0.051, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_SPEED, 0.051, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.MOVEMENT_SPEED, 0.05, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
-                    .attribute(Attributes.JUMP_STRENGTH, 0.1, ADD_MULTIPLIED_TOTAL))), // 月光护身符 todo 模型
-            NEPTUNES_SHELL = registerCurio("neptunes_shell", builder -> builder.rarity(PINK)
+                    .attribute(Attributes.JUMP_STRENGTH, 0.1, ADD_MULTIPLIED_TOTAL))), // 月光护身符
+            NEPTUNES_SHELL = registerDirectly("neptunes_shell", (name, builder) -> new NeptunesShell(builder.rarity(PINK)
                     .accessories(units(NEPTUNES$SHELL))
-                    .attribute(Attributes.SUBMERGED_MINING_SPEED, 0.8, ADD_VALUE)), // 海神贝壳 todo 模型
+                    .attribute(Attributes.SUBMERGED_MINING_SPEED, 0.8, ADD_VALUE))), // 海神贝壳
             MOON_SHELL = registerDirectly("moon_shell", (name, builder) -> new MoonShell(builder.rarity(LIGHT_PURPLE)
                     .accessories(units(NEPTUNES$SHELL))
                     .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
@@ -226,7 +223,7 @@ public final class TCItems { // todo 全换成data map
                     .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
                     .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 天界贝壳
-    COBALT_SHIELD = registerCurio("cobalt_shield", builder -> builder.rarity(GREEN).attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)), // 钴护盾
+            COBALT_SHIELD = registerCurio("cobalt_shield", builder -> builder.rarity(GREEN).attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)), // 钴护盾
             CROSS_NECKLACE = registerCurio("cross_necklace", builder -> builder.rarity(LIGHT_RED).accessories(of(INVULNERABLE$TICKS$MULTIPLIER, 2.0F))), // 十字项链
             RANGER_EMBLEM = registerCurio("ranger_emblem", builder -> builder.rarity(LIGHT_RED).noTooltip().attribute(TCAttributes.getRangedDamage(), 0.15, ADD_MULTIPLIED_TOTAL)), // 游侠徽章
             WARRIOR_EMBLEM = registerCurio("warrior_emblem", builder -> builder.rarity(LIGHT_RED).noTooltip().attribute(Attributes.ATTACK_DAMAGE, 0.15, ADD_MULTIPLIED_TOTAL)), // 战士徽章

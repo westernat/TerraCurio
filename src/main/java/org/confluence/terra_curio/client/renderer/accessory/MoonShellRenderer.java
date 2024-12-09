@@ -4,33 +4,37 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.model.accessory.MermanModel;
+import org.confluence.terra_curio.client.model.accessory.WerewolfModel;
 import org.confluence.terra_curio.mixed.IClientLivingEntity;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.client.ICurioRenderer;
 
-public class MermanRenderer implements ICurioRenderer {
-    static final RenderType CUTOUT = RenderType.entityCutout(TerraCurio.asResource("textures/curio/merman.png"));
+public class MoonShellRenderer implements ICurioRenderer {
+    private final MermanModel mermanModel;
+    private final WerewolfModel werewolfModel;
 
-    private final MermanModel model;
-
-    public MermanRenderer(EntityModelSet entityModels) {
-        this.model = new MermanModel(entityModels.bakeLayer(MermanModel.LAYER_LOCATION));
+    public MoonShellRenderer(EntityModelSet entityModels) {
+        this.mermanModel = new MermanModel(entityModels.bakeLayer(MermanModel.LAYER_LOCATION));
+        this.werewolfModel = new WerewolfModel(entityModels.bakeLayer(WerewolfModel.LAYER_LOCATION));
     }
 
     @Override
     public <T extends LivingEntity, M extends EntityModel<T>> void render(ItemStack itemStack, SlotContext slotContext, PoseStack poseStack, RenderLayerParent<T, M> renderLayerParent, MultiBufferSource multiBufferSource, int light, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         LivingEntity living = slotContext.entity();
         if (living.isInWaterOrBubble()) {
-            ICurioRenderer.followBodyRotations(living, model);
-            ICurioRenderer.followHeadRotations(living, model.head);
-            model.renderToBuffer(poseStack, multiBufferSource.getBuffer(CUTOUT), light, OverlayTexture.NO_OVERLAY);
+            ICurioRenderer.followBodyRotations(living, mermanModel);
+            ICurioRenderer.followHeadRotations(living, mermanModel.head);
+            mermanModel.renderToBuffer(poseStack, multiBufferSource.getBuffer(MermanRenderer.CUTOUT), light, OverlayTexture.NO_OVERLAY);
+            ((IClientLivingEntity) living).terra_curio$setShowingCosmetic(true);
+        } else if (living.level().getDayTime() % 24000L > 12000L) {
+            ICurioRenderer.followBodyRotations(living, werewolfModel);
+            ICurioRenderer.followHeadRotations(living, werewolfModel.head);
+            werewolfModel.renderToBuffer(poseStack, multiBufferSource.getBuffer(WerewolfRenderer.CUTOUT), light, OverlayTexture.NO_OVERLAY);
             ((IClientLivingEntity) living).terra_curio$setShowingCosmetic(true);
         }
     }

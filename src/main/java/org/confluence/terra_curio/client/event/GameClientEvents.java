@@ -96,6 +96,10 @@ public final class GameClientEvents {
 
     @SubscribeEvent
     public static void screen$MouseScrolled$Pre(ScreenEvent.MouseScrolled.Pre event) {
-        MultiFunctionTooltip.mouseScrollY -= (int) event.getScrollDeltaY();
+        if (MultiFunctionTooltip.isShowing) {
+            MultiFunctionTooltip.mouseScrollY -= (int) event.getScrollDeltaY();
+        } else {
+            MultiFunctionTooltip.mouseScrollY = 0;
+        }
     }
 }

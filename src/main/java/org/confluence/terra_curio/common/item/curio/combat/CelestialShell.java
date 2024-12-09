@@ -13,13 +13,15 @@ import net.minecraft.world.item.ItemStack;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCEffects;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
+import org.confluence.terra_curio.util.CuriosUtils;
 import top.theillusivec4.curios.api.SlotContext;
 
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE;
 
-public class CelestialShell extends BaseCurioItem {
+public class CelestialShell extends BaseCurioItem implements ICosmetic {
     public static final ResourceLocation ID = TerraCurio.asResource("celestial_shell_night");
     private static final ImmutableMultimap<Holder<Attribute>, AttributeModifier> NIGHT = Util.make(ImmutableMultimap.<Holder<Attribute>, AttributeModifier>builder(), builder -> {
         builder.put(TCAttributes.getCriticalChance(), new AttributeModifier(ID, 0.02, ADD_VALUE));
@@ -32,6 +34,14 @@ public class CelestialShell extends BaseCurioItem {
 
     public CelestialShell(Builder builder) {
         super(builder);
+    }
+
+    @Override
+    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
+        LivingEntity living = slotContext.entity();
+        return CuriosUtils.noSameCurio(living, this) &&
+                CuriosUtils.noSameCurio(living, TCItems.CELESTIAL_STONE.get()) &&
+                CuriosUtils.noSameCurio(living, ICosmetic.class);
     }
 
     @Override

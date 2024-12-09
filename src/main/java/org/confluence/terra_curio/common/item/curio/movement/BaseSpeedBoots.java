@@ -63,7 +63,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
                     }
                     float ratio = (float) value / maxSpeed;
                     if (TCClientConfigs.playShoesSound && player.level().getGameTime() % (ratio < 0.5F ? 6L : 4L) == 0) {
-                        player.playSound(TCSoundEvents.SHOES_WALK.get());
+                        player.playSound(TCSoundEvents.SHOES_WALK.get(), TCClientConfigs.shoesSoundVolume, 1.0F);
                     }
                 }
                 if (TCClientConfigs.showShoesParticle) {
