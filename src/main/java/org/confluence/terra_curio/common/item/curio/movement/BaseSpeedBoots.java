@@ -4,11 +4,15 @@ import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
@@ -23,6 +27,8 @@ import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.confluence.terra_curio.util.TCUtils;
+import org.joml.Vector3f;
+import org.mesdag.particlestorm.particle.ParticleEmitter;
 import top.theillusivec4.curios.api.SlotContext;
 
 public class BaseSpeedBoots extends BaseCurioItem {
@@ -40,7 +46,18 @@ public class BaseSpeedBoots extends BaseCurioItem {
 
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
+        super.curioTick(slotContext, stack);
         speedUp(slotContext, stack, acceleration, maxSpeed);
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    @Override
+    protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
+        emitter.offsetPos = new Vec3(0.0, 0.0, living.zza * 0.5);
+        if (emitter.parentRotation == null) {
+            emitter.parentRotation = new Vector3f();
+        }
+        emitter.active = living.zza > 0.0F;
     }
 
     @Override

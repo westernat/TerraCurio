@@ -407,9 +407,7 @@ public final class TCItems { // todo 全换成data map
                     of(FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)),
                     of(LAVA$IMMUNE$TICKS, 140),
                     of(LAVA$HURT$REDUCE, 0.5F))), // 熔岩靴
-            TERRASPARK_BOOTS = registerDirectly("terraspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIME)
-                    .tooltips(3)
-                    .jeiInfos(0)
+            TERRASPARK_BOOTS = registerDirectly("terraspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIME).tooltips(3).jeiInfos(0).particle(TerraCurio.asResource("terraspark"))
                     .accessories(
                             units(ICE$SPEED, FIRE$IMMUNE),
                             of(MAY$FLY, new MayFlyAbilityValue.Storage(0.3F, 40, false, false)),
