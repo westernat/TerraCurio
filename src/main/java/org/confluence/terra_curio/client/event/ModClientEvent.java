@@ -3,6 +3,7 @@ package org.confluence.terra_curio.client.event;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterClientTooltipComponentFactoriesEvent;
@@ -33,6 +34,11 @@ public final class ModClientEvent {
             TCClientConfigs.onLoad();
             CuriosClient.registerRenderers();
         });
+    }
+
+    @SubscribeEvent
+    public static void modConfig$Reloading(ModConfigEvent.Reloading event) {
+        TCClientConfigs.onLoad();
     }
 
     @SubscribeEvent

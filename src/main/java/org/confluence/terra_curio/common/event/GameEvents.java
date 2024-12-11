@@ -98,7 +98,7 @@ public final class GameEvents {
 
         amount = DivingHelmet.apply(living, damageSource, amount);
         amount = TCAttributes.applyMagicDamage(damageSource, amount);
-        amount = TCAttributes.applyRangedDamage(living, damageSource, amount);
+        amount = TCAttributes.applyRangedDamage(damageSource, amount);
         amount = PaladinsShield.apply(living, damageSource, amount);
         amount = TCUtils.applyFrozenTurtleShell(living, amount);
         amount = TCUtils.applyLavaHurtReduce(living, damageSource, amount);
