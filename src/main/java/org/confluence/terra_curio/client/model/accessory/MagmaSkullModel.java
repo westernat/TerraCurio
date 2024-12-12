@@ -1,0 +1,39 @@
+package org.confluence.terra_curio.client.model.accessory;
+
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import net.minecraft.client.model.HumanoidModel;
+import net.minecraft.client.model.geom.ModelLayerLocation;
+import net.minecraft.client.model.geom.ModelPart;
+import net.minecraft.client.model.geom.PartPose;
+import net.minecraft.client.model.geom.builders.*;
+import net.minecraft.world.entity.LivingEntity;
+import org.confluence.terra_curio.TerraCurio;
+import org.jetbrains.annotations.NotNull;
+
+public class MagmaSkullModel extends HumanoidModel<LivingEntity> {
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(TerraCurio.asResource("magma_skull"), "main");
+
+    public final ModelPart magma;
+
+    public MagmaSkullModel(ModelPart root) {
+        super(root);
+        this.magma = root.getChild("head").getChild("magma");
+    }
+
+    public static LayerDefinition createBodyLayer() {
+        MeshDefinition meshdefinition = HumanoidModel.createMesh(CubeDeformation.NONE, 0.0F);
+        PartDefinition partdefinition = meshdefinition.getRoot();
+
+        PartDefinition head = partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 24).addBox(-4.0F, -28.0F, -4.375F, 8.0F, 6.0F, 2.0F,  CubeDeformation.NONE), PartPose.offset(0.0F, 24.0F, 0.0F));
+        head.addOrReplaceChild("magma", CubeListBuilder.create().texOffs(0, 24).addBox(-4.0F, -28.0F, -4.375F, 8.0F, 6.0F, 2.0F, CubeDeformation.NONE), PartPose.offset(0.0F, 24.0F, 0.0F));
+
+        return LayerDefinition.create(meshdefinition, 32, 32);
+    }
+
+    @Override
+    public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
+        head.render(poseStack, vertexConsumer, packedLight, packedOverlay);
+        magma.render(poseStack, vertexConsumer, 15, packedOverlay);
+    }
+}

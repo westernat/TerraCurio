@@ -5,6 +5,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Unit;
 import net.minecraft.world.damagesource.DamageSource;
@@ -26,26 +27,28 @@ import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.common.EffectCures;
 import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.common.util.FakePlayer;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
+import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.component.NbtComponent;
 import org.confluence.terra_curio.common.entity.projectile.BeeProjectile;
 import org.confluence.terra_curio.common.entity.projectile.StarCloakEntity;
 import org.confluence.terra_curio.common.init.*;
-import org.confluence.terra_curio.mixinauxi.IEntity;
+import org.confluence.terra_curio.mixed.IEntity;
+import org.confluence.terra_curio.mixed.ILivingEntity;
+import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.s2c.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.function.Consumer;
-
-import static org.confluence.terra_curio.api.primitive.ValueType.*;
 
 public final class TCUtils {
     public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(TerraCurio.asResource("ice_speed"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
@@ -64,20 +67,8 @@ public final class TCUtils {
         return (V) primitiveValue;
     }
 
-    public static float nextFloat(RandomSource randomSource, float origin, float bound) {
-        if (origin >= bound) {
-            throw new IllegalArgumentException("bound - origin is non positive");
-        } else {
-            return origin + randomSource.nextFloat() * (bound - origin);
-        }
-    }
-
-    public static boolean isServerNotFake(Player player) {
-        return player instanceof ServerPlayer && !(player instanceof FakePlayer);
-    }
-
     public static void applyFireAttack(Player player, Entity entity) {
-        if (hasAccessoriesType(player, FIRE$ATTACK)) {
+        if (hasAccessoriesType(player, TCItems.FIRE$ATTACK)) {
             float f = player.getRandom().nextFloat();
             int time;
             if (f < 0.25F) {
@@ -93,31 +84,31 @@ public final class TCUtils {
 
     public static boolean isInvulnerableTo(Entity self, DamageSource damageSource) {
         if (!(self instanceof LivingEntity living)) return false;
-        AccessoriesAttachment attachment = self.getData(TCAttachments.ACCESSORIES);
+        AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
         Entity attacker = damageSource.getEntity();
-        if (attacker != null && attachment.getValue(MOB$IGNORE).contains(attacker.getType())) {
+        if (attacker != null && attachment.getValue(TCItems.MOB$IGNORE).contains(attacker.getType())) {
             return true;
         }
-        if (attachment.contains(SHIELD$OF$CTHULHU) && ((IEntity) living).terra_curio$isOnCthulhuSprinting()) {
+        if (((IEntity) living).terra_curio$isOnCthulhuSprinting() && attachment.contains(TCItems.SHIELD$OF$CTHULHU)) {
             return true;
         }
-        if (attachment.contains(FIRE$IMMUNE) && damageSource.is(DamageTypes.IN_FIRE) ||
+        if (attachment.contains(TCItems.FIRE$IMMUNE) && (damageSource.is(DamageTypes.IN_FIRE) ||
                 damageSource.is(DamageTypes.ON_FIRE) ||
                 damageSource.is(DamageTypes.HOT_FLOOR) ||
                 damageSource.is(DamageTypes.UNATTRIBUTED_FIREBALL) ||
-                damageSource.is(DamageTypes.FIREBALL)
+                damageSource.is(DamageTypes.FIREBALL))
         ) return true;
         return TCAttributes.applyDodge(living, living.getRandom());
     }
 
     public static float applyInjuryFree(LivingEntity living, float amount) {
-        float injuryFree = TCUtils.getAccessoriesValue(living, INJURY$FREE);
+        float injuryFree = getAccessoriesValue(living, TCItems.INJURY$FREE);
         return amount * (1.0F - injuryFree);
     }
 
     public static void applyStarClock(LivingEntity living, RandomSource random) {
         AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
-        boolean starClock = attachment.contains(STAR$CLOCK);
+        boolean starClock = attachment.contains(TCItems.STAR$CLOCK);
         if (starClock) {
             Level level = living.level();
             List<Entity> list = level.getEntities(living, new AABB(living.getOnPos()).inflate(4.0, 3.0, 4.0), entity -> entity instanceof Enemy);
@@ -128,7 +119,7 @@ public final class TCUtils {
                 } else {
                     target = list.get(random.nextInt(list.size()));
                 }
-                StarCloakEntity entity = new StarCloakEntity(level, living, target, attachment.getValue(STAR$CLOCK));
+                StarCloakEntity entity = new StarCloakEntity(level, living, target, attachment.getValue(TCItems.STAR$CLOCK));
                 level.addFreshEntity(entity);
             }
         }
@@ -136,8 +127,8 @@ public final class TCUtils {
 
     public static void applyHoneyComb(LivingEntity living, RandomSource random) {
         AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
-        if (attachment.contains(HONEY$COMB)) {
-            boolean hasHivePack = attachment.contains(HIVE$PACK);
+        if (attachment.contains(TCItems.HONEY$COMB)) {
+            boolean hasHivePack = attachment.contains(TCItems.HIVE$PACK);
             int summon = random.nextInt(1, hasHivePack ? 5 : 4);
             for (int i = 0; i < summon; i++) {
                 BeeProjectile projectile = new BeeProjectile(living.level(), living, hasHivePack && random.nextBoolean());
@@ -149,13 +140,13 @@ public final class TCUtils {
     }
 
     public static void applyIgniteArrow(LivingEntity living, AbstractArrow arrow) {
-        if (hasAccessoriesType(living, IGNITE$ARROW)) {
+        if (hasAccessoriesType(living, TCItems.IGNITE$ARROW)) {
             arrow.igniteForTicks(2000);
         }
     }
 
     public static float applyFrozenTurtleShell(LivingEntity living, float amount) {
-        if (living.getHealth() / living.getMaxHealth() < 0.5F && hasAccessoriesType(living, FROZEN$TURTLE$SHELL)) {
+        if (living.getHealth() / living.getMaxHealth() < 0.5F && hasAccessoriesType(living, TCItems.FROZEN$TURTLE$SHELL)) {
             return amount * 0.75F;
         }
         return amount;
@@ -163,7 +154,7 @@ public final class TCUtils {
 
     public static float applyBrainOfConfusion(LivingEntity living, RandomSource randomSource, DamageSource damageSource, float amount) {
         if (damageSource.is(TCTags.HARMFUL_EFFECT)) return amount;
-        if (!living.getData(TCAttachments.ACCESSORIES).contains(BRAIN$OF$CONFUSION)) return amount;
+        if (!living.getData(TCAttachments.ACCESSORIES).contains(TCItems.BRAIN$OF$CONFUSION)) return amount;
         if (randomSource.nextFloat() < 0.6F + amount * 0.02F) {
             float rangeMin, rangeMax;
             if (amount <= 120) rangeMin = amount * 0.5F + 200;
@@ -174,7 +165,7 @@ public final class TCUtils {
             else if (amount <= 46.6F) rangeMax = amount * 1.5F + 350;
             else if (amount <= 100) rangeMax = amount * 0.75F + 525;
             else rangeMax = amount * 0.1875F + 806.25F;
-            float range = nextFloat(randomSource, rangeMin, rangeMax) / 24;
+            float range = Mth.nextFloat(randomSource, rangeMin, rangeMax) / 24;
             int duration = randomSource.nextInt((int) (90 + amount / 3), (int) (300 + amount / 2));
             living.level().getEntities(living, new AABB(living.getOnPos()).inflate(range), entity -> entity instanceof Enemy).forEach(enemy -> {
                 if (enemy instanceof LivingEntity living1) {
@@ -190,16 +181,20 @@ public final class TCUtils {
     }
 
     public static boolean magicQuiver$shouldConsume(LivingEntity living) {
-        return !living.getData(TCAttachments.ACCESSORIES).contains(MAGIC$QUIVER) || living.getRandom().nextFloat() >= 0.2F;
+        return !living.getData(TCAttachments.ACCESSORIES).contains(TCItems.MAGIC$QUIVER) || living.getRandom().nextFloat() >= 0.2F;
     }
 
     public static void resetClientPacket(ServerPlayer serverPlayer) {
-        InfoCurioCheckPacketS2C.sendToPlayer(serverPlayer, serverPlayer.getInventory());
+        InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
+        InfoDisablePacket.sendToClient(serverPlayer);
         CurioExistsPacketS2C.sendToClient(serverPlayer);
         PlayerClimbPacketS2C.sendToClient(serverPlayer);
         PlayerJumpPacketS2C.sendToClient(serverPlayer);
         PlayerFlyPacketS2C.sendToClient(serverPlayer);
         RightClickSubtractorPacketS2C.sendToClient(serverPlayer);
+        FluidWalkUpdatePacketS2C.sendToClient(serverPlayer);
+        InfiniteFlightPacketS2C.sendToClient(serverPlayer);
+        BroadcastRenderPacketS2C.sendToAll(serverPlayer);
     }
 
     public static @NotNull CompoundTag getItemStackNbt(ItemStack itemStack) {
@@ -226,7 +221,7 @@ public final class TCUtils {
 
     public static float applyLavaHurtReduce(LivingEntity living, DamageSource damageSource, float amount) {
         if (damageSource.is(DamageTypes.LAVA)) {
-            float value = getAccessoriesValue(living, LAVA$HURT$REDUCE);
+            float value = getAccessoriesValue(living, TCItems.LAVA$HURT$REDUCE);
             living.igniteForTicks(140);
             return amount * (1.0F - value);
         }
@@ -237,7 +232,7 @@ public final class TCUtils {
         if (living.onGround()) {
             AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
             BlockPos onPos = living.getOnPos();
-            if (attachment.contains(FLOWER$BOOTS) && level.getBlockState(onPos).is(TCTags.FLOWER_BOOTS_AVAILABLE)) {
+            if (attachment.contains(TCItems.FLOWER$BOOTS) && level.getBlockState(onPos).is(TCTags.FLOWER_BOOTS_AVAILABLE)) {
                 BlockPos abovePos = onPos.above();
                 RandomSource random = level.random;
                 for (BlockPos aroundPos : BlockPos.betweenClosed(abovePos.offset(-1, 0, -1), abovePos.offset(1, 0, 1))) {
@@ -250,7 +245,7 @@ public final class TCUtils {
                     }
                 }
             }
-            if (attachment.contains(ICE$SPEED)) {
+            if (attachment.contains(TCItems.ICE$SPEED)) {
                 AttributeInstance instance = living.getAttribute(Attributes.MOVEMENT_SPEED);
                 assert instance != null;
                 if (level.getBlockState(onPos).is(BlockTags.ICE)) {
@@ -264,16 +259,18 @@ public final class TCUtils {
         }
     }
 
-    public static Vec3 getWalkVec(LivingEntity living, Vec3 par1) {
-        if (living instanceof Player && living.getEyeInFluidType() == NeoForgeMod.EMPTY_TYPE.value()) {
-            if (living.canStandOnFluid(living.level().getFluidState(living.blockPosition()))) {
-                AttributeInstance instance = living.getAttribute(Attributes.MOVEMENT_SPEED);
-                if (instance == null) return par1;
-                double horizon = Math.min(0.91 * living.getSpeed() / instance.getBaseValue(), 0.93);
-                return living.getDeltaMovement().multiply(horizon, 1.0, horizon);
+    public static void applyFluidWalk(Player player) {
+        if (player.getEyeInFluidType() == NeoForgeMod.EMPTY_TYPE.value()) {
+            BlockPos pos = player.blockPosition();
+            Level level = player.level();
+            if (level.getFluidState(pos.above()).isEmpty() && player.canStandOnFluid(level.getFluidState(pos))) {
+                Vec3 motion = player.getDeltaMovement();
+                player.setDeltaMovement(motion.x, Math.max(0.0, motion.y), motion.z);
+                player.setOnGround(true);
+                float f = Math.min(0.1F, (float) motion.horizontalDistance());
+                player.bob = player.bob + (f - player.bob) * 0.8F;
             }
         }
-        return par1;
     }
 
     public static float applyArmorPass(DamageSource damageSource, float armorValue) {
@@ -287,23 +284,57 @@ public final class TCUtils {
     }
 
     public static boolean applyTotemAbility(LivingEntity living) {
-        int cooldown = getAccessoriesValue(living, ValueType.TOTEM$WITH$COOLDOWN);
-        CompoundTag data = living.getPersistentData();
-        if (cooldown > 0) {
-            if (data.getInt("terra_curio:totem_cooldown") <= 0) {
+        ILivingEntity iLiving = (ILivingEntity) living;
+        if (iLiving.terra_curio$getTotemCooldown() == 0) {
+            int cooldown = getAccessoriesValue(living, TCItems.TOTEM$WITH$COOLDOWN);
+            if (cooldown > 0) {
                 living.setHealth(1.0F);
-                living.removeEffectsCuredBy(net.neoforged.neoforge.common.EffectCures.PROTECTED_BY_TOTEM);
+                living.removeEffectsCuredBy(EffectCures.PROTECTED_BY_TOTEM);
                 living.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
                 living.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
                 living.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
                 living.level().broadcastEntityEvent(living, EntityEvent.TALISMAN_ACTIVATE);
-                data.putInt("terra_curio:totem_cooldown", cooldown);
+                iLiving.terra_curio$setTotemCooldown(cooldown);
                 return true;
+            } else {
+                iLiving.terra_curio$setTotemCooldown(-1);
             }
-        } else {
-            data.putInt("terra_curio:totem_cooldown", -1);
         }
         return false;
+    }
+
+    public static void applyCthulhuTouch(Player player, Entity touched) {
+        if (((IEntity) player).terra_curio$isOnCthulhuSprinting()) {
+            Vec3 vector = player.getDeltaMovement();
+            touched.addDeltaMovement(new Vec3(vector.x * 1.6, 0.6, vector.z * 1.6));
+            touched.hurt(player.damageSources().playerAttack(player), 7.8F);
+            player.setDeltaMovement(vector.scale(-0.9));
+            ((IEntity) player).terra_curio$setCthulhuSprintingTime(20);
+        }
+    }
+
+    public static void applyCthulhuSprinting(boolean bool, Level level, Entity self) {
+        if (bool && !level.isClientSide && self instanceof LivingEntity living) {
+            if (((IEntity) self).terra_curio$getCthulhuSprintingTime() == 0 && TCUtils.hasAccessoriesType(living, TCItems.SHIELD$OF$CTHULHU)) {
+                float f = living.getYRot() * Mth.DEG_TO_RAD;
+                double factor = living.onGround() ? 1.6 : 1.2;
+                living.setDeltaMovement(living.getDeltaMovement().add(-Mth.sin(f) * factor, 0.0D, Mth.cos(f) * factor));
+                ((IEntity) self).terra_curio$setCthulhuSprintingTime(32);
+            }
+        }
+    }
+
+    public static boolean applyLavaImmune(boolean original, Entity self) {
+        if (!self.level().isClientSide) {
+            if (original) {
+                if (self.getData(TCAttachments.ACCESSORIES).decreaseLavaImmuneTicks()) {
+                    return false;
+                }
+            } else {
+                self.getData(TCAttachments.ACCESSORIES).increaseLavaImmuneTicks();
+            }
+        }
+        return original;
     }
 
     public static boolean hasAccessoriesType(LivingEntity living, ValueType<Unit, UnitValue> type) {
@@ -312,5 +343,13 @@ public final class TCUtils {
 
     public static <T, V extends PrimitiveValue<T>> T getAccessoriesValue(LivingEntity living, ValueType<T, V> type) {
         return living.getData(TCAttachments.ACCESSORIES).getValue(type);
+    }
+
+    public static @Nullable AccessoriesComponent getAccessoriesComponent(ItemStack itemStack) {
+        AccessoriesComponent component = itemStack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+        if (component != null || (component = itemStack.get(TCDataComponentTypes.ACCESSORIES)) != null) {
+            return component;
+        }
+        return null;
     }
 }

@@ -1,38 +1,107 @@
 package org.confluence.terra_curio.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.StepStoolHandler;
-import org.confluence.terra_curio.mixinauxi.SelfGetter;
+import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
+import org.confluence.terra_curio.mixed.IClientLivingEntity;
+import org.confluence.terra_curio.mixed.SelfGetter;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class ClientLivingEntityMixin implements SelfGetter<LivingEntity> {
+public abstract class ClientLivingEntityMixin implements IClientLivingEntity, SelfGetter<LivingEntity> {
+    @Unique
+    private FluidState terra_curio$lastWalkedFluidState = null;
+    @Unique
+    private boolean terra_curio$showingCosmetic = false;
+
+    @Override
+    public void terra_curio$resetLastWalkedFluidState() {
+        this.terra_curio$lastWalkedFluidState = null;
+    }
+
+    @Override
+    public void terra_curio$setShowingCosmetic(boolean showing) {
+        this.terra_curio$showingCosmetic = showing;
+    }
+
+    @Override
+    public boolean terra_curio$isShowingCosmetic() {
+        return terra_curio$showingCosmetic;
+    }
+
     @Inject(method = "checkFallDamage", at = @At("HEAD"))
     private void fall(double motionY, boolean onGround, BlockState blockState, BlockPos blockPos, CallbackInfo ci) {
         LivingEntity self = self();
-        if (motionY > 0.0 && self instanceof LocalPlayer && GravitationHandler.isShouldRot()) {
+        if (motionY > 0.0 && GravitationHandler.isShouldRot() && self().getClass() == LocalPlayer.class) {
             self.fallDistance += (float) motionY;
         }
     }
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3 confused(Vec3 vec3) {
-        if (self() instanceof LocalPlayer) {
-            if (GravitationHandler.isShouldRot()) {
-                return new Vec3(-vec3.x, vec3.y, vec3.z);
-            } else if (StepStoolHandler.onStool()) {
-                return Vec3.ZERO;
-            }
+        if (GravitationHandler.isShouldRot()) {
+            return self().getClass() == LocalPlayer.class ? new Vec3(-vec3.x, vec3.y, vec3.z) : vec3;
+        } else if (StepStoolHandler.onStool()) {
+            return self().getClass() == LocalPlayer.class ? Vec3.ZERO : vec3;
         }
         return vec3;
+    }
+
+    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
+    private Vec3 notSlowdown(Vec3 instance, double factorX, double factorY, double factorZ, Operation<Vec3> original) {
+        if (TCClientPacketHandler.floating && TCClientPacketHandler.isCanFloating()) {
+            if (self().getClass() == LocalPlayer.class) return original.call(instance, factorX, 1.0, factorZ);
+        }
+        if (terra_curio$checkCanWalk(self(), self().getInBlockState().getFluidState())) {
+            return original.call(instance, 0.94, factorY, 0.94);
+        }
+        return original.call(instance, factorX, factorY, factorZ);
+    }
+
+    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canStandOnFluid(Lnet/minecraft/world/level/material/FluidState;)Z"))
+    private boolean onFluid(LivingEntity instance, FluidState fluidState, Operation<Boolean> original) {
+        if (terra_curio$checkCanWalk(instance, fluidState)) {
+            return false;
+        }
+        return original.call(instance, fluidState);
+    }
+
+    @ModifyExpressionValue(method = "travel", at= @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1))
+    private boolean neptunesShell(boolean original) {
+        return original || (self().getClass() == LocalPlayer.class && TCClientPacketHandler.isHasNeptunesShell());
+    }
+
+    @Inject(method = "canStandOnFluid", at = @At("RETURN"), cancellable = true)
+    private void standOnFluid(FluidState fluidState, CallbackInfoReturnable<Boolean> cir) {
+        if (!cir.getReturnValue() && terra_curio$checkCanWalk(self(), fluidState)) {
+            cir.setReturnValue(true);
+        }
+    }
+
+    @Unique
+    private boolean terra_curio$checkCanWalk(LivingEntity living, FluidState fluidState) {
+        if (living.isCrouching() || fluidState.isEmpty() || self().getClass() != LocalPlayer.class) return false;
+        if (terra_curio$lastWalkedFluidState == fluidState) {
+            return true;
+        } else if (TCClientPacketHandler.getWalkableFluidStates().contains(fluidState)) {
+            this.terra_curio$lastWalkedFluidState = fluidState;
+            return true;
+        }
+        return false;
     }
 }

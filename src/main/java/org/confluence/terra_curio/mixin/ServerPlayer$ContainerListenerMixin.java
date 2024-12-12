@@ -19,6 +19,6 @@ public abstract class ServerPlayer$ContainerListenerMixin {
 
     @Inject(method = "slotChanged", at = @At(value = "INVOKE", target = "Lnet/minecraft/advancements/critereon/InventoryChangeTrigger;trigger(Lnet/minecraft/server/level/ServerPlayer;Lnet/minecraft/world/entity/player/Inventory;Lnet/minecraft/world/item/ItemStack;)V"))
     private void inventoryChange(AbstractContainerMenu p_143466_, int p_143467_, ItemStack p_143468_, CallbackInfo ci) {
-        InfoCurioCheckPacketS2C.sendToPlayer(this$0, this$0.getInventory());
+        InfoCurioCheckPacketS2C.sendToClient(this$0, this$0.getInventory());
     }
 }

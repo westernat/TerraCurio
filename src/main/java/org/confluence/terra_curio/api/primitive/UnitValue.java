@@ -7,7 +7,7 @@ import java.util.function.Function;
 
 public class UnitValue implements PrimitiveValue<Unit> {
     public static final UnitValue INSTANCE = new UnitValue();
-    public static final Function<Unit, UnitValue> UNIT_2_VALUE = unit -> UnitValue.INSTANCE;
+    public static final Function<Unit, UnitValue> UNIT_2_VALUE = unit -> INSTANCE;
     public static final Codec<UnitValue> CODEC = Unit.CODEC.xmap(UNIT_2_VALUE, unitValue -> Unit.INSTANCE);
     public static final CombineRule<Unit, UnitValue> GET_SELF = CombineRule.register(new CombineRule<>() {
         @Override
@@ -27,7 +27,7 @@ public class UnitValue implements PrimitiveValue<Unit> {
     }
 
     @Override
-    public Codec<UnitValue> codec() {
+    public Codec<? extends UnitValue> codec() {
         return CODEC;
     }
 }

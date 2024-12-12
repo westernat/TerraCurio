@@ -9,34 +9,36 @@ import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.network.c2s.StepStoolSteppingPacketC2S;
 import org.confluence.terra_curio.network.s2c.StepStoolSteppingPacketS2C;
 
+import static org.confluence.terra_curio.network.c2s.StepStoolSteppingPacketC2S.INCREASE;
+
 @OnlyIn(Dist.CLIENT)
 public final class StepStoolHandler {
     private static boolean upKeyDown = false;
     private static boolean shiftKeyDown = false;
-    private static int step = 0;
+    private static byte actualStep = 0;
     private static int maxStep = 0;
     private static int slot = StepStoolSteppingPacketS2C.NO_CURIO;
 
     public static void handle(LocalPlayer localPlayer) {
-        if (slot == StepStoolSteppingPacketS2C.NO_CURIO || (step == 0 && !localPlayer.onGround())) {
-            step = 0;
+        if (slot == StepStoolSteppingPacketS2C.NO_CURIO || (actualStep == 0 && !localPlayer.onGround())) {
+            actualStep = 0;
             return;
         }
 
-        if (step > 0) {
+        if (actualStep > 0) {
             if (localPlayer.input.jumping) {
                 localPlayer.jumpFromGround();
-                setStep(0, false);
+                setStep((byte) 0, false);
                 return;
             } else if (localPlayer.getVehicle() != null) {
-                setStep(0, false);
+                setStep((byte) 0, false);
                 return;
             }
         }
 
         if (TCKeyBindings.STEP_STOOL.get().isDown()) {
-            if (!upKeyDown && step < maxStep) {
-                setStep(step + 1, true);
+            if (!upKeyDown && actualStep < maxStep) {
+                setStep((byte) (actualStep + 1), true);
                 upKeyDown = true;
             }
         } else {
@@ -44,41 +46,43 @@ public final class StepStoolHandler {
         }
 
         if (!upKeyDown && localPlayer.isShiftKeyDown()) {
-            if (!shiftKeyDown && step > 0) {
-                setStep(step - 1, false);
+            if (!shiftKeyDown && actualStep > 0) {
+                setStep((byte) (actualStep - 1), false);
                 shiftKeyDown = true;
             }
         } else {
             shiftKeyDown = false;
         }
 
-        if (step > 0) {
+        if (actualStep > 0) {
             localPlayer.setDeltaMovement(new Vec3(0.0, localPlayer.getDeltaMovement().y, 0.0));
         }
     }
 
     public static void reset() {
-        step = 0;
+        actualStep = 0;
         maxStep = 0;
         slot = StepStoolSteppingPacketS2C.NO_CURIO;
     }
 
-    public static void setStep(int step, boolean increase) {
-        StepStoolHandler.step = step;
-        PacketDistributor.sendToServer(new StepStoolSteppingPacketC2S(slot, step, increase));
+    public static void setStep(byte actualStep, boolean increase) {
+        StepStoolHandler.actualStep = actualStep;
+        byte step = actualStep;
+        if (increase) step = (byte) (actualStep | INCREASE);
+        PacketDistributor.sendToServer(new StepStoolSteppingPacketC2S(slot, step));
     }
 
-    public static int getStep() {
-        return step;
+    public static int getActualStep() {
+        return actualStep;
     }
 
     public static boolean onStool() {
-        return step > 0;
+        return actualStep > 0;
     }
 
     public static void handlePacket(StepStoolSteppingPacketS2C packet) {
         if (packet.slot() == StepStoolSteppingPacketS2C.RESET_STEP) {
-            step = 0;
+            actualStep = 0;
             maxStep = 0;
         } else {
             maxStep = packet.maxStep();

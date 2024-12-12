@@ -12,8 +12,12 @@ import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.integration.airhop.AirHopHelper;
 import org.confluence.terra_curio.mixin.accessor.LivingEntityAccessor;
 import org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S;
+import org.confluence.terra_curio.network.s2c.InfiniteFlightPacketS2C;
 import org.confluence.terra_curio.network.s2c.PlayerFlyPacketS2C;
 import org.confluence.terra_curio.network.s2c.PlayerJumpPacketS2C;
+
+import static org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S.JUMP_BY_SELF;
+import static org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S.RESET_FALL_DISTANCE;
 
 @OnlyIn(Dist.CLIENT)
 public final class PlayerJumpHandler {
@@ -37,12 +41,14 @@ public final class PlayerJumpHandler {
 
     private static double cloudSpeed = 0.0;
     private static boolean cloudFinished = false;
+    public static boolean isOnCloudJump = false;
 
     private static double flySpeed = 0.0;
     private static int maxFlyTicks = 0;
     private static int remainFlyTicks = 0;
     private static boolean couldGlide = false;
     private static boolean horizontalFlight = false;
+    static boolean infiniteFlight = false;
 
     public static boolean onFly = false;
 
@@ -58,7 +64,7 @@ public final class PlayerJumpHandler {
             }
 
             if (couldGlide) {
-                if (remainFlyTicks-- > 0) {
+                if (infiniteFlight || remainFlyTicks-- > 0) {
                     onFly = true;
                     if (horizontalFlight && localPlayer.isShiftKeyDown()) {
                         horizontalFlight(localPlayer);
@@ -90,11 +96,17 @@ public final class PlayerJumpHandler {
                 localPlayer.playSound(TCSoundEvents.DOUBLE_JUMP.get());
             } else if (!cloudFinished && cloudSpeed > 0.0) {
                 cloudFinished = true;
+                isOnCloudJump = true;
                 jumpKeyDown = true;
                 multiJump(localPlayer, cloudSpeed);
                 localPlayer.playSound(TCSoundEvents.DOUBLE_JUMP.get());
-            } else if (remainFlyTicks-- > 0) {
-                fly(localPlayer, flySpeed);
+            } else if (infiniteFlight || remainFlyTicks-- > 0) {
+                onFly = true;
+                if (horizontalFlight) {
+                    horizontalFlight(localPlayer);
+                } else {
+                    fly(localPlayer, flySpeed);
+                }
             } else {
                 jumpKeyDown = true;
             }
@@ -128,7 +140,7 @@ public final class PlayerJumpHandler {
         }
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
-        PacketDistributor.sendToServer(new PlayerJumpPacketC2S(true, true, (float) speed));
+        PacketDistributor.sendToServer(new PlayerJumpPacketC2S((byte) (JUMP_BY_SELF | RESET_FALL_DISTANCE), (float) speed));
     }
 
     private static void oneTimeJump(LocalPlayer localPlayer, double speed) {
@@ -136,7 +148,7 @@ public final class PlayerJumpHandler {
         localPlayer.setDeltaMovement(vec3.x, speed, vec3.z);
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
-        PacketDistributor.sendToServer(new PlayerJumpPacketC2S(false, true, (float) speed));
+        PacketDistributor.sendToServer(new PlayerJumpPacketC2S(RESET_FALL_DISTANCE, (float) speed));
     }
 
     private static void fly(LocalPlayer localPlayer, double speed) {
@@ -155,21 +167,23 @@ public final class PlayerJumpHandler {
 
     private static void horizontalFlight(LocalPlayer localPlayer) {
         AttributeMap attributes = localPlayer.getAttributes();
-        airMove(localPlayer, 0.0, (float) (attributes.getValue(Attributes.MOVEMENT_SPEED) * 4.0));
+        airMove(localPlayer, 0.0, (float) (attributes.getValue(Attributes.MOVEMENT_SPEED) * 4.0 + flySpeed - 0.5));
     }
 
     private static void airMove(LocalPlayer localPlayer, double y, float h) {
         float rad = localPlayer.getYRot() * Mth.DEG_TO_RAD;
         float cos = Mth.cos(rad);
         float sin = Mth.sin(rad);
-        float x = localPlayer.xxa * h;
-        float z = localPlayer.zza * h;
+        float v = h * 0.15F;
+        float x = localPlayer.xxa * v;
+        float z = localPlayer.zza * v;
         double mx = x * cos + z * -sin;
         double mz = x * sin + z * cos;
-        localPlayer.setDeltaMovement(mx, y, mz);
+        Vec3 motion = localPlayer.getDeltaMovement();
+        localPlayer.setDeltaMovement(motion.x + mx, y, motion.z + mz);
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
-        PacketDistributor.sendToServer(new PlayerJumpPacketC2S(false, true, (float) y));
+        PacketDistributor.sendToServer(new PlayerJumpPacketC2S(RESET_FALL_DISTANCE, (float) y));
     }
 
     public static void handleJumpPacket(PlayerJumpPacketS2C packet) {
@@ -189,7 +203,15 @@ public final class PlayerJumpHandler {
         horizontalFlight = packet.horizontalFlight();
     }
 
+    public static void handleInfiniteFlight(InfiniteFlightPacketS2C packet) {
+        infiniteFlight = packet.enable();
+    }
+
     public static boolean isOnHorizontalFlight() {
         return onFly && horizontalFlight;
+    }
+
+    public static boolean isInfiniteFlight() {
+        return infiniteFlight;
     }
 }

@@ -12,7 +12,9 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.animate.ExpertColorAnimation;
+import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
+import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
@@ -24,7 +26,7 @@ public class DemonHeart extends Item {
     public static final ResourceLocation ID = TerraCurio.asResource("demon_heart");
 
     public DemonHeart() {
-        super(new Properties().stacksTo(1));
+        super(new Properties().component(TCDataComponentTypes.MOD_RARITY, ModRarity.EXPERT).stacksTo(1).fireResistant());
     }
 
     @Override

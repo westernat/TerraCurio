@@ -14,16 +14,18 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.ModLoader;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.confluence.terra_curio.api.event.AfterAccessoryAbilitiesFlushedEvent;
 import org.confluence.terra_curio.api.event.RegisterAccessoriesComponentUpdateEvent;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
-import org.confluence.terra_curio.common.init.TCDataMaps;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.util.MobEntityTypesTest;
+import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.UnknownNullability;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -37,37 +39,40 @@ import static org.confluence.terra_curio.util.TCUtils.tryCast;
 @SuppressWarnings("unchecked")
 public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
     public static final List<ValueType<Unit, UnitValue>> UNITS_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
-        list.add(ValueType.FIRE$ATTACK);
-        list.add(ValueType.BRAIN$OF$CONFUSION);
-        list.add(ValueType.HIVE$PACK);
-        list.add(ValueType.HONEY$COMB);
-        list.add(ValueType.MAGIC$QUIVER);
-        list.add(ValueType.IGNITE$ARROW);
-        list.add(ValueType.FROZEN$TURTLE$SHELL);
-        list.add(ValueType.FIRE$IMMUNE);
-        list.add(ValueType.FLOWER$BOOTS);
-        list.add(ValueType.FROZEN$IMMUNE);
-        list.add(ValueType.ICE$SPEED);
+        list.add(TCItems.FIRE$ATTACK);
+        list.add(TCItems.BRAIN$OF$CONFUSION);
+        list.add(TCItems.HIVE$PACK);
+        list.add(TCItems.HONEY$COMB);
+        list.add(TCItems.MAGIC$QUIVER);
+        list.add(TCItems.IGNITE$ARROW);
+        list.add(TCItems.FROZEN$TURTLE$SHELL);
+        list.add(TCItems.FIRE$IMMUNE);
+        list.add(TCItems.FLOWER$BOOTS);
+        list.add(TCItems.FROZEN$IMMUNE);
+        list.add(TCItems.ICE$SPEED);
+        list.add(TCItems.DIVING);
+        list.add(TCItems.INFINITE$FLIGHT);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.UnitType(list));
     });
     public static final List<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
-        list.add(ValueType.STAR$CLOCK);
-        list.add(ValueType.INJURY$FREE);
-        list.add(ValueType.INVULNERABLE$TICKS$MULTIPLIER);
-        list.add(ValueType.LAVA$HURT$REDUCE);
-        list.add(ValueType.LAVA$IMMUNE$TICKS);
-        list.add(ValueType.RIGHT$CLICK$DELAY$SUBSTRACTOR);
-        list.add(ValueType.MOB$IGNORE);
-        list.add(ValueType.FLUID$WALK);
-        list.add(ValueType.WALL$CLIMB);
-        list.add(ValueType.FART);
-        list.add(ValueType.SAND$STORM);
-        list.add(ValueType.BLIZZARD);
-        list.add(ValueType.TSUNAMI);
-        list.add(ValueType.CLOUD);
-        list.add(ValueType.MAY$FLY);
-        list.add(ValueType.EFFECT$IMMUNITIES);
-        list.add(ValueType.TOTEM$WITH$COOLDOWN);
+        list.add(TCItems.NEPTUNES$SHELL);
+        list.add(TCItems.STAR$CLOCK);
+        list.add(TCItems.INJURY$FREE);
+        list.add(TCItems.INVULNERABLE$TICKS$MULTIPLIER);
+        list.add(TCItems.LAVA$HURT$REDUCE);
+        list.add(TCItems.LAVA$IMMUNE$TICKS);
+        list.add(TCItems.RIGHT$CLICK$DELAY$SUBSTRACTOR);
+        list.add(TCItems.MOB$IGNORE);
+        list.add(TCItems.WALL$CLIMB);
+        list.add(TCItems.FART);
+        list.add(TCItems.SAND$STORM);
+        list.add(TCItems.BLIZZARD);
+        list.add(TCItems.TSUNAMI);
+        list.add(TCItems.CLOUD);
+        list.add(TCItems.MAY$FLY);
+        list.add(TCItems.EFFECT$IMMUNITIES);
+        list.add(TCItems.TOTEM$WITH$COOLDOWN);
+        list.add(TCItems.LUMINANCE);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.OtherType(list));
     });
     private final Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> valueMap = new HashMap<>();
@@ -103,7 +108,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
     }
 
     public void increaseLavaImmuneTicks() {
-        if (remainLavaImmuneTicks < getValue(ValueType.LAVA$IMMUNE$TICKS)) {
+        if (remainLavaImmuneTicks < getValue(TCItems.LAVA$IMMUNE$TICKS)) {
             this.remainLavaImmuneTicks++;
         }
     }
@@ -124,8 +129,8 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                 for (int i = 0; i < stackHandler.getSlots(); i++) {
                     ItemStack stack = stackHandler.getStackInSlot(i);
                     if (stack.isEmpty()) continue;
-                    AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
-                    if (component == null && (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
+                    AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
+                    if (component == null) continue;
                     Item item = stack.getItem();
 
                     for (Map.Entry<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> entry : component.types().entrySet()) {
@@ -134,15 +139,17 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                     }
 
                     if (!panicNecklace && item instanceof PanicNecklace) this.panicNecklace = true;
+                    TCUtils.forConfluence$Inject();
                 }
             }
-            Set<EntityType<?>> ignores = getValue(ValueType.MOB$IGNORE);
+            Set<EntityType<?>> ignores = getValue(TCItems.MOB$IGNORE);
             if (!ignores.isEmpty()) {
                 living.level().getEntities(new MobEntityTypesTest(ignores), new AABB(living.getOnPos()).inflate(31.5), mob -> true).forEach(mob -> {
                     if (mob.getTarget() == living) mob.setTarget(null);
                 });
             }
         });
+        NeoForge.EVENT_BUS.post(new AfterAccessoryAbilitiesFlushedEvent(living));
     }
 
     private <T, V extends PrimitiveValue<T>> void putUnitIfPresent(ValueType<T, V> type) {

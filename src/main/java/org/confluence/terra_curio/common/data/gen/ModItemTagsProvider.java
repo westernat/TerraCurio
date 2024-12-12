@@ -25,5 +25,23 @@ public class ModItemTagsProvider extends ItemTagsProvider {
         accessory.add(TCItems.BASE_POINT.get());
         accessory.add(TCItems.EVERLASTING.get());
         TCItems.CURIOS.getEntries().forEach(item -> accessory.add(item.get()));
+        tag(TCTags.DIVING).add(
+                TCItems.DIVING_HELMET.get(),
+                TCItems.DIVING_GEAR.get(),
+                TCItems.JELLYFISH_DIVING_GEAR.get(),
+                TCItems.ARCTIC_DIVING_GEAR.get()
+        );
+        tag(TCTags.ANY_SANDSTORM_BALLOONS).add(
+                TCItems.SANDSTORM_IN_A_BALLOON.get(),
+                TCItems.YELLOW_HORSESHOE_BALLOON.get()
+        );
+        tag(TCTags.ANY_BLIZZARD_BALLOONS).add(
+                TCItems.BLIZZARD_IN_A_BALLOON.get(),
+                TCItems.WHITE_HORSESHOE_BALLOON.get()
+        );
+        tag(TCTags.ANY_CLOUD_BALLOONS).add(
+                TCItems.CLOUD_IN_A_BALLOON.get(),
+                TCItems.BLUE_HORSESHOE_BALLOON.get()
+        );
     }
 }

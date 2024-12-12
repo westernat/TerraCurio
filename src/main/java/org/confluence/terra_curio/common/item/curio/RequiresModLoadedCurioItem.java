@@ -1,0 +1,32 @@
+package org.confluence.terra_curio.common.item.curio;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.neoforged.fml.ModList;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.Arrays;
+import java.util.List;
+
+public class RequiresModLoadedCurioItem extends BaseCurioItem {
+    private final String[] required;
+    private Boolean noneLoaded;
+
+    public RequiresModLoadedCurioItem(Builder builder, String... required) {
+        super(builder);
+        this.required = required;
+    }
+
+    public RequiresModLoadedCurioItem(Properties properties, String... required) {
+        super(properties);
+        this.required = required;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        if (noneLoaded == null) this.noneLoaded = Arrays.stream(required).noneMatch(ModList.get()::isLoaded);
+        if (noneLoaded) tooltipComponents.add(Component.translatable("tooltip.terra_curio.requires_mod_loaded", Arrays.toString(required)));
+    }
+}

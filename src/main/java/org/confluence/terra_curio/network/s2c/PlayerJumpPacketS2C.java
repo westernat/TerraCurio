@@ -9,10 +9,10 @@ import net.minecraft.util.Tuple;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.init.TCAttachments;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.network.codec.ByteBufCodecs.FLOAT;
@@ -64,14 +64,14 @@ public record PlayerJumpPacketS2C(float fartSpeed, float sandstormSpeed, int san
 
     public static void sendToClient(ServerPlayer serverPlayer) {
         AccessoriesAttachment attachment = serverPlayer.getData(TCAttachments.ACCESSORIES);
-        Tuple<Float, Integer> sandStorm = attachment.getValue(ValueType.SAND$STORM);
-        Tuple<Float, Integer> blizzard = attachment.getValue(ValueType.BLIZZARD);
+        Tuple<Float, Integer> sandStorm = attachment.getValue(TCItems.SAND$STORM);
+        Tuple<Float, Integer> blizzard = attachment.getValue(TCItems.BLIZZARD);
         PacketDistributor.sendToPlayer(serverPlayer, new PlayerJumpPacketS2C(
-                attachment.getValue(ValueType.FART),
+                attachment.getValue(TCItems.FART),
                 sandStorm.getA(), sandStorm.getB(),
                 blizzard.getA(), blizzard.getB(),
-                attachment.getValue(ValueType.TSUNAMI),
-                attachment.getValue(ValueType.CLOUD)
+                attachment.getValue(TCItems.TSUNAMI),
+                attachment.getValue(TCItems.CLOUD)
         ));
     }
 }

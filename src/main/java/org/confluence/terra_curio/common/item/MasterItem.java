@@ -4,11 +4,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terra_curio.client.animate.MasterColorAnimation;
+import org.confluence.terra_curio.common.component.ModRarity;
+import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.jetbrains.annotations.NotNull;
 
 public class MasterItem extends Item {
     public MasterItem() {
-        super(new Properties());
+        super(new Properties().component(TCDataComponentTypes.MOD_RARITY, ModRarity.MASTER));
     }
 
     @Override

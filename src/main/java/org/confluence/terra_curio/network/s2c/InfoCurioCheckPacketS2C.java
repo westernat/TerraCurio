@@ -12,15 +12,17 @@ import net.minecraft.world.scores.Team;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.api.primitive.ValueType;
+import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.client.handler.InformationHandler;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
-import org.confluence.terra_curio.common.init.TCDataMaps;
+import org.confluence.terra_curio.common.init.TCItems;
+import org.confluence.terra_curio.common.item.IFunctionCouldEnable;
 import org.confluence.terra_curio.util.CuriosUtils;
+import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements CustomPacketPayload {
     public static final Type<InfoCurioCheckPacketS2C> TYPE = new Type<>(TerraCurio.asResource("info_curio_check"));
@@ -29,9 +31,8 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
             ByteBufCodecs.BYTE_ARRAY, p -> p.enabled,
             InfoCurioCheckPacketS2C::new
     );
-    public static final int ARRAY_LENGTH = 12;
-    public static final byte[] FULL_MYSELF_ARRAY = new byte[]{3, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1};
-    public static final byte[] FULL_REMOTE_ARRAY = new byte[]{-128, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1};
+    public static final int ARRAY_LENGTH = 13;
+    public static final double MAX_SHARE_DISTANCE_SQR = 1024.0;
 
     @Override
     public @NotNull Type<InfoCurioCheckPacketS2C> type() {
@@ -49,47 +50,70 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         });
     }
 
-    public static void sendToPlayer(ServerPlayer serverPlayer, Inventory inventory) {
+    private static byte checkEnabled(byte original, byte target, ItemStack itemStack, TooltipComponentsValue.Storage storage) {
+        if (itemStack.getItem() instanceof IFunctionCouldEnable function) {
+            return function.isEnabled(itemStack, storage) ? target : original;
+        }
+        return target;
+    }
+
+    public static void sendToClient(ServerPlayer serverPlayer, Inventory inventory) {
         ArrayList<ItemStack> itemStacks = CuriosUtils.getCurios(serverPlayer);
         itemStacks.addAll(inventory.items);
         byte watch = 0;
         byte weatherRadio = 0;
         byte sextant = 0;
-        byte fishermansPocketGuide = 0;
-        byte metalDetector = 0;
-        byte lifeFormAnalyzer = 0;
+        byte guide = 0;
+        byte detector = 0;
+        byte analyzer = 0;
         byte radar = 0;
-        byte tallyCounter = 0;
+        byte counter = 0;
         byte dpsMeter = 0;
         byte stopwatch = 0;
         byte compass = 0;
         byte depthMeter = 0;
+        byte lens = 0;
         for (ItemStack stack : itemStacks) {
-            AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
-            if (component == null && (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
-            if (component.contains(ValueType.FULL$INFORMATION)) {
-                PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), FULL_MYSELF_ARRAY));
-                return;
-            }
+            AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
+            if (component == null) continue;
+            TooltipComponentsValue value = component.get(TCItems.INFORMATION);
+            if (value == null) continue;
+            Set<TooltipComponentsValue.Storage> list = value.getSet();
 
-            if (watch < 1 && component.contains(ValueType.HOUR$WATCH)) watch = 1;
-            else if (watch < 2 && component.contains(ValueType.HALF$HOUR$WATCH)) watch = 2;
-            else if (watch < 3 && component.contains(ValueType.MINUTE$WATCH)) watch = 3;
-            if (component.contains(ValueType.WEATHER$RADIO)) weatherRadio = 1;
-            if (component.contains(ValueType.SEXTANT)) sextant = 1;
-            if (component.contains(ValueType.FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = 1;
-            if (component.contains(ValueType.METAL$DETECTOR)) metalDetector = 1;
-            if (component.contains(ValueType.LIFE$FORM$ANALYZER)) lifeFormAnalyzer = 1;
-            if (component.contains(ValueType.RADAR)) radar = 1;
-            if (component.contains(ValueType.TALLY$COUNTER)) tallyCounter = 1;
-            if (component.contains(ValueType.DPS$METER)) dpsMeter = 1;
-            if (component.contains(ValueType.STOPWATCH)) stopwatch = 1;
-            if (component.contains(ValueType.COMPASS)) compass = 1;
-            if (component.contains(ValueType.DEPTH$METER)) depthMeter = 1;
+            if (watch < 1 && list.contains(TCItems.HOUR$WATCH))
+                watch = checkEnabled(watch, (byte) 1, stack, TCItems.HOUR$WATCH);
+            else if (watch < 2 && list.contains(TCItems.HALF$HOUR$WATCH))
+                watch = checkEnabled(watch, (byte) 2, stack, TCItems.HALF$HOUR$WATCH);
+            else if (watch < 3 && list.contains(TCItems.MINUTE$WATCH))
+                watch = checkEnabled(watch, (byte) 3, stack, TCItems.MINUTE$WATCH);
+            if (weatherRadio == 0 && list.contains(TCItems.WEATHER$RADIO))
+                weatherRadio = checkEnabled(weatherRadio, (byte) 1, stack, TCItems.WEATHER$RADIO);
+            if (sextant == 0 && list.contains(TCItems.$SEXTANT))
+                sextant = checkEnabled(sextant, (byte) 1, stack, TCItems.$SEXTANT);
+            if (guide == 0 && list.contains(TCItems.FISHERMANS$POCKET$GUIDE))
+                guide = checkEnabled(guide, (byte) 1, stack, TCItems.FISHERMANS$POCKET$GUIDE);
+            if (detector == 0 && list.contains(TCItems.METAL$DETECTOR))
+                detector = checkEnabled(detector, (byte) 1, stack, TCItems.METAL$DETECTOR);
+            if (analyzer == 0 && list.contains(TCItems.LIFE$FORM$ANALYZER))
+                analyzer = checkEnabled(analyzer, (byte) 1, stack, TCItems.LIFE$FORM$ANALYZER);
+            if (radar == 0 && list.contains(TCItems.$RADAR))
+                radar = checkEnabled(radar, (byte) 1, stack, TCItems.$RADAR);
+            if (counter == 0 && list.contains(TCItems.TALLY$COUNTER))
+                counter = checkEnabled(counter, (byte) 1, stack, TCItems.TALLY$COUNTER);
+            if (dpsMeter == 0 && list.contains(TCItems.DPS$METER))
+                dpsMeter = checkEnabled(dpsMeter, (byte) 1, stack, TCItems.DPS$METER);
+            if (stopwatch == 0 && list.contains(TCItems.$STOPWATCH))
+                stopwatch = checkEnabled(stopwatch, (byte) 1, stack, TCItems.$STOPWATCH);
+            if (compass == 0 && list.contains(TCItems.$COMPASS))
+                compass = checkEnabled(compass, (byte) 1, stack, TCItems.$COMPASS);
+            if (depthMeter == 0 && list.contains(TCItems.DEPTH$METER))
+                depthMeter = checkEnabled(depthMeter, (byte) 1, stack, TCItems.DEPTH$METER);
+            if (lens == 0 && list.contains(TCItems.MECHANICAL$LENS))
+                lens = checkEnabled(lens, (byte) 1, stack, TCItems.MECHANICAL$LENS);
         }
         PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), new byte[]{
-                watch, weatherRadio, sextant, fishermansPocketGuide, metalDetector,
-                lifeFormAnalyzer, radar, tallyCounter, dpsMeter, stopwatch, compass, depthMeter
+                watch, weatherRadio, sextant, guide, detector, analyzer,
+                radar, counter, dpsMeter, stopwatch, compass, depthMeter, lens
         }));
     }
 
@@ -99,48 +123,64 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         byte watch = -125;
         byte weatherRadio = -128;
         byte sextant = -128;
-        byte fishermansPocketGuide = -128;
-        byte metalDetector = -128;
-        byte lifeFormAnalyzer = -128;
+        byte guide = -128;
+        byte detector = -128;
+        byte analyzer = -128;
         byte radar = -128;
-        byte tallyCounter = -128;
+        byte counter = -128;
         byte dpsMeter = -128;
         byte stopwatch = -128;
         byte compass = -128;
         byte depthMeter = -128;
+        byte lens = -128;
         for (ItemStack stack : itemStacks) {
-            AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
-            if (component == null && (component = stack.get(TCDataComponentTypes.ACCESSORIES)) == null) continue;
-            if (component.contains(ValueType.FULL$INFORMATION)) {
-                PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), FULL_REMOTE_ARRAY));
-                return;
-            }
+            AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
+            if (component == null) continue;
+            TooltipComponentsValue value = component.get(TCItems.INFORMATION);
+            if (value == null) continue;
+            Set<TooltipComponentsValue.Storage> list = value.getSet();
 
-            if (watch > -126 && component.contains(ValueType.HOUR$WATCH)) watch = -126;
-            else if (watch > -127 && component.contains(ValueType.HALF$HOUR$WATCH)) watch = -127;
-            else if (watch > -128 && component.contains(ValueType.MINUTE$WATCH)) watch = -128;
-            if (component.contains(ValueType.WEATHER$RADIO)) weatherRadio = -1;
-            if (component.contains(ValueType.SEXTANT)) sextant = -1;
-            if (component.contains(ValueType.FISHERMANS$POCKET$GUIDE)) fishermansPocketGuide = -1;
-            if (component.contains(ValueType.METAL$DETECTOR)) metalDetector = -1;
-            if (component.contains(ValueType.LIFE$FORM$ANALYZER)) lifeFormAnalyzer = -1;
-            if (component.contains(ValueType.RADAR)) radar = -1;
-            if (component.contains(ValueType.TALLY$COUNTER)) tallyCounter = -1;
-            if (component.contains(ValueType.DPS$METER)) dpsMeter = -1;
-            if (component.contains(ValueType.STOPWATCH)) stopwatch = -1;
-            if (component.contains(ValueType.COMPASS)) compass = -1;
-            if (component.contains(ValueType.DEPTH$METER)) depthMeter = -1;
+            if (watch > -126 && list.contains(TCItems.HOUR$WATCH))
+                watch = checkEnabled(watch, (byte) -126, stack, TCItems.HOUR$WATCH);
+            else if (watch > -127 && list.contains(TCItems.HALF$HOUR$WATCH))
+                watch = checkEnabled(watch, (byte) -127, stack, TCItems.HALF$HOUR$WATCH);
+            else if (watch > -128 && list.contains(TCItems.MINUTE$WATCH))
+                watch = checkEnabled(watch, (byte) -128, stack, TCItems.MINUTE$WATCH);
+            if (weatherRadio == -128 && list.contains(TCItems.WEATHER$RADIO))
+                weatherRadio = checkEnabled(weatherRadio, (byte) -1, stack, TCItems.WEATHER$RADIO);
+            if (sextant == -128 && list.contains(TCItems.$SEXTANT))
+                sextant = checkEnabled(sextant, (byte) -1, stack, TCItems.$SEXTANT);
+            if (guide == -128 && list.contains(TCItems.FISHERMANS$POCKET$GUIDE))
+                guide = checkEnabled(guide, (byte) -1, stack, TCItems.FISHERMANS$POCKET$GUIDE);
+            if (detector == -128 && list.contains(TCItems.METAL$DETECTOR))
+                detector = checkEnabled(detector, (byte) -1, stack, TCItems.METAL$DETECTOR);
+            if (analyzer == -128 && list.contains(TCItems.LIFE$FORM$ANALYZER))
+                analyzer = checkEnabled(analyzer, (byte) -1, stack, TCItems.LIFE$FORM$ANALYZER);
+            if (radar == -128 && list.contains(TCItems.$RADAR))
+                radar = checkEnabled(radar, (byte) -1, stack, TCItems.$RADAR);
+            if (counter == -128 && list.contains(TCItems.TALLY$COUNTER))
+                counter = checkEnabled(counter, (byte) -1, stack, TCItems.TALLY$COUNTER);
+            if (dpsMeter == -128 && list.contains(TCItems.DPS$METER))
+                dpsMeter = checkEnabled(dpsMeter, (byte) -1, stack, TCItems.DPS$METER);
+            if (stopwatch == -128 && list.contains(TCItems.$STOPWATCH))
+                stopwatch = checkEnabled(stopwatch, (byte) -1, stack, TCItems.$STOPWATCH);
+            if (compass == -128 && list.contains(TCItems.$COMPASS))
+                compass = checkEnabled(compass, (byte) -1, stack, TCItems.$COMPASS);
+            if (depthMeter == -128 && list.contains(TCItems.DEPTH$METER))
+                depthMeter = checkEnabled(depthMeter, (byte) -1, stack, TCItems.DEPTH$METER);
+            if (lens == -128 && list.contains(TCItems.MECHANICAL$LENS))
+                lens = checkEnabled(lens, (byte) -1, stack, TCItems.MECHANICAL$LENS);
         }
-        boolean equals = watch == -125 && weatherRadio == -128 && sextant == -128 && fishermansPocketGuide == -128 && metalDetector == -128 &&
-                lifeFormAnalyzer == -128 && radar == -128 && tallyCounter == -128 && dpsMeter == -128 && stopwatch == -128 && compass == -128 && depthMeter == -128;
+        boolean equals = watch == -125 && weatherRadio == -128 && sextant == -128 && guide == -128 && detector == -128 && analyzer == -128 &&
+                radar == -128 && counter == -128 && dpsMeter == -128 && stopwatch == -128 && compass == -128 && depthMeter == -128 && lens == -128;
         if (equals) return; // 如果不需要发送, 则返回
         InfoCurioCheckPacketS2C packet = new InfoCurioCheckPacketS2C(serverPlayer.getId(), new byte[]{
-                watch, weatherRadio, sextant, fishermansPocketGuide, metalDetector,
-                lifeFormAnalyzer, radar, tallyCounter, dpsMeter, stopwatch, compass, depthMeter
+                watch, weatherRadio, sextant, guide, detector, analyzer,
+                radar, counter, dpsMeter, stopwatch, compass, depthMeter, lens
         });
         Team team = serverPlayer.getTeam();
         serverPlayer.serverLevel().players().forEach(player -> {
-            if (player != serverPlayer && player.getTeam() == team && player.distanceToSqr(serverPlayer) < 1024.0) {
+            if (player != serverPlayer && player.getTeam() == team && player.distanceToSqr(serverPlayer) < MAX_SHARE_DISTANCE_SQR) {
                 PacketDistributor.sendToPlayer(player, packet);
             }
         });

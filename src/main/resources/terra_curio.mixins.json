@@ -16,6 +16,7 @@
         "TargetingConditionsMixin",
         "accessor.ItemEntityAccessor",
         "accessor.LivingEntityAccessor",
+        "accessor.MobAccessor",
         "accessor.RangedAttributeAccessor",
         "accessor.SmithingTransformRecipeAccessor"
     ],
@@ -29,7 +30,9 @@
         "client.LocalPlayerMixin",
         "client.MouseHandlerMixin",
         "client.accessor.LocalPlayerAccessor",
-        "client.accessor.MinecraftAccessor"
+        "client.accessor.MinecraftAccessor",
+        "client.accessor.ModelPartAccessor",
+        "sodiumdynamiclights.DynamicLightHandlersMixin"
     ],
     "injectors": {
         "defaultRequire": 1

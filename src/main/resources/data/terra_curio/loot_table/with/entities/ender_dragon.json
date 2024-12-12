@@ -24,6 +24,30 @@
                     ]
                 }
             ]
+        },
+        {
+            "rolls": 1,
+            "entries": [
+                {
+                    "type": "minecraft:item",
+                    "name": "terra_curio:celestial_starboard",
+                    "conditions": [
+                        {
+                            "condition": "minecraft:random_chance",
+                            "chance": 1
+                        },
+                        {
+                            "condition": "minecraft:entity_properties",
+                            "entity":"attacking_player",
+                            "predicate": {
+                                "flags": {
+                                    "is_flying": true
+                                }
+                            }
+                        }
+                    ]
+                }
+            ]
         }
     ]
 }

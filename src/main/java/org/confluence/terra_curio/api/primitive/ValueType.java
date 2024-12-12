@@ -1,24 +1,12 @@
 package org.confluence.terra_curio.api.primitive;
 
-import com.google.common.collect.ImmutableListMultimap;
 import com.mojang.serialization.Codec;
-import net.minecraft.core.Holder;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.TagKey;
-import net.minecraft.util.Tuple;
 import net.minecraft.util.Unit;
-import net.minecraft.world.effect.MobEffect;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.level.material.Fluid;
 import org.confluence.terra_curio.TerraCurio;
 
 import java.util.Hashtable;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Function;
 
 @SuppressWarnings("unchecked")
@@ -26,63 +14,6 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final Map<ResourceLocation, Codec<PrimitiveValue<?>>> VALUE_CODECS = new Hashtable<>();
     public static final Map<ResourceLocation, ValueType<?, ? extends PrimitiveValue<?>>> TYPES = new Hashtable<>();
     public static final Codec<ValueType<?, ? extends PrimitiveValue<?>>> CODEC = ResourceLocation.CODEC.xmap(TYPES::get, ValueType::key);
-    // client side info_check todo optimization
-    public static final ValueType<Unit, UnitValue> FULL$INFORMATION = ofUnit("full_information");
-    public static final ValueType<Unit, UnitValue> HOUR$WATCH = ofUnit("hour_watch");
-    public static final ValueType<Unit, UnitValue> HALF$HOUR$WATCH = ofUnit("half_hour_watch");
-    public static final ValueType<Unit, UnitValue> MINUTE$WATCH = ofUnit("minute_watch");
-    public static final ValueType<Unit, UnitValue> WEATHER$RADIO = ofUnit("weather_radio");
-    public static final ValueType<Unit, UnitValue> SEXTANT = ofUnit("sextant");
-    public static final ValueType<Unit, UnitValue> FISHERMANS$POCKET$GUIDE = ofUnit("fishermans_pocket_guide");
-    public static final ValueType<Unit, UnitValue> METAL$DETECTOR = ofUnit("metal_detector");
-    public static final ValueType<Unit, UnitValue> LIFE$FORM$ANALYZER = ofUnit("life_form_analyzer");
-    public static final ValueType<Unit, UnitValue> RADAR = ofUnit("radar");
-    public static final ValueType<Unit, UnitValue> TALLY$COUNTER = ofUnit("tally_counter");
-    public static final ValueType<Unit, UnitValue> DPS$METER = ofUnit("dps_meter");
-    public static final ValueType<Unit, UnitValue> STOPWATCH = ofUnit("stopwatch");
-    public static final ValueType<Unit, UnitValue> COMPASS = ofUnit("compass");
-    public static final ValueType<Unit, UnitValue> DEPTH$METER = ofUnit("depth_meter");
-    // client side curio_exits
-    public static final ValueType<Unit, UnitValue> AUTO$ATTACK = ofUnit("auto_attack");
-    public static final ValueType<Unit, UnitValue> SHIELD$OF$CTHULHU = ofUnit("shield_of_cthulhu");
-    public static final ValueType<Unit, UnitValue> SPRINTING = ofUnit("sprinting");
-    public static final ValueType<Unit, UnitValue> SCOPE = ofUnit("scope");
-    public static final ValueType<Unit, UnitValue> GRAVITY$GLOBE = ofUnit("gravity_globe");
-    public static final ValueType<Unit, UnitValue> MAGILUMINESCENCE = ofUnit("magiluminescence");
-    // require updates
-    public static final ValueType<Unit, UnitValue> FIRE$ATTACK = ofUnit("fire_attack");
-    public static final ValueType<Unit, UnitValue> BRAIN$OF$CONFUSION = ofUnit("brain_of_confusion");
-    public static final ValueType<Unit, UnitValue> HIVE$PACK = ofUnit("hive_pack");
-    public static final ValueType<Unit, UnitValue> HONEY$COMB = ofUnit("honey_comb");
-    public static final ValueType<Unit, UnitValue> MAGIC$QUIVER = ofUnit("magic_quiver");
-    public static final ValueType<Unit, UnitValue> IGNITE$ARROW = ofUnit("ignite_arrow");
-    public static final ValueType<Unit, UnitValue> FROZEN$TURTLE$SHELL = ofUnit("frozen_turtle_shell");
-    public static final ValueType<Unit, UnitValue> FIRE$IMMUNE = ofUnit("fire_immune");
-    public static final ValueType<Unit, UnitValue> FLOWER$BOOTS = ofUnit("flower_boots");
-    public static final ValueType<Unit, UnitValue> FROZEN$IMMUNE = ofUnit("frozen_immune");
-    public static final ValueType<Unit, UnitValue> ICE$SPEED = ofUnit("ice_speed");
-
-    public static final ValueType<Boolean, BooleanValue> STAR$CLOCK = create("star_clock", BooleanValue.OR, BooleanValue.CODEC, false, BooleanValue::new);
-
-    public static final ValueType<Float, FloatValue> INJURY$FREE = ofFloat("injury_free", FloatValue.ADDITION_WITHIN_0_TO_1, 0.0F);
-    public static final ValueType<Float, FloatValue> INVULNERABLE$TICKS$MULTIPLIER = ofFloat("invulnerable_ticks_multiplier", FloatValue.GET_MAX_WITHIN_0_TO_100, 1.0F);
-    public static final ValueType<Float, FloatValue> LAVA$HURT$REDUCE = ofFloat("lava_hurt_reduce", FloatValue.GET_MAX_WITHIN_0_TO_1, 0.0F);
-    public static final ValueType<Integer, IntegerValue> LAVA$IMMUNE$TICKS = ofInteger("lava_immune_ticks", IntegerValue.GET_MAX, 0);
-    public static final ValueType<Integer, IntegerValue> RIGHT$CLICK$DELAY$SUBSTRACTOR = ofInteger("right_click_delay_substractor", IntegerValue.GET_MAX, 0);
-    public static final ValueType<Set<EntityType<?>>, EntityTypesValue> MOB$IGNORE = create("mob_ignore", EntityTypesValue.EXPANSION, EntityTypesValue.CODEC, Set.of(), EntityTypesValue::new);
-    public static final ValueType<Set<TagKey<Fluid>>, FluidTagsValue> FLUID$WALK = create("fluid_walk", FluidTagsValue.EXPANSION, FluidTagsValue.CODEC, Set.of(), FluidTagsValue::new);
-    public static final ValueType<Byte, ByteValue> WALL$CLIMB = create("wall_climb", ByteValue.ADDITION_WITHIN_0_TO_2, ByteValue.CODEC, (byte) 0, ByteValue::new);
-    public static final ValueType<Float, FloatValue> FART = ofFloat("fart", FloatValue.GET_SELF, 0.0F);
-    public static final ValueType<Tuple<Float, Integer>, OneTimeJumpAbilityValue> SAND$STORM = create("sand_storm", OneTimeJumpAbilityValue.COMBINE_RULE, OneTimeJumpAbilityValue.CODEC, new Tuple<>(0.0F, 0), OneTimeJumpAbilityValue::new);
-    public static final ValueType<Tuple<Float, Integer>, OneTimeJumpAbilityValue> BLIZZARD = create("blizzard", OneTimeJumpAbilityValue.COMBINE_RULE, OneTimeJumpAbilityValue.CODEC, new Tuple<>(0.0F, 0), OneTimeJumpAbilityValue::new);
-    public static final ValueType<Float, FloatValue> TSUNAMI = ofFloat("tsunami", FloatValue.GET_SELF, 0.0F);
-    public static final ValueType<Float, FloatValue> CLOUD = ofFloat("cloud", FloatValue.GET_SELF, 0.0F);
-    public static final ValueType<MayFlyAbilityValue.Storage, MayFlyAbilityValue> MAY$FLY = create("may_fly", MayFlyAbilityValue.COMBINE_RULE, MayFlyAbilityValue.CODEC, new MayFlyAbilityValue.Storage(0.0F, 0, false, false), MayFlyAbilityValue::new);
-    public static final ValueType<Set<Holder<MobEffect>>, MobEffectsValue> EFFECT$IMMUNITIES = create("effect_immunities", MobEffectsValue.EXPANSION, MobEffectsValue.CODEC, Set.of(), MobEffectsValue::new);
-    public static final ValueType<Integer, IntegerValue> TOTEM$WITH$COOLDOWN = ofInteger("totem_with_cooldown", IntegerValue.GET_MIN_GREAT_EQUAL_THAN_0, -1);
-    // no updates
-    public static final ValueType<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> ATTRIBUTES = create("attributes", AttributeModifiersValue.GET_SELF, AttributeModifiersValue.CODEC, ImmutableListMultimap.of(), AttributeModifiersValue::new);
-    public static final ValueType<List<Component>, ComponentsValue> COMPONENTS = create("components", ComponentsValue.COMBINE_RULE, ComponentsValue.CODEC, List.of(), ComponentsValue::new);
 
     private final ResourceLocation key;
     private final CombineRule<T, V> combineRule;

@@ -6,11 +6,15 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.api.primitive.ComponentsValue;
@@ -20,9 +24,14 @@ import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCDataMaps;
+import org.confluence.terra_curio.common.init.TCItems;
+import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.mesdag.particlestorm.PSGameClient;
+import org.mesdag.particlestorm.particle.ParticleEmitter;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
@@ -46,10 +55,35 @@ public class BaseCurioItem extends Item implements ICurioItem {
     }
 
     @Override
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
+        if (builder == null || builder.particle == null) return;
+        LivingEntity living = slotContext.entity();
+        if (living.level().isClientSide) {
+            ILivingEntity iLiving = (ILivingEntity) living;
+            ParticleEmitter emitter = iLiving.terra_curio$getOrCreateParticleEmitters().get(builder.particle);
+            if (emitter == null) {
+                Map<ResourceLocation, ParticleEmitter> emitters = iLiving.terra_curio$getOrCreateParticleEmitters();
+                emitter = new ParticleEmitter(living.level(), living.position(), builder.particle);
+                emitter.attached = living;
+                PSGameClient.LOADER.addEmitter(emitter, false);
+                emitters.put(builder.particle, emitter);
+            }
+            particleTick(living, emitter, builder.particle);
+        }
+    }
+
+    @OnlyIn(Dist.CLIENT)
+    protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
+        if (emitter.isRemoved()) {
+            ((ILivingEntity) living).terra_curio$getOrCreateParticleEmitters().remove(particle);
+        }
+    }
+
+    @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
         AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         AttributeModifiersValue value;
-        if (component != null && (value = component.get(ValueType.ATTRIBUTES)) != null) {
+        if (component != null && (value = component.get(TCItems.ATTRIBUTES)) != null) {
             return value.get();
         }
         return builder == null ? EMPTY_ATTRIBUTE : builder.attributes;
@@ -59,7 +93,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
     public void appendHoverText(ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
         AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         ComponentsValue value;
-        if (component != null && (value = component.get(ValueType.COMPONENTS)) != null) {
+        if (component != null && (value = component.get(TCItems.COMPONENTS)) != null) {
             tooltipComponents.addAll(value.components());
             return;
         }
@@ -86,7 +120,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public boolean makesPiglinsNeutral(SlotContext slotContext, ItemStack stack) {
-        return builder.makePiglinsNeutral;
+        return builder != null && builder.makePiglinsNeutral;
     }
 
     @Override
@@ -114,11 +148,24 @@ public class BaseCurioItem extends Item implements ICurioItem {
         private ModRarity rarity = ModRarity.BLUE;
         private int jeiInformationCount = 1;
         private boolean makePiglinsNeutral = false;
+        private EquipmentSlot equipmentSlot = null;
+
+        private ResourceLocation particle = null;
 
         Builder(String name, Properties properties) {
             this.name = name;
             this.properties = properties;
             this.defaultId = TerraCurio.asResource(name);
+        }
+
+        public Builder particle(ResourceLocation particle) {
+            this.particle = particle;
+            return this;
+        }
+
+        public Builder equipable(EquipmentSlot slot) {
+            this.equipmentSlot = slot;
+            return this;
         }
 
         public Builder makesPiglinsNeutral() {
@@ -209,8 +256,27 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return attributes;
         }
 
+        @ApiStatus.Internal
+        public @Nullable ResourceLocation getParticle() {
+            return particle;
+        }
+
         public BaseCurioItem build() {
+            if (equipmentSlot != null) {
+                return new Equipable(this);
+            }
             return new BaseCurioItem(this);
+        }
+    }
+
+    public static class Equipable extends BaseCurioItem implements net.minecraft.world.item.Equipable {
+        public Equipable(Builder builder) {
+            super(builder);
+        }
+
+        @Override
+        public @NotNull EquipmentSlot getEquipmentSlot() {
+            return builder.equipmentSlot;
         }
     }
 }

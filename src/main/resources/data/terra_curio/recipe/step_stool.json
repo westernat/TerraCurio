@@ -3,12 +3,16 @@
     "ingredients": [
         {
             "type": "terra_curio:amount_ingredient",
-            "item": "minecraft:stick",
+            "ingredient": {
+                "item": "minecraft:stick"
+            },
             "count": 2
         },
         {
             "type": "terra_curio:amount_ingredient",
-            "item": "minecraft:scaffolding",
+            "ingredient": {
+                "item": "minecraft:scaffolding"
+            },
             "count": 5
         }
     ],

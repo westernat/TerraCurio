@@ -1,11 +1,9 @@
 package org.confluence.terra_curio.common.item.curio.movement;
 
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Level;
 import org.confluence.terra_curio.common.entity.StepStoolEntity;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
@@ -52,11 +50,8 @@ public class StepStool extends BaseCurioItem {
     @Override
     public void appendHoverText(ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
-        CustomData data = stack.get(DataComponents.CUSTOM_DATA);
-        if (data != null) {
-            tooltipComponents.add(Component.translatable(
-                    "item.confluence.step_stool.tooltip2", data.getUnsafe().getInt("extraStep")
-            ).withStyle(style -> style.withColor(ChatFormatting.BLUE)));
-        }
+        tooltipComponents.add(Component.translatable(
+                "tooltip.item.terra_curio.step_stool.1", TCUtils.getItemStackNbt(stack).getInt("extraStep")
+        ).withStyle(style -> style.withColor(ChatFormatting.BLUE)));
     }
 }

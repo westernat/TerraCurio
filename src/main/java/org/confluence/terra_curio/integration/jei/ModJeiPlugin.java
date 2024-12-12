@@ -43,6 +43,7 @@ public class ModJeiPlugin implements IModPlugin {
     @Override
     public void registerRecipes(@NotNull IRecipeRegistration registration) {
         registration.addItemStackInfo(TCItems.DEMON_HEART.get().getDefaultInstance(), Component.translatable("jei.tooltip.item.terra_curio.demon_heart.0"));
+        registration.addItemStackInfo(TCItems.DIVING_HELMET.get().getDefaultInstance(), Component.translatable("jei.tooltip.item.terra_curio.diving_helmet.0"), Component.translatable("jei.tooltip.item.terra_curio.diving_helmet.1"));
         TCItems.CURIOS.getEntries().forEach(entry -> {
             if (entry.get() instanceof BaseCurioItem curioItem && curioItem.getJeiInformationCount() > 0) {
                 Component[] information = new Component[curioItem.getJeiInformationCount()];

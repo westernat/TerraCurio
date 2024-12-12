@@ -18,12 +18,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
-public record StepStoolSteppingPacketC2S(int slot, int step, boolean increase) implements CustomPacketPayload {
+public record StepStoolSteppingPacketC2S(int slot, byte step) implements CustomPacketPayload {
+    public static final byte STEP_MASK = 31;
+    public static final byte INCREASE = 64;
+
     public static final Type<StepStoolSteppingPacketC2S> TYPE = new Type<>(TerraCurio.asResource("step_stool_stepping_c2s"));
     public static final StreamCodec<ByteBuf, StepStoolSteppingPacketC2S> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, p -> p.slot,
-            ByteBufCodecs.INT, p -> p.step,
-            ByteBufCodecs.BOOL, p -> p.increase,
+            ByteBufCodecs.BYTE, p -> p.step,
             StepStoolSteppingPacketC2S::new
     );
     private static final Predicate<ItemStack> PREDICATE = itemStack -> itemStack.getItem() instanceof StepStool;
@@ -35,30 +37,31 @@ public record StepStoolSteppingPacketC2S(int slot, int step, boolean increase) i
 
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
+            if (slot == -1) return;
             if (context.player() instanceof ServerPlayer serverPlayer) {
-                if (slot == -1) return;
-                if (step == 1 && increase) {
+                ItemStack itemStack = CuriosUtils.getSlot(serverPlayer, PREDICATE, slot);
+                if (itemStack == null) return;
+                int actualStep = step & STEP_MASK;
+                boolean increase = (step & INCREASE) == INCREASE;
+
+                if (actualStep == 1 && increase) {
                     StepStoolEntity pEntity = new StepStoolEntity(serverPlayer);
                     serverPlayer.level().addFreshEntity(pEntity);
                     serverPlayer.teleportRelative(0.0, 1.001, 0.0);
-                    CuriosUtils.getSlot(serverPlayer, PREDICATE, slot).ifPresent(itemStack -> {
-                        TCUtils.updateItemStackNbt(itemStack, nbt -> nbt.putInt("id", pEntity.getId()));
-                    });
+                    TCUtils.updateItemStackNbt(itemStack, nbt -> nbt.putInt("id", pEntity.getId()));
                 } else {
-                    CuriosUtils.getSlot(serverPlayer, PREDICATE, slot).ifPresent(itemStack -> {
-                        int id = TCUtils.getItemStackNbt(itemStack).getInt("id");
-                        Entity entity = serverPlayer.level().getEntity(id);
-                        if (entity instanceof StepStoolEntity stepStool) {
-                            if (step == 0) {
-                                stepStool.setOwner(null);
-                            } else {
-                                stepStool.setStep(step);
-                                if (increase) {
-                                    serverPlayer.teleportRelative(0.0, 1.001, 0.0);
-                                }
+                    int id = TCUtils.getItemStackNbt(itemStack).getInt("id");
+                    Entity entity = serverPlayer.level().getEntity(id);
+                    if (entity instanceof StepStoolEntity stepStool) {
+                        if (actualStep == 0) {
+                            stepStool.setOwner(null);
+                        } else {
+                            stepStool.setStep(actualStep);
+                            if (increase) {
+                                serverPlayer.teleportRelative(0.0, 1.001, 0.0);
                             }
                         }
-                    });
+                    }
                 }
             }
         }).exceptionally(e -> {

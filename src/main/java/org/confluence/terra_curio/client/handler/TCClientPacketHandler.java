@@ -1,26 +1,47 @@
 package org.confluence.terra_curio.client.handler;
 
+import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2BooleanMap;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.RemotePlayer;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForgeMod;
+import org.confluence.terra_curio.client.TCClientConfigs;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
+import org.confluence.terra_curio.mixed.IClientLivingEntity;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
+import org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C;
 import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
 import org.confluence.terra_curio.network.s2c.RightClickSubtractorPacketS2C;
 import org.confluence.terra_curio.network.s2c.SetItemEntityPickupDelayPacketS2C;
+import org.confluence.terra_curio.util.CuriosUtils;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.LUMINANCE_MASK;
+import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.NEPTUNES_SHELL;
 import static org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C.*;
 
 @OnlyIn(Dist.CLIENT)
@@ -29,9 +50,16 @@ public final class TCClientPacketHandler {
     private static boolean hasCthulhu = false;
     private static boolean hasTabi = false;
     private static boolean hasMagiluminescence = false;
+    private static boolean canFloating = false;
+    public static boolean floating = false;
+    private static boolean hasNeptunesShell = false;
+    private static final Int2BooleanMap remoteNeptuneShell = new Int2BooleanArrayMap();
     private static int rightClickSubtractor = 0;
+    private static int luminance = 0;
+    private static final Int2IntMap remoteLuminance = new Int2IntArrayMap();
     private static final Int2IntMap pickupDelayStorage = new Int2IntArrayMap();
     private static final Int2IntMap pickupDelayCounter = Util.make(new Int2IntArrayMap(), map -> map.defaultReturnValue(0));
+    private static final Set<FluidState> walkableFluidStates = new HashSet<>();
 
     public static boolean couldAutoAttack() {
         return autoAttack;
@@ -49,8 +77,28 @@ public final class TCClientPacketHandler {
         return hasMagiluminescence;
     }
 
+    public static boolean isCanFloating() {
+        return canFloating;
+    }
+
+    public static boolean isHasNeptunesShell() {
+        return hasNeptunesShell;
+    }
+
+    public static boolean canShowNeptunesShell(LivingEntity living) {
+        return ((hasNeptunesShell && living.getClass() == LocalPlayer.class) || (living.getClass() == RemotePlayer.class && remoteNeptuneShell.get(living.getId()))) && living.isInWaterOrBubble();
+    }
+
     public static int getRightClickSubtractor() {
         return rightClickSubtractor;
+    }
+
+    public static int getLuminance(Entity entity) {
+        int ret = entity == Minecraft.getInstance().player ? luminance : remoteLuminance.getOrDefault(entity.getId(), 0);
+        if (ret < 0) { // 只能在水下发光
+            return entity.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value()) ? -ret : 0;
+        }
+        return ret;
     }
 
     public static void handleSubstractor(RightClickSubtractorPacketS2C packet) {
@@ -65,10 +113,15 @@ public final class TCClientPacketHandler {
         ScopeFovHandler.hasScope = (item & SCOPE) == SCOPE;
         GravitationHandler.hasGlobe = (item & GRAVITY_GLOBE) == GRAVITY_GLOBE;
         hasMagiluminescence = (item & MAGILUMINESCENCE) == MAGILUMINESCENCE;
+        canFloating = (item & FLOAT_ON_LIQUID_SURFACE) == FLOAT_ON_LIQUID_SURFACE;
     }
 
     public static void handleItemPickupDelay(SetItemEntityPickupDelayPacketS2C packet) {
         pickupDelayStorage.put(packet.id(), packet.delay());
+    }
+
+    public static Set<FluidState> getWalkableFluidStates() {
+        return walkableFluidStates;
     }
 
     public static void handle(Minecraft minecraft, LocalPlayer player) {
@@ -99,7 +152,7 @@ public final class TCClientPacketHandler {
     }
 
     private static void applyAutoAttack(Minecraft minecraft, LocalPlayer localPlayer) {
-        if (minecraft.gameMode == null || minecraft.gameMode.isDestroying()) return;
+        if (!TCClientConfigs.autoAttack || minecraft.gameMode == null || minecraft.gameMode.isDestroying()) return;
         if (BetterCombatHelper.isLoaded()) {
             ItemStack itemStack = localPlayer.getItemInHand(InteractionHand.MAIN_HAND);
             if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
@@ -123,13 +176,43 @@ public final class TCClientPacketHandler {
         }
     }
 
+    public static void handleFluidWalk(Player player) {
+        walkableFluidStates.clear();
+        ((IClientLivingEntity) player).terra_curio$resetLastWalkedFluidState();
+        Set<TagKey<Fluid>> tagKeys = CuriosUtils.calculateValue(player, TCItems.FLUID$WALK);
+        BuiltInRegistries.FLUID.stream().flatMap(fluid -> fluid.getStateDefinition().getPossibleStates().stream()).forEach(state -> {
+            if (tagKeys.stream().anyMatch(state::is)) {
+                walkableFluidStates.add(state);
+            }
+        });
+    }
+
+    public static void handleRender(BroadcastRenderPacketS2C packet, Player player) {
+        short render = packet.render();
+        if (player == Minecraft.getInstance().player) {
+            luminance = render & LUMINANCE_MASK;
+            hasNeptunesShell = (render & NEPTUNES_SHELL) == NEPTUNES_SHELL;
+        } else {
+            int playerId = packet.playerId();
+            remoteLuminance.put(playerId, render & LUMINANCE_MASK);
+            remoteNeptuneShell.put(playerId, (render & NEPTUNES_SHELL) == NEPTUNES_SHELL);
+        }
+    }
+
     public static void reset() {
         autoAttack = false;
         hasCthulhu = false;
         hasTabi = false;
         hasMagiluminescence = false;
         rightClickSubtractor = 0;
+        canFloating = false;
+        hasNeptunesShell = false;
+        floating = false;
+        luminance = 0;
         pickupDelayStorage.clear();
         pickupDelayCounter.clear();
+        walkableFluidStates.clear();
+        remoteLuminance.clear();
+        remoteNeptuneShell.clear();
     }
 }

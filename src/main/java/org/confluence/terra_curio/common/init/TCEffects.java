@@ -24,8 +24,8 @@ public final class TCEffects {
     public static final DeferredHolder<MobEffect, MobEffect> HONEY = EFFECTS.register("honey", HoneyEffect::new);
 
     public static void healPerSecond(LivingEntity living, float amount) {
-        if (living.level().getGameTime() % 20 == 0) {
-            if (living.hasEffect(HONEY)) amount += 1;
+        if (living.level().getGameTime() % 20L == 0) {
+            if (living.hasEffect(HONEY)) amount += 1.0F;
             living.heal(amount);
         }
     }

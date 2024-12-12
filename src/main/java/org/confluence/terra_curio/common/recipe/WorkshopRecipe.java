@@ -49,7 +49,7 @@ public class WorkshopRecipe extends AbstractAmountRecipe {
                     } else {
                         return ingredients.length > 12 ? DataResult.error(() -> "Too many ingredients for workshop recipe. The maximum is: 12") : DataResult.success(NonNullList.of(AmountIngredient.EMPTY, ingredients));
                     }
-                }, DataResult::success).forGetter(p_300975_ -> p_300975_.ingredients)
+                }, DataResult::success).forGetter(recipe -> recipe.ingredients)
         ).apply(instance, WorkshopRecipe::new));
         public static final StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> STREAM_CODEC = StreamCodec.of(Serializer::toNetwork, Serializer::fromNetwork);
 

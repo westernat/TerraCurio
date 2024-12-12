@@ -1,6 +1,7 @@
 package org.confluence.terra_curio.client.handler;
 
-import com.google.common.collect.EvictingQueue;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -26,7 +27,6 @@ import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2f;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicReference;
@@ -46,8 +46,11 @@ public final class InformationHandler {
     public static final int STOPWATCH = 9;
     public static final int COMPASS = 10;
     public static final int DEPTH_METER = 11;
+    public static final int MECHANICAL_LENS = 12;
 
-    private static final ArrayList<Component> INFORMATION = new ArrayList<>();
+    public static final boolean[] DISABLE = new boolean[InfoCurioCheckPacketS2C.ARRAY_LENGTH];
+
+    private static final Int2ObjectMap<Component> INFORMATION = new Int2ObjectArrayMap<>();
     private static final byte[] INFO_DATA = new byte[InfoCurioCheckPacketS2C.ARRAY_LENGTH];
     private static final Int2ObjectOpenHashMap<byte[]> REMOTE_DATA = new Int2ObjectOpenHashMap<>();
 
@@ -61,7 +64,7 @@ public final class InformationHandler {
     private static Component radarInfo = Component.translatable("info.terra_curio.radar", 0);
     private static Component tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter.unknown");
     private static long lastAttackTime = 0;
-    private static final EvictingQueue<Float> ATTACK_DAMAGE = EvictingQueue.create(5);
+    private static float cachedDamage = 0.0F;
     private static Component dpsMeterInfo = Component.translatable("info.terra_curio.dps_meter", 0.00F);
 
     public static void handle(LocalPlayer localPlayer) {
@@ -69,67 +72,62 @@ public final class InformationHandler {
         long gameTime = localPlayer.level().getGameTime();
 
         byte b = INFO_DATA[WATCH];
-        if (b != 0 && timeInfo != null) {
-            INFORMATION.add(timeInfo.apply(localPlayer.level().dayTime()));
+        if (!DISABLE[WATCH]) {
+            if (b != 0 && timeInfo != null) {
+                INFORMATION.put(WATCH, timeInfo.apply(localPlayer.level().dayTime()));
+            }
         }
 
         long tenSec = gameTime % 200;
-        if (INFO_DATA[WEATHER_RADIO] != 0) {
+        if (!DISABLE[WEATHER_RADIO] && INFO_DATA[WEATHER_RADIO] != 0) {
             if (tenSec == WEATHER_RADIO) weatherRadioInfo = getWeatherInfo(localPlayer);
-            INFORMATION.add(weatherRadioInfo);
+            INFORMATION.put(WEATHER_RADIO, weatherRadioInfo);
         }
 
-        if (INFO_DATA[SEXTANT] != 0) {
-            INFORMATION.add(Component.translatable("info.terra_curio.sextant." + localPlayer.level().getMoonPhase()));
+        if (!DISABLE[SEXTANT] && INFO_DATA[SEXTANT] != 0) {
+            INFORMATION.put(SEXTANT, Component.translatable("info.terra_curio.sextant." + localPlayer.level().getMoonPhase()));
         }
 
-        if (INFO_DATA[FISHERMANS_POCKET_GUIDE] != 0) {
-            INFORMATION.add(getFishingPowerInfo(localPlayer));
+        if (!DISABLE[FISHERMANS_POCKET_GUIDE] && INFO_DATA[FISHERMANS_POCKET_GUIDE] != 0) {
+            INFORMATION.put(FISHERMANS_POCKET_GUIDE, getFishingPowerInfo(localPlayer));
         }
 
-        b = INFO_DATA[METAL_DETECTOR];
-        if (TCKeyBindings.METAL_DETECTOR.get().isDown()) {
-            if (!detectorPressed && b != 0) {
-                detectorPressed = true;
-                metalDetectorInfo = getMetalDetectorInfo(localPlayer);
+        if (!DISABLE[METAL_DETECTOR]) {
+            b = INFO_DATA[METAL_DETECTOR];
+            if (TCKeyBindings.METAL_DETECTOR.get().isDown()) {
+                if (!detectorPressed && b != 0) {
+                    detectorPressed = true;
+                    metalDetectorInfo = getMetalDetectorInfo(localPlayer);
+                }
+            } else detectorPressed = false;
+            if (b != 0) {
+                INFORMATION.put(METAL_DETECTOR, metalDetectorInfo);
             }
-        } else detectorPressed = false;
-        if (b != 0) {
-            INFORMATION.add(metalDetectorInfo);
         }
 
-        if (INFO_DATA[LIFE_FORM_ANALYZER] != 0) {
+        if (!DISABLE[LIFE_FORM_ANALYZER] && INFO_DATA[LIFE_FORM_ANALYZER] != 0) {
             if (tenSec == LIFE_FORM_ANALYZER) lifeFormAnalyzerInfo = getLifeFormAnalyzerInfo(localPlayer);
-            INFORMATION.add(lifeFormAnalyzerInfo);
+            INFORMATION.put(LIFE_FORM_ANALYZER, lifeFormAnalyzerInfo);
         }
 
-        if (INFO_DATA[RADAR] != 0) {
+        if (!DISABLE[RADAR] && INFO_DATA[RADAR] != 0) {
             if (tenSec == RADAR) radarInfo = Component.translatable(
                     "info.terra_curio.radar",
                     localPlayer.level().getEntities(localPlayer, new AABB(localPlayer.getOnPos()).inflate(63.5), entity -> entity instanceof Enemy).size()
             );
-            INFORMATION.add(radarInfo);
+            INFORMATION.put(RADAR, radarInfo);
         }
 
-        if (INFO_DATA[TALLY_COUNTER] != 0) {
-            INFORMATION.add(tallyCounterInfo);
+        if (!DISABLE[TALLY_COUNTER] && INFO_DATA[TALLY_COUNTER] != 0) {
+            INFORMATION.put(TALLY_COUNTER, tallyCounterInfo);
         }
 
-        if (INFO_DATA[DPS_METER] != 0) {
-            long delta = gameTime - lastAttackTime;
-            if (delta % 20 == 0) {
-                float sum = 0.0F;
-                for (float value : ATTACK_DAMAGE) sum += value;
-                dpsMeterInfo = Component.translatable(
-                        "info.terra_curio.dps_meter",
-                        "%.2f".formatted(sum / (ATTACK_DAMAGE.size() + 1))
-                );
-            }
-            INFORMATION.add(dpsMeterInfo);
+        if (!DISABLE[DPS_METER] && INFO_DATA[DPS_METER] != 0) {
+            INFORMATION.put(DPS_METER, dpsMeterInfo);
         }
 
-        if (INFO_DATA[STOPWATCH] != 0) {
-            INFORMATION.add(Component.translatable(
+        if (!DISABLE[STOPWATCH] && INFO_DATA[STOPWATCH] != 0) {
+            INFORMATION.put(STOPWATCH, Component.translatable(
                     "info.terra_curio.stopwatch",
                     "%.2f".formatted(Mth.length(
                             localPlayer.getX() - localPlayer.xOld,
@@ -139,12 +137,12 @@ public final class InformationHandler {
             ));
         }
 
-        if (INFO_DATA[COMPASS] != 0) {
-            INFORMATION.add(getCompassInfo(localPlayer));
+        if (!DISABLE[COMPASS] && INFO_DATA[COMPASS] != 0) {
+            INFORMATION.put(COMPASS, getCompassInfo(localPlayer));
         }
 
-        if (INFO_DATA[DEPTH_METER] != 0) {
-            INFORMATION.add(getDepthMeterInfo(localPlayer));
+        if (!DISABLE[DEPTH_METER] && INFO_DATA[DEPTH_METER] != 0) {
+            INFORMATION.put(DEPTH_METER, getDepthMeterInfo(localPlayer));
         }
 
         if (tenSec == 0) {
@@ -152,7 +150,7 @@ public final class InformationHandler {
                 if (INFO_DATA[i] >= 0) continue;
                 boolean match = false;
                 for (Player player : localPlayer.level().players()) {
-                    if (player == localPlayer || player.distanceToSqr(localPlayer) > 1024.0) continue;
+                    if (player == localPlayer || player.distanceToSqr(localPlayer) > InfoCurioCheckPacketS2C.MAX_SHARE_DISTANCE_SQR) continue;
                     byte[] data = REMOTE_DATA.get(player.getId());
                     if (data == null) continue;
                     if (data[i] > -125) {
@@ -177,10 +175,17 @@ public final class InformationHandler {
         Level level = player.level();
         String weather = level.dimension() == Level.OVERWORLD ? "clear" : "cloudy";
         if (level.isRaining()) {
-            if (level.getBiome(player.getOnPos()).is(Tags.Biomes.IS_COLD)) {
+            if (level.getBiome(player.blockPosition()).is(Tags.Biomes.IS_COLD)) {
                 weather = "snow";
             } else {
                 weather = "rain";
+            }
+            if (level.isThundering()) {
+                if ("snow".equals(weather)) {
+                    weather = "thunder_snow";
+                } else {
+                    weather = "thunder";
+                }
             }
         } else if (level.isThundering()) {
             weather = "thunder";
@@ -231,7 +236,19 @@ public final class InformationHandler {
         return Component.translatable("info.terra_curio.depth_meter." + (y > 63 ? "surface" : "underground"), "%.2f".formatted(y));
     }
 
-    public static ArrayList<Component> getInformation() {
+    public static boolean hasMechanicalView() {
+        return INFO_DATA[MECHANICAL_LENS] != 0;
+    }
+
+    public static float getWindSpeedX() {
+        return WIND_SPEED.x;
+    }
+
+    public static float getWindSpeedZ() {
+        return WIND_SPEED.y;
+    }
+
+    public static Int2ObjectMap<Component> getInformation() {
         return INFORMATION;
     }
 
@@ -262,6 +279,7 @@ public final class InformationHandler {
         setInfoData(enabled, STOPWATCH);
         setInfoData(enabled, COMPASS);
         setInfoData(enabled, DEPTH_METER);
+        setInfoData(enabled, MECHANICAL_LENS);
     }
 
     private static Component wrapHour(long dayTime) {
@@ -299,17 +317,27 @@ public final class InformationHandler {
 
     public static void handleEntityKilled(EntityKilledPacketS2C packet) {
         EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(packet.entityType());
-        tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter")
-                .append(entityType.getDescription()).append("': " + (packet.amount() + 1));
+        tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter").append(entityType.getDescription()).append("': " + (packet.amount() + 1));
     }
 
     public static void handleAttackDamage(AttackDamagePacketS2C packet, Player player) {
-        ATTACK_DAMAGE.add(packet.amount());
-        lastAttackTime = player.level().getGameTime();
+        long gameTime = player.level().getGameTime();
+        long delta = gameTime - lastAttackTime;
+        if (delta == gameTime) { // 防止第一次攻击
+            delta = 20L;
+        }
+        if (delta > 100) { // 大于五秒重置
+            cachedDamage = 0.0F;
+            delta = 20L;
+        }
+        lastAttackTime = gameTime;
+        cachedDamage += packet.amount();
+        dpsMeterInfo = Component.translatable("info.terra_curio.dps_meter", "%.2f".formatted(cachedDamage / delta));
     }
 
     public static void handleWindSpeed(WindSpeedPacketS2C packet) {
         WIND_SPEED.set(packet.x(), packet.z());
         windSpeedInfo = "%.2f".formatted(WIND_SPEED.length());
+        TCUtils.forConfluence$Inject();
     }
 }

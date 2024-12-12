@@ -14,7 +14,7 @@ repositories {
 }
 
 base {
-    archivesName = mod_name
+    archivesName = mod_id
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
@@ -112,33 +112,25 @@ repositories {
     maven {
         url = "https://www.cursemaven.com"
     }
+    maven {
+        url = "https://maven.bawnorton.com/releases"
+    }
 }
 
 dependencies {
     implementation "curse.maven:adorned-1036809:5740650"
+    implementation jarJar(project(":ParticleStorm"))
 
     compileOnly("mezz.jei:jei-1.21-common-api:${jei_version}")
     compileOnly("mezz.jei:jei-1.21-neoforge-api:${jei_version}")
     runtimeOnly("mezz.jei:jei-1.21-neoforge:${jei_version}")
 
-    implementation jarJar(project(":ParticleStorm"))
+    compileOnly "curse.maven:dynamiclights-reforged-551736:5807536"
+    runtimeOnly "curse.maven:dynamiclights-reforged-551736:5807536"
 
-
-
-    // Example mod dependency using a mod jar from ./libs with a flat dir repository
-    // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
-    // The group id is ignored when searching -- in this case, it is "blank"
-    // implementation "blank:coolmod-${mc_version}:${coolmod_version}"
-
-    // Example mod dependency using a file as dependency
-    // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
-
-    // Example project dependency using a sister or child project:
-    // implementation project(":myproject")
-
-    // For more info:
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+    compileOnly "curse.maven:air-hop-323071:5736739"
+//    runtimeOnly "curse.maven:air-hop-323071:5736739"
+//    runtimeOnly "curse.maven:puzzles-lib-495476:5838627"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

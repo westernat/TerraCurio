@@ -20,7 +20,7 @@ import java.util.stream.Stream;
 public record AmountIngredient(Ingredient ingredient, int amount) implements ICustomIngredient {
     public static final Ingredient EMPTY = new Ingredient(new AmountIngredient(Ingredient.EMPTY, 0));
     public static final MapCodec<AmountIngredient> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            Ingredient.CODEC.fieldOf("item").orElse(Ingredient.EMPTY).forGetter(AmountIngredient::ingredient),
+            Ingredient.CODEC.fieldOf("ingredient").orElse(Ingredient.EMPTY).forGetter(AmountIngredient::ingredient),
             ExtraCodecs.POSITIVE_INT.fieldOf("count").orElse(0).forGetter(AmountIngredient::amount)
     ).apply(instance, AmountIngredient::new));
     public static final StreamCodec<RegistryFriendlyByteBuf, AmountIngredient> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC.codec());

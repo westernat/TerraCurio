@@ -30,9 +30,10 @@
             }
         },
         "terra_curio:base_point": {
+            "terra_curio:fire_immune": {},
             "terra_curio:ice_speed": {},
             "terra_curio:may_fly": {
-                "fly_speed": 0.5,
+                "fly_speed": 1.1,
                 "fly_ticks": 70,
                 "could_glide": true,
                 "horizontal_flight": true
@@ -68,6 +69,8 @@
             }
         },
         "terra_curio:everlasting": {
+            "terra_curio:frozen_immune": {},
+            "terra_curio:fire_immune": {},
             "terra_curio:shield_of_cthulhu": {},
             "terra_curio:effect_immunities": [
                 "minecraft:poison",

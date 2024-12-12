@@ -5,13 +5,17 @@ import com.mojang.serialization.Codec;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
 public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, AttributeModifier> value) implements PrimitiveValue<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>> {
+    public static final AttributeModifiersValue EMPTY = new AttributeModifiersValue(ImmutableListMultimap.of());
     public static final Codec<AttributeModifiersValue> CODEC = Codec.unboundedMap(RegistryFixedCodec.create(Registries.ATTRIBUTE), AttributeModifier.MAP_CODEC.codec().listOf()).xmap(
             map -> {
                 ImmutableListMultimap.Builder<Holder<Attribute>, AttributeModifier> builder = ImmutableListMultimap.builder();
@@ -28,6 +32,17 @@ public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, A
                 return map;
             }
     );
+    public static final StreamCodec<RegistryFriendlyByteBuf, AttributeModifiersValue> STREAM_CODEC = new StreamCodec<>() {
+        @Override
+        public @NotNull AttributeModifiersValue decode(RegistryFriendlyByteBuf buffer) {
+            return buffer.readJsonWithCodec(CODEC);
+        }
+
+        @Override
+        public void encode(RegistryFriendlyByteBuf buffer, @NotNull AttributeModifiersValue value) {
+            buffer.writeJsonWithCodec(CODEC, value);
+        }
+    };
     public static final CombineRule<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> GET_SELF = CombineRule.register(PrimitiveValue.identity(), "attributes_modifiers_get_self");
 
     @Override

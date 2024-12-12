@@ -21,6 +21,7 @@ public final class TCTabs {
                         output.accept(TCItems.DEMON_HEART.get());
                         output.accept(TCItems.MAGIC_MIRROR.get());
                         output.accept(TCItems.CELL_PHONE.get());
+                        output.accept(TCItems.DIVING_HELMET.get());
                         TCItems.CURIOS.getEntries().forEach(entry -> output.accept(entry.get()));
                     }).build()
     );

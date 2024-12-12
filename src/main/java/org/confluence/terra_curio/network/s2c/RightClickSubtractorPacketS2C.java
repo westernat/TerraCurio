@@ -9,8 +9,8 @@ import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
@@ -38,6 +38,6 @@ public record RightClickSubtractorPacketS2C(int amount) implements CustomPacketP
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        PacketDistributor.sendToPlayer(serverPlayer, new RightClickSubtractorPacketS2C(TCUtils.getAccessoriesValue(serverPlayer, ValueType.RIGHT$CLICK$DELAY$SUBSTRACTOR)));
+        PacketDistributor.sendToPlayer(serverPlayer, new RightClickSubtractorPacketS2C(TCUtils.getAccessoriesValue(serverPlayer, TCItems.RIGHT$CLICK$DELAY$SUBSTRACTOR)));
     }
 }
