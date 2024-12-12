@@ -38,7 +38,9 @@ public final class ModClientEvent {
 
     @SubscribeEvent
     public static void modConfig$Reloading(ModConfigEvent.Reloading event) {
-        TCClientConfigs.onLoad();
+        if (event.getConfig().getModId().equals(TerraCurio.MODID)) {
+            TCClientConfigs.onLoad();
+        }
     }
 
     @SubscribeEvent
