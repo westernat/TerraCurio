@@ -69,6 +69,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
                 emitters.put(builder.particle, emitter);
             }
             particleTick(living, emitter, builder.particle);
+            emitter.active &= slotContext.visible();
         }
     }
 

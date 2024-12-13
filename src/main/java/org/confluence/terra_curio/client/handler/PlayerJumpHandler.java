@@ -2,8 +2,6 @@ package org.confluence.terra_curio.client.handler;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -158,16 +156,16 @@ public final class PlayerJumpHandler {
         } else {
             y = speed;
         }
-        airMove(localPlayer, y, (float) (localPlayer.getAttributeValue(Attributes.MOVEMENT_SPEED) + speed));
+        airMove(localPlayer, y, localPlayer.getSpeed() + (float) speed);
     }
 
     private static void glide(LocalPlayer localPlayer) {
-        airMove(localPlayer, -0.3, (float) localPlayer.getAttributeValue(Attributes.MOVEMENT_SPEED) + 0.4F);
+        airMove(localPlayer, -0.3, localPlayer.getSpeed() + 0.4F);
     }
 
     private static void horizontalFlight(LocalPlayer localPlayer) {
-        AttributeMap attributes = localPlayer.getAttributes();
-        airMove(localPlayer, 0.0, (float) (attributes.getValue(Attributes.MOVEMENT_SPEED) * 4.0 + flySpeed - 0.5));
+        float speed = (float) flySpeed;
+        airMove(localPlayer, 0.0, Math.min(localPlayer.getSpeed() * 4.0F + speed - 0.5F, speed + speed));
     }
 
     private static void airMove(LocalPlayer localPlayer, double y, float h) {
