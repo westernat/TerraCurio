@@ -52,7 +52,6 @@ public final class ModEvents {
         registrar.playToClient(BroadcastGravitationRotPacketS2C.TYPE, BroadcastGravitationRotPacketS2C.STREAM_CODEC, BroadcastGravitationRotPacketS2C::handle);
         registrar.playToClient(CurioExistsPacketS2C.TYPE, CurioExistsPacketS2C.STREAM_CODEC, CurioExistsPacketS2C::handle);
         registrar.playToClient(AttackDamagePacketS2C.TYPE, AttackDamagePacketS2C.STREAM_CODEC, AttackDamagePacketS2C::handle);
-        registrar.playToClient(WindSpeedPacketS2C.TYPE, WindSpeedPacketS2C.STREAM_CODEC, WindSpeedPacketS2C::handle);
         registrar.playToClient(EntityKilledPacketS2C.TYPE, EntityKilledPacketS2C.STREAM_CODEC, EntityKilledPacketS2C::handle);
         registrar.playToClient(InfoCurioCheckPacketS2C.TYPE, InfoCurioCheckPacketS2C.STREAM_CODEC, InfoCurioCheckPacketS2C::handle);
         registrar.playToClient(StepStoolSteppingPacketS2C.TYPE, StepStoolSteppingPacketS2C.STREAM_CODEC, StepStoolSteppingPacketS2C::handle);
