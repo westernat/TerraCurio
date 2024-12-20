@@ -369,14 +369,13 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyTooltips(TCItems.FISH_FINDER, "探鱼器",
                 new String[]{
                         "Displays fishing information",
-                        "Displays fishing information",
-                        "Displays the phase of the moon",
-                        "Displays the weather"
+                        "Displays the weather",
+                        "Displays the phase of the moon"
                 },
                 new String[]{
                         "显示钓鱼信息",
-                        "显示月相",
-                        "显示天气"
+                        "显示天气",
+                        "显示月相"
                 }
         );
         onlyTooltip(TCItems.TIGER_CLIMBING_GEAR, "猛虎攀爬装备", "Allows the ability to climb walls, hold Crouch key to slide down", "可爬墙，按住潜行键可快速下滑");
@@ -455,27 +454,27 @@ public class ModLanguageProvider extends LanguageProvider {
         tooltipAndJeiInfo(TCItems.FROZEN_TURTLE_SHELL, "冰冻海龟壳", "Puts a shell around the owner when below 50% life that reduces damage by 25%", "当生命值低于50%时，在主人周围放置一个外壳，使伤害降低25%", "When the Turtle died for Freezing chance to dropped this item.", "当海龟因冰冻而死时，有几率掉落这个饰品。");
         onlyTooltips(TCItems.GOBLIN_TECH, "哥布林数据仪",
                 new String[]{
-                        "Displays your damage per second",
                         "Displays the most valuable ore around you",
-                        "Displays how fast the player is moving"
+                        "Displays how fast the player is moving",
+                        "Displays your damage per second"
                 },
                 new String[]{
-                        "显示你的每秒伤害",
                         "显示你周围最贵重的矿石",
-                        "显示玩家的移动速度"
+                        "显示玩家的移动速度",
+                        "显示你的每秒伤害"
                 }
         );
         onlyTooltip(TCItems.GOLD_WATCH, "金表", "Tell the time", "报时");
         onlyTooltips(TCItems.GPS, "全球定位系统",
                 new String[]{
-                        "Displays horizontal position",
+                        "Tell the time",
                         "Displays depth",
-                        "Tell the time"
+                        "Displays horizontal position"
                 },
                 new String[]{
-                        "显示水平位置",
+                        "报时",
                         "显示深度",
-                        "报时"
+                        "显示水平位置"
                 }
         );
         tooltipsAndJeiInfo(TCItems.GRAVITY_GLOBE, "重力球",
@@ -710,13 +709,13 @@ public class ModLanguageProvider extends LanguageProvider {
                 });
         onlyTooltips(TCItems.REK_3000, "R.E.K.3000",
                 new String[]{
-                        "Displays the name of rare creatures around you",
                         "Detects enemies around you",
+                        "Displays the name of rare creatures around you",
                         "Displays how many monsters have been killed"
                 },
                 new String[]{
-                        "显示您周围稀有生物的名称",
                         "探测你周围的敌人",
+                        "显示您周围稀有生物的名称",
                         "显示怪物击杀数量"
                 });
         onlyTooltips(TCItems.SNIPER_SCOPE, "狙击镜",
