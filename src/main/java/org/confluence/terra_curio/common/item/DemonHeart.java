@@ -33,13 +33,13 @@ public class DemonHeart extends Item {
     public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand) {
         ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
         CuriosApi.getCuriosInventory(pPlayer).ifPresent(iCuriosItemHandler -> {
-            ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get("accessory");
+            ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
             if (iCurioStacksHandler != null && iCurioStacksHandler.getSlots() < TCCommonConfigs.MAX_ACCESSORIES.get()) {
                 itemStack.shrink(1);
                 Map<ResourceLocation, AttributeModifier> modifiers = iCurioStacksHandler.getModifiers();
                 double before = modifiers.containsKey(ID) ? modifiers.get(ID).amount() : 0.0;
                 iCurioStacksHandler.removeModifier(ID);
-                iCuriosItemHandler.addPermanentSlotModifier("accessory", ID, before + 1.0, AttributeModifier.Operation.ADD_VALUE);
+                iCuriosItemHandler.addPermanentSlotModifier(TerraCurio.CURIO_SLOT, ID, before + 1.0, AttributeModifier.Operation.ADD_VALUE);
             }
         });
         return InteractionResultHolder.sidedSuccess(itemStack, pLevel.isClientSide);

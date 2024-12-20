@@ -14,7 +14,7 @@ import org.confluence.terra_curio.TerraCurio;
 import top.theillusivec4.curios.api.CuriosApi;
 
 public final class TCTags {
-    public static final TagKey<Item> ACCESSORY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(CuriosApi.MODID, "accessory"));
+    public static final TagKey<Item> ACCESSORY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(CuriosApi.MODID, TerraCurio.CURIO_SLOT));
     public static final TagKey<Item> DIVING = ItemTags.create(TerraCurio.asResource("diving"));
     public static final TagKey<Item> ANY_SANDSTORM_BALLOONS = ItemTags.create(TerraCurio.asResource("any_sandstorm_balloons"));
     public static final TagKey<Item> ANY_BLIZZARD_BALLOONS = ItemTags.create(TerraCurio.asResource("any_blizzard_balloons"));
