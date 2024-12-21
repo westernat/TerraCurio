@@ -6,7 +6,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +17,9 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     protected AbstractAmountRecipe(ItemStack pResult, NonNullList<Ingredient> pIngredients) {
         this.result = pResult;
         this.ingredients = pIngredients;
+        if (ingredients.size() > maxIngredientSize()) {
+            throw new RuntimeException("Too many ingredients for '" + getGroup() + "' recipe. The maximum is: " + maxIngredientSize());
+        }
     }
 
     @Override
@@ -78,7 +80,7 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
 
     protected abstract int maxIngredientSize();
 
-    public static abstract class Serializer<R extends AbstractAmountRecipe> implements RecipeSerializer<R> {
-        protected abstract R newInstance(ItemStack pResult, NonNullList<Ingredient> pIngredients);
-    }
+    public abstract @NotNull String getGroup();
+
+    public abstract @NotNull ItemStack getToastSymbol();
 }
