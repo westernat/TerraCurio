@@ -11,7 +11,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCMenus;
 import org.confluence.terra_curio.common.init.TCRecipes;
-import org.confluence.terra_curio.common.recipe.AbstractAmountRecipe;
 import org.confluence.terra_curio.common.recipe.WorkshopRecipe;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,7 +20,7 @@ import java.util.List;
 public class WorkshopMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
     private final Player player;
-    private final CraftingContainer craftSlots = new TransientCraftingContainer(this, 3, 4);
+    private final RecipeInputContainer craftSlots = new RecipeInputContainer(this, 12);
     private final ResultContainer resultSlot = new ResultContainer();
     private final DataSlot selectedRecipeIndex = DataSlot.standalone();
     private List<RecipeHolder<WorkshopRecipe>> recipes = new ArrayList<>();
@@ -42,12 +41,8 @@ public class WorkshopMenu extends AbstractContainerMenu {
         this.access = pAccess;
         addSlot(new AmountResultSlot(craftSlots, resultSlot, 0, 62, 35) {
             @Override
-            public void onTake(@NotNull Player pPlayer, @NotNull ItemStack pStack) {
-                if (recipe != null) {
-                    AbstractAmountRecipe.extractIngredients(crafting, recipe.getIngredients());
-                    WorkshopMenu.this.setupResultSlot();
-                    WorkshopMenu.this.slotsChanged(crafting);
-                }
+            protected void updateMenu() {
+                WorkshopMenu.this.setupResultSlot();
             }
         });
 
@@ -172,7 +167,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
 
     @Override
     public void slotsChanged(@NotNull Container pContainer) {
-        this.recipes = player.level().getRecipeManager().getRecipesFor(TCRecipes.WORKSHOP_TYPE.get(), craftSlots.asCraftInput(), player.level());
+        this.recipes = player.level().getRecipeManager().getRecipesFor(TCRecipes.WORKSHOP_TYPE.get(), craftSlots, player.level());
         if (selectedRecipeIndex.get() >= recipes.size()) selectedRecipeIndex.set(recipes.size() - 1);
         access.execute((level, pos) -> {
             if (player instanceof ServerPlayer serverPlayer) {

@@ -2,7 +2,6 @@ package org.confluence.terra_curio.common.recipe;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -47,25 +46,9 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
         return getResultItem(registries).copy();
     }
 
-    private static void extractIngredients(RecipeInput pContainer, NonNullList<Ingredient> ingredients) {
+    public static void extractIngredients(RecipeInput pContainer, NonNullList<Ingredient> ingredients) {
         for (Ingredient ingredient : ingredients) {
             for (int index = 0; index < pContainer.size(); index++) {
-                ItemStack itemStack = pContainer.getItem(index);
-                if (!itemStack.isEmpty() && ingredient.test(itemStack)) {
-                    if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
-                        itemStack.shrink(amountIngredient.amount());
-                    } else {
-                        itemStack.shrink(1);
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-    public static void extractIngredients(CraftingContainer pContainer, NonNullList<Ingredient> ingredients) {
-        for (Ingredient ingredient : ingredients) {
-            for (int index = 0; index < pContainer.getContainerSize(); index++) {
                 ItemStack itemStack = pContainer.getItem(index);
                 if (!itemStack.isEmpty() && ingredient.test(itemStack)) {
                     if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
