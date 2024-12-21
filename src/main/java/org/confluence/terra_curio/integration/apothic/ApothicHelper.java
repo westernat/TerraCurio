@@ -10,23 +10,16 @@ import org.confluence.terra_curio.common.init.TCAttributes;
 import java.util.Map;
 
 public class ApothicHelper {
-    private static Boolean isAttributesLoaded;
     public static final String ATTRIBUTES_ID = "attributeslib";
+    public static final boolean LOADED = ModList.get().isLoaded(ATTRIBUTES_ID);
     public static final ResourceLocation CRIT_CHANCE = ResourceLocation.fromNamespaceAndPath(ATTRIBUTES_ID, "crit_chance");
     public static final ResourceLocation ARROW_VELOCITY = ResourceLocation.fromNamespaceAndPath(ATTRIBUTES_ID, "arrow_velocity");
     public static final ResourceLocation ARROW_DAMAGE = ResourceLocation.fromNamespaceAndPath(ATTRIBUTES_ID, "arrow_damage");
     public static final ResourceLocation DODGE_CHANCE = ResourceLocation.fromNamespaceAndPath(ATTRIBUTES_ID, "dodge_chance");
     public static final ResourceLocation ARMOR_PIERCE = ResourceLocation.fromNamespaceAndPath(ATTRIBUTES_ID, "armor_pierce");
 
-    public static boolean isAttributesLoaded() {
-        if (isAttributesLoaded == null) {
-            isAttributesLoaded = ModList.get().isLoaded(ATTRIBUTES_ID);
-        }
-        return isAttributesLoaded;
-    }
-
     public static void preset(Map<Holder<Attribute>, Holder<Attribute>> map) {
-        if (isAttributesLoaded()) {
+        if (LOADED) {
             map.put(TCAttributes.CRIT_CHANCE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.CRIT_CHANCE).get());
             map.put(TCAttributes.RANGED_VELOCITY, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARROW_VELOCITY).get());
             map.put(TCAttributes.RANGED_DAMAGE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARROW_DAMAGE).get());

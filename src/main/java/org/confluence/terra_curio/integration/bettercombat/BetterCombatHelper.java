@@ -6,15 +6,8 @@ import net.neoforged.fml.ModList;
 import java.lang.reflect.Method;
 
 public class BetterCombatHelper {
-    private static Boolean isLoaded;
+    public static final boolean LOADED = ModList.get().isLoaded("bettercombat");
     private static Method getAttributes;
-
-    public static boolean isLoaded() {
-        if (isLoaded == null) {
-            isLoaded = ModList.get().isLoaded("bettercombat");
-        }
-        return isLoaded;
-    }
 
     public static boolean hasWeaponAttributes(ItemStack itemStack) {
         try {

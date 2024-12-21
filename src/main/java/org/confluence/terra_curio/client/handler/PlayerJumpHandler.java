@@ -56,7 +56,7 @@ public final class PlayerJumpHandler {
         if (localPlayer.onGround()) {
             reset(true);
         } else if (jumping) {
-            if (AirHopHelper.isLoaded() && AirHopHelper.notFinishJump(localPlayer)) {
+            if (AirHopHelper.LOADED && AirHopHelper.notFinishJump(localPlayer)) {
                 jumpKeyDown = true;
                 return;
             }
