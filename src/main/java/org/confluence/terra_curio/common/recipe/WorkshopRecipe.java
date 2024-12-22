@@ -31,7 +31,7 @@ public class WorkshopRecipe extends AbstractAmountRecipe {
 
     @Override
     public @NotNull ItemStack getToastSymbol() {
-        return TCBlocks.WORKSHOP.get().asItem().getDefaultInstance();
+        return TCBlocks.WORKSHOP.toStack();
     }
 
     @Override
