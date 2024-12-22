@@ -2,6 +2,7 @@ package org.confluence.terra_curio.common.recipe;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
@@ -44,14 +45,30 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
 
     @Override
     public @NotNull ItemStack assemble(@NotNull RecipeInput input, HolderLookup.@NotNull Provider registries) {
-        extractIngredients(input, ingredients);
+        extractInput(input, ingredients);
         return getResultItem(registries).copy();
     }
 
-    public static void extractIngredients(RecipeInput pContainer, NonNullList<Ingredient> ingredients) {
+    public static void extractInput(RecipeInput input, NonNullList<Ingredient> ingredients) {
         for (Ingredient ingredient : ingredients) {
-            for (int index = 0; index < pContainer.size(); index++) {
-                ItemStack itemStack = pContainer.getItem(index);
+            for (int index = 0; index < input.size(); index++) {
+                ItemStack itemStack = input.getItem(index);
+                if (!itemStack.isEmpty() && ingredient.test(itemStack)) {
+                    if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
+                        itemStack.shrink(amountIngredient.amount());
+                    } else {
+                        itemStack.shrink(1);
+                    }
+                    break;
+                }
+            }
+        }
+    }
+
+    public static void extractContainer(Container container, NonNullList<Ingredient> ingredients) {
+        for (Ingredient ingredient : ingredients) {
+            for (int index = 0; index < container.getContainerSize(); index++) {
+                ItemStack itemStack = container.getItem(index);
                 if (!itemStack.isEmpty() && ingredient.test(itemStack)) {
                     if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
                         itemStack.shrink(amountIngredient.amount());
