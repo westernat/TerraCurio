@@ -831,7 +831,7 @@ public class ModLanguageProvider extends LanguageProvider {
         tooltipAndJeiInfo(TCItems.SUN_STONE, "太阳石", "During daytime, grants minor increase.", "在白天时略微增强属性值", "It has a Chance to be dropped from Blaze.", "它有几率由烈焰人掉落。");
         onlyTooltip(TCItems.SWEETHEART_NECKLACE, "甜心项链", "When damaged, the bee is released and the user is immersed in honey and increases movement speed.", "受到伤害后释放蜜蜂并将使用者浸入蜂蜜中、并提高移动速度。");
         tooltipAndJeiInfo(TCItems.TABI, "分趾厚底袜", "Allows the ability to dash while double tap a direction", "双击一个方向可猛冲", "It can be found in Chests in the Nether Bridge.", "它可以在下届要塞的宝箱中找到。");
-        tooltipAndJeiInfo(TCItems.TALLY_COUNTER, "杀怪计数器", "Displays how many monsters have been killed", "显示怪物击杀数量", "The Tally Counter a Chance to be dropped from Creeper.", "它有几率从爬行者（苦力怕）身上掉落。");
+        tooltipAndJeiInfo(TCItems.TALLY_COUNTER, "杀怪计数器", "Displays how many monsters have been killed", "显示怪物击杀数量", "The Tally Counter a Chance to be dropped from Creeper.", "它有几率从苦力怕身上掉落。");
         onlyTooltips(TCItems.TERRASPARK_BOOTS, "泰拉闪耀靴",
                 new String[]{
                         "Allows flight, super fast running, and extra mobility on ice",
