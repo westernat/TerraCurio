@@ -29,7 +29,7 @@ public class AmountResultSlot extends Slot {
     @Override
     public void onTake(@NotNull Player pPlayer, @NotNull ItemStack pStack) {
         if (recipe != null) {
-            AbstractAmountRecipe.extractInput(input, recipe.getIngredients());
+            AbstractAmountRecipe.extractIngredients(input, recipe.getIngredients());
             input.setChanged();
             updateMenu();
         }
