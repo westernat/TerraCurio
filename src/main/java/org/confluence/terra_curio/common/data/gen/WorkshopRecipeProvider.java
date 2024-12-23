@@ -43,7 +43,7 @@ public class WorkshopRecipeProvider implements DataProvider {
     public WorkshopRecipeProvider( PackOutput output) {
         this(TerraCurio.MODID,"workshop","amount_ingredient",output);
     }
-    void run(){
+    protected void run(){
 
         // Example usage:
 //        gen(TCItems.TERRASPARK_BOOTS)
