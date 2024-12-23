@@ -81,7 +81,7 @@ public abstract class ClientLivingEntityMixin implements IClientLivingEntity, Se
         return original.call(instance, fluidState);
     }
 
-    @ModifyExpressionValue(method = "travel", at= @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1))
+    @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1))
     private boolean neptunesShell(boolean original) {
         return original || (self().getClass() == LocalPlayer.class && TCClientPacketHandler.isHasNeptunesShell());
     }
