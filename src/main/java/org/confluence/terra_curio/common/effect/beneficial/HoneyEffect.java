@@ -18,6 +18,6 @@ public class HoneyEffect extends MobEffect {
 
     @Override
     public boolean shouldApplyEffectTickThisTick(int pDuration, int pAmplifier) {
-        return pAmplifier % 10 == 0;
+        return pDuration % 10 == 0;
     }
 }
