@@ -1,22 +1,23 @@
 package org.confluence.terra_curio.common.recipe;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.Container;
-import net.minecraft.world.inventory.CraftingContainer;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
-import org.confluence.terra_curio.common.menu.RecipeInputContainer;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+import java.util.HashSet;
 
 public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     public final ItemStack result;
@@ -36,75 +37,70 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
-    public boolean matches(@NotNull RecipeInput pContainer, @NotNull Level pLevel) {
-        // pContainer
-        Map<Item, Integer> ingredientCount = new HashMap<>();
-        for (int index = 0; index < pContainer.size(); index++) {
-            ItemStack itemStack = pContainer.getItem(index);
-            if (!itemStack.isEmpty()) {
-                ingredientCount.put(itemStack.getItem(), ingredientCount.getOrDefault(itemStack.getItem(), 0) + itemStack.getCount());
+    public boolean matches(@NotNull RecipeInput input, @NotNull Level pLevel) {
+        HashSet<Ingredient> matches = new HashSet<>();
+        Object2IntOpenHashMap<Integer> requires2Count = new Object2IntOpenHashMap<>();
+        outer:
+        for (int j = 0; j < ingredients.size(); j++) {
+            Ingredient ingredient = ingredients.get(j);
+            for (int i = 0; i < input.size(); i++) {
+                ItemStack itemStack = input.getItem(i);
+                if (itemStack.isEmpty()) continue;
+                if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
+                    if (amountIngredient.ingredient().test(itemStack)) {
+                        requires2Count.addTo(j, itemStack.getCount());
+                        matches.add(ingredient);
+                    }
+                } else if (ingredient.test(itemStack)) {
+                    matches.add(ingredient);
+                    continue outer;
+                }
             }
         }
-        // ingredients
-        Map<Item, Integer> requiredCount = new HashMap<>();
-        for (Ingredient ingredient : ingredients) {
-            ItemStack[] items = ingredient.getItems();
-            for (ItemStack item : items) {
-                requiredCount.put(item.getItem(), requiredCount.getOrDefault(item.getItem(), 0) + item.getCount());
-            }
-        }
-        // 比较
-        for (Map.Entry<Item, Integer> entry : requiredCount.entrySet()) {
-            Item requiredItem = entry.getKey();
-            int requiredAmount = entry.getValue();
-            int availableAmount = ingredientCount.getOrDefault(requiredItem, 0);
-
-            if (availableAmount < requiredAmount) {
+        if (matches.size() != ingredients.size()) return false;
+        for (Object2IntMap.Entry<Integer> entry : requires2Count.object2IntEntrySet()) {
+            if (((AmountIngredient) ingredients.get(entry.getKey()).getCustomIngredient()).amount() > entry.getIntValue()) {
                 return false;
             }
         }
         return true;
     }
 
-
-
-    public static void extractIngredients(RecipeInputContainer pContainer, NonNullList<Ingredient> ingredients) {
-        consumeIngredients(pContainer.size(), pContainer::getItem, ingredients);
-    }
-    public static void extractIngredients(RecipeInput pContainer, NonNullList<Ingredient> ingredients) {
-        consumeIngredients(pContainer.size(), pContainer::getItem, ingredients);
-    }
-    public static void extractIngredients(CraftingContainer pContainer, NonNullList<Ingredient> ingredients) {
-        consumeIngredients(pContainer.getContainerSize(), pContainer::getItem, ingredients);
-    }
-    public static void extractIngredients(Container pContainer, NonNullList<Ingredient> ingredients) {
-        consumeIngredients(pContainer.getContainerSize(), pContainer::getItem, ingredients);
-    }
-
-    private static void consumeIngredients(int pContainerSize, Function<Integer, ItemStack> getItemStackCallback, NonNullList<Ingredient> ingredients) {
-        // 计算所有需要的原料数量
-        Map<ItemStack, Integer> requiredIngredients = new HashMap<>();
-        for (Ingredient ingredient : ingredients) {
-            int requiredAmount = ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient
-                    ? amountIngredient.amount() : 1;
-            ItemStack[] items = ingredient.getItems();
-            for (ItemStack item : items) {
-                requiredIngredients.put(item, requiredIngredients.getOrDefault(item, 0) + requiredAmount);
+    private static void consumeIngredients(int pContainerSize, Int2ObjectFunction<ItemStack> getItemStackCallback, NonNullList<Ingredient> ingredients) {
+        Object2ObjectOpenHashMap<Integer, IntArrayList> requires2Slots = new Object2ObjectOpenHashMap<>();
+        outer:
+        for (int j = 0; j < ingredients.size(); j++) {
+            Ingredient ingredient = ingredients.get(j);
+            for (int i = 0; i < pContainerSize; i++) {
+                ItemStack itemStack = getItemStackCallback.apply(i);
+                if (itemStack.isEmpty()) continue;
+                if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
+                    if (amountIngredient.ingredient().test(itemStack)) {
+                        requires2Slots.computeIfAbsent(j, ai -> new IntArrayList()).add(i);
+                    }
+                } else if (ingredient.test(itemStack)) {
+                    itemStack.shrink(1);
+                    continue outer;
+                }
             }
         }
-        // 逐个消耗
-        for (Map.Entry<ItemStack, Integer> entry : requiredIngredients.entrySet()) {
-            ItemStack requiredItem = entry.getKey();
-            int amountToConsume = entry.getValue();
-            for (int index = 0; index < pContainerSize; index++) {
-                ItemStack itemStack = getItemStackCallback.apply(index);
-                if (!itemStack.isEmpty() && requiredItem.getItem() == itemStack.getItem()) {
-                    int availableAmount = itemStack.getCount();
-                    // 实际消耗
-                    int amountToShrink = Math.min(availableAmount, amountToConsume);
-                    itemStack.shrink(amountToShrink);
-                    amountToConsume -= amountToShrink;
-                    if (amountToConsume <= 0) break;
+        for (Object2ObjectMap.Entry<Integer, IntArrayList> entry : requires2Slots.object2ObjectEntrySet()) {
+            int requires = ((AmountIngredient) ingredients.get(entry.getKey()).getCustomIngredient()).amount();
+            int[] slots = entry.getValue().toIntArray();
+            int avg = requires / slots.length;
+            int rem = requires % slots.length;
+            boolean shouldConsumeRem = false;
+            if (rem > 0) {
+                shouldConsumeRem = true;
+                rem += avg;
+            }
+            for (int slot : slots) {
+                ItemStack itemStack = getItemStackCallback.apply(slot);
+                if (shouldConsumeRem && itemStack.getCount() >= rem) {
+                    itemStack.shrink(rem);
+                    shouldConsumeRem = false;
+                } else {
+                    itemStack.shrink(avg);
                 }
             }
         }
@@ -112,12 +108,20 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
 
     @Override
     public @NotNull ItemStack assemble(@NotNull RecipeInput input, HolderLookup.@NotNull Provider registries) {
-        extractIngredients(input, ingredients);
         return getResultItem(registries).copy();
     }
 
-    public ItemStack assemble(RecipeInput container, Level level) {
-        return assemble(container, level.registryAccess());
+    public ItemStack assembleAndExtract(RecipeInput input, HolderLookup.Provider registries) {
+        extractInput(input, ingredients);
+        return assemble(input, registries);
+    }
+
+    public static void extractInput(RecipeInput input, NonNullList<Ingredient> ingredients) {
+        consumeIngredients(input.size(), input::getItem, ingredients);
+    }
+
+    public static void extractContainer(Container container, NonNullList<Ingredient> ingredients) {
+        consumeIngredients(container.getContainerSize(), container::getItem, ingredients);
     }
 
     @Override
