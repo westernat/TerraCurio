@@ -47,17 +47,19 @@ public class WorkshopScreen extends AbstractContainerScreen<WorkshopMenu> {
             this.upItem = null;
             this.downItem = null;
         }
-        String text = menu.getRecipesAmount() == 0 ? "0/0" : menu.getCurrentIndex() + 1 + "/" + menu.getRecipesAmount();
-        pGuiGraphics.drawString(font, text, leftPos + 144, topPos + 37 + (16 - font.lineHeight) / 2, 4210752, false);
+        if (menu.getRecipesAmount() > 0) {
+            String text = menu.getCurrentIndex() + 1 + "/" + menu.getRecipesAmount();
+            pGuiGraphics.drawString(font, text, leftPos + 144, topPos + 37 + (16 - font.lineHeight) / 2, 4210752, false);
+        }
     }
 
     @Override
     protected void renderBg(@NotNull GuiGraphics pGuiGraphics, float pPartialTick, int pMouseX, int pMouseY) {
         pGuiGraphics.blit(BACKGROUND, leftPos, topPos, 0, 0, imageWidth, imageHeight);
         if (upButtonClicked) {
-            pGuiGraphics.blit(BACKGROUND, leftPos + 128, topPos + 25, 177, 0, 10, 7);
+            pGuiGraphics.blit(BACKGROUND, leftPos + 128, topPos + 23, 177, 0, 10, 8);
         } else if (downButtonClicked) {
-            pGuiGraphics.blit(BACKGROUND, leftPos + 128, topPos + 54, 177, 8, 10, 7);
+            pGuiGraphics.blit(BACKGROUND, leftPos + 128, topPos + 54, 177, 8, 10, 9);
         }
     }
 
@@ -98,7 +100,7 @@ public class WorkshopScreen extends AbstractContainerScreen<WorkshopMenu> {
     }
 
     private static boolean isOverUpButton(int x, int y) {
-        return x >= 128 && x <= 138 && y >= 25 && y <= 32;
+        return x >= 128 && x <= 138 && y >= 23 && y <= 30;
     }
 
     private static boolean isOverDownButton(int x, int y) {

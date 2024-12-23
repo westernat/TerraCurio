@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
 public class TerraCurio {
     public static final String MODID = "terra_curio";
     public static final Logger LOGGER = LoggerFactory.getLogger("Terra Curio");
+    public static final String CURIO_SLOT = "accessory";
     private static Boolean isConfluenceLoaded;
 
     public TerraCurio(IEventBus eventBus, ModContainer modContainer) {

@@ -10,23 +10,16 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class AirHopHelper {
-    private static Boolean isLoaded;
+    public static final boolean LOADED = ModList.get().isLoaded("airhop");
     private static Method canJump;
     private static Method isSaturated;
     private static Method getHighestLevel;
     private static Method getOrDefault;
     private static Object AIR_HOPS_ATTACHMENT;
 
-    public static boolean isLoaded() {
-        if (isLoaded == null) {
-            isLoaded = ModList.get().isLoaded("airhop");
-        }
-        return isLoaded;
-    }
-
     public static boolean notFinishJump(Player player) {
         try {
-             if (canJump == null) {
+            if (canJump == null) {
                 ClassLoader classLoader = AirHopHelper.class.getClassLoader();
                 Class<?> AirHopClientHandler = classLoader.loadClass("fuzs.airhop.client.handler.AirHopClientHandler");
                 canJump = AirHopClientHandler.getDeclaredMethod("canJump", Player.class);

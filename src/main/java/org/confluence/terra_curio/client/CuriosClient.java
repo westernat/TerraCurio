@@ -29,10 +29,12 @@ public final class CuriosClient {
         CuriosRendererRegistry.register(TCItems.MAGMA_SKULL.get(), () -> new MagmaSkullRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.FLURRY_BOOTS.get(), () -> new FlurryBootsRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.HERMES_BOOTS.get(), () -> new HermesBootsRenderer(entityModels));
-        CuriosRendererRegistry.register(TCItems.OBSIDIAN_SKULL.get(), () -> new ObsidianSkullRenderer(entityModels));
+        //CuriosRendererRegistry.register(TCItems.OBSIDIAN_SKULL.get(), () -> new ObsidianSkullRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.SHIELD_OF_CTHULHU.get(), () -> new ShieldOfCthulhuRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.NEPTUNES_SHELL.get(), () -> new MermanRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.MOON_CHARM.get(), () -> new WerewolfRenderer(entityModels));
+        CuriosRendererRegistry.register(TCItems.MOON_SHELL.get(), () -> new MoonShellRenderer(entityModels));
+        CuriosRendererRegistry.register(TCItems.CELESTIAL_SHELL.get(), () -> new MoonShellRenderer(entityModels));
     }
 
     public static void registerLayers(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> layerDefinition) {
@@ -42,7 +44,7 @@ public final class CuriosClient {
         layerDefinition.accept(MagmaSkullModel.LAYER_LOCATION, MagmaSkullModel::createBodyLayer);
         layerDefinition.accept(FlurryBootsModel.LAYER_LOCATION, FlurryBootsModel::createBodyLayer);
         layerDefinition.accept(HermesBootsModel.LAYER_LOCATION, HermesBootsModel::createBodyLayer);
-        layerDefinition.accept(ObsidianSkullModel.LAYER_LOCATION, ObsidianSkullModel::createBodyLayer);
+        //layerDefinition.accept(ObsidianSkullModel.LAYER_LOCATION, ObsidianSkullModel::createBodyLayer);
         layerDefinition.accept(ShieldOfCthulhuModel.LAYER_LOCATION, ShieldOfCthulhuModel::createBodyLayer);
         layerDefinition.accept(MermanModel.LAYER_LOCATION, MermanModel::createBodyLayer);
         layerDefinition.accept(WerewolfModel.LAYER_LOCATION, WerewolfModel::createBodyLayer);

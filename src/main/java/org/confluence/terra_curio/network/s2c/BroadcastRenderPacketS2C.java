@@ -15,23 +15,26 @@ import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
-public record LuminancePacketS2C(int playerId, int luminance) implements CustomPacketPayload {
-    public static final Type<LuminancePacketS2C> TYPE = new Type<>(TerraCurio.asResource("luminance"));
-    public static final StreamCodec<ByteBuf, LuminancePacketS2C> STREAM_CODEC = StreamCodec.composite(
+public record BroadcastRenderPacketS2C(int playerId, short render) implements CustomPacketPayload {
+    public static final short LUMINANCE_MASK = 0b001111;
+    public static final short NEPTUNES_SHELL = 0b010000;
+    public static final short MOON_CHARM = 0b100000;
+    public static final Type<BroadcastRenderPacketS2C> TYPE = new Type<>(TerraCurio.asResource("broadcast_render"));
+    public static final StreamCodec<ByteBuf, BroadcastRenderPacketS2C> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.INT, p -> p.playerId,
-            ByteBufCodecs.INT, p -> p.luminance,
-            LuminancePacketS2C::new
+            ByteBufCodecs.SHORT, p -> p.render,
+            BroadcastRenderPacketS2C::new
     );
 
     @Override
-    public @NotNull Type<LuminancePacketS2C> type() {
+    public @NotNull Type<BroadcastRenderPacketS2C> type() {
         return TYPE;
     }
 
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player().isLocalPlayer()) {
-                TCClientPacketHandler.handleLuminance(this, context.player());
+                TCClientPacketHandler.handleRender(this, context.player());
             }
         }).exceptionally(e -> {
             context.disconnect(Component.translatable("neoforge.network.invalid_flow", e.getMessage()));
@@ -41,8 +44,9 @@ public record LuminancePacketS2C(int playerId, int luminance) implements CustomP
 
     public static void sendToAll(ServerPlayer serverPlayer) {
         if (ServerLifecycleHooks.getCurrentServer() != null) {
-            Integer luminance = TCUtils.getAccessoriesValue(serverPlayer, TCItems.LUMINANCE);
-            PacketDistributor.sendToAllPlayers(new LuminancePacketS2C(serverPlayer.getId(), luminance));
+            short luminance = (short) (TCUtils.getAccessoriesValue(serverPlayer, TCItems.LUMINANCE) & LUMINANCE_MASK);
+            short neptunesShell = TCUtils.hasAccessoriesType(serverPlayer, TCItems.NEPTUNES$SHELL) ? NEPTUNES_SHELL : 0;
+            PacketDistributor.sendToAllPlayers(new BroadcastRenderPacketS2C(serverPlayer.getId(), (short) (luminance | neptunesShell)));
         }
     }
 }

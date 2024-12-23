@@ -25,6 +25,7 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
     private static final ResourceLocation ENABLED = TerraCurio.asResource("textures/gui/information/enabled.png");
     public static final float SCALE = 10.0F / 18.0F;
     public static int mouseScrollY = 0;
+    public static boolean isShowing = false;
 
     private final List<TooltipComponentsValue.Storage> storages;
     private int mouseScrolledY = -1;
@@ -42,19 +43,22 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
     @Override
     public int getWidth(@NotNull Font font) {
         if (isShiftKeyDown()) {
+            isShowing = true;
             for (TooltipComponentsValue.Storage storage : storages) {
                 int w = font.width(storage.text());
                 if (w > width) this.width = w;
             }
             this.width += 10;
             return width;
+        } else {
+            isShowing = false;
         }
         return font.width(TOOLTIP);
     }
 
     @Override
     public void renderText(@NotNull Font font, int mouseX, int mouseY, @NotNull Matrix4f matrix, MultiBufferSource.@NotNull BufferSource bufferSource) {
-        if (isShiftKeyDown()) {
+        if (isShowing) {
             int size = storages.size();
             for (int i = 0; i < size; i++) {
                 font.drawInBatch(storages.get(i).text(), mouseX + 10, mouseY + i * 10, -1, true, matrix, bufferSource, Font.DisplayMode.NORMAL, 0, 0xF000F0);
@@ -73,7 +77,7 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
         } else if (mouseScrollY < 0) {
             mouseScrollY = size;
         }
-        if (isShiftKeyDown()) {
+        if (isShowing) {
             for (int i = 0; i < size; i++) {
                 PoseStack pose = guiGraphics.pose();
                 pose.pushPose();

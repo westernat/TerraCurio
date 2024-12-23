@@ -26,10 +26,22 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class ClientLivingEntityMixin implements IClientLivingEntity, SelfGetter<LivingEntity> {
     @Unique
     private FluidState terra_curio$lastWalkedFluidState = null;
+    @Unique
+    private boolean terra_curio$showingCosmetic = false;
 
     @Override
     public void terra_curio$resetLastWalkedFluidState() {
         this.terra_curio$lastWalkedFluidState = null;
+    }
+
+    @Override
+    public void terra_curio$setShowingCosmetic(boolean showing) {
+        this.terra_curio$showingCosmetic = showing;
+    }
+
+    @Override
+    public boolean terra_curio$isShowingCosmetic() {
+        return terra_curio$showingCosmetic;
     }
 
     @Inject(method = "checkFallDamage", at = @At("HEAD"))
@@ -69,7 +81,7 @@ public abstract class ClientLivingEntityMixin implements IClientLivingEntity, Se
         return original.call(instance, fluidState);
     }
 
-    @ModifyExpressionValue(method = "travel", at= @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1))
+    @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1))
     private boolean neptunesShell(boolean original) {
         return original || (self().getClass() == LocalPlayer.class && TCClientPacketHandler.isHasNeptunesShell());
     }

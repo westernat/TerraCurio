@@ -25,8 +25,13 @@ public class WorkshopRecipe extends AbstractAmountRecipe {
     }
 
     @Override
+    public @NotNull String getGroup() {
+        return "workshop";
+    }
+
+    @Override
     public @NotNull ItemStack getToastSymbol() {
-        return TCBlocks.WORKSHOP.get().asItem().getDefaultInstance();
+        return TCBlocks.WORKSHOP.toStack();
     }
 
     @Override
@@ -39,7 +44,7 @@ public class WorkshopRecipe extends AbstractAmountRecipe {
         return TCRecipes.WORKSHOP_TYPE.get();
     }
 
-    public static class Serializer extends AbstractAmountRecipe.Serializer<WorkshopRecipe> {
+    public static class Serializer implements RecipeSerializer<WorkshopRecipe> {
         public static final MapCodec<WorkshopRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
                 Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").flatXmap(list -> {
@@ -47,16 +52,11 @@ public class WorkshopRecipe extends AbstractAmountRecipe {
                     if (ingredients.length == 0) {
                         return DataResult.error(() -> "No ingredients for workshop recipe");
                     } else {
-                        return ingredients.length > 12 ? DataResult.error(() -> "Too many ingredients for workshop recipe. The maximum is: 12") : DataResult.success(NonNullList.of(AmountIngredient.EMPTY, ingredients));
+                        return DataResult.success(NonNullList.of(AmountIngredient.EMPTY, ingredients));
                     }
                 }, DataResult::success).forGetter(recipe -> recipe.ingredients)
         ).apply(instance, WorkshopRecipe::new));
         public static final StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> STREAM_CODEC = StreamCodec.of(Serializer::toNetwork, Serializer::fromNetwork);
-
-        @Override
-        protected WorkshopRecipe newInstance(ItemStack pResult, NonNullList<Ingredient> pIngredients) {
-            return new WorkshopRecipe(pResult, pIngredients);
-        }
 
         @Override
         public @NotNull MapCodec<WorkshopRecipe> codec() {

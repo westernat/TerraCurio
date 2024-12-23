@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.item.curio.movement;
 
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
@@ -11,8 +12,8 @@ public class CloudInABottle extends BaseCurioItem {
     }
 
     @Override
-    protected void particleTick(LivingEntity living, ParticleEmitter emitter) {
-        super.particleTick(living, emitter);
+    protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
+        super.particleTick(living, emitter, particle);
         if (PlayerJumpHandler.isOnCloudJump) {
             emitter.active = true;
             PlayerJumpHandler.isOnCloudJump = false;

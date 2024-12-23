@@ -56,7 +56,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
-        if (builder.particle == null) return;
+        if (builder == null || builder.particle == null) return;
         LivingEntity living = slotContext.entity();
         if (living.level().isClientSide) {
             ILivingEntity iLiving = (ILivingEntity) living;
@@ -68,14 +68,15 @@ public class BaseCurioItem extends Item implements ICurioItem {
                 PSGameClient.LOADER.addEmitter(emitter, false);
                 emitters.put(builder.particle, emitter);
             }
-            particleTick(living, emitter);
+            particleTick(living, emitter, builder.particle);
+            emitter.active &= slotContext.visible();
         }
     }
 
     @OnlyIn(Dist.CLIENT)
-    protected void particleTick(LivingEntity living, ParticleEmitter emitter) {
+    protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
         if (emitter.isRemoved()) {
-            ((ILivingEntity) living).terra_curio$getOrCreateParticleEmitters().remove(builder.particle);
+            ((ILivingEntity) living).terra_curio$getOrCreateParticleEmitters().remove(particle);
         }
     }
 
@@ -120,7 +121,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public boolean makesPiglinsNeutral(SlotContext slotContext, ItemStack stack) {
-        return builder.makePiglinsNeutral;
+        return builder != null && builder.makePiglinsNeutral;
     }
 
     @Override

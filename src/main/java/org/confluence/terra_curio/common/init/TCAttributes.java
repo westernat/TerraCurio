@@ -126,12 +126,14 @@ public final class TCAttributes {
         return random.nextFloat() < attributeInstance.getValue();
     }
 
-    public static float applyRangedDamage(LivingEntity living, DamageSource damageSource, float amount) {
+    public static float applyRangedDamage(DamageSource damageSource, float amount) {
         if (hasCustomAttribute(RANGED_DAMAGE)) return amount;
-        if (damageSource.is(DamageTypeTags.IS_PROJECTILE)) return amount;
-        AttributeInstance attributeInstance = living.getAttribute(RANGED_DAMAGE);
-        if (attributeInstance == null) return amount;
-        return amount * (float) attributeInstance.getValue();
+        if (damageSource.is(DamageTypeTags.IS_PROJECTILE) && damageSource.getEntity() instanceof LivingEntity living) {
+            AttributeInstance attributeInstance = living.getAttribute(RANGED_DAMAGE);
+            if (attributeInstance == null) return amount;
+            return amount * (float) attributeInstance.getValue();
+        }
+        return amount;
     }
 
     public static float applyMagicDamage(DamageSource damageSource, float amount) {

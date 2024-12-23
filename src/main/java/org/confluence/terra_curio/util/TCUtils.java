@@ -194,7 +194,7 @@ public final class TCUtils {
         RightClickSubtractorPacketS2C.sendToClient(serverPlayer);
         FluidWalkUpdatePacketS2C.sendToClient(serverPlayer);
         InfiniteFlightPacketS2C.sendToClient(serverPlayer);
-        LuminancePacketS2C.sendToAll(serverPlayer);
+        BroadcastRenderPacketS2C.sendToAll(serverPlayer);
     }
 
     public static @NotNull CompoundTag getItemStackNbt(ItemStack itemStack) {

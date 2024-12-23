@@ -11,11 +11,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.model.accessory.MermanModel;
+import org.confluence.terra_curio.mixed.IClientLivingEntity;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.client.ICurioRenderer;
 
 public class MermanRenderer implements ICurioRenderer {
-    private static final RenderType CUTOUT = RenderType.entityCutout(TerraCurio.asResource("textures/curio/merman.png"));
+    static final RenderType CUTOUT = RenderType.entityCutout(TerraCurio.asResource("textures/curio/merman.png"));
 
     private final MermanModel model;
 
@@ -29,9 +30,8 @@ public class MermanRenderer implements ICurioRenderer {
         if (living.isInWaterOrBubble()) {
             ICurioRenderer.followBodyRotations(living, model);
             ICurioRenderer.followHeadRotations(living, model.head);
-            ICurioRenderer.rotateIfSneaking(poseStack, living);
-            ICurioRenderer.translateIfSneaking(poseStack, living);
             model.renderToBuffer(poseStack, multiBufferSource.getBuffer(CUTOUT), light, OverlayTexture.NO_OVERLAY);
+            ((IClientLivingEntity) living).terra_curio$setShowingCosmetic(true);
         }
     }
 }

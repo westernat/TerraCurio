@@ -11,7 +11,6 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCMenus;
 import org.confluence.terra_curio.common.init.TCRecipes;
-import org.confluence.terra_curio.common.recipe.AbstractAmountRecipe;
 import org.confluence.terra_curio.common.recipe.WorkshopRecipe;
 import org.jetbrains.annotations.NotNull;
 
@@ -21,8 +20,8 @@ import java.util.List;
 public class WorkshopMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
     private final Player player;
-    private final CraftingContainer craftSlots = new TransientCraftingContainer(this, 3, 4);
-    private final ResultContainer resultSlot = new ResultContainer();
+    private final RecipeInputContainer input = new RecipeInputContainer(this, 12);
+    private final ResultContainer result = new ResultContainer();
     private final DataSlot selectedRecipeIndex = DataSlot.standalone();
     private List<RecipeHolder<WorkshopRecipe>> recipes = new ArrayList<>();
 
@@ -40,29 +39,25 @@ public class WorkshopMenu extends AbstractContainerMenu {
         super(TCMenus.WORKSHOP.get(), pContainerId);
         this.player = pPlayerInventory.player;
         this.access = pAccess;
-        addSlot(new AmountResultSlot(craftSlots, resultSlot, 0, 62, 35) {
+        addSlot(new AmountResultSlot(input, result, 0, 62, 35) {
             @Override
-            public void onTake(@NotNull Player pPlayer, @NotNull ItemStack pStack) {
-                if (recipe != null) {
-                    AbstractAmountRecipe.extractIngredients(crafting, recipe.getIngredients());
-                    WorkshopMenu.this.setupResultSlot();
-                    WorkshopMenu.this.slotsChanged(crafting);
-                }
+            protected void updateMenu() {
+                WorkshopMenu.this.setupResultSlot();
             }
         });
 
-        addSlot(new Slot(craftSlots, 0, 35, 8));
-        addSlot(new Slot(craftSlots, 1, 53, 8));
-        addSlot(new Slot(craftSlots, 2, 71, 8));
-        addSlot(new Slot(craftSlots, 3, 89, 8));
-        addSlot(new Slot(craftSlots, 4, 89, 26));
-        addSlot(new Slot(craftSlots, 5, 89, 44));
-        addSlot(new Slot(craftSlots, 6, 89, 62));
-        addSlot(new Slot(craftSlots, 7, 71, 62));
-        addSlot(new Slot(craftSlots, 8, 53, 62));
-        addSlot(new Slot(craftSlots, 9, 35, 62));
-        addSlot(new Slot(craftSlots, 10, 35, 44));
-        addSlot(new Slot(craftSlots, 11, 35, 26));
+        addSlot(new Slot(input, 0, 35, 8));
+        addSlot(new Slot(input, 1, 53, 8));
+        addSlot(new Slot(input, 2, 71, 8));
+        addSlot(new Slot(input, 3, 89, 8));
+        addSlot(new Slot(input, 4, 89, 26));
+        addSlot(new Slot(input, 5, 89, 44));
+        addSlot(new Slot(input, 6, 89, 62));
+        addSlot(new Slot(input, 7, 71, 62));
+        addSlot(new Slot(input, 8, 53, 62));
+        addSlot(new Slot(input, 9, 35, 62));
+        addSlot(new Slot(input, 10, 35, 44));
+        addSlot(new Slot(input, 11, 35, 26));
 
         for (int k = 0; k < 3; k++) {
             for (int l = 0; l < 9; l++) {
@@ -86,7 +81,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
 
     public ItemStack getUpResult() {
         int index = getUpIndex();
-        if (index == -1) return resultSlot.getItem(0);
+        if (index == -1) return result.getItem(0);
         return recipes.get(index).value().getResultItem(null);
     }
 
@@ -106,7 +101,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
 
     public ItemStack getDownResult() {
         int index = getDownIndex();
-        if (index == -1) return resultSlot.getItem(0);
+        if (index == -1) return result.getItem(0);
         return recipes.get(index).value().getResultItem(null);
     }
 
@@ -143,13 +138,13 @@ public class WorkshopMenu extends AbstractContainerMenu {
             WorkshopRecipe recipe = recipes.get(selectedRecipeIndex.get()).value();
             ItemStack itemStack = recipe.getResultItem(null).copy();
             if (itemStack.isItemEnabled(player.level().enabledFeatures())) {
-                resultSlot.setItem(0, itemStack);
+                result.setItem(0, itemStack);
                 setCurrentRecipe(recipe);
             } else {
-                resultSlot.setItem(0, ItemStack.EMPTY);
+                result.setItem(0, ItemStack.EMPTY);
             }
         } else {
-            resultSlot.setItem(0, ItemStack.EMPTY);
+            result.setItem(0, ItemStack.EMPTY);
         }
         broadcastChanges();
     }
@@ -162,17 +157,17 @@ public class WorkshopMenu extends AbstractContainerMenu {
     @Override
     public void removed(@NotNull Player pPlayer) {
         super.removed(pPlayer);
-        access.execute((level, blockPos) -> clearContainer(pPlayer, craftSlots));
+        access.execute((level, blockPos) -> clearContainer(pPlayer, input));
     }
 
     @Override
     public boolean canTakeItemForPickAll(@NotNull ItemStack pStack, Slot pSlot) {
-        return pSlot.container != resultSlot && super.canTakeItemForPickAll(pStack, pSlot);
+        return pSlot.container != result && super.canTakeItemForPickAll(pStack, pSlot);
     }
 
     @Override
     public void slotsChanged(@NotNull Container pContainer) {
-        this.recipes = player.level().getRecipeManager().getRecipesFor(TCRecipes.WORKSHOP_TYPE.get(), craftSlots.asCraftInput(), player.level());
+        this.recipes = player.level().getRecipeManager().getRecipesFor(TCRecipes.WORKSHOP_TYPE.get(), input, player.level());
         if (selectedRecipeIndex.get() >= recipes.size()) selectedRecipeIndex.set(recipes.size() - 1);
         access.execute((level, pos) -> {
             if (player instanceof ServerPlayer serverPlayer) {
@@ -183,7 +178,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
                     itemStack = recipe.getResultItem(null).copy();
                     setCurrentRecipe(recipe);
                 }
-                resultSlot.setItem(0, itemStack);
+                result.setItem(0, itemStack);
                 setRemoteSlot(0, itemStack);
                 serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 0, itemStack));
             }

@@ -1,11 +1,14 @@
 package org.confluence.terra_curio.client.handler;
 
+import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2BooleanMap;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
@@ -23,12 +26,13 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForgeMod;
+import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
 import org.confluence.terra_curio.mixed.IClientLivingEntity;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
+import org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C;
 import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
-import org.confluence.terra_curio.network.s2c.LuminancePacketS2C;
 import org.confluence.terra_curio.network.s2c.RightClickSubtractorPacketS2C;
 import org.confluence.terra_curio.network.s2c.SetItemEntityPickupDelayPacketS2C;
 import org.confluence.terra_curio.util.CuriosUtils;
@@ -36,6 +40,8 @@ import org.confluence.terra_curio.util.CuriosUtils;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.LUMINANCE_MASK;
+import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.NEPTUNES_SHELL;
 import static org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C.*;
 
 @OnlyIn(Dist.CLIENT)
@@ -47,6 +53,7 @@ public final class TCClientPacketHandler {
     private static boolean canFloating = false;
     public static boolean floating = false;
     private static boolean hasNeptunesShell = false;
+    private static final Int2BooleanMap remoteNeptuneShell = new Int2BooleanArrayMap();
     private static int rightClickSubtractor = 0;
     private static int luminance = 0;
     private static final Int2IntMap remoteLuminance = new Int2IntArrayMap();
@@ -78,8 +85,8 @@ public final class TCClientPacketHandler {
         return hasNeptunesShell;
     }
 
-    public static boolean canApplyNeptunesShell(LivingEntity living) {
-        return hasNeptunesShell && living.getClass() == LocalPlayer.class && living.isInWaterOrBubble();
+    public static boolean canShowNeptunesShell(LivingEntity living) {
+        return ((hasNeptunesShell && living.getClass() == LocalPlayer.class) || (living.getClass() == RemotePlayer.class && remoteNeptuneShell.get(living.getId()))) && living.isInWaterOrBubble();
     }
 
     public static int getRightClickSubtractor() {
@@ -107,7 +114,6 @@ public final class TCClientPacketHandler {
         GravitationHandler.hasGlobe = (item & GRAVITY_GLOBE) == GRAVITY_GLOBE;
         hasMagiluminescence = (item & MAGILUMINESCENCE) == MAGILUMINESCENCE;
         canFloating = (item & FLOAT_ON_LIQUID_SURFACE) == FLOAT_ON_LIQUID_SURFACE;
-        hasNeptunesShell = (item & NEPTUNES_SHELL) == NEPTUNES_SHELL;
     }
 
     public static void handleItemPickupDelay(SetItemEntityPickupDelayPacketS2C packet) {
@@ -146,8 +152,8 @@ public final class TCClientPacketHandler {
     }
 
     private static void applyAutoAttack(Minecraft minecraft, LocalPlayer localPlayer) {
-        if (minecraft.gameMode == null || minecraft.gameMode.isDestroying()) return;
-        if (BetterCombatHelper.isLoaded()) {
+        if (!TCClientConfigs.autoAttack || minecraft.gameMode == null || minecraft.gameMode.isDestroying()) return;
+        if (BetterCombatHelper.LOADED) {
             ItemStack itemStack = localPlayer.getItemInHand(InteractionHand.MAIN_HAND);
             if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
         }
@@ -181,11 +187,15 @@ public final class TCClientPacketHandler {
         });
     }
 
-    public static void handleLuminance(LuminancePacketS2C packet, Player player) {
+    public static void handleRender(BroadcastRenderPacketS2C packet, Player player) {
+        short render = packet.render();
         if (player == Minecraft.getInstance().player) {
-            luminance = packet.luminance();
+            luminance = render & LUMINANCE_MASK;
+            hasNeptunesShell = (render & NEPTUNES_SHELL) == NEPTUNES_SHELL;
         } else {
-            remoteLuminance.put(packet.playerId(), packet.luminance());
+            int playerId = packet.playerId();
+            remoteLuminance.put(playerId, render & LUMINANCE_MASK);
+            remoteNeptuneShell.put(playerId, (render & NEPTUNES_SHELL) == NEPTUNES_SHELL);
         }
     }
 
@@ -203,5 +213,6 @@ public final class TCClientPacketHandler {
         pickupDelayCounter.clear();
         walkableFluidStates.clear();
         remoteLuminance.clear();
+        remoteNeptuneShell.clear();
     }
 }
