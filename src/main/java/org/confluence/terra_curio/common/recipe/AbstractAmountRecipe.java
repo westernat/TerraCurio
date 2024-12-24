@@ -90,26 +90,26 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
         for (Tuple<Integer, IntArraySet> tuple : requires2Slots.values()) {
             int requires = tuple.getA();
             int[] slots = tuple.getB().toIntArray();
-            int avg, rem;
-            boolean shouldConsumeRem = false;
             if (shaped) {
-                avg = requires;
-                rem = 0;
+                for (int slot : slots) {
+                    getItemStackCallback.apply(slot).shrink(requires);
+                }
             } else {
-                avg = requires / slots.length;
-                rem = requires % slots.length;
+                int avg = requires / slots.length;
+                int rem = requires % slots.length;
+                boolean shouldConsumeRem = false;
                 if (rem > 0) {
                     shouldConsumeRem = true;
                     rem += avg;
                 }
-            }
-            for (int slot : slots) {
-                ItemStack itemStack = getItemStackCallback.apply(slot);
-                if (shouldConsumeRem && itemStack.getCount() >= rem) {
-                    itemStack.shrink(rem);
-                    shouldConsumeRem = false;
-                } else {
-                    itemStack.shrink(avg);
+                for (int slot : slots) {
+                    ItemStack itemStack = getItemStackCallback.apply(slot);
+                    if (shouldConsumeRem && itemStack.getCount() >= rem) {
+                        itemStack.shrink(rem);
+                        shouldConsumeRem = false;
+                    } else {
+                        itemStack.shrink(avg);
+                    }
                 }
             }
         }
