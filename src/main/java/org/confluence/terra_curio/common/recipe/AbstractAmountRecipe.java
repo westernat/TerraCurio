@@ -4,10 +4,11 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectFunction;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.util.Tuple;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 
 public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
+    private static final Object2ObjectFunction<Ingredient, Tuple<Integer, IntArraySet>> FUNCTION = I -> new Tuple<>(((Ingredient) I).getCustomIngredient() instanceof AmountIngredient ai ? ai.amount() : 1, new IntArraySet());
     public final ItemStack result;
     public final NonNullList<Ingredient> ingredients;
 
@@ -67,28 +69,27 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     }
 
     private static void consumeIngredients(int pContainerSize, Int2ObjectFunction<ItemStack> getItemStackCallback, NonNullList<Ingredient> ingredients, boolean shaped) {
-        Object2ObjectOpenHashMap<AmountIngredient, IntArraySet> requires2Slots = new Object2ObjectOpenHashMap<>();
+        Object2ObjectOpenHashMap<Ingredient, Tuple<Integer, IntArraySet>> requires2Slots = new Object2ObjectOpenHashMap<>();
         outer:
         for (Ingredient ingredient : ingredients) {
             for (int i = 0; i < pContainerSize; i++) {
                 ItemStack itemStack = getItemStackCallback.apply(i);
                 if (itemStack.isEmpty()) continue;
-                if (ingredient.getCustomIngredient() instanceof AmountIngredient AI) {
-                    if (!shaped && AI.amount() == requires2Slots.computeIfAbsent(AI, ai -> new IntArraySet()).size()) {
+                if (ingredient.getCustomIngredient() instanceof AmountIngredient ai) {
+                    if (!shaped && ai.amount() == requires2Slots.computeIfAbsent(ingredient, FUNCTION).getB().size()) {
                         continue outer;
                     }
-                    if (AI.ingredient().test(itemStack)) {
-                        requires2Slots.computeIfAbsent(AI, ai -> new IntArraySet()).add(i);
+                    if (ai.ingredient().test(itemStack)) {
+                        requires2Slots.computeIfAbsent(ingredient, FUNCTION).getB().add(i);
                     }
                 } else if (ingredient.test(itemStack)) {
-                    itemStack.shrink(1);
-                    continue outer;
+                    requires2Slots.computeIfAbsent(ingredient, FUNCTION).getB().add(i);
                 }
             }
         }
-        for (Object2ObjectMap.Entry<AmountIngredient, IntArraySet> entry : requires2Slots.object2ObjectEntrySet()) {
-            int requires = entry.getKey().amount();
-            int[] slots = entry.getValue().toIntArray();
+        for (Tuple<Integer, IntArraySet> tuple : requires2Slots.values()) {
+            int requires = tuple.getA();
+            int[] slots = tuple.getB().toIntArray();
             int avg, rem;
             boolean shouldConsumeRem = false;
             if (shaped) {
