@@ -1,7 +1,7 @@
 package org.confluence.terra_curio.common.recipe;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
@@ -66,17 +66,19 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
         return true;
     }
 
-    private static void consumeIngredients(int pContainerSize, Int2ObjectFunction<ItemStack> getItemStackCallback, NonNullList<Ingredient> ingredients) {
-        Object2ObjectOpenHashMap<Integer, IntArrayList> requires2Slots = new Object2ObjectOpenHashMap<>();
+    private static void consumeIngredients(int pContainerSize, Int2ObjectFunction<ItemStack> getItemStackCallback, NonNullList<Ingredient> ingredients, boolean shaped) {
+        Object2ObjectOpenHashMap<AmountIngredient, IntArraySet> requires2Slots = new Object2ObjectOpenHashMap<>();
         outer:
-        for (int j = 0; j < ingredients.size(); j++) {
-            Ingredient ingredient = ingredients.get(j);
+        for (Ingredient ingredient : ingredients) {
             for (int i = 0; i < pContainerSize; i++) {
                 ItemStack itemStack = getItemStackCallback.apply(i);
                 if (itemStack.isEmpty()) continue;
-                if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
-                    if (amountIngredient.ingredient().test(itemStack)) {
-                        requires2Slots.computeIfAbsent(j, ai -> new IntArrayList()).add(i);
+                if (ingredient.getCustomIngredient() instanceof AmountIngredient AI) {
+                    if (!shaped && AI.amount() == requires2Slots.computeIfAbsent(AI, ai -> new IntArraySet()).size()) {
+                        continue outer;
+                    }
+                    if (AI.ingredient().test(itemStack)) {
+                        requires2Slots.computeIfAbsent(AI, ai -> new IntArraySet()).add(i);
                     }
                 } else if (ingredient.test(itemStack)) {
                     itemStack.shrink(1);
@@ -84,15 +86,21 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
                 }
             }
         }
-        for (Object2ObjectMap.Entry<Integer, IntArrayList> entry : requires2Slots.object2ObjectEntrySet()) {
-            int requires = ((AmountIngredient) ingredients.get(entry.getKey()).getCustomIngredient()).amount();
+        for (Object2ObjectMap.Entry<AmountIngredient, IntArraySet> entry : requires2Slots.object2ObjectEntrySet()) {
+            int requires = entry.getKey().amount();
             int[] slots = entry.getValue().toIntArray();
-            int avg = requires / slots.length;
-            int rem = requires % slots.length;
+            int avg, rem;
             boolean shouldConsumeRem = false;
-            if (rem > 0) {
-                shouldConsumeRem = true;
-                rem += avg;
+            if (shaped) {
+                avg = requires;
+                rem = 0;
+            } else {
+                avg = requires / slots.length;
+                rem = requires % slots.length;
+                if (rem > 0) {
+                    shouldConsumeRem = true;
+                    rem += avg;
+                }
             }
             for (int slot : slots) {
                 ItemStack itemStack = getItemStackCallback.apply(slot);
@@ -112,16 +120,16 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     }
 
     public ItemStack assembleAndExtract(RecipeInput input, HolderLookup.Provider registries) {
-        extractInput(input, ingredients);
+        extractInput(input, ingredients, false);
         return assemble(input, registries);
     }
 
-    public static void extractInput(RecipeInput input, NonNullList<Ingredient> ingredients) {
-        consumeIngredients(input.size(), input::getItem, ingredients);
+    public static void extractInput(RecipeInput input, NonNullList<Ingredient> ingredients, boolean shaped) {
+        consumeIngredients(input.size(), input::getItem, ingredients, shaped);
     }
 
-    public static void extractContainer(Container container, NonNullList<Ingredient> ingredients) {
-        consumeIngredients(container.getContainerSize(), container::getItem, ingredients);
+    public static void extractContainer(Container container, NonNullList<Ingredient> ingredients, boolean shaped) {
+        consumeIngredients(container.getContainerSize(), container::getItem, ingredients, shaped);
     }
 
     @Override
