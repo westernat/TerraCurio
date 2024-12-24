@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 public class ModJeiPlugin implements IModPlugin {
     public static final ResourceLocation UID = TerraCurio.asResource("jei_plugin");
     public static final ResourceLocation ARROW_RIGHT = TerraCurio.asResource("textures/gui/arrow_right.png");
-    public static final JeiBackGround HALF_BACKGROUND = new JeiBackGround(128, 64);
+    public static final JeiBackGround HALF_BACKGROUND = new JeiBackGround(128, 64, null);
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
