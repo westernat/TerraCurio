@@ -2,6 +2,7 @@ package org.confluence.terra_curio.integration.jei;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -70,8 +71,8 @@ public class ModJeiPlugin implements IModPlugin {
 
     public static void addInput(IRecipeLayoutBuilder builder, int x, int y, Ingredient ingredient) {
         if (!ingredient.isEmpty()) {
-            if (ingredient.isCustom() && ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
-                builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredients(amountIngredient.ingredient());
+            if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
+                builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredients(VanillaTypes.ITEM_STACK, amountIngredient.getItems().toList());
             } else {
                 builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredients(ingredient);
             }
