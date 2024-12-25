@@ -25,12 +25,12 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     public final ItemStack result;
     public final NonNullList<Ingredient> ingredients;
 
-    protected AbstractAmountRecipe(ItemStack pResult, NonNullList<Ingredient> pIngredients) {
-        this.result = pResult;
-        this.ingredients = pIngredients;
+    protected AbstractAmountRecipe(ItemStack result, NonNullList<Ingredient> ingredients) {
         if (ingredients.size() > maxIngredientSize()) {
             throw new RuntimeException("Too many ingredients for '" + getGroup() + "' recipe. The maximum is: " + maxIngredientSize());
         }
+        this.result = result;
+        this.ingredients = ingredients;
     }
 
     @Override
@@ -40,13 +40,17 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
 
     @Override
     public boolean matches(@NotNull RecipeInput input, @NotNull Level pLevel) {
+        return matches(input.size(), input::getItem, ingredients);
+    }
+
+    public static boolean matches(int size, Int2ObjectFunction<ItemStack> getItemStackCallback, NonNullList<Ingredient> ingredients) {
         HashSet<Ingredient> matches = new HashSet<>();
         Object2IntOpenHashMap<Integer> requires2Count = new Object2IntOpenHashMap<>();
         outer:
         for (int j = 0; j < ingredients.size(); j++) {
             Ingredient ingredient = ingredients.get(j);
-            for (int i = 0; i < input.size(); i++) {
-                ItemStack itemStack = input.getItem(i);
+            for (int i = 0; i < size; i++) {
+                ItemStack itemStack = getItemStackCallback.apply(i);
                 if (itemStack.isEmpty()) continue;
                 if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
                     if (amountIngredient.ingredient().test(itemStack)) {
@@ -68,7 +72,25 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
         return true;
     }
 
-    private static void consumeIngredients(int pContainerSize, Int2ObjectFunction<ItemStack> getItemStackCallback, NonNullList<Ingredient> ingredients, boolean shaped) {
+    @Override
+    public @NotNull ItemStack assemble(@NotNull RecipeInput input, HolderLookup.@NotNull Provider registries) {
+        return getResultItem(registries).copy();
+    }
+
+    public ItemStack assembleAndExtract(RecipeInput input, HolderLookup.Provider registries) {
+        extractInput(input, ingredients, false);
+        return assemble(input, registries);
+    }
+
+    public static void extractInput(RecipeInput input, NonNullList<Ingredient> ingredients, boolean shaped) {
+        consumeIngredients(input.size(), input::getItem, ingredients, shaped);
+    }
+
+    public static void extractContainer(Container container, NonNullList<Ingredient> ingredients, boolean shaped) {
+        consumeIngredients(container.getContainerSize(), container::getItem, ingredients, shaped);
+    }
+
+    public static void consumeIngredients(int pContainerSize, Int2ObjectFunction<ItemStack> getItemStackCallback, NonNullList<Ingredient> ingredients, boolean shaped) {
         Object2ObjectOpenHashMap<Ingredient, Tuple<Integer, IntArraySet>> requires2Slots = new Object2ObjectOpenHashMap<>();
         outer:
         for (Ingredient ingredient : ingredients) {
@@ -113,24 +135,6 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
                 }
             }
         }
-    }
-
-    @Override
-    public @NotNull ItemStack assemble(@NotNull RecipeInput input, HolderLookup.@NotNull Provider registries) {
-        return getResultItem(registries).copy();
-    }
-
-    public ItemStack assembleAndExtract(RecipeInput input, HolderLookup.Provider registries) {
-        extractInput(input, ingredients, false);
-        return assemble(input, registries);
-    }
-
-    public static void extractInput(RecipeInput input, NonNullList<Ingredient> ingredients, boolean shaped) {
-        consumeIngredients(input.size(), input::getItem, ingredients, shaped);
-    }
-
-    public static void extractContainer(Container container, NonNullList<Ingredient> ingredients, boolean shaped) {
-        consumeIngredients(container.getContainerSize(), container::getItem, ingredients, shaped);
     }
 
     @Override
