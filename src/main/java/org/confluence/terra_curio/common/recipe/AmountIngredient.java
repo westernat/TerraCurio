@@ -49,4 +49,8 @@ public record AmountIngredient(Ingredient ingredient, int amount) implements ICu
     public @NotNull IngredientType<AmountIngredient> getType() {
         return TCRecipes.AMOUNT_INGREDIENT_TYPE.get();
     }
+
+    public static int getAmount(Ingredient ingredient) {
+        return ingredient.getCustomIngredient() instanceof AmountIngredient ai ? ai.amount : 1;
+    }
 }
