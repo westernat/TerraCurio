@@ -21,7 +21,7 @@ import java.util.List;
 public class WorkshopMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
     private final Player player;
-    private final RecipeInputContainer input = new RecipeInputContainer(this, 12);
+    private final RecipeInputContainer input;
     private final ResultContainer result = new ResultContainer();
     private final DataSlot selectedRecipeIndex = DataSlot.standalone();
     private List<RecipeHolder<WorkshopRecipe>> recipes = new ArrayList<>();
@@ -40,6 +40,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
         super(TCMenus.WORKSHOP.get(), pContainerId);
         this.player = pPlayerInventory.player;
         this.access = TCUtils.forConfluence$ModifyExpression(pAccess);
+        this.input = TCUtils.forConfluence$ModifyExpression(new RecipeInputContainer(this, 12));
         addSlot(new AmountResultSlot(input, result, 0, 62, 35) {
             @Override
             protected void updateMenu() {

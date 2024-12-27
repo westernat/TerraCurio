@@ -8,15 +8,23 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCRecipes;
+import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
 public class WorkshopRecipe extends AbstractAmountRecipe {
     public WorkshopRecipe(ItemStack pResult, NonNullList<Ingredient> pIngredients) {
         super(pResult, pIngredients);
+    }
+
+    @Override
+    public boolean matches(@NotNull RecipeInput input, @NotNull Level pLevel) {
+        return TCUtils.forConfluence$ModifyExpression(super.matches(input, pLevel));
     }
 
     @Override
