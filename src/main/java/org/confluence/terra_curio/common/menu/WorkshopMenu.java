@@ -12,6 +12,7 @@ import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCMenus;
 import org.confluence.terra_curio.common.init.TCRecipes;
 import org.confluence.terra_curio.common.recipe.WorkshopRecipe;
+import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -35,10 +36,10 @@ public class WorkshopMenu extends AbstractContainerMenu {
      * 10       05
      * 09 08 07 06
      */
-    public WorkshopMenu(int pContainerId, Inventory pPlayerInventory, final ContainerLevelAccess pAccess) {
+    public WorkshopMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
         super(TCMenus.WORKSHOP.get(), pContainerId);
         this.player = pPlayerInventory.player;
-        this.access = pAccess;
+        this.access = TCUtils.forConfluence$ModifyExpression(pAccess);
         addSlot(new AmountResultSlot(input, result, 0, 62, 35) {
             @Override
             protected void updateMenu() {
