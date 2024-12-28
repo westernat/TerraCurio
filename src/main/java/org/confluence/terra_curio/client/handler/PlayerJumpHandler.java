@@ -28,14 +28,17 @@ public final class PlayerJumpHandler {
     private static int maxSandstormTicks = 0;
     private static int remainSandstormTicks = 0;
     private static boolean sandstormFinished = false;
+    public static boolean isOnSandstormJump = false;
 
     private static double blizzardSpeed = 0.0;
     private static int maxBlizzardTicks = 0;
     private static int remainBlizzardTicks = 0;
     private static boolean blizzardFinished = false;
+    public static boolean isOnBlizzardJump = false;
 
     private static double tsunamiSpeed = 0.0;
     private static boolean tsunamiFinished = false;
+    public static boolean isOnTsunamiJump = false;
 
     private static double cloudSpeed = 0.0;
     private static boolean cloudFinished = false;
@@ -82,13 +85,24 @@ public final class PlayerJumpHandler {
                 multiJump(localPlayer, fartSpeed);
                 localPlayer.playSound(TCSoundEvents.FART_SOUND.get());
             } else if (!sandstormFinished && sandstormSpeed > 0.0) {
-                if (remainSandstormTicks-- > 0) oneTimeJump(localPlayer, sandstormSpeed);
-                else jumpKeyDown = true;
+                if (remainSandstormTicks-- > 0) {
+                    oneTimeJump(localPlayer, sandstormSpeed);
+                    isOnSandstormJump = true;
+                } else {
+                    jumpKeyDown = true;
+                    isOnSandstormJump = false;
+                }
             } else if (!blizzardFinished && blizzardSpeed > 0.0) {
-                if (remainBlizzardTicks-- > 0) oneTimeJump(localPlayer, blizzardSpeed);
-                else jumpKeyDown = true;
+                if (remainBlizzardTicks-- > 0) {
+                    oneTimeJump(localPlayer, blizzardSpeed);
+                    isOnBlizzardJump = true;
+                } else {
+                    jumpKeyDown = true;
+                    isOnBlizzardJump = false;
+                }
             } else if (!tsunamiFinished && tsunamiSpeed > 0.0) {
                 tsunamiFinished = true;
+                isOnTsunamiJump = true;
                 jumpKeyDown = true;
                 multiJump(localPlayer, tsunamiSpeed);
                 localPlayer.playSound(TCSoundEvents.DOUBLE_JUMP.get());
@@ -112,6 +126,8 @@ public final class PlayerJumpHandler {
             jumpKeyDown = false;
             sandstormFinished = remainSandstormTicks < maxSandstormTicks;
             blizzardFinished = remainBlizzardTicks < maxBlizzardTicks;
+            isOnSandstormJump = false;
+            isOnBlizzardJump = false;
             onFly = false;
         }
     }
