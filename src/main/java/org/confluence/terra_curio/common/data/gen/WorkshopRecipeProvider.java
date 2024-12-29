@@ -1,12 +1,8 @@
 package org.confluence.terra_curio.common.data.gen;
 
 import com.google.gson.*;
-import com.ibm.icu.impl.Pair;
 import com.mojang.serialization.JavaOps;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -15,21 +11,17 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.recipe.AmountIngredient;
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
-public class WorkshopRecipeProvider implements DataProvider {
+public class WorkshopRecipeProvider extends AbstractRecipeProvider {
     private final String modid;
     private final String recipeType;
     private final String amountIngredientType;
-    private final PackOutput output;
-    private final List<Pair<JsonObject, ItemStack>> jsons = new ArrayList<>();
-    private final List<CompletableFuture<?>> futures = new ArrayList<>();
 
     public WorkshopRecipeProvider(String modid, String recipeType, String amountIngredientType, PackOutput output) {
+        super(output);
         this.modid = modid;
         this.recipeType = recipeType;
         this.amountIngredientType = amountIngredientType;
@@ -42,34 +34,23 @@ public class WorkshopRecipeProvider implements DataProvider {
 
     protected void run() {
 
-        // Example usage:
+//         Example usage:
 //        gen(TCItems.TERRASPARK_BOOTS)
 //                .add(Items.GRASS_BLOCK,5)
 //                .build();
 
     }
 
-    @Override
-    public @NotNull CompletableFuture<?> run(@NotNull CachedOutput cachedOutput) {
-        run();
-        jsons.forEach(pair -> {
-            var obj = pair.first;
-            var result = pair.second;
-            futures.add(DataProvider.saveStable(cachedOutput, obj, getPath(result.getItemHolder().getKey().location())));
-        });
-        return CompletableFuture.allOf(futures.toArray(CompletableFuture[]::new));
-    }
-
-    protected Path getPath(ResourceLocation loc) {
-        return this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(loc.getNamespace()).resolve("recipe").resolve(loc.getPath() + "_gen_workshop.json");
+    protected String pathSuffix(){
+        return "_workshop";
     }
 
     @Override
     public @NotNull String getName() {
-        return "Work Shop Recipe Provider: " + modid;
+        return "Workshop Recipe Provider: " + modid;
     }
 
-    public void genRecipe(Supplier<ItemStack> result, List<AmountIngredient> ingredients) {
+    protected void genRecipe(Supplier<ItemStack> result, List<AmountIngredient> ingredients, String suffix) {
         JsonObject obj = new JsonObject();
         obj.addProperty("type", modid + ":" + recipeType);
 
@@ -92,20 +73,20 @@ public class WorkshopRecipeProvider implements DataProvider {
         JsonElement resit = JsonParser.parseString(new Gson().toJson(a));
         obj.add("result", resit);
 
-        jsons.add(Pair.of(obj, result.get()));
+        addJson(obj, result.get(),suffix);
 //        futures.add(DataProvider.saveStable(cachedOutput,obj, getPath(result.get().getItemHolder().getKey().location())));
     }
 
 
-    public AmountIngredientBuilder gen(Supplier<? extends Item> result, int count) {
+    private AmountIngredientBuilder gen(Supplier<? extends Item> result, int count) {
         return new AmountIngredientBuilder(() -> new ItemStack(result.get(), count));
     }
 
-    public AmountIngredientBuilder gen(Supplier<? extends Item> result) {
+    private AmountIngredientBuilder gen(Supplier<? extends Item> result) {
         return gen(result, 1);
     }
 
-    public class AmountIngredientBuilder {
+    private final class AmountIngredientBuilder {
         Supplier<ItemStack> result;
         List<AmountIngredient> ingredients = new ArrayList<>();
 
@@ -134,8 +115,11 @@ public class WorkshopRecipeProvider implements DataProvider {
             return this;
         }
 
+        public void build(String suffix) {
+            genRecipe(result, ingredients, suffix);
+        }
         public void build() {
-            genRecipe(result, ingredients);
+            genRecipe(result, ingredients, "");
         }
     }
 }
