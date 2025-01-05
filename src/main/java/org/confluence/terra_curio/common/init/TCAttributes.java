@@ -137,7 +137,7 @@ public final class TCAttributes {
     }
 
     public static float applyMagicDamage(DamageSource damageSource, float amount) {
-        if (TerraCurio.isConfluenceLoaded() || hasCustomAttribute(MAGIC_DAMAGE)) return amount;
+        if (TerraCurio.IS_CONFLUENCE_LOADED || hasCustomAttribute(MAGIC_DAMAGE)) return amount;
         if (damageSource.is(DamageTypes.MAGIC) || damageSource.is(DamageTypes.INDIRECT_MAGIC)) {
             if (damageSource.getEntity() instanceof LivingEntity living) {
                 AttributeInstance attributeInstance = living.getAttribute(MAGIC_DAMAGE);

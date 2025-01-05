@@ -19,7 +19,7 @@ public class TCCommonConfigs {
     public static final Supplier<String> STRING_SUPPLIER = () -> null;
     public static final Predicate<Object> FILTER_CONFLUENCE = o -> {
         if (o instanceof String s && s.startsWith("confluence:")) {
-            return TerraCurio.isConfluenceLoaded();
+            return TerraCurio.IS_CONFLUENCE_LOADED;
         }
         return true;
     };

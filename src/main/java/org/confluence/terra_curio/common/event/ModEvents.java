@@ -34,7 +34,7 @@ public final class ModEvents {
         TCAttributes.registerAttribute(TCAttributes.RANGED_DAMAGE, event::add);
         TCAttributes.registerAttribute(TCAttributes.DODGE_CHANCE, event::add);
         TCAttributes.registerAttribute(TCAttributes.AGGRO, event::add);
-        if (TerraCurio.isConfluenceLoaded()) {
+        if (TerraCurio.IS_CONFLUENCE_LOADED) {
             TCAttributes.registerAttribute(TCAttributes.MAGIC_DAMAGE, event::add);
         }
         TCAttributes.registerAttribute(TCAttributes.ARMOR_PASS, event::add);
