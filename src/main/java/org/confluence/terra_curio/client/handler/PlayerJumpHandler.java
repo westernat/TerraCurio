@@ -65,7 +65,10 @@ public final class PlayerJumpHandler {
             }
 
             if (couldGlide) {
-                if (infiniteFlight || remainFlyTicks-- > 0) {
+                if (infiniteFlight || remainFlyTicks > 0) {
+                    if (!horizontalFlight || localPlayer.level().getGameTime() % 2 == 0) {
+                        remainFlyTicks--;
+                    }
                     onFly = true;
                     if (horizontalFlight && localPlayer.isShiftKeyDown()) {
                         horizontalFlight(localPlayer);
