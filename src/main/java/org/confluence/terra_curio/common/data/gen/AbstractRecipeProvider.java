@@ -6,7 +6,6 @@ import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.ArrayList;
@@ -24,7 +23,7 @@ public abstract class AbstractRecipeProvider implements DataProvider {
     abstract protected void run();
 
     @Override
-    public @NotNull CompletableFuture<?> run(@NotNull CachedOutput cachedOutput) {
+    public CompletableFuture<?> run(CachedOutput cachedOutput) {
         run();
         jsons.forEach(pair -> {
             var obj = pair.json;

@@ -13,11 +13,12 @@ import org.confluence.terra_curio.common.init.TCMenus;
 import org.confluence.terra_curio.common.init.TCRecipes;
 import org.confluence.terra_curio.common.recipe.WorkshopRecipe;
 import org.confluence.terra_curio.util.TCUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 
+@javax.annotation.ParametersAreNonnullByDefault
+@net.minecraft.MethodsReturnNonnullByDefault
 public class WorkshopMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
     private final Player player;
@@ -127,7 +128,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean clickMenuButton(@NotNull Player pPlayer, int pId) {
+    public boolean clickMenuButton(Player pPlayer, int pId) {
         if (isValidRecipeIndex(pId)) {
             selectedRecipeIndex.set(pId);
             setupResultSlot();
@@ -152,23 +153,23 @@ public class WorkshopMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(@NotNull Player pPlayer) {
+    public boolean stillValid(Player pPlayer) {
         return stillValid(access, pPlayer, TCBlocks.WORKSHOP.get());
     }
 
     @Override
-    public void removed(@NotNull Player pPlayer) {
+    public void removed(Player pPlayer) {
         super.removed(pPlayer);
         access.execute((level, blockPos) -> clearContainer(pPlayer, input));
     }
 
     @Override
-    public boolean canTakeItemForPickAll(@NotNull ItemStack pStack, Slot pSlot) {
+    public boolean canTakeItemForPickAll(ItemStack pStack, Slot pSlot) {
         return pSlot.container != result && super.canTakeItemForPickAll(pStack, pSlot);
     }
 
     @Override
-    public void slotsChanged(@NotNull Container pContainer) {
+    public void slotsChanged(Container pContainer) {
         this.recipes = player.level().getRecipeManager().getRecipesFor(TCRecipes.WORKSHOP_TYPE.get(), input, player.level());
         if (selectedRecipeIndex.get() >= recipes.size()) selectedRecipeIndex.set(recipes.size() - 1);
         access.execute((level, pos) -> {
@@ -194,7 +195,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public @NotNull ItemStack quickMoveStack(@NotNull Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
         ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = slots.get(pIndex);
         if (slot.hasItem()) {

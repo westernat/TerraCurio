@@ -8,17 +8,18 @@ import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.advancements.critereon.SimpleCriterionTrigger;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
+@javax.annotation.ParametersAreNonnullByDefault
+@net.minecraft.MethodsReturnNonnullByDefault
 public class CuriosEquippedTrigger extends SimpleCriterionTrigger<CuriosEquippedTrigger.TriggerInstance> {
     public void trigger(ServerPlayer pPlayer, ItemStack itemStack) {
         trigger(pPlayer, instance -> instance.matches(itemStack));
     }
 
     @Override
-    public @NotNull Codec<TriggerInstance> codec() {
+    public Codec<TriggerInstance> codec() {
         return TriggerInstance.CODEC;
     }
 
@@ -33,7 +34,7 @@ public class CuriosEquippedTrigger extends SimpleCriterionTrigger<CuriosEquipped
         }
 
         @Override
-        public @NotNull Optional<ContextAwarePredicate> player() {
+        public Optional<ContextAwarePredicate> player() {
             return player;
         }
     }

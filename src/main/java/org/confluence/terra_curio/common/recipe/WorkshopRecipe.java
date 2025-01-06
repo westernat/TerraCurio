@@ -15,7 +15,6 @@ import net.minecraft.world.level.Level;
 import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCRecipes;
 import org.confluence.terra_curio.util.TCUtils;
-import org.jetbrains.annotations.NotNull;
 
 public class WorkshopRecipe extends AbstractAmountRecipe {
     public WorkshopRecipe(ItemStack pResult, NonNullList<Ingredient> pIngredients) {
@@ -23,7 +22,7 @@ public class WorkshopRecipe extends AbstractAmountRecipe {
     }
 
     @Override
-    public boolean matches(@NotNull RecipeInput input, @NotNull Level pLevel) {
+    public boolean matches(RecipeInput input, Level pLevel) {
         return TCUtils.forConfluence$ModifyExpression(super.matches(input, pLevel));
     }
 
@@ -33,22 +32,22 @@ public class WorkshopRecipe extends AbstractAmountRecipe {
     }
 
     @Override
-    public @NotNull String getGroup() {
+    public String getGroup() {
         return "workshop";
     }
 
     @Override
-    public @NotNull ItemStack getToastSymbol() {
+    public ItemStack getToastSymbol() {
         return TCBlocks.WORKSHOP.toStack();
     }
 
     @Override
-    public @NotNull RecipeSerializer<WorkshopRecipe> getSerializer() {
+    public RecipeSerializer<WorkshopRecipe> getSerializer() {
         return TCRecipes.WORKSHOP_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<WorkshopRecipe> getType() {
+    public RecipeType<WorkshopRecipe> getType() {
         return TCRecipes.WORKSHOP_TYPE.get();
     }
 
@@ -67,12 +66,12 @@ public class WorkshopRecipe extends AbstractAmountRecipe {
         public static final StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> STREAM_CODEC = StreamCodec.of(Serializer::toNetwork, Serializer::fromNetwork);
 
         @Override
-        public @NotNull MapCodec<WorkshopRecipe> codec() {
+        public MapCodec<WorkshopRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> streamCodec() {
             return STREAM_CODEC;
         }
 

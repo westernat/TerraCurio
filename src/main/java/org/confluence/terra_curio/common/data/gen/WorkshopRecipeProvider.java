@@ -9,7 +9,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.recipe.AmountIngredient;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,7 +45,7 @@ public class WorkshopRecipeProvider extends AbstractRecipeProvider {
     }
 
     @Override
-    public @NotNull String getName() {
+    public String getName() {
         return "Workshop Recipe Provider: " + modid;
     }
 

@@ -12,7 +12,6 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
-import org.jetbrains.annotations.NotNull;
 
 public record RightClickSubtractorPacketS2C(int amount) implements CustomPacketPayload {
     public static final Type<RightClickSubtractorPacketS2C> TYPE = new Type<>(TerraCurio.asResource("right_click_sub"));
@@ -22,7 +21,7 @@ public record RightClickSubtractorPacketS2C(int amount) implements CustomPacketP
     );
 
     @Override
-    public @NotNull Type<RightClickSubtractorPacketS2C> type() {
+    public Type<RightClickSubtractorPacketS2C> type() {
         return TYPE;
     }
 

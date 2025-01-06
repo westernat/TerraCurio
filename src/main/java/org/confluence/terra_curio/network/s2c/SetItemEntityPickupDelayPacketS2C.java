@@ -10,7 +10,6 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import net.neoforged.neoforge.server.ServerLifecycleHooks;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
-import org.jetbrains.annotations.NotNull;
 
 public record SetItemEntityPickupDelayPacketS2C(int id, int delay) implements CustomPacketPayload {
     public static final Type<SetItemEntityPickupDelayPacketS2C> TYPE = new Type<>(TerraCurio.asResource("set_item_entity_pickup_delay"));
@@ -21,7 +20,7 @@ public record SetItemEntityPickupDelayPacketS2C(int id, int delay) implements Cu
     );
 
     @Override
-    public @NotNull Type<SetItemEntityPickupDelayPacketS2C> type() {
+    public Type<SetItemEntityPickupDelayPacketS2C> type() {
         return TYPE;
     }
 

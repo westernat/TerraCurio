@@ -15,7 +15,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -34,12 +33,12 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(HolderLookup.@Nullable Provider registries) {
+    public ItemStack getResultItem(HolderLookup.@Nullable Provider registries) {
         return result;
     }
 
     @Override
-    public boolean matches(@NotNull RecipeInput input, @NotNull Level pLevel) {
+    public boolean matches(RecipeInput input, Level pLevel) {
         return matches(input.size(), input::getItem, ingredients);
     }
 
@@ -73,7 +72,7 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(@NotNull RecipeInput input, HolderLookup.@NotNull Provider registries) {
+    public ItemStack assemble(RecipeInput input, HolderLookup.Provider registries) {
         return getResultItem(registries).copy();
     }
 
@@ -143,13 +142,13 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
-    public @NotNull NonNullList<Ingredient> getIngredients() {
+    public NonNullList<Ingredient> getIngredients() {
         return ingredients;
     }
 
     protected abstract int maxIngredientSize();
 
-    public abstract @NotNull String getGroup();
+    public abstract String getGroup();
 
-    public abstract @NotNull ItemStack getToastSymbol();
+    public abstract ItemStack getToastSymbol();
 }

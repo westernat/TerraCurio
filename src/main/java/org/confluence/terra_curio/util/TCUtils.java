@@ -44,7 +44,6 @@ import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.s2c.*;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -197,7 +196,7 @@ public final class TCUtils {
         BroadcastRenderPacketS2C.sendToAll(serverPlayer);
     }
 
-    public static @NotNull CompoundTag getItemStackNbt(ItemStack itemStack) {
+    public static CompoundTag getItemStackNbt(ItemStack itemStack) {
         NbtComponent nbtComponent = itemStack.get(TCDataComponentTypes.NBT);
         if (nbtComponent == null) {
             CompoundTag nbt = new CompoundTag();

@@ -5,6 +5,8 @@ import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import top.theillusivec4.curios.api.SlotContext;
 
+@javax.annotation.ParametersAreNonnullByDefault
+@net.minecraft.MethodsReturnNonnullByDefault
 public class BandOfRegeneration extends BaseCurioItem {
     public BandOfRegeneration(Builder builder) {
         super(builder);

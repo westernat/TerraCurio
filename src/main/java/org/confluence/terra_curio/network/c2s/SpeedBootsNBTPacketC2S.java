@@ -12,7 +12,6 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.item.curio.movement.BaseSpeedBoots;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.confluence.terra_curio.util.TCUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
@@ -26,7 +25,7 @@ public record SpeedBootsNBTPacketC2S(int slot, int value) implements CustomPacke
     private static final Predicate<ItemStack> PREDICATE = itemStack -> itemStack.getItem() instanceof BaseSpeedBoots;
 
     @Override
-    public @NotNull Type<SpeedBootsNBTPacketC2S> type() {
+    public Type<SpeedBootsNBTPacketC2S> type() {
         return TYPE;
     }
 

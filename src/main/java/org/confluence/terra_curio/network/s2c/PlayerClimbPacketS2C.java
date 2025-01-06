@@ -12,7 +12,6 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.PlayerClimbHandler;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
-import org.jetbrains.annotations.NotNull;
 
 public record PlayerClimbPacketS2C(byte climberAmount) implements CustomPacketPayload {
     public static final Type<PlayerClimbPacketS2C> TYPE = new Type<>(TerraCurio.asResource("player_climb"));
@@ -22,7 +21,7 @@ public record PlayerClimbPacketS2C(byte climberAmount) implements CustomPacketPa
     );
 
     @Override
-    public @NotNull Type<PlayerClimbPacketS2C> type() {
+    public Type<PlayerClimbPacketS2C> type() {
         return TYPE;
     }
 

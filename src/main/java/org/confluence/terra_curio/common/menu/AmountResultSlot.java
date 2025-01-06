@@ -5,9 +5,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terra_curio.common.recipe.AbstractAmountRecipe;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@javax.annotation.ParametersAreNonnullByDefault
+@net.minecraft.MethodsReturnNonnullByDefault
 public class AmountResultSlot extends Slot {
     protected final RecipeInputContainer input;
     protected @Nullable AbstractAmountRecipe recipe;
@@ -22,12 +23,12 @@ public class AmountResultSlot extends Slot {
     }
 
     @Override
-    public boolean mayPlace(@NotNull ItemStack pStack) {
+    public boolean mayPlace(ItemStack pStack) {
         return false;
     }
 
     @Override
-    public void onTake(@NotNull Player pPlayer, @NotNull ItemStack pStack) {
+    public void onTake(Player pPlayer, ItemStack pStack) {
         if (recipe != null) {
             AbstractAmountRecipe.extractInput(input, recipe.getIngredients(), false);
             input.setChanged();

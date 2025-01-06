@@ -13,7 +13,6 @@ import org.confluence.terra_curio.api.primitive.MayFlyAbilityValue;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
-import org.jetbrains.annotations.NotNull;
 
 public record PlayerFlyPacketS2C(float flySpeed, int flyTicks, boolean couldGlide, boolean horizontalFlight) implements CustomPacketPayload {
     public static final Type<PlayerFlyPacketS2C> TYPE = new Type<>(TerraCurio.asResource("player_fly"));
@@ -26,7 +25,7 @@ public record PlayerFlyPacketS2C(float flySpeed, int flyTicks, boolean couldGlid
     );
 
     @Override
-    public @NotNull Type<PlayerFlyPacketS2C> type() {
+    public Type<PlayerFlyPacketS2C> type() {
         return TYPE;
     }
 

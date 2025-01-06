@@ -12,7 +12,6 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
-import org.jetbrains.annotations.NotNull;
 
 public record InfiniteFlightPacketS2C(boolean enable) implements CustomPacketPayload {
     public static final Type<InfiniteFlightPacketS2C> TYPE = new Type<>(TerraCurio.asResource("infinite_flight"));
@@ -22,7 +21,7 @@ public record InfiniteFlightPacketS2C(boolean enable) implements CustomPacketPay
     );
 
     @Override
-    public @NotNull Type<InfiniteFlightPacketS2C> type() {
+    public Type<InfiniteFlightPacketS2C> type() {
         return TYPE;
     }
 
