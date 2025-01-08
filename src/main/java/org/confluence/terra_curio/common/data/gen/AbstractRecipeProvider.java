@@ -1,6 +1,7 @@
 package org.confluence.terra_curio.common.data.gen;
 
-import com.google.gson.JsonObject;
+import com.google.gson.*;
+import com.mojang.serialization.DataResult;
 import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
@@ -19,6 +20,7 @@ public abstract class AbstractRecipeProvider implements DataProvider {
     public AbstractRecipeProvider(PackOutput output) {
         this.output = output;
     }
+    GsonBuilder builder = new GsonBuilder().setPrettyPrinting();
     private record tuple(JsonObject json, ItemStack result, String suffix) {}
     abstract protected void run();
 
@@ -29,7 +31,13 @@ public abstract class AbstractRecipeProvider implements DataProvider {
             var obj = pair.json;
             var result = pair.result;
             var suffix = pair.suffix;
-            ResourceLocation loc = result.getItemHolder().getKey().location();
+            ResourceLocation loc;
+            if(result == null || result.isEmpty()){
+                loc = ResourceLocation.parse(suffix);
+            }else{
+                loc = result.getItemHolder().getKey().location();
+            }
+
             Path path = getPath(loc, suffix);
             futures.add(DataProvider.saveStable(cachedOutput, obj, path));
         });
@@ -57,5 +65,10 @@ public abstract class AbstractRecipeProvider implements DataProvider {
 
     protected Path getRoot(ResourceLocation loc){
         return this.output.getOutputFolder(PackOutput.Target.DATA_PACK).resolve(loc.getNamespace()).resolve("recipe");
+    }
+
+    protected JsonElement parseCodec(DataResult<?> result){
+
+        return JsonParser.parseString(builder.create().toJson(result.result().get()));
     }
 }
