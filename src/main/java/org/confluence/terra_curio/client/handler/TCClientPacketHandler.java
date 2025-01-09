@@ -107,13 +107,13 @@ public final class TCClientPacketHandler {
 
     public static void handleCurioExists(CurioExistsPacketS2C packet) {
         int item = packet.item();
-        autoAttack = (item & AUTO_ATTACK) == AUTO_ATTACK;
-        hasCthulhu = (item & SHIELD_OF_CTHULHU) == SHIELD_OF_CTHULHU;
-        hasTabi = (item & TABI) == TABI;
-        ScopeFovHandler.hasScope = (item & SCOPE) == SCOPE;
-        GravitationHandler.hasGlobe = (item & GRAVITY_GLOBE) == GRAVITY_GLOBE;
-        hasMagiluminescence = (item & MAGILUMINESCENCE) == MAGILUMINESCENCE;
-        canFloating = (item & FLOAT_ON_LIQUID_SURFACE) == FLOAT_ON_LIQUID_SURFACE;
+        autoAttack = (item & AUTO_ATTACK) != 0;
+        hasCthulhu = (item & SHIELD_OF_CTHULHU) != 0;
+        hasTabi = (item & TABI) != 0;
+        ScopeFovHandler.hasScope = (item & SCOPE) != 0;
+        GravitationHandler.hasGlobe = (item & GRAVITY_GLOBE) != 0;
+        hasMagiluminescence = (item & MAGILUMINESCENCE) != 0;
+        canFloating = (item & FLOAT_ON_LIQUID_SURFACE) != 0;
     }
 
     public static void handleItemPickupDelay(SetItemEntityPickupDelayPacketS2C packet) {
