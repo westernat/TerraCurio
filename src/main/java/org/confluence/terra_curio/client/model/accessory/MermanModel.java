@@ -9,7 +9,6 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.LivingEntity;
 import org.confluence.terra_curio.TerraCurio;
-import org.jetbrains.annotations.NotNull;
 
 public class MermanModel extends HumanoidModel<LivingEntity> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(TerraCurio.asResource("merman"), "main");
@@ -49,7 +48,7 @@ public class MermanModel extends HumanoidModel<LivingEntity> {
     }
 
     @Override
-    public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
         head.render(poseStack, vertexConsumer, packedLight, packedOverlay);
         body.render(poseStack, vertexConsumer, packedLight, packedOverlay);
         rightArm.render(poseStack, vertexConsumer, packedLight, packedOverlay);

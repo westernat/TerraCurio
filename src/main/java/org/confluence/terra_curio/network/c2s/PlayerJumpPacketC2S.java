@@ -31,11 +31,11 @@ public record PlayerJumpPacketC2S(byte jumpState, float motionY) implements Cust
         context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer serverPlayer) {
                 serverPlayer.hasImpulse = true;
-                if ((jumpState & JUMP_BY_SELF) == JUMP_BY_SELF) {
+                if ((jumpState & JUMP_BY_SELF) != 0) {
                     serverPlayer.awardStat(Stats.JUMP);
                     serverPlayer.causeFoodExhaustion(serverPlayer.isSprinting() ? 0.2F : 0.05F);
                 }
-                if ((jumpState & RESET_FALL_DISTANCE) == RESET_FALL_DISTANCE) {
+                if ((jumpState & RESET_FALL_DISTANCE) != 0) {
                     serverPlayer.resetFallDistance();
                 }
                 Vec3 motion = serverPlayer.getDeltaMovement();

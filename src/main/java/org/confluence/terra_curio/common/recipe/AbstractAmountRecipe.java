@@ -15,6 +15,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
+import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -64,7 +65,9 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
         }
         if (matches.size() != ingredients.size()) return false;
         for (Object2IntMap.Entry<Integer> entry : requires2Count.object2IntEntrySet()) {
-            if (((AmountIngredient) ingredients.get(entry.getKey()).getCustomIngredient()).amount() > entry.getIntValue()) {
+            ICustomIngredient customIngredient = ingredients.get(entry.getKey()).getCustomIngredient();
+            if (customIngredient == null) return false;
+            if (((AmountIngredient) customIngredient).amount() > entry.getIntValue()) {
                 return false;
             }
         }

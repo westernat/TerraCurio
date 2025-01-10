@@ -11,6 +11,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.InformationHandler;
+import org.jetbrains.annotations.Nullable;
 
 public record AttackDamagePacketS2C(float amount) implements CustomPacketPayload {
     public static final Type<AttackDamagePacketS2C> TYPE = new Type<>(TerraCurio.asResource("attack_damage"));
@@ -35,7 +36,7 @@ public record AttackDamagePacketS2C(float amount) implements CustomPacketPayload
         });
     }
 
-    public static void sendToClient(float amount, Entity entity) {
+    public static void sendToClient(float amount, @Nullable Entity entity) {
         if (entity instanceof ServerPlayer serverPlayer) {
             PacketDistributor.sendToPlayer(serverPlayer, new AttackDamagePacketS2C(amount));
         }

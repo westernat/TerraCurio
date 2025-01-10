@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
+import java.util.function.LongFunction;
 
 @OnlyIn(Dist.CLIENT)
 public final class InformationHandler {
@@ -51,7 +51,7 @@ public final class InformationHandler {
     private static final byte[] INFO_DATA = new byte[InfoCurioCheckPacketS2C.ARRAY_LENGTH];
     private static final Int2ObjectOpenHashMap<byte[]> REMOTE_DATA = new Int2ObjectOpenHashMap<>();
 
-    private static @Nullable Function<Long, Component> timeInfo = null;
+    private static @Nullable LongFunction<Component> timeInfo = null;
     private static Component weatherRadioInfo = Component.translatable("info.terra_curio.weather_radio.clear", "0.00");
     private static boolean detectorPressed = false;
     private static Component metalDetectorInfo = Component.translatable("info.terra_curio.metal_detector.none");

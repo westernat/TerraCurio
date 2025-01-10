@@ -9,7 +9,6 @@ import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import net.minecraft.world.entity.LivingEntity;
 import org.confluence.terra_curio.TerraCurio;
-import org.jetbrains.annotations.NotNull;
 
 public class DuneriderBootsModel extends HumanoidModel<LivingEntity> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(TerraCurio.asResource("dunerider_boots"), "main");
@@ -42,7 +41,7 @@ public class DuneriderBootsModel extends HumanoidModel<LivingEntity> {
     }
 
     @Override
-    public void renderToBuffer(@NotNull PoseStack poseStack, @NotNull VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
         leftLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay);
         rightLeg.render(poseStack, vertexConsumer, packedLight, packedOverlay);
     }
