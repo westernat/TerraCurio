@@ -142,7 +142,7 @@ public class ModLanguageProvider extends LanguageProvider {
 
         add("tooltip.item.terra_curio.demon_heart.1", "Remaining Times: %s", "剩余次数: %s");
 
-        add(TCItems.BASE_POINT.get().getDescriptionId(), "Base Point", "基点");
+        onlyTooltip(TCItems.BASE_POINT, "基点", "'Can you hear the sound in this silence?'", "“你可听闻这寂静之声？”");
         add(TCItems.EVERLASTING.get().getDescriptionId(), "Everlasting", "亘古");
         add(TCItems.CELL_PHONE.get().getDescriptionId(), "Cell Phone", "手机");
         add(TCItems.MAGIC_MIRROR.get().getDescriptionId(), "Magic Mirror", "魔镜");
