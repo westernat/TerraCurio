@@ -115,10 +115,14 @@ repositories {
     maven {
         url = "https://maven.bawnorton.com/releases"
     }
+    maven {
+        name = "Curios"
+        url = uri("https://maven.theillusivec4.top/")
+    }
 }
 
 dependencies {
-    implementation "curse.maven:adorned-1036809:5740650"
+    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
     implementation jarJar(project(":ParticleStorm"))
 
     compileOnly("mezz.jei:jei-1.21-common-api:${jei_version}")
