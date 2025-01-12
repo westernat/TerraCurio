@@ -130,7 +130,7 @@ dependencies {
     runtimeOnly("mezz.jei:jei-1.21-neoforge:${jei_version}")
 
     compileOnly "curse.maven:dynamiclights-reforged-551736:5807536"
-    runtimeOnly "curse.maven:dynamiclights-reforged-551736:5807536"
+    //runtimeOnly "curse.maven:dynamiclights-reforged-551736:5807536"
 
     compileOnly "curse.maven:air-hop-323071:5736739"
 //    runtimeOnly "curse.maven:air-hop-323071:5736739"
