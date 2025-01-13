@@ -120,8 +120,8 @@ public final class TCClientPacketHandler {
         pickupDelayStorage.put(packet.id(), packet.delay());
     }
 
-    public static Set<FluidState> getWalkableFluidStates() {
-        return walkableFluidStates;
+    public static boolean isFluidWalkable(LivingEntity living, FluidState fluidState) {
+        return walkableFluidStates.contains(fluidState); // Confluence injected here
     }
 
     public static void handle(Minecraft minecraft, LocalPlayer player) {

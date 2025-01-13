@@ -98,7 +98,7 @@ public abstract class ClientLivingEntityMixin implements IClientLivingEntity, Se
         if (living.isCrouching() || fluidState.isEmpty() || self().getClass() != LocalPlayer.class) return false;
         if (terra_curio$lastWalkedFluidState == fluidState) {
             return true;
-        } else if (TCClientPacketHandler.getWalkableFluidStates().contains(fluidState)) {
+        } else if (TCClientPacketHandler.isFluidWalkable(living, fluidState)) {
             this.terra_curio$lastWalkedFluidState = fluidState;
             return true;
         }
