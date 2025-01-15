@@ -11,6 +11,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.TagKey;
+import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -158,7 +159,7 @@ public final class TCClientPacketHandler {
             if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
         }
         if (TCClientPacketHandler.couldAutoAttack() && minecraft.options.keyAttack.isDown()) {
-            if (localPlayer.getAttackStrengthScale(0.5F) < 1.0F) return;
+            if (localPlayer.getAttackStrengthScale(0.5F) < 1.0F - Mth.EPSILON) return;
             MinecraftAccessor accessor = (MinecraftAccessor) minecraft;
             if (accessor.getMissTime() > 0) accessor.setMissTime(0);
             double reach = Math.max(localPlayer.entityInteractionRange(), localPlayer.blockInteractionRange());

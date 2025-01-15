@@ -239,7 +239,6 @@ public final class TCItems { // todo 全换成data map
                     .accessories(units(AUTO$ATTACK))
                     .attribute(Attributes.ATTACK_SPEED, 0.12, ADD_MULTIPLIED_TOTAL)), // 狂爪手套
             TITAN_GLOVE = registerCurio("titan_glove", builder -> builder.rarity(LIGHT_RED).noTooltip()
-                    .accessories(units(AUTO$ATTACK))
                     .attribute(Attributes.ATTACK_KNOCKBACK, 1.0, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)), // 泰坦手套
             POWER_GLOVE = registerCurio("power_glove", builder -> builder.jeiInfos(0).rarity(PINK)
