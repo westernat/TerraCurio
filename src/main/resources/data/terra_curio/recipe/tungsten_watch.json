@@ -10,7 +10,7 @@
             "item": "minecraft:chain"
         },
         "c": {
-            "tag": "neoforge:ingots/tungsten"
+            "tag": "c:ingots/tungsten"
         },
         "R": {
             "item": "minecraft:redstone"
