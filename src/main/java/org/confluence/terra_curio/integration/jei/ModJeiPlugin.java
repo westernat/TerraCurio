@@ -9,9 +9,12 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -25,7 +28,7 @@ import org.confluence.terra_curio.common.recipe.AmountIngredient;
 import org.jetbrains.annotations.NotNull;
 
 @JeiPlugin
-public class ModJeiPlugin implements IModPlugin {
+public final class ModJeiPlugin implements IModPlugin {
     public static final ResourceLocation UID = TerraCurio.asResource("jei_plugin");
     public static final ResourceLocation ARROW_RIGHT = TerraCurio.asResource("textures/gui/arrow_right.png");
     public static final JeiBackGround HALF_BACKGROUND = new JeiBackGround(128, 64, null);
@@ -49,7 +52,12 @@ public class ModJeiPlugin implements IModPlugin {
             if (entry.get() instanceof BaseCurioItem curioItem && curioItem.getJeiInformationCount() > 0) {
                 Component[] information = new Component[curioItem.getJeiInformationCount()];
                 for (int i = 0; i < information.length; i++) {
-                    information[i] = Component.translatable("jei.tooltip." + curioItem.getDescriptionId() + "." + i);
+                    if (TerraCurio.IS_CONFLUENCE_LOADED) {
+                        ResourceLocation confluence = ResourceLocation.fromNamespaceAndPath("confluence", BuiltInRegistries.ITEM.getKey(curioItem).getPath());
+                        information[i] = Component.literal(I18n.get("jei.tooltip." + Util.makeDescriptionId("item", confluence) + "." + i));
+                    } else {
+                        information[i] = Component.translatable("jei.tooltip." + curioItem.getDescriptionId() + "." + i);
+                    }
                 }
                 registration.addItemStackInfo(entry.get().getDefaultInstance(), information);
             }
