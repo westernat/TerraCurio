@@ -9,12 +9,9 @@ import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -46,18 +43,13 @@ public final class ModJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(@NotNull IRecipeRegistration registration) {
-        registration.addItemStackInfo(TCItems.DEMON_HEART.get().getDefaultInstance(), Component.translatable("jei.tooltip.item.terra_curio.demon_heart.0"));
-        registration.addItemStackInfo(TCItems.DIVING_HELMET.get().getDefaultInstance(), Component.translatable("jei.tooltip.item.terra_curio.diving_helmet.0"), Component.translatable("jei.tooltip.item.terra_curio.diving_helmet.1"));
+        registration.addItemStackInfo(TCItems.DEMON_HEART.get().getDefaultInstance(), Component.translatable(getTranslationKey("jei.tooltip.item.terra_curio.demon_heart.0")));
+        registration.addItemStackInfo(TCItems.DIVING_HELMET.get().getDefaultInstance(), Component.translatable(getTranslationKey("jei.tooltip.item.terra_curio.diving_helmet.0")), Component.translatable(getTranslationKey("jei.tooltip.item.terra_curio.diving_helmet.1")));
         TCItems.CURIOS.getEntries().forEach(entry -> {
             if (entry.get() instanceof BaseCurioItem curioItem && curioItem.getJeiInformationCount() > 0) {
                 Component[] information = new Component[curioItem.getJeiInformationCount()];
                 for (int i = 0; i < information.length; i++) {
-                    if (TerraCurio.IS_CONFLUENCE_LOADED) {
-                        ResourceLocation confluence = ResourceLocation.fromNamespaceAndPath("confluence", BuiltInRegistries.ITEM.getKey(curioItem).getPath());
-                        information[i] = Component.literal(I18n.get("jei.tooltip." + Util.makeDescriptionId("item", confluence) + "." + i));
-                    } else {
-                        information[i] = Component.translatable("jei.tooltip." + curioItem.getDescriptionId() + "." + i);
-                    }
+                    information[i] = Component.translatable(getTranslationKey("jei.tooltip." + curioItem.getDescriptionId() + "." + i));
                 }
                 registration.addItemStackInfo(entry.get().getDefaultInstance(), information);
             }
@@ -66,6 +58,13 @@ public final class ModJeiPlugin implements IModPlugin {
         if (level == null) return;
         RecipeManager recipeManager = level.getRecipeManager();
         registration.addRecipes(WorkshopCategory.TYPE, recipeManager.getAllRecipesFor(TCRecipes.WORKSHOP_TYPE.get()).stream().map(RecipeHolder::value).toList());
+    }
+
+    private static String getTranslationKey(String original) {
+        if (TerraCurio.IS_CONFLUENCE_LOADED) {
+            return original.replaceFirst("terra_curio", "confluence");
+        }
+        return original;
     }
 
     @Override
