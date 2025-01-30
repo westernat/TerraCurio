@@ -45,6 +45,9 @@ public class MagicMirror extends Item {
         if (level.isClientSide) {
             Minecraft.getInstance().gameRenderer.displayItemActivation(itemStack);
         } else if (living instanceof ServerPlayer serverPlayer) {
+            if (serverPlayer.getVehicle() != null) {
+                serverPlayer.removeVehicle();
+            }
             serverPlayer.getCooldowns().addCooldown(this, 10);
             serverPlayer.changeDimension(serverPlayer.findRespawnPositionAndUseSpawnBlock(true, DimensionTransition.DO_NOTHING));
         }
