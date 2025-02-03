@@ -95,7 +95,7 @@ public abstract class ClientLivingEntityMixin implements IClientLivingEntity, Se
 
     @Unique
     private boolean terra_curio$checkCanWalk(LivingEntity living, FluidState fluidState) {
-        if (living.isCrouching() || fluidState.isEmpty() || self() instanceof LocalPlayer) return false;
+        if (living.isCrouching() || fluidState.isEmpty() || !(self() instanceof LocalPlayer)) return false;
         if (terra_curio$lastWalkedFluidState == fluidState) {
             return true;
         } else if (TCClientPacketHandler.isFluidWalkable(living, fluidState)) {
