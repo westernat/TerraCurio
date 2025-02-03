@@ -46,8 +46,7 @@ public abstract class ClientLivingEntityMixin implements IClientLivingEntity, Se
 
     @Inject(method = "checkFallDamage", at = @At("HEAD"))
     private void fall(double motionY, boolean onGround, BlockState blockState, BlockPos blockPos, CallbackInfo ci) {
-        LivingEntity self = self();
-        if (motionY > 0.0 && GravitationHandler.isShouldRot() && self() instanceof LocalPlayer) {
+        if (motionY > 0.0 && GravitationHandler.isShouldRot() && self() instanceof LocalPlayer self) {
             self.fallDistance += (float) motionY;
         }
     }
@@ -83,7 +82,7 @@ public abstract class ClientLivingEntityMixin implements IClientLivingEntity, Se
 
     @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1))
     private boolean neptunesShell(boolean original) {
-        return original || (self() instanceof LocalPlayer && TCClientPacketHandler.isHasNeptunesShell());
+        return original || (TCClientPacketHandler.isHasNeptunesShell() && self() instanceof LocalPlayer);
     }
 
     @Inject(method = "canStandOnFluid", at = @At("RETURN"), cancellable = true)
@@ -95,7 +94,7 @@ public abstract class ClientLivingEntityMixin implements IClientLivingEntity, Se
 
     @Unique
     private boolean terra_curio$checkCanWalk(LivingEntity living, FluidState fluidState) {
-        if (living.isCrouching() || fluidState.isEmpty() || !(self() instanceof LocalPlayer)) return false;
+        if (fluidState.isEmpty() || living.isCrouching() || !(self() instanceof LocalPlayer)) return false;
         if (terra_curio$lastWalkedFluidState == fluidState) {
             return true;
         } else if (TCClientPacketHandler.isFluidWalkable(living, fluidState)) {
