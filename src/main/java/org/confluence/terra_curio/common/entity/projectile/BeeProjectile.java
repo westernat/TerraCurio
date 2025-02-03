@@ -13,8 +13,9 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.common.init.TCEntities;
-import org.jetbrains.annotations.NotNull;
 
+@javax.annotation.ParametersAreNonnullByDefault
+@net.minecraft.MethodsReturnNonnullByDefault
 public class BeeProjectile extends AbstractHurtingProjectile {
     private static final EntityDataAccessor<Boolean> DATA_IS_GIANT = SynchedEntityData.defineId(BeeProjectile.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDimensions SMALL =  TCEntities.BEE_PROJECTILE.get().getDimensions().scale(0.5f);
@@ -81,7 +82,7 @@ public class BeeProjectile extends AbstractHurtingProjectile {
     }
 
     @Override
-    protected void onHitBlock(@NotNull BlockHitResult blockHitResult) {
+    protected void onHitBlock(BlockHitResult blockHitResult) {
         Vec3 motion = getDeltaMovement();
         double x = motion.x;
         double y = motion.y;
@@ -96,7 +97,7 @@ public class BeeProjectile extends AbstractHurtingProjectile {
     }
 
     @Override
-    protected void onHitEntity(@NotNull EntityHitResult entityHitResult) {
+    protected void onHitEntity(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
         if (entity != getOwner()) {
             float damage = 5.0F + (isGiant() ? random.nextInt(1, 4) : (random.nextBoolean() ? 1 : 0));
@@ -109,7 +110,7 @@ public class BeeProjectile extends AbstractHurtingProjectile {
     }
 
     @Override
-    public @NotNull EntityDimensions getDimensions(@NotNull Pose pPose) {
+    public EntityDimensions getDimensions(Pose pPose) {
         return isGiant() ? GIANT : SMALL;
     }
 }

@@ -26,8 +26,6 @@ import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.util.MobEntityTypesTest;
 import org.confluence.terra_curio.util.TCUtils;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.UnknownNullability;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
@@ -36,6 +34,8 @@ import java.util.*;
 
 import static org.confluence.terra_curio.util.TCUtils.tryCast;
 
+@javax.annotation.ParametersAreNonnullByDefault
+@net.minecraft.MethodsReturnNonnullByDefault
 @SuppressWarnings("unchecked")
 public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
     public static final List<ValueType<Unit, UnitValue>> UNITS_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
@@ -171,7 +171,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public @UnknownNullability CompoundTag serializeNBT(HolderLookup.@NotNull Provider provider) {
+    public CompoundTag serializeNBT(HolderLookup.Provider provider) {
         CompoundTag nbt = new CompoundTag();
         ListTag listTag = new ListTag();
         for (Map.Entry<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> entry : valueMap.entrySet()) {
@@ -188,16 +188,17 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
     }
 
     @Override
-    public void deserializeNBT(HolderLookup.@NotNull Provider provider, @NotNull CompoundTag nbt) {
+    public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         this.valueMap.clear();
         ListTag listTag = nbt.getList("valueMap", Tag.TAG_COMPOUND);
         for (Tag tag : listTag) {
             CompoundTag compoundTag = (CompoundTag) tag;
-            String key = compoundTag.getAllKeys().stream().findFirst().get();
+            String key = compoundTag.getAllKeys().stream().findFirst().orElse(null);
+            if (key == null) continue;
             ResourceLocation location = ResourceLocation.parse(key);
-            ValueType.VALUE_CODECS.get(location).parse(NbtOps.INSTANCE, compoundTag.get(key)).result().ifPresent(value -> {
-                valueMap.put(ValueType.TYPES.get(location), value);
-            });
+            ValueType.VALUE_CODECS.get(location).parse(NbtOps.INSTANCE, compoundTag.get(key)).result().ifPresent(
+                    value -> valueMap.put(ValueType.TYPES.get(location), value)
+            );
         }
         this.panicNecklace = nbt.getBoolean("panicNecklace");
     }

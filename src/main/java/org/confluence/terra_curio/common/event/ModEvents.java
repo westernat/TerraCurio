@@ -34,7 +34,7 @@ public final class ModEvents {
         TCAttributes.registerAttribute(TCAttributes.RANGED_DAMAGE, event::add);
         TCAttributes.registerAttribute(TCAttributes.DODGE_CHANCE, event::add);
         TCAttributes.registerAttribute(TCAttributes.AGGRO, event::add);
-        if (TerraCurio.isConfluenceLoaded()) {
+        if (TerraCurio.IS_CONFLUENCE_LOADED) {
             TCAttributes.registerAttribute(TCAttributes.MAGIC_DAMAGE, event::add);
         }
         TCAttributes.registerAttribute(TCAttributes.ARMOR_PASS, event::add);
@@ -52,7 +52,6 @@ public final class ModEvents {
         registrar.playToClient(BroadcastGravitationRotPacketS2C.TYPE, BroadcastGravitationRotPacketS2C.STREAM_CODEC, BroadcastGravitationRotPacketS2C::handle);
         registrar.playToClient(CurioExistsPacketS2C.TYPE, CurioExistsPacketS2C.STREAM_CODEC, CurioExistsPacketS2C::handle);
         registrar.playToClient(AttackDamagePacketS2C.TYPE, AttackDamagePacketS2C.STREAM_CODEC, AttackDamagePacketS2C::handle);
-        registrar.playToClient(WindSpeedPacketS2C.TYPE, WindSpeedPacketS2C.STREAM_CODEC, WindSpeedPacketS2C::handle);
         registrar.playToClient(EntityKilledPacketS2C.TYPE, EntityKilledPacketS2C.STREAM_CODEC, EntityKilledPacketS2C::handle);
         registrar.playToClient(InfoCurioCheckPacketS2C.TYPE, InfoCurioCheckPacketS2C.STREAM_CODEC, InfoCurioCheckPacketS2C::handle);
         registrar.playToClient(StepStoolSteppingPacketS2C.TYPE, StepStoolSteppingPacketS2C.STREAM_CODEC, StepStoolSteppingPacketS2C::handle);

@@ -15,7 +15,6 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.effect.beneficial.GravitationEffect;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.network.s2c.BroadcastGravitationRotPacketS2C;
-import org.jetbrains.annotations.NotNull;
 
 public record GravitationPacketC2S(boolean enable) implements CustomPacketPayload {
     public static final Type<GravitationPacketC2S> TYPE = new Type<>(TerraCurio.asResource("gravitation"));
@@ -45,7 +44,7 @@ public record GravitationPacketC2S(boolean enable) implements CustomPacketPayloa
     }
 
     @Override
-    public @NotNull Type<GravitationPacketC2S> type() {
+    public Type<GravitationPacketC2S> type() {
         return TYPE;
     }
 }

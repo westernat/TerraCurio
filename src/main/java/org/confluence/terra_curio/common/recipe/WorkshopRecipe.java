@@ -8,15 +8,22 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCRecipes;
-import org.jetbrains.annotations.NotNull;
+import org.confluence.terra_curio.util.TCUtils;
 
 public class WorkshopRecipe extends AbstractAmountRecipe {
     public WorkshopRecipe(ItemStack pResult, NonNullList<Ingredient> pIngredients) {
         super(pResult, pIngredients);
+    }
+
+    @Override
+    public boolean matches(RecipeInput input, Level pLevel) {
+        return TCUtils.forConfluence$ModifyExpression(super.matches(input, pLevel));
     }
 
     @Override
@@ -25,21 +32,26 @@ public class WorkshopRecipe extends AbstractAmountRecipe {
     }
 
     @Override
-    public @NotNull ItemStack getToastSymbol() {
-        return TCBlocks.WORKSHOP.get().asItem().getDefaultInstance();
+    public String getGroup() {
+        return "workshop";
     }
 
     @Override
-    public @NotNull RecipeSerializer<WorkshopRecipe> getSerializer() {
+    public ItemStack getToastSymbol() {
+        return TCBlocks.WORKSHOP.toStack();
+    }
+
+    @Override
+    public RecipeSerializer<WorkshopRecipe> getSerializer() {
         return TCRecipes.WORKSHOP_SERIALIZER.get();
     }
 
     @Override
-    public @NotNull RecipeType<WorkshopRecipe> getType() {
+    public RecipeType<WorkshopRecipe> getType() {
         return TCRecipes.WORKSHOP_TYPE.get();
     }
 
-    public static class Serializer extends AbstractAmountRecipe.Serializer<WorkshopRecipe> {
+    public static class Serializer implements RecipeSerializer<WorkshopRecipe> {
         public static final MapCodec<WorkshopRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 ItemStack.STRICT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
                 Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").flatXmap(list -> {
@@ -47,24 +59,19 @@ public class WorkshopRecipe extends AbstractAmountRecipe {
                     if (ingredients.length == 0) {
                         return DataResult.error(() -> "No ingredients for workshop recipe");
                     } else {
-                        return ingredients.length > 12 ? DataResult.error(() -> "Too many ingredients for workshop recipe. The maximum is: 12") : DataResult.success(NonNullList.of(AmountIngredient.EMPTY, ingredients));
+                        return DataResult.success(NonNullList.of(AmountIngredient.EMPTY, ingredients));
                     }
                 }, DataResult::success).forGetter(recipe -> recipe.ingredients)
         ).apply(instance, WorkshopRecipe::new));
         public static final StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> STREAM_CODEC = StreamCodec.of(Serializer::toNetwork, Serializer::fromNetwork);
 
         @Override
-        protected WorkshopRecipe newInstance(ItemStack pResult, NonNullList<Ingredient> pIngredients) {
-            return new WorkshopRecipe(pResult, pIngredients);
-        }
-
-        @Override
-        public @NotNull MapCodec<WorkshopRecipe> codec() {
+        public MapCodec<WorkshopRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> streamCodec() {
             return STREAM_CODEC;
         }
 

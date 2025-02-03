@@ -17,6 +17,8 @@ import org.confluence.terra_curio.common.init.TCEntities;
 import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
+@javax.annotation.ParametersAreNonnullByDefault
+@net.minecraft.MethodsReturnNonnullByDefault
 public class StarCloakEntity extends Projectile {
     private static final EntityDataAccessor<Boolean> DATA_MANA = SynchedEntityData.defineId(StarCloakEntity.class, EntityDataSerializers.BOOLEAN);
     private final boolean hasMana;
@@ -80,7 +82,7 @@ public class StarCloakEntity extends Projectile {
     }
 
     @Override
-    protected void onHitEntity(@NotNull EntityHitResult pResult) {
+    protected void onHitEntity(EntityHitResult pResult) {
         if (isManaState()) {
             TCUtils.forConfluence$Inject();
         } else {
@@ -94,7 +96,7 @@ public class StarCloakEntity extends Projectile {
     }
 
     @Override
-    protected boolean canHitEntity(@NotNull Entity pTarget) {
+    protected boolean canHitEntity(Entity pTarget) {
         if (!pTarget.canBeHitByProjectile()) {
             return false;
         } else if (isManaState()) {

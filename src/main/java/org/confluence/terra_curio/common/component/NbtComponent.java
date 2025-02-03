@@ -8,7 +8,6 @@ import net.minecraft.nbt.TagParser;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public record NbtComponent(CompoundTag nbt) implements DataComponentType<NbtComponent> {
@@ -21,7 +20,7 @@ public record NbtComponent(CompoundTag nbt) implements DataComponentType<NbtComp
     }
 
     @Override
-    public @NotNull StreamCodec<? super RegistryFriendlyByteBuf, NbtComponent> streamCodec() {
+    public StreamCodec<? super RegistryFriendlyByteBuf, NbtComponent> streamCodec() {
         return STREAM_CODEC;
     }
 }

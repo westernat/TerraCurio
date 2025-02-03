@@ -2,8 +2,6 @@ package org.confluence.terra_curio.client.handler;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -30,14 +28,17 @@ public final class PlayerJumpHandler {
     private static int maxSandstormTicks = 0;
     private static int remainSandstormTicks = 0;
     private static boolean sandstormFinished = false;
+    public static boolean isOnSandstormJump = false;
 
     private static double blizzardSpeed = 0.0;
     private static int maxBlizzardTicks = 0;
     private static int remainBlizzardTicks = 0;
     private static boolean blizzardFinished = false;
+    public static boolean isOnBlizzardJump = false;
 
     private static double tsunamiSpeed = 0.0;
     private static boolean tsunamiFinished = false;
+    public static boolean isOnTsunamiJump = false;
 
     private static double cloudSpeed = 0.0;
     private static boolean cloudFinished = false;
@@ -58,13 +59,16 @@ public final class PlayerJumpHandler {
         if (localPlayer.onGround()) {
             reset(true);
         } else if (jumping) {
-            if (AirHopHelper.isLoaded() && AirHopHelper.notFinishJump(localPlayer)) {
+            if (AirHopHelper.LOADED && AirHopHelper.notFinishJump(localPlayer)) {
                 jumpKeyDown = true;
                 return;
             }
 
             if (couldGlide) {
-                if (infiniteFlight || remainFlyTicks-- > 0) {
+                if (infiniteFlight || remainFlyTicks > 0) {
+                    if (!horizontalFlight || localPlayer.level().getGameTime() % 2 == 0) {
+                        remainFlyTicks--;
+                    }
                     onFly = true;
                     if (horizontalFlight && localPlayer.isShiftKeyDown()) {
                         horizontalFlight(localPlayer);
@@ -84,13 +88,24 @@ public final class PlayerJumpHandler {
                 multiJump(localPlayer, fartSpeed);
                 localPlayer.playSound(TCSoundEvents.FART_SOUND.get());
             } else if (!sandstormFinished && sandstormSpeed > 0.0) {
-                if (remainSandstormTicks-- > 0) oneTimeJump(localPlayer, sandstormSpeed);
-                else jumpKeyDown = true;
+                if (remainSandstormTicks-- > 0) {
+                    oneTimeJump(localPlayer, sandstormSpeed);
+                    isOnSandstormJump = true;
+                } else {
+                    jumpKeyDown = true;
+                    isOnSandstormJump = false;
+                }
             } else if (!blizzardFinished && blizzardSpeed > 0.0) {
-                if (remainBlizzardTicks-- > 0) oneTimeJump(localPlayer, blizzardSpeed);
-                else jumpKeyDown = true;
+                if (remainBlizzardTicks-- > 0) {
+                    oneTimeJump(localPlayer, blizzardSpeed);
+                    isOnBlizzardJump = true;
+                } else {
+                    jumpKeyDown = true;
+                    isOnBlizzardJump = false;
+                }
             } else if (!tsunamiFinished && tsunamiSpeed > 0.0) {
                 tsunamiFinished = true;
+                isOnTsunamiJump = true;
                 jumpKeyDown = true;
                 multiJump(localPlayer, tsunamiSpeed);
                 localPlayer.playSound(TCSoundEvents.DOUBLE_JUMP.get());
@@ -114,6 +129,8 @@ public final class PlayerJumpHandler {
             jumpKeyDown = false;
             sandstormFinished = remainSandstormTicks < maxSandstormTicks;
             blizzardFinished = remainBlizzardTicks < maxBlizzardTicks;
+            isOnSandstormJump = false;
+            isOnBlizzardJump = false;
             onFly = false;
         }
     }
@@ -158,16 +175,16 @@ public final class PlayerJumpHandler {
         } else {
             y = speed;
         }
-        airMove(localPlayer, y, (float) (localPlayer.getAttributeValue(Attributes.MOVEMENT_SPEED) + speed));
+        airMove(localPlayer, y, localPlayer.getSpeed() + (float) speed);
     }
 
     private static void glide(LocalPlayer localPlayer) {
-        airMove(localPlayer, -0.3, (float) localPlayer.getAttributeValue(Attributes.MOVEMENT_SPEED) + 0.4F);
+        airMove(localPlayer, -0.3, localPlayer.getSpeed() + 0.4F);
     }
 
     private static void horizontalFlight(LocalPlayer localPlayer) {
-        AttributeMap attributes = localPlayer.getAttributes();
-        airMove(localPlayer, 0.0, (float) (attributes.getValue(Attributes.MOVEMENT_SPEED) * 4.0 + flySpeed - 0.5));
+        float speed = (float) flySpeed;
+        airMove(localPlayer, 0.0, Math.min(localPlayer.getSpeed() * 4.0F + speed - 0.5F, speed + speed));
     }
 
     private static void airMove(LocalPlayer localPlayer, double y, float h) {

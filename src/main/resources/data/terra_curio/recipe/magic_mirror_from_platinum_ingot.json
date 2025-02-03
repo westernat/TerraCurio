@@ -7,7 +7,7 @@
     ],
     "key": {
         "g": {
-            "tag": "forge:ingots/platinum"
+            "tag": "c:ingots/platinum"
         },
         "G": {
             "item": "minecraft:glass"

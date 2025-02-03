@@ -6,23 +6,24 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.confluence.terra_curio.common.item.IFunctionCouldEnable;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.Optional;
 
+@javax.annotation.ParametersAreNonnullByDefault
+@net.minecraft.MethodsReturnNonnullByDefault
 public class MultiInfoCurioItem extends BaseCurioItem implements IFunctionCouldEnable.Multi {
     public MultiInfoCurioItem(Builder builder) {
         super(builder);
     }
 
     @Override
-    public @NotNull Optional<TooltipComponent> getTooltipImage(@NotNull ItemStack stack) {
+    public Optional<TooltipComponent> getTooltipImage(ItemStack stack) {
         return Optional.ofNullable(getTooltipComponent(stack));
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         if (!tooltipFlag.hasShiftDown()) {
             super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         }

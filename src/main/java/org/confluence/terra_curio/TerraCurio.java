@@ -15,7 +15,8 @@ import org.slf4j.LoggerFactory;
 public class TerraCurio {
     public static final String MODID = "terra_curio";
     public static final Logger LOGGER = LoggerFactory.getLogger("Terra Curio");
-    private static Boolean isConfluenceLoaded;
+    public static final String CURIO_SLOT = "accessory";
+    public static final boolean IS_CONFLUENCE_LOADED = ModList.get().isLoaded("confluence");
 
     public TerraCurio(IEventBus eventBus, ModContainer modContainer) {
         TCStartupConfigs.register(modContainer);
@@ -40,12 +41,5 @@ public class TerraCurio {
 
     public static ResourceLocation asResource(String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
-    }
-
-    public static boolean isConfluenceLoaded() {
-        if (isConfluenceLoaded == null) {
-            isConfluenceLoaded = ModList.get().isLoaded("confluence");
-        }
-        return isConfluenceLoaded;
     }
 }

@@ -22,9 +22,8 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
     @Inject(method = "isEntityUpsideDown", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
     private static void upsideDown(LivingEntity living, CallbackInfoReturnable<Boolean> cir) {
         if (cir.getReturnValue()) return;
-        Class<?> clazz = living.getClass();
-        if ((clazz == LocalPlayer.class && GravitationHandler.isShouldRot()) ||
-                (clazz == RemotePlayer.class && ((IEntity) living).terra_curio$isShouldRot())
+        if ((living instanceof LocalPlayer && GravitationHandler.isShouldRot()) ||
+                (living instanceof RemotePlayer && ((IEntity) living).terra_curio$isShouldRot())
         ) {
             cir.setReturnValue(true);
         }

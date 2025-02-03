@@ -16,21 +16,18 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.Tags;
-import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
-import org.confluence.terra_curio.network.s2c.WindSpeedPacketS2C;
 import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector2f;
 
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.function.Function;
+import java.util.function.LongFunction;
 
 @OnlyIn(Dist.CLIENT)
 public final class InformationHandler {
@@ -54,9 +51,7 @@ public final class InformationHandler {
     private static final byte[] INFO_DATA = new byte[InfoCurioCheckPacketS2C.ARRAY_LENGTH];
     private static final Int2ObjectOpenHashMap<byte[]> REMOTE_DATA = new Int2ObjectOpenHashMap<>();
 
-    private static @Nullable Function<Long, Component> timeInfo = null;
-    private static final Vector2f WIND_SPEED = new Vector2f();
-    private static String windSpeedInfo = "0.00";
+    private static @Nullable LongFunction<Component> timeInfo = null;
     private static Component weatherRadioInfo = Component.translatable("info.terra_curio.weather_radio.clear", "0.00");
     private static boolean detectorPressed = false;
     private static Component metalDetectorInfo = Component.translatable("info.terra_curio.metal_detector.none");
@@ -190,9 +185,7 @@ public final class InformationHandler {
         } else if (level.isThundering()) {
             weather = "thunder";
         }
-        if (TerraCurio.isConfluenceLoaded()) {
-            return Component.translatable("info.confluence.weather_radio." + weather, windSpeedInfo);
-        }
+        TCUtils.forConfluence$Inject();
         return Component.translatable("info.terra_curio.weather_radio." + weather);
     }
 
@@ -238,14 +231,6 @@ public final class InformationHandler {
 
     public static boolean hasMechanicalView() {
         return INFO_DATA[MECHANICAL_LENS] != 0;
-    }
-
-    public static float getWindSpeedX() {
-        return WIND_SPEED.x;
-    }
-
-    public static float getWindSpeedZ() {
-        return WIND_SPEED.y;
     }
 
     public static Int2ObjectMap<Component> getInformation() {
@@ -333,11 +318,5 @@ public final class InformationHandler {
         lastAttackTime = gameTime;
         cachedDamage += packet.amount();
         dpsMeterInfo = Component.translatable("info.terra_curio.dps_meter", "%.2f".formatted(cachedDamage / delta));
-    }
-
-    public static void handleWindSpeed(WindSpeedPacketS2C packet) {
-        WIND_SPEED.set(packet.x(), packet.z());
-        windSpeedInfo = "%.2f".formatted(WIND_SPEED.length());
-        TCUtils.forConfluence$Inject();
     }
 }

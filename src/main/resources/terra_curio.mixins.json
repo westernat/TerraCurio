@@ -6,6 +6,7 @@
     "refmap": "terra_curio.refmap.json",
     "mixins": [
         "AbstractArrowMixin",
+        "CommonHooksMixin",
         "CrossbowItemMixin",
         "EntityMixin",
         "LivingEntityMixin",

@@ -34,7 +34,7 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
     });
     public static final StreamCodec<FriendlyByteBuf, AccessoriesComponent> STREAM_CODEC = new StreamCodec<>() {
         @Override
-        public void encode(FriendlyByteBuf buffer, @NotNull AccessoriesComponent value) {
+        public void encode(FriendlyByteBuf buffer, AccessoriesComponent value) {
             buffer.writeJsonWithCodec(CODEC, value);
         }
 
@@ -85,7 +85,7 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
     }
 
     @Override
-    public @NotNull StreamCodec<FriendlyByteBuf, AccessoriesComponent> streamCodec() {
+    public StreamCodec<FriendlyByteBuf, AccessoriesComponent> streamCodec() {
         return STREAM_CODEC;
     }
 
@@ -93,7 +93,7 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
         public static final Codec<Remover> CODEC = ValueType.CODEC.listOf().xmap(Remover::new, Remover::types);
 
         @Override
-        public @NotNull Optional<AccessoriesComponent> remove(AccessoriesComponent component, @NotNull Registry<Item> registry, @NotNull Either<TagKey<Item>, ResourceKey<Item>> source, @NotNull Item item) {
+        public Optional<AccessoriesComponent> remove(AccessoriesComponent component, Registry<Item> registry, Either<TagKey<Item>, ResourceKey<Item>> source, Item item) {
             HashMap<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new HashMap<>(component.types());
             for (ValueType<?, ? extends PrimitiveValue<?>> type : types) {
                 map.remove(type);
@@ -104,7 +104,7 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
 
     public static class Merger implements DataMapValueMerger<Item, AccessoriesComponent> {
         @Override
-        public @NotNull AccessoriesComponent merge(@NotNull Registry<Item> registry, @NotNull Either<TagKey<Item>, ResourceKey<Item>> either, AccessoriesComponent component, @NotNull Either<TagKey<Item>, ResourceKey<Item>> either1, AccessoriesComponent component1) {
+        public AccessoriesComponent merge(Registry<Item> registry, Either<TagKey<Item>, ResourceKey<Item>> either, AccessoriesComponent component, Either<TagKey<Item>, ResourceKey<Item>> either1, AccessoriesComponent component1) {
             Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component1.types());
             map.putAll(component.types());
             return new AccessoriesComponent(map);

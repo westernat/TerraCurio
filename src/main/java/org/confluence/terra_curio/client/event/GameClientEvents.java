@@ -115,7 +115,7 @@ public final class GameClientEvents {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && event.getItemStack().is(TCItems.DEMON_HEART.get())) {
             CuriosApi.getCuriosInventory(player).ifPresent(iCuriosItemHandler -> {
-                ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get("accessory");
+                ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
                 Component remainingTimes = Component.translatable(
                         "tooltip.item.terra_curio.demon_heart.1",
                         TCCommonConfigs.MAX_ACCESSORIES.get() - iCurioStacksHandler.getSlots()

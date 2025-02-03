@@ -6,7 +6,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
@@ -190,14 +189,6 @@ public final class GameEvents {
                 // 每十秒向周围玩家共享一次信息配饰
                 InfoCurioCheckPacketS2C.sendToOthers(serverPlayer);
             }
-        }
-    }
-
-    @SubscribeEvent
-    public static void effectApplicable(MobEffectEvent.Applicable event) {
-        MobEffectInstance effectInstance = event.getEffectInstance();
-        if (effectInstance != null && TCUtils.getAccessoriesValue(event.getEntity(), TCItems.EFFECT$IMMUNITIES).contains(effectInstance.getEffect())) {
-            event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
         }
     }
 

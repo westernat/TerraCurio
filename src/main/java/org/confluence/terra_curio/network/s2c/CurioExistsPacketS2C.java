@@ -21,7 +21,6 @@ import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.confluence.terra_curio.util.TCUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -49,7 +48,7 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     );
 
     @Override
-    public @NotNull Type<CurioExistsPacketS2C> type() {
+    public Type<CurioExistsPacketS2C> type() {
         return TYPE;
     }
 

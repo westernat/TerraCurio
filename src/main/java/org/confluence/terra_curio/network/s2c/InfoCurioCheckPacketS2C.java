@@ -19,7 +19,6 @@ import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.item.IFunctionCouldEnable;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.confluence.terra_curio.util.TCUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Set;
@@ -35,7 +34,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
     public static final double MAX_SHARE_DISTANCE_SQR = 1024.0;
 
     @Override
-    public @NotNull Type<InfoCurioCheckPacketS2C> type() {
+    public Type<InfoCurioCheckPacketS2C> type() {
         return TYPE;
     }
 

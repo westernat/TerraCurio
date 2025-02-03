@@ -14,7 +14,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.InformationHandler;
-import org.jetbrains.annotations.NotNull;
 
 public record EntityKilledPacketS2C(int amount, ResourceLocation entityType) implements CustomPacketPayload {
     public static final Type<EntityKilledPacketS2C> TYPE = new Type<>(TerraCurio.asResource("entity_killed"));
@@ -25,7 +24,7 @@ public record EntityKilledPacketS2C(int amount, ResourceLocation entityType) imp
     );
 
     @Override
-    public @NotNull Type<EntityKilledPacketS2C> type() {
+    public Type<EntityKilledPacketS2C> type() {
         return TYPE;
     }
 

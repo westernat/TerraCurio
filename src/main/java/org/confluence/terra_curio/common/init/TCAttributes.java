@@ -111,10 +111,10 @@ public final class TCAttributes {
         }
     }
 
-    public static float applyArrowKnockback(Entity attacker, float original) {
+    public static double applyArrowKnockback(Entity attacker, double original) {
         if (attacker instanceof LivingEntity living) {
             AttributeInstance instance = living.getAttribute(Attributes.ATTACK_KNOCKBACK);
-            if (instance != null) return (float) (original * (1.0 + instance.getValue()));
+            if (instance != null) return original * (1.0 + instance.getValue());
         }
         return original;
     }
@@ -137,7 +137,7 @@ public final class TCAttributes {
     }
 
     public static float applyMagicDamage(DamageSource damageSource, float amount) {
-        if (TerraCurio.isConfluenceLoaded() || hasCustomAttribute(MAGIC_DAMAGE)) return amount;
+        if (TerraCurio.IS_CONFLUENCE_LOADED || hasCustomAttribute(MAGIC_DAMAGE)) return amount;
         if (damageSource.is(DamageTypes.MAGIC) || damageSource.is(DamageTypes.INDIRECT_MAGIC)) {
             if (damageSource.getEntity() instanceof LivingEntity living) {
                 AttributeInstance attributeInstance = living.getAttribute(MAGIC_DAMAGE);

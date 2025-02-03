@@ -11,7 +11,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.StepStoolHandler;
-import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.SlotContext;
 
 public record StepStoolSteppingPacketS2C(int slot, int maxStep) implements CustomPacketPayload {
@@ -25,7 +24,7 @@ public record StepStoolSteppingPacketS2C(int slot, int maxStep) implements Custo
     );
 
     @Override
-    public @NotNull Type<StepStoolSteppingPacketS2C> type() {
+    public Type<StepStoolSteppingPacketS2C> type() {
         return TYPE;
     }
 

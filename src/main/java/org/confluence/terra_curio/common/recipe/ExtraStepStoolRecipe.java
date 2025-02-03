@@ -16,7 +16,6 @@ import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.item.curio.movement.StepStool;
 import org.confluence.terra_curio.mixin.accessor.SmithingTransformRecipeAccessor;
 import org.confluence.terra_curio.util.TCUtils;
-import org.jetbrains.annotations.NotNull;
 
 public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
     public ExtraStepStoolRecipe(Ingredient base, Ingredient addition, ItemStack result) {
@@ -24,7 +23,7 @@ public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
     }
 
     @Override
-    public boolean matches(SmithingRecipeInput input, @NotNull Level level) {
+    public boolean matches(SmithingRecipeInput input, Level level) {
         ItemStack base = input.getItem(1);
         ItemStack addition = input.getItem(2);
         if (isBaseIngredient(base) && isAdditionIngredient(addition)) {
@@ -35,7 +34,7 @@ public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
     }
 
     @Override
-    public boolean isBaseIngredient(@NotNull ItemStack pStack) {
+    public boolean isBaseIngredient(ItemStack pStack) {
         CompoundTag tag = TCUtils.getItemStackNbt(pStack);
         return pStack.getItem() instanceof StepStool && tag.getInt("extraStep") < 15;
     }
@@ -46,7 +45,7 @@ public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
     }
 
     @Override
-    public @NotNull ItemStack assemble(SmithingRecipeInput input, HolderLookup.@NotNull Provider registries) {
+    public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider registries) {
         ItemStack base = input.getItem(1).copyWithCount(1);
         int additional = TCUtils.getItemStackNbt(input.getItem(2)).getInt("extraStep");
         TCUtils.updateItemStackNbt(base, nbt -> nbt.putInt("extraStep", nbt.getInt("extraStep") + additional + 1));
@@ -62,12 +61,12 @@ public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
         public static final StreamCodec<RegistryFriendlyByteBuf, ExtraStepStoolRecipe> STREAM_CODEC = StreamCodec.of(Serializer::toNetwork, Serializer::fromNetwork);
 
         @Override
-        public @NotNull MapCodec<ExtraStepStoolRecipe> codec() {
+        public MapCodec<ExtraStepStoolRecipe> codec() {
             return CODEC;
         }
 
         @Override
-        public @NotNull StreamCodec<RegistryFriendlyByteBuf, ExtraStepStoolRecipe> streamCodec() {
+        public StreamCodec<RegistryFriendlyByteBuf, ExtraStepStoolRecipe> streamCodec() {
             return STREAM_CODEC;
         }
 

@@ -14,7 +14,6 @@ import org.confluence.terra_curio.common.entity.StepStoolEntity;
 import org.confluence.terra_curio.common.item.curio.movement.StepStool;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.confluence.terra_curio.util.TCUtils;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
@@ -31,7 +30,7 @@ public record StepStoolSteppingPacketC2S(int slot, byte step) implements CustomP
     private static final Predicate<ItemStack> PREDICATE = itemStack -> itemStack.getItem() instanceof StepStool;
 
     @Override
-    public @NotNull Type<StepStoolSteppingPacketC2S> type() {
+    public Type<StepStoolSteppingPacketC2S> type() {
         return TYPE;
     }
 

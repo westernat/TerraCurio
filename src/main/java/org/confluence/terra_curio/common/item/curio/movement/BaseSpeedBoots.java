@@ -2,6 +2,7 @@ package org.confluence.terra_curio.common.item.curio.movement;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -17,6 +18,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.client.TCClientConfigs;
+import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
@@ -53,11 +55,15 @@ public class BaseSpeedBoots extends BaseCurioItem {
     @OnlyIn(Dist.CLIENT)
     @Override
     protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
-        emitter.offsetPos = new Vec3(0.0, 0.0, living.zza * 0.5);
-        if (emitter.parentRotation == null) {
-            emitter.parentRotation = new Vector3f();
+        if (GravitationHandler.isShouldRot() && living.getClass() == LocalPlayer.class) {
+            emitter.active = false;
+        } else {
+            emitter.offsetPos = new Vec3(0.0, 0.0, living.zza * 0.5);
+            if (emitter.parentRotation == null) {
+                emitter.parentRotation = new Vector3f();
+            }
+            emitter.active = living.zza > 0.0F && !living.horizontalCollision;
         }
-        emitter.active = living.zza > 0.0F;
     }
 
     @Override
@@ -70,7 +76,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
         TCUtils.forConfluence$Inject();
         if (TCClientConfigs.speedUp && slotContext.entity() instanceof Player player && player.isLocalPlayer()) {
             int speed = TCUtils.getItemStackNbt(stack).getInt(KEY);
-            if (player.zza > 0) {
+            if (player.zza > 0 && !player.horizontalCollision) {
                 if (player.onGround()) {
                     if (TCClientPacketHandler.isHasMagiluminescence() || PlayerJumpHandler.isInfiniteFlight()) acceleration *= 2;
                     int actually = Math.min(maxSpeed - speed, acceleration);

@@ -6,6 +6,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -13,6 +14,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terra_curio.TerraCurio;
@@ -28,7 +30,6 @@ import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mesdag.particlestorm.PSGameClient;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
@@ -69,6 +70,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
                 emitters.put(builder.particle, emitter);
             }
             particleTick(living, emitter, builder.particle);
+            emitter.active &= slotContext.visible();
         }
     }
 
@@ -90,7 +92,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @NotNull TooltipContext context, @NotNull List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         ComponentsValue value;
         if (component != null && (value = component.get(TCItems.COMPONENTS)) != null) {
@@ -124,7 +126,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
     }
 
     @Override
-    public @NotNull Component getName(@NotNull ItemStack stack) {
+    public Component getName(ItemStack stack) {
         return Component.translatable(getDescriptionId()).withStyle(style -> style.withColor(stack.get(TCDataComponentTypes.MOD_RARITY).getColor()));
     }
 
@@ -134,6 +136,11 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     public static Builder builder(String name) {
         return new Builder(name, new Properties());
+    }
+
+    @Override
+    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+        return enchantment.is(EnchantmentTags.CURSE);
     }
 
     public static class Builder {
@@ -275,7 +282,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         }
 
         @Override
-        public @NotNull EquipmentSlot getEquipmentSlot() {
+        public EquipmentSlot getEquipmentSlot() {
             return builder.equipmentSlot;
         }
     }

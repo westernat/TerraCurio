@@ -19,7 +19,7 @@ public class TCCommonConfigs {
     public static final Supplier<String> STRING_SUPPLIER = () -> null;
     public static final Predicate<Object> FILTER_CONFLUENCE = o -> {
         if (o instanceof String s && s.startsWith("confluence:")) {
-            return TerraCurio.isConfluenceLoaded();
+            return TerraCurio.IS_CONFLUENCE_LOADED;
         }
         return true;
     };
@@ -55,8 +55,8 @@ public class TCCommonConfigs {
                 "confluence:life_crystal_block",
                 "confluence:tr_crimson_ore",
                 "confluence:deepslate_tr_crimson_ore",
-                "confluence:ebony_ore",
-                "confluence:deepslate_ebony_ore",
+                "confluence:demonite_ore",
+                "confluence:deepslate_demonite_ore",
                 "minecraft:ancient_debris",
                 "minecraft:diamond_ore",
                 "minecraft:deepslate_diamond_ore",

@@ -15,7 +15,6 @@ import org.confluence.terra_curio.client.animate.ExpertColorAnimation;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
-import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
@@ -30,28 +29,28 @@ public class DemonHeart extends Item {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level pLevel, Player pPlayer, @NotNull InteractionHand pUsedHand) {
+    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
         CuriosApi.getCuriosInventory(pPlayer).ifPresent(iCuriosItemHandler -> {
-            ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get("accessory");
+            ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
             if (iCurioStacksHandler != null && iCurioStacksHandler.getSlots() < TCCommonConfigs.MAX_ACCESSORIES.get()) {
                 itemStack.shrink(1);
                 Map<ResourceLocation, AttributeModifier> modifiers = iCurioStacksHandler.getModifiers();
                 double before = modifiers.containsKey(ID) ? modifiers.get(ID).amount() : 0.0;
                 iCurioStacksHandler.removeModifier(ID);
-                iCuriosItemHandler.addPermanentSlotModifier("accessory", ID, before + 1.0, AttributeModifier.Operation.ADD_VALUE);
+                iCuriosItemHandler.addPermanentSlotModifier(TerraCurio.CURIO_SLOT, ID, before + 1.0, AttributeModifier.Operation.ADD_VALUE);
             }
         });
         return InteractionResultHolder.sidedSuccess(itemStack, pLevel.isClientSide);
     }
 
     @Override
-    public void appendHoverText(@NotNull ItemStack stack, @NotNull TooltipContext context, List<Component> tooltipComponents, @NotNull TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.demon_heart.0"));
     }
 
     @Override
-    public @NotNull Component getName(@NotNull ItemStack stack) {
+    public Component getName(ItemStack stack) {
         return Component.translatable(getDescriptionId()).withStyle(style -> style.withColor(ExpertColorAnimation.INSTANCE.getColor()));
     }
 }

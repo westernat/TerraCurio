@@ -11,7 +11,6 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import net.neoforged.neoforge.common.crafting.IngredientType;
 import org.confluence.terra_curio.common.init.TCRecipes;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -26,7 +25,7 @@ public record AmountIngredient(Ingredient ingredient, int amount) implements ICu
     public static final StreamCodec<RegistryFriendlyByteBuf, AmountIngredient> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC.codec());
 
     @Override
-    public @NotNull Stream<ItemStack> getItems() {
+    public Stream<ItemStack> getItems() {
         return Arrays.stream(ingredient.getItems()).peek(itemStack -> itemStack.setCount(amount));
     }
 
@@ -46,7 +45,11 @@ public record AmountIngredient(Ingredient ingredient, int amount) implements ICu
     }
 
     @Override
-    public @NotNull IngredientType<AmountIngredient> getType() {
+    public IngredientType<AmountIngredient> getType() {
         return TCRecipes.AMOUNT_INGREDIENT_TYPE.get();
+    }
+
+    public static int getAmount(Ingredient ingredient) {
+        return ingredient.getCustomIngredient() instanceof AmountIngredient ai ? ai.amount : 1;
     }
 }

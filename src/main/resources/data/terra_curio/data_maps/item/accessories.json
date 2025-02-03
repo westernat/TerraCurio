@@ -65,6 +65,13 @@
                         "amount": 1.0,
                         "operation": "add_multiplied_total"
                     }
+                ],
+                "minecraft:generic.step_height": [
+                    {
+                        "id": "terra_curio:base_point",
+                        "amount": 0.5,
+                        "operation": "add_value"
+                    }
                 ]
             }
         },

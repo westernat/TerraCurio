@@ -11,15 +11,16 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.InformationHandler;
-import org.jetbrains.annotations.NotNull;
 
 import static org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C.ARRAY_LENGTH;
 
+@javax.annotation.ParametersAreNonnullByDefault
+@net.minecraft.MethodsReturnNonnullByDefault
 public record InfoDisablePacket(boolean[] disables) implements CustomPacketPayload {
     public static final Type<InfoDisablePacket> TYPE = new Type<>(TerraCurio.asResource("info_disable"));
     public static final StreamCodec<ByteBuf, InfoDisablePacket> STREAM_CODEC = new StreamCodec<>() {
         @Override
-        public @NotNull InfoDisablePacket decode(@NotNull ByteBuf buffer) {
+        public InfoDisablePacket decode(ByteBuf buffer) {
             byte[] bytes = new byte[ARRAY_LENGTH];
             buffer.readBytes(bytes);
             boolean[] disables = new boolean[ARRAY_LENGTH];
@@ -30,7 +31,7 @@ public record InfoDisablePacket(boolean[] disables) implements CustomPacketPaylo
         }
 
         @Override
-        public void encode(@NotNull ByteBuf buffer, @NotNull InfoDisablePacket value) {
+        public void encode(ByteBuf buffer, InfoDisablePacket value) {
             byte[] bytes = new byte[ARRAY_LENGTH];
             for (int i = 0; i < ARRAY_LENGTH; i++) {
                 bytes[i] = (byte) (value.disables[i] ? 1 : 0);
@@ -40,7 +41,7 @@ public record InfoDisablePacket(boolean[] disables) implements CustomPacketPaylo
     };
 
     @Override
-    public @NotNull Type<InfoDisablePacket> type() {
+    public Type<InfoDisablePacket> type() {
         return TYPE;
     }
 

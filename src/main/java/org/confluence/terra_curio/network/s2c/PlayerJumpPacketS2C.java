@@ -13,7 +13,6 @@ import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.common.init.TCItems;
-import org.jetbrains.annotations.NotNull;
 
 import static net.minecraft.network.codec.ByteBufCodecs.FLOAT;
 import static net.minecraft.network.codec.ByteBufCodecs.INT;
@@ -23,7 +22,7 @@ public record PlayerJumpPacketS2C(float fartSpeed, float sandstormSpeed, int san
     public static final Type<PlayerJumpPacketS2C> TYPE = new Type<>(TerraCurio.asResource("player_jump_s2c"));
     public static final StreamCodec<ByteBuf, PlayerJumpPacketS2C> STREAM_CODEC = new StreamCodec<>() {
         @Override
-        public void encode(@NotNull ByteBuf buffer, PlayerJumpPacketS2C value) {
+        public void encode(ByteBuf buffer, PlayerJumpPacketS2C value) {
             FLOAT.encode(buffer, value.fartSpeed);
             FLOAT.encode(buffer, value.sandstormSpeed);
             INT.encode(buffer, value.sandstormTicks);
@@ -34,7 +33,7 @@ public record PlayerJumpPacketS2C(float fartSpeed, float sandstormSpeed, int san
         }
 
         @Override
-        public @NotNull PlayerJumpPacketS2C decode(@NotNull ByteBuf buffer) {
+        public PlayerJumpPacketS2C decode(ByteBuf buffer) {
             float t1 = FLOAT.decode(buffer);
             float t2 = FLOAT.decode(buffer);
             int t3 = INT.decode(buffer);
@@ -47,7 +46,7 @@ public record PlayerJumpPacketS2C(float fartSpeed, float sandstormSpeed, int san
     };
 
     @Override
-    public @NotNull Type<PlayerJumpPacketS2C> type() {
+    public Type<PlayerJumpPacketS2C> type() {
         return TYPE;
     }
 

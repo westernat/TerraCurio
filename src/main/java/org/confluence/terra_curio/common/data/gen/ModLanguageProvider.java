@@ -11,7 +11,6 @@ import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.common.init.TCEntities;
 import org.confluence.terra_curio.common.init.TCItems;
-import org.jetbrains.annotations.NotNull;
 
 import java.nio.file.Path;
 import java.util.Arrays;
@@ -143,7 +142,7 @@ public class ModLanguageProvider extends LanguageProvider {
 
         add("tooltip.item.terra_curio.demon_heart.1", "Remaining Times: %s", "剩余次数: %s");
 
-        add(TCItems.BASE_POINT.get().getDescriptionId(), "Base Point", "基点");
+        onlyTooltip(TCItems.BASE_POINT, "基点", "'Can you hear the sound in this silence?'", "“你可听闻这寂静之声？”");
         add(TCItems.EVERLASTING.get().getDescriptionId(), "Everlasting", "亘古");
         add(TCItems.CELL_PHONE.get().getDescriptionId(), "Cell Phone", "手机");
         add(TCItems.MAGIC_MIRROR.get().getDescriptionId(), "Magic Mirror", "魔镜");
@@ -243,12 +242,12 @@ public class ModLanguageProvider extends LanguageProvider {
         tooltipsAndJeiInfo(TCItems.BRAIN_OF_CONFUSION, "混乱之脑",
                 new String[]{
                         "Has a chance to create illusions and dodge an attack",
-                        "Temporarily increase critical chance after dodge",
+                        "Temporarily increase critical chance for 4% after dodge",
                         "May confuse nearby enemies after being struck"
                 },
                 new String[]{
                         "有几率制造幻觉并躲避攻击",
-                        "闪避后暂时增加暴击几率",
+                        "闪避后暂时增加4%暴击几率",
                         "被击中后可能会迷惑附近的敌人"
                 },
                 "It has a Chance to be dropped from Zombie Villager.",
@@ -369,14 +368,13 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyTooltips(TCItems.FISH_FINDER, "探鱼器",
                 new String[]{
                         "Displays fishing information",
-                        "Displays fishing information",
-                        "Displays the phase of the moon",
-                        "Displays the weather"
+                        "Displays the weather",
+                        "Displays the phase of the moon"
                 },
                 new String[]{
                         "显示钓鱼信息",
-                        "显示月相",
-                        "显示天气"
+                        "显示天气",
+                        "显示月相"
                 }
         );
         onlyTooltip(TCItems.TIGER_CLIMBING_GEAR, "猛虎攀爬装备", "Allows the ability to climb walls, hold Crouch key to slide down", "可爬墙，按住潜行键可快速下滑");
@@ -455,27 +453,27 @@ public class ModLanguageProvider extends LanguageProvider {
         tooltipAndJeiInfo(TCItems.FROZEN_TURTLE_SHELL, "冰冻海龟壳", "Puts a shell around the owner when below 50% life that reduces damage by 25%", "当生命值低于50%时，在主人周围放置一个外壳，使伤害降低25%", "When the Turtle died for Freezing chance to dropped this item.", "当海龟因冰冻而死时，有几率掉落这个饰品。");
         onlyTooltips(TCItems.GOBLIN_TECH, "哥布林数据仪",
                 new String[]{
-                        "Displays your damage per second",
                         "Displays the most valuable ore around you",
-                        "Displays how fast the player is moving"
+                        "Displays how fast the player is moving",
+                        "Displays your damage per second"
                 },
                 new String[]{
-                        "显示你的每秒伤害",
                         "显示你周围最贵重的矿石",
-                        "显示玩家的移动速度"
+                        "显示玩家的移动速度",
+                        "显示你的每秒伤害"
                 }
         );
         onlyTooltip(TCItems.GOLD_WATCH, "金表", "Tell the time", "报时");
         onlyTooltips(TCItems.GPS, "全球定位系统",
                 new String[]{
-                        "Displays horizontal position",
+                        "Tell the time",
                         "Displays depth",
-                        "Tell the time"
+                        "Displays horizontal position"
                 },
                 new String[]{
-                        "显示水平位置",
+                        "报时",
                         "显示深度",
-                        "报时"
+                        "显示水平位置"
                 }
         );
         tooltipsAndJeiInfo(TCItems.GRAVITY_GLOBE, "重力球",
@@ -710,13 +708,13 @@ public class ModLanguageProvider extends LanguageProvider {
                 });
         onlyTooltips(TCItems.REK_3000, "R.E.K.3000",
                 new String[]{
-                        "Displays the name of rare creatures around you",
                         "Detects enemies around you",
+                        "Displays the name of rare creatures around you",
                         "Displays how many monsters have been killed"
                 },
                 new String[]{
-                        "显示您周围稀有生物的名称",
                         "探测你周围的敌人",
+                        "显示您周围稀有生物的名称",
                         "显示怪物击杀数量"
                 });
         onlyTooltips(TCItems.SNIPER_SCOPE, "狙击镜",
@@ -832,7 +830,7 @@ public class ModLanguageProvider extends LanguageProvider {
         tooltipAndJeiInfo(TCItems.SUN_STONE, "太阳石", "During daytime, grants minor increase.", "在白天时略微增强属性值", "It has a Chance to be dropped from Blaze.", "它有几率由烈焰人掉落。");
         onlyTooltip(TCItems.SWEETHEART_NECKLACE, "甜心项链", "When damaged, the bee is released and the user is immersed in honey and increases movement speed.", "受到伤害后释放蜜蜂并将使用者浸入蜂蜜中、并提高移动速度。");
         tooltipAndJeiInfo(TCItems.TABI, "分趾厚底袜", "Allows the ability to dash while double tap a direction", "双击一个方向可猛冲", "It can be found in Chests in the Nether Bridge.", "它可以在下届要塞的宝箱中找到。");
-        tooltipAndJeiInfo(TCItems.TALLY_COUNTER, "杀怪计数器", "Displays how many monsters have been killed", "显示怪物击杀数量", "The Tally Counter a Chance to be dropped from Creeper.", "它有几率从爬行者（苦力怕）身上掉落。");
+        tooltipAndJeiInfo(TCItems.TALLY_COUNTER, "杀怪计数器", "Displays how many monsters have been killed", "显示怪物击杀数量", "The Tally Counter a Chance to be dropped from Creeper.", "它有几率从苦力怕身上掉落。");
         onlyTooltips(TCItems.TERRASPARK_BOOTS, "泰拉闪耀靴",
                 new String[]{
                         "Allows flight, super fast running, and extra mobility on ice",
@@ -945,7 +943,7 @@ public class ModLanguageProvider extends LanguageProvider {
     }
 
     @Override
-    public @NotNull CompletableFuture<?> run(@NotNull CachedOutput cache) {
+    public CompletableFuture<?> run(CachedOutput cache) {
         addTranslations();
         Path path = output.getOutputFolder(PackOutput.Target.RESOURCE_PACK).resolve(TerraCurio.MODID).resolve("lang");
         if (locale.equals("en_us") && !enData.isEmpty()) {

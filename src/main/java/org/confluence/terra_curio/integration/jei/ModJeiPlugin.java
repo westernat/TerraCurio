@@ -2,6 +2,7 @@ package org.confluence.terra_curio.integration.jei;
 
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -24,10 +25,10 @@ import org.confluence.terra_curio.common.recipe.AmountIngredient;
 import org.jetbrains.annotations.NotNull;
 
 @JeiPlugin
-public class ModJeiPlugin implements IModPlugin {
+public final class ModJeiPlugin implements IModPlugin {
     public static final ResourceLocation UID = TerraCurio.asResource("jei_plugin");
     public static final ResourceLocation ARROW_RIGHT = TerraCurio.asResource("textures/gui/arrow_right.png");
-    public static final JeiBackGround HALF_BACKGROUND = new JeiBackGround(128, 64);
+    public static final JeiBackGround HALF_BACKGROUND = new JeiBackGround(128, 64, null);
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
@@ -42,13 +43,13 @@ public class ModJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(@NotNull IRecipeRegistration registration) {
-        registration.addItemStackInfo(TCItems.DEMON_HEART.get().getDefaultInstance(), Component.translatable("jei.tooltip.item.terra_curio.demon_heart.0"));
-        registration.addItemStackInfo(TCItems.DIVING_HELMET.get().getDefaultInstance(), Component.translatable("jei.tooltip.item.terra_curio.diving_helmet.0"), Component.translatable("jei.tooltip.item.terra_curio.diving_helmet.1"));
+        registration.addItemStackInfo(TCItems.DEMON_HEART.get().getDefaultInstance(), Component.translatable(getTranslationKey("jei.tooltip.item.terra_curio.demon_heart.0")));
+        registration.addItemStackInfo(TCItems.DIVING_HELMET.get().getDefaultInstance(), Component.translatable(getTranslationKey("jei.tooltip.item.terra_curio.diving_helmet.0")), Component.translatable(getTranslationKey("jei.tooltip.item.terra_curio.diving_helmet.1")));
         TCItems.CURIOS.getEntries().forEach(entry -> {
             if (entry.get() instanceof BaseCurioItem curioItem && curioItem.getJeiInformationCount() > 0) {
                 Component[] information = new Component[curioItem.getJeiInformationCount()];
                 for (int i = 0; i < information.length; i++) {
-                    information[i] = Component.translatable("jei.tooltip." + curioItem.getDescriptionId() + "." + i);
+                    information[i] = Component.translatable(getTranslationKey("jei.tooltip." + curioItem.getDescriptionId() + "." + i));
                 }
                 registration.addItemStackInfo(entry.get().getDefaultInstance(), information);
             }
@@ -57,6 +58,13 @@ public class ModJeiPlugin implements IModPlugin {
         if (level == null) return;
         RecipeManager recipeManager = level.getRecipeManager();
         registration.addRecipes(WorkshopCategory.TYPE, recipeManager.getAllRecipesFor(TCRecipes.WORKSHOP_TYPE.get()).stream().map(RecipeHolder::value).toList());
+    }
+
+    private static String getTranslationKey(String original) {
+        if (TerraCurio.IS_CONFLUENCE_LOADED) {
+            return original.replaceFirst("terra_curio", "confluence");
+        }
+        return original;
     }
 
     @Override
@@ -70,8 +78,8 @@ public class ModJeiPlugin implements IModPlugin {
 
     public static void addInput(IRecipeLayoutBuilder builder, int x, int y, Ingredient ingredient) {
         if (!ingredient.isEmpty()) {
-            if (ingredient.isCustom() && ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
-                builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredients(amountIngredient.ingredient());
+            if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
+                builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredients(VanillaTypes.ITEM_STACK, amountIngredient.getItems().toList());
             } else {
                 builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredients(ingredient);
             }

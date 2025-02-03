@@ -3,7 +3,7 @@ plugins {
     id 'eclipse'
     id 'idea'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.43-beta'
+    id 'net.neoforged.moddev' version '2.0.76'
 }
 
 version = mod_version
@@ -115,10 +115,14 @@ repositories {
     maven {
         url = "https://maven.bawnorton.com/releases"
     }
+    maven {
+        name = "Curios"
+        url = uri("https://maven.theillusivec4.top/")
+    }
 }
 
 dependencies {
-    implementation "curse.maven:adorned-1036809:5740650"
+    implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
     implementation jarJar(project(":ParticleStorm"))
 
     compileOnly("mezz.jei:jei-1.21-common-api:${jei_version}")
@@ -126,7 +130,7 @@ dependencies {
     runtimeOnly("mezz.jei:jei-1.21-neoforge:${jei_version}")
 
     compileOnly "curse.maven:dynamiclights-reforged-551736:5807536"
-    runtimeOnly "curse.maven:dynamiclights-reforged-551736:5807536"
+    //runtimeOnly "curse.maven:dynamiclights-reforged-551736:5807536"
 
     compileOnly "curse.maven:air-hop-323071:5736739"
 //    runtimeOnly "curse.maven:air-hop-323071:5736739"

@@ -13,7 +13,6 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
-import org.jetbrains.annotations.NotNull;
 
 public record BroadcastRenderPacketS2C(int playerId, short render) implements CustomPacketPayload {
     public static final short LUMINANCE_MASK = 0b001111;
@@ -27,7 +26,7 @@ public record BroadcastRenderPacketS2C(int playerId, short render) implements Cu
     );
 
     @Override
-    public @NotNull Type<BroadcastRenderPacketS2C> type() {
+    public Type<BroadcastRenderPacketS2C> type() {
         return TYPE;
     }
 

@@ -9,7 +9,6 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
-import org.jetbrains.annotations.NotNull;
 
 public record FluidWalkUpdatePacketS2C() implements CustomPacketPayload {
     public static final Type<FluidWalkUpdatePacketS2C> TYPE = new Type<>(TerraCurio.asResource("fluid_walk_update"));
@@ -22,7 +21,7 @@ public record FluidWalkUpdatePacketS2C() implements CustomPacketPayload {
     }
 
     @Override
-    public @NotNull Type<FluidWalkUpdatePacketS2C> type() {
+    public Type<FluidWalkUpdatePacketS2C> type() {
         return TYPE;
     }
 

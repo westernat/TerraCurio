@@ -13,7 +13,6 @@ import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCArmorMaterials;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCTags;
-import org.jetbrains.annotations.NotNull;
 
 public class DivingHelmet extends ArmorItem {
     private static final float DIVISION = 1.0F / 6.0F;
@@ -26,12 +25,12 @@ public class DivingHelmet extends ArmorItem {
     }
 
     @Override
-    public boolean isEnderMask(@NotNull ItemStack stack, @NotNull Player player, @NotNull EnderMan endermanEntity) {
+    public boolean isEnderMask(ItemStack stack, Player player, EnderMan endermanEntity) {
         return true;
     }
 
     @Override
-    public @NotNull Component getName(@NotNull ItemStack stack) {
+    public Component getName(ItemStack stack) {
         return Component.translatable(getDescriptionId()).withStyle(style -> style.withColor(ModRarity.GREEN.getColor()));
     }
 

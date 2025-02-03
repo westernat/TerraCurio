@@ -14,7 +14,6 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.util.CuriosUtils;
-import org.jetbrains.annotations.NotNull;
 import top.theillusivec4.curios.api.SlotContext;
 
 public class PanicNecklace extends BaseCurioItem {
@@ -44,7 +43,7 @@ public class PanicNecklace extends BaseCurioItem {
     }
 
     @Override
-    public boolean canEquip(@NotNull ItemStack stack, @NotNull EquipmentSlot armorType, @NotNull LivingEntity entity) {
+    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
         return CuriosUtils.noSameCurio(entity, PanicNecklace.class);
     }
 
