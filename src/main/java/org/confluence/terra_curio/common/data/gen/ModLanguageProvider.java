@@ -132,6 +132,7 @@ public class ModLanguageProvider extends LanguageProvider {
         add("key.terra_curio.step_stool", "Step Stool", "上梯凳");
 
         add("curios.identifier.accessory", "Accessory", "配饰");
+        add("accessories.slot.accessory", "Accessory", "配饰");
         add("curios.modifiers.accessory", "When worn as accessory:", "佩戴配饰时：");
 
         add("container.terra_curio.workshop", "Workshop", "工匠作坊");
