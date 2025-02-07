@@ -7,7 +7,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -22,6 +21,7 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terra_curio.TerraCurio;
@@ -138,7 +138,7 @@ public final class TCAttributes {
 
     public static float applyMagicDamage(DamageSource damageSource, float amount) {
         if (TerraCurio.IS_CONFLUENCE_LOADED || hasCustomAttribute(MAGIC_DAMAGE)) return amount;
-        if (damageSource.is(DamageTypes.MAGIC) || damageSource.is(DamageTypes.INDIRECT_MAGIC)) {
+        if (damageSource.is(Tags.DamageTypes.IS_MAGIC)) {
             if (damageSource.getEntity() instanceof LivingEntity living) {
                 AttributeInstance attributeInstance = living.getAttribute(MAGIC_DAMAGE);
                 if (attributeInstance == null) return amount;
