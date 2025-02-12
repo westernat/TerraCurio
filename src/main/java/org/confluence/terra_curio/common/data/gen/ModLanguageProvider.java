@@ -530,15 +530,15 @@ public class ModLanguageProvider extends LanguageProvider {
         );
         tooltipAndJeiInfo(TCItems.HONEY_COMB, "蜂窝", "Releases bees and douses the user in honey when damaged", "受到伤害后释放蜜蜂并将使用者浸入蜂蜜中", "It has a Chance to be dropped from Bee.", "它有几率从蜜蜂身上掉落。");
         onlyTooltip(TCItems.ICE_SKATES, "溜冰鞋", "Provides extra mobility on ice", "提供额外冰面行动力");
-        tooltipAndJeiInfo(TCItems.LAVA_CHARM, "熔岩护身符", "Provides 7 seconds of immunity to lava", "对岩浆免疫7秒", "It has a Chance to be dropped from Blaze.", "它有几率从烈焰人掉落");
+        tooltipAndJeiInfo(TCItems.LAVA_CHARM, "熔岩护身符", "Provides 7 seconds of immunity to lava", "对熔岩免疫7秒", "It has a Chance to be dropped from Blaze.", "它有几率从烈焰人掉落");
         onlyTooltips(TCItems.LAVA_WADERS, "熔岩靴",
                 new String[]{
                         "Allows flight, super fast running, and extra mobility on ice",
                         "Grants immunity to fire blocks and 7 seconds of immunity to lava"
                 },
                 new String[]{
-                        "提供在水、蜂蜜、岩浆上行走的能力",
-                        "对火块免疫、对岩浆免疫7秒"
+                        "提供在水、蜂蜜、熔岩上行走的能力",
+                        "对火块免疫、对熔岩免疫7秒"
                 }
         );
         tooltipAndJeiInfo(TCItems.LIFE_FORM_ANALYZER, "生命体分析机", "Displays the name of rare creatures around you", "显示您周围稀有生物的名称", "The Lifeform Analyzer has a Chance to be dropped from Glow Squid.", "它有几率从发光鱿鱼身上掉落。");
@@ -575,7 +575,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "Immunity to fire blocks, melee attacks deal fire damage"
                 },
                 new String[]{
-                        "对岩浆免疫7秒",
+                        "对熔岩免疫7秒",
                         "对火块免疫、近战攻击造成火焰伤害"
                 }
         );
@@ -601,7 +601,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 },
                 new String[]{
                         "对火块免疫",
-                        "对岩浆免疫7秒"
+                        "对熔岩免疫7秒"
                 });
         onlyTooltips(TCItems.MOLTEN_QUIVER, "熔火箭袋",
                 new String[]{
@@ -623,7 +623,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 },
                 new String[]{
                         "对火块免疫",
-                        "对岩浆免疫7秒",
+                        "对熔岩免疫7秒",
                         "减少因触碰熔岩而造成的伤害"
                 });
         tooltipAndJeiInfo(TCItems.MOON_STONE, "月亮石", "It has a Chance to be dropped from Phantom.", "在夜晚时略微增强属性值", "It has a Chance to be dropped from Phantom.", "它有几率从幻翼身上掉落。");
@@ -841,7 +841,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 },
                 new String[]{
                         "可飞行、飞速奔跑、并提供额外冰面行动力",
-                        "提供在水、蜂蜜、岩浆上行走的能力",
+                        "提供在水、蜂蜜、熔岩上行走的能力",
                         "对火块免疫并在7秒内对熔岩免疫",
                         "减少因触碰熔岩而造成的伤害"
                 }
