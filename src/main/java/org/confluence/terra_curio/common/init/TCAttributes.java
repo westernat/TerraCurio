@@ -97,17 +97,17 @@ public final class TCAttributes {
     }
 
     public static void applyToArrow(LivingEntity living, AbstractArrow abstractArrow) {
-        AttributeInstance attributeInstance;
+        AttributeInstance instance;
         if (!hasCustomAttribute(RANGED_VELOCITY)) {
-            attributeInstance = living.getAttribute(RANGED_VELOCITY);
-            if (attributeInstance != null) {
-                abstractArrow.setDeltaMovement(abstractArrow.getDeltaMovement().scale(attributeInstance.getValue()));
+            instance = living.getAttribute(RANGED_VELOCITY);
+            if (instance != null) {
+                abstractArrow.setDeltaMovement(abstractArrow.getDeltaMovement().scale(instance.getValue()));
             }
         }
         if (!abstractArrow.isCritArrow() && !hasCustomAttribute(CRIT_CHANCE)) {
-            attributeInstance = living.getAttribute(CRIT_CHANCE);
-            if (attributeInstance != null) {
-                abstractArrow.setCritArrow(living.getRandom().nextFloat() < attributeInstance.getValue());
+            instance = living.getAttribute(CRIT_CHANCE);
+            if (instance != null) {
+                abstractArrow.setCritArrow(living.getRandom().nextFloat() < instance.getValue());
             }
         }
     }
@@ -122,36 +122,51 @@ public final class TCAttributes {
 
     public static boolean applyDodge(LivingEntity living, RandomSource random) {
         if (hasCustomAttribute(DODGE_CHANCE)) return false;
-        AttributeInstance attributeInstance = living.getAttribute(DODGE_CHANCE);
-        if (attributeInstance == null) return false;
-        return random.nextFloat() < attributeInstance.getValue();
+        AttributeInstance instance = living.getAttribute(DODGE_CHANCE);
+        if (instance == null) return false;
+        return random.nextFloat() < instance.getValue();
     }
 
-    public static float applyRangedDamage(DamageSource damageSource, float amount) {
-        if (hasCustomAttribute(RANGED_DAMAGE)) return amount;
-        if (damageSource.is(DamageTypeTags.IS_PROJECTILE) && damageSource.getEntity() instanceof LivingEntity living) {
-            AttributeInstance attributeInstance = living.getAttribute(RANGED_DAMAGE);
-            if (attributeInstance == null) return amount;
-            return amount * (float) attributeInstance.getValue();
+    public static float applyCritDamage(RandomSource random, LivingEntity living, float amount) {
+        if (hasCustomAttribute(CRIT_CHANCE)) return amount;
+        AttributeInstance instance = living.getAttribute(CRIT_CHANCE);
+        if (instance != null && random.nextFloat() < instance.getValue()) {
+            return amount * 1.5F;
         }
         return amount;
     }
 
-    public static float applyMagicDamage(DamageSource damageSource, float amount) {
+    public static float applyRangedDamage(RandomSource random, DamageSource damageSource, float amount) {
+        if (hasCustomAttribute(RANGED_DAMAGE)) return amount;
+        if (damageSource.is(DamageTypeTags.IS_PROJECTILE) && damageSource.getEntity() instanceof LivingEntity living) {
+            AttributeInstance instance = living.getAttribute(RANGED_DAMAGE);
+            if (instance != null) {
+                amount *= (float) instance.getValue();
+            }
+            if (!(damageSource.getDirectEntity() instanceof AbstractArrow)) {
+                amount = applyCritDamage(random, living, amount);
+            }
+        }
+        return amount;
+    }
+
+    public static float applyMagicDamage(RandomSource random, DamageSource damageSource, float amount) {
         if (TerraCurio.IS_CONFLUENCE_LOADED || hasCustomAttribute(MAGIC_DAMAGE)) return amount;
-        if (damageSource.is(Tags.DamageTypes.IS_MAGIC)) {
-            if (damageSource.getEntity() instanceof LivingEntity living) {
-                AttributeInstance attributeInstance = living.getAttribute(MAGIC_DAMAGE);
-                if (attributeInstance == null) return amount;
-                return amount * (float) attributeInstance.getValue();
+        if (damageSource.is(Tags.DamageTypes.IS_MAGIC) && damageSource.getEntity() instanceof LivingEntity living) {
+            AttributeInstance instance = living.getAttribute(MAGIC_DAMAGE);
+            if (instance != null) {
+                amount *= (float) instance.getValue();
+            }
+            if (!(damageSource.getDirectEntity() instanceof AbstractArrow)) {
+                amount = applyCritDamage(random, living, amount);
             }
         }
         return amount;
     }
 
     public static void applyPickupRange(Player player) {
-        AttributeInstance attributeInstance = player.getAttribute(PICKUP_RANGE);
-        float originalRange = attributeInstance == null ? 0.0F : (float) attributeInstance.getValue();
+        AttributeInstance instance = player.getAttribute(PICKUP_RANGE);
+        float originalRange = instance == null ? 0.0F : (float) instance.getValue();
         float range = NeoForge.EVENT_BUS.post(new RangePickupItemEvent.Pre(player, originalRange)).getRange();
         if (range <= 0.0F) return;
         player.level().getEntitiesOfClass(

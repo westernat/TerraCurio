@@ -96,8 +96,8 @@ public final class GameEvents {
         PanicNecklace.apply(living);
 
         amount = DivingHelmet.apply(living, damageSource, amount);
-        amount = TCAttributes.applyMagicDamage(damageSource, amount);
-        amount = TCAttributes.applyRangedDamage(damageSource, amount);
+        amount = TCAttributes.applyMagicDamage(random, damageSource, amount);
+        amount = TCAttributes.applyRangedDamage(random, damageSource, amount);
         amount = PaladinsShield.apply(living, damageSource, amount);
         amount = TCUtils.applyFrozenTurtleShell(living, amount);
         amount = TCUtils.applyLavaHurtReduce(living, damageSource, amount);
