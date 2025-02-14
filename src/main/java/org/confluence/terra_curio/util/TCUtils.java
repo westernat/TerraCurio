@@ -272,16 +272,6 @@ public final class TCUtils {
         }
     }
 
-    public static float applyArmorPass(DamageSource damageSource, float armorValue) {
-        if (!TCAttributes.hasCustomAttribute(TCAttributes.ARMOR_PASS) && damageSource.getEntity() instanceof LivingEntity attacker) {
-            AttributeInstance attributeInstance = attacker.getAttribute(TCAttributes.ARMOR_PASS);
-            if (attributeInstance != null) armorValue -= (float) attributeInstance.getValue();
-            if (damageSource.is(TCDamageTypes.STAR_CLOAK)) armorValue -= 3.0F;
-            return Math.max(armorValue, 0.0F);
-        }
-        return armorValue;
-    }
-
     public static boolean applyTotemAbility(LivingEntity living) {
         ILivingEntity iLiving = (ILivingEntity) living;
         if (iLiving.terra_curio$getTotemCooldown() == 0) {

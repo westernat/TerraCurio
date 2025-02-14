@@ -11,6 +11,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.mixed.IEntity;
@@ -84,7 +85,7 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
 
     @WrapOperation(method = "getDamageAfterArmorAbsorb", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(Lnet/minecraft/world/entity/LivingEntity;FLnet/minecraft/world/damagesource/DamageSource;FF)F"))
     private float passArmor(LivingEntity entity, float damage, DamageSource damageSource, float armorValue, float armorToughness, Operation<Float> original) {
-        return original.call(entity, damage, damageSource, TCUtils.applyArmorPass(damageSource, armorValue), armorToughness);
+        return original.call(entity, damage, damageSource, TCAttributes.applyArmorPass(damageSource, armorValue), armorToughness);
     }
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)

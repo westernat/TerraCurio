@@ -20,10 +20,7 @@ import org.confluence.terra_curio.network.s2c.*;
 public final class ModEvents {
     @SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            TCCommonConfigs.onLoad();
-            TCAttributes.modifyAttributesUpperLimit();
-        });
+        event.enqueueWork(TCCommonConfigs::onLoad);
     }
 
     @SubscribeEvent

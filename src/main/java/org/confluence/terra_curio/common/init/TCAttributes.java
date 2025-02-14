@@ -19,7 +19,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.fml.ModList;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.PercentageAttribute;
 import net.neoforged.neoforge.common.Tags;
@@ -28,7 +27,6 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.event.RangePickupItemEvent;
 import org.confluence.terra_curio.integration.apothic.ApothicHelper;
-import org.confluence.terra_curio.mixin.accessor.RangedAttributeAccessor;
 
 import java.util.HashMap;
 import java.util.List;
@@ -115,7 +113,9 @@ public final class TCAttributes {
     public static double applyArrowKnockback(Entity attacker, double original) {
         if (attacker instanceof LivingEntity living) {
             AttributeInstance instance = living.getAttribute(Attributes.ATTACK_KNOCKBACK);
-            if (instance != null) return original * (1.0 + instance.getValue());
+            if (instance != null) {
+                original *= (1.0 + instance.getValue());
+            }
         }
         return original;
     }
@@ -123,15 +123,14 @@ public final class TCAttributes {
     public static boolean applyDodge(LivingEntity living, RandomSource random) {
         if (hasCustomAttribute(DODGE_CHANCE)) return false;
         AttributeInstance instance = living.getAttribute(DODGE_CHANCE);
-        if (instance == null) return false;
-        return random.nextFloat() < instance.getValue();
+        return instance != null && random.nextFloat() < instance.getValue();
     }
 
     public static float applyCritDamage(RandomSource random, LivingEntity living, float amount) {
         if (hasCustomAttribute(CRIT_CHANCE)) return amount;
         AttributeInstance instance = living.getAttribute(CRIT_CHANCE);
         if (instance != null && random.nextFloat() < instance.getValue()) {
-            return amount * 1.5F;
+            amount *= 1.5F;
         }
         return amount;
     }
@@ -180,6 +179,16 @@ public final class TCAttributes {
         });
     }
 
+    public static float applyArmorPass(DamageSource damageSource, float armorValue) {
+        if (!hasCustomAttribute(ARMOR_PASS) && damageSource.getEntity() instanceof LivingEntity attacker) {
+            AttributeInstance attributeInstance = attacker.getAttribute(ARMOR_PASS);
+            if (attributeInstance != null) armorValue -= (float) attributeInstance.getValue();
+            if (damageSource.is(TCDamageTypes.STAR_CLOAK)) armorValue -= 3.0F;
+            return Math.max(armorValue, 0.0F);
+        }
+        return armorValue;
+    }
+
     public static void prepareReplacements() {
         Map<String, Holder<Attribute>> available = Map.of(
                 "crit_chance", CRIT_CHANCE,
@@ -209,20 +218,6 @@ public final class TCAttributes {
                 TerraCurio.LOGGER.warn("Unknown attribute: {}", split[1]);
             } else {
                 MAP.replace(holder, optional.get());
-            }
-        }
-    }
-
-    public static void modifyAttributesUpperLimit() {
-        if (!ModList.get().isLoaded("attributefix")) {
-            if (Attributes.ARMOR.value() instanceof RangedAttribute rangedAttribute) {
-                ((RangedAttributeAccessor) rangedAttribute).setMaxValue(1024.0);
-            }
-            if (Attributes.ARMOR_TOUGHNESS.value() instanceof RangedAttribute rangedAttribute) {
-                ((RangedAttributeAccessor) rangedAttribute).setMaxValue(1024.0);
-            }
-            if (Attributes.MAX_HEALTH.value() instanceof RangedAttribute rangedAttribute) {
-                ((RangedAttributeAccessor) rangedAttribute).setMaxValue(8192.0);
             }
         }
     }
