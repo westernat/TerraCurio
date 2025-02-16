@@ -3,6 +3,7 @@ package org.confluence.terra_curio.common.event;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
@@ -20,7 +21,10 @@ import org.confluence.terra_curio.network.s2c.*;
 public final class ModEvents {
     @SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
-        event.enqueueWork(TCCommonConfigs::onLoad);
+        event.enqueueWork(() -> {
+            TCCommonConfigs.onLoad();
+            NeoForgeMod.enableMergedAttributeTooltips();
+        });
     }
 
     @SubscribeEvent
