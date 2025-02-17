@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.entity.projectile;
 
+import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -13,6 +14,7 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.common.init.TCEntities;
+import org.jetbrains.annotations.Nullable;
 
 @javax.annotation.ParametersAreNonnullByDefault
 @net.minecraft.MethodsReturnNonnullByDefault
@@ -112,5 +114,10 @@ public class BeeProjectile extends AbstractHurtingProjectile {
     @Override
     public EntityDimensions getDimensions(Pose pPose) {
         return isGiant() ? GIANT : SMALL;
+    }
+
+    @Override
+    protected @Nullable ParticleOptions getTrailParticle() {
+        return null;
     }
 }
