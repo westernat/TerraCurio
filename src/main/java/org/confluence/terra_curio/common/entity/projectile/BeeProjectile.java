@@ -93,7 +93,8 @@ public class BeeProjectile extends Projectile {
             setDeltaMovement(motion);
             blockHitCount++;
         }
-        if (blockHitCount > (isGiant() ? 2 : 1) || lifeTime++ > (isGiant() ? 220 : 200)) discard();
+        if (getInBlockState().liquid()) discard();
+        else if (blockHitCount > (isGiant() ? 2 : 1) || lifeTime++ > (isGiant() ? 220 : 200)) discard();
     }
 
     @Override
@@ -127,5 +128,10 @@ public class BeeProjectile extends Projectile {
         float f1 = -Mth.sin((x + z) * Mth.DEG_TO_RAD);
         float f2 = Mth.cos(value) * cos;
         shoot(f, f1, f2, velocity, inaccuracy);
+    }
+
+    @Override
+    public boolean shouldRender(double x, double y, double z) {
+        return true;
     }
 }
