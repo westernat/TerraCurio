@@ -1,26 +1,26 @@
 package org.confluence.terra_curio.common.entity.projectile;
 
-import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.projectile.AbstractHurtingProjectile;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.common.init.TCEntities;
 import org.jetbrains.annotations.Nullable;
 
 @javax.annotation.ParametersAreNonnullByDefault
 @net.minecraft.MethodsReturnNonnullByDefault
-public class BeeProjectile extends AbstractHurtingProjectile {
+public class BeeProjectile extends Projectile {
     private static final EntityDataAccessor<Boolean> DATA_IS_GIANT = SynchedEntityData.defineId(BeeProjectile.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDimensions SMALL =  TCEntities.BEE_PROJECTILE.get().getDimensions().scale(0.5f);
+    private static final EntityDimensions SMALL = TCEntities.BEE_PROJECTILE.get().getDimensions().scale(0.5f);
     private static final EntityDimensions GIANT = TCEntities.BEE_PROJECTILE.get().getDimensions();
 
     private int blockHitCount;
@@ -33,7 +33,7 @@ public class BeeProjectile extends AbstractHurtingProjectile {
         this.lifeTime = 0;
     }
 
-    public BeeProjectile(Level level, LivingEntity owner, boolean isGiant) {
+    public BeeProjectile(Level level, @Nullable LivingEntity owner, boolean isGiant) {
         this(TCEntities.BEE_PROJECTILE.get(), level);
         setOwner(owner);
         this.blockHitCount = 0;
@@ -43,8 +43,6 @@ public class BeeProjectile extends AbstractHurtingProjectile {
 
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        super.defineSynchedData(builder);
-
         builder.define(DATA_IS_GIANT, false);
     }
 
@@ -54,58 +52,58 @@ public class BeeProjectile extends AbstractHurtingProjectile {
 
     @Override
     public void tick() {
-        super.tick();
-        if (tickCount % 20 == 2) {
-            level().getEntities(getOwner(), new AABB(getOnPos()).inflate(8.0), entity -> entity instanceof Enemy)
-                .stream().min((a, b) -> (int) (a.distanceToSqr(this) - b.distanceToSqr(this)))
-                .ifPresent(monster -> this.target = monster);
+        if (target == null) {
+            double d0 = -1.0;
+            Entity enemy = null;
+            for (Entity entity : level().getEntities(this, new AABB(blockPosition()).inflate(8))) {
+                if (entity instanceof Enemy) {
+                    double d1 = entity.distanceToSqr(getX(), getY(), getZ());
+                    if (d0 == -1.0 || d1 < d0) {
+                        d0 = d1;
+                        enemy = entity;
+                    }
+                }
+            }
+            this.target = enemy;
         }
         if (target != null) {
             if (target.isSpectator() || (target instanceof LivingEntity living && living.isDeadOrDying())) this.target = null;
             if (target != null) {
-                Vec3 vec3 = new Vec3(target.getX() - getX(), target.getY() + target.getEyeHeight() / 2.0 - getY(), target.getZ() - getZ());
-                double lengthSqr = vec3.lengthSqr();
-                if (lengthSqr < 64.0) {
-                    double factor = 1.0 - Math.sqrt(lengthSqr) / 8.0;
-                    addDeltaMovement(vec3.normalize().scale(factor * factor * (isGiant() ? 0.3 : 0.1)));
-                }
+                Vec3 vec3 = target.getEyePosition().subtract(position()).normalize();
+                addDeltaMovement(vec3.scale(0.95).scale(isGiant() ? 0.15 : 0.05));
             }
         }
-        Vec3 motion = getDeltaMovement();
-        setYRot((float) (Mth.atan2(motion.x, motion.z) * Mth.RAD_TO_DEG));
-        setXRot((float) (Mth.atan2(motion.y, motion.horizontalDistance()) * Mth.RAD_TO_DEG));
-        move(MoverType.SELF, motion);
-        if (lifeTime++ > (isGiant() ? 220 : 200)) discard();
-    }
-
-    @Override
-    protected boolean shouldBurn() {
-        return false;
-    }
-
-    @Override
-    protected void onHitBlock(BlockHitResult blockHitResult) {
-        Vec3 motion = getDeltaMovement();
-        double x = motion.x;
-        double y = motion.y;
-        double z = motion.z;
-        switch (blockHitResult.getDirection().getAxis()) {
-            case X -> x = -x;
-            case Y -> y = -y;
-            case Z -> z = -z;
+        if (lifeTime % 4 == 0) {
+            AABB boundingBox = getBoundingBox().inflate(1.0);
+            HitResult hitresult = ProjectileUtil.getEntityHitResult(level(), this, boundingBox.getMinPosition(), boundingBox.getMaxPosition(), boundingBox, this::canHitEntity);
+            if (hitresult instanceof EntityHitResult entityHitResult) {
+                onHitEntity(entityHitResult);
+            }
         }
-        setDeltaMovement(x, y, z);
-        if (blockHitCount++ > (isGiant() ? 2 : 1)) discard();
+
+        checkInsideBlocks();
+        updateRotation();
+        Vec3 vec3 = getDeltaMovement();
+        move(MoverType.SELF, vec3);
+        Vec3 motion = getDeltaMovement();
+        if (motion.x != vec3.x || motion.y != vec3.y || motion.z != vec3.z) {
+            if (motion.x != vec3.x) motion = new Vec3(-vec3.x, vec3.y, vec3.z);
+            if (motion.y != vec3.y) motion = new Vec3(vec3.x, -vec3.y, vec3.z);
+            if (motion.z != vec3.z) motion = new Vec3(vec3.x, vec3.y, -vec3.z);
+            setDeltaMovement(motion);
+            blockHitCount++;
+        }
+        if (blockHitCount > (isGiant() ? 2 : 1) || lifeTime++ > (isGiant() ? 220 : 200)) discard();
     }
 
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
-        if (entity != getOwner()) {
+        if (getOwner() != null) {
             float damage = 5.0F + (isGiant() ? random.nextInt(1, 4) : (random.nextBoolean() ? 1 : 0));
-            entity.hurt(damageSources().mobProjectile(this, (LivingEntity) getOwner()), damage);
+            entity.hurt(damageSources().indirectMagic(getOwner(), this), damage);
             if (isGiant()) {
-                Vec3 motion = position().subtract(entity.position()).normalize().scale(0.5);
+                Vec3 motion = entity.position().subtract(position()).normalize().scale(0.5);
                 entity.push(motion.x, motion.y, motion.z);
             }
         }
@@ -117,7 +115,17 @@ public class BeeProjectile extends AbstractHurtingProjectile {
     }
 
     @Override
-    protected @Nullable ParticleOptions getTrailParticle() {
-        return null;
+    protected boolean canHitEntity(Entity target) {
+        return target.canBeHitByProjectile() && target != getOwner();
+    }
+
+    @Override
+    public void shootFromRotation(Entity shooter, float x, float y, float z, float velocity, float inaccuracy) {
+        float cos = Mth.cos(x * Mth.DEG_TO_RAD);
+        float value = y * Mth.DEG_TO_RAD;
+        float f = -Mth.sin(value) * cos;
+        float f1 = -Mth.sin((x + z) * Mth.DEG_TO_RAD);
+        float f2 = Mth.cos(value) * cos;
+        shoot(f, f1, f2, velocity, inaccuracy);
     }
 }
