@@ -116,6 +116,15 @@ public class BeeProjectile extends Projectile {
     }
 
     @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        super.onSyncedDataUpdated(key);
+        if (DATA_IS_GIANT.equals(key)) {
+            refreshDimensions();
+            setBoundingBox(makeBoundingBox());
+        }
+    }
+
+    @Override
     protected boolean canHitEntity(Entity target) {
         return target.canBeHitByProjectile() && target != getOwner();
     }
