@@ -308,12 +308,11 @@ public final class InformationHandler {
     public static void handleAttackDamage(AttackDamagePacketS2C packet, Player player) {
         long gameTime = player.level().getGameTime();
         long delta = gameTime - lastAttackTime;
-        if (delta == gameTime) { // 防止第一次攻击
-            delta = 20L;
-        }
-        if (delta > 100) { // 大于五秒重置
+        if (delta == gameTime) delta = 20; // 防止第一次攻击
+        else if (delta == 0) delta = 1; // 防止极端攻击
+        else if (delta > 100) { // 大于五秒重置
             cachedDamage = 0.0F;
-            delta = 20L;
+            delta = 20;
         }
         lastAttackTime = gameTime;
         cachedDamage += packet.amount();
