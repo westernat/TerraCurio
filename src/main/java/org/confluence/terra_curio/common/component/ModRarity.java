@@ -1,7 +1,9 @@
 package org.confluence.terra_curio.common.component;
 
+import com.google.common.collect.HashBiMap;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.Util;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Style;
@@ -16,11 +18,6 @@ import java.util.Objects;
 
 
 public class ModRarity implements DataComponentType<ModRarity> {
-    public static final ModRarity COMMON = new ModRarity("common", 16777215);
-    public static final ModRarity UNCOMMON = new ModRarity("uncommon", 16777045);
-    public static final ModRarity RARE = new ModRarity("rare", 5636095);
-    public static final ModRarity EPIC = new ModRarity("epic", 16733695);
-
     public static final ModRarity GRAY = new ModRarity("gray", 0x828282);
     public static final ModRarity WHITE = new ModRarity("white", 0xFFFFFF);
     public static final ModRarity BLUE = new ModRarity("blue", 0x9696FF);
@@ -38,6 +35,25 @@ public class ModRarity implements DataComponentType<ModRarity> {
     public static final ModRarity EXPERT = new ModRarity("expert", ExpertColorAnimation.INSTANCE);
     public static final ModRarity MASTER = new ModRarity("master", MasterColorAnimation.INSTANCE);
     public static final ModRarity QUEST = new ModRarity("quest", 0xFFAF00);
+
+    public static final HashBiMap<Integer, ModRarity> ID_MAP = Util.make(HashBiMap.create(), map -> {
+        map.put(-13, MASTER);
+        map.put(-12, EXPERT);
+        map.put(-11, QUEST);
+        map.put(-1, GRAY);
+        map.put(0, WHITE);
+        map.put(1, BLUE);
+        map.put(2, GREEN);
+        map.put(3, ORANGE);
+        map.put(4, LIGHT_RED);
+        map.put(5, PINK);
+        map.put(6, LIGHT_PURPLE);
+        map.put(7, LIME);
+        map.put(8, YELLOW);
+        map.put(9, CYAN);
+        map.put(10, RED);
+        map.put(11, PURPLE);
+    });
 
     public static final Codec<ModRarity> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.STRING.fieldOf("name").forGetter(ModRarity::getName),
