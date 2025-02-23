@@ -11,7 +11,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.client.animate.ExpertColorAnimation;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
@@ -47,10 +46,5 @@ public class DemonHeart extends Item {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.demon_heart.0"));
-    }
-
-    @Override
-    public Component getName(ItemStack stack) {
-        return Component.translatable(getDescriptionId()).withStyle(style -> style.withColor(ExpertColorAnimation.INSTANCE.getColor()));
     }
 }

@@ -6,7 +6,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
@@ -18,12 +22,16 @@ import org.confluence.terra_curio.client.animate.ExpertColorAnimation;
 import org.confluence.terra_curio.client.animate.MasterColorAnimation;
 import org.confluence.terra_curio.client.handler.*;
 import org.confluence.terra_curio.client.renderer.tooltip.MultiFunctionTooltip;
+import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+
+import java.util.List;
+import java.util.Optional;
 
 @EventBusSubscriber(modid = TerraCurio.MODID, value = Dist.CLIENT)
 public final class GameClientEvents {
@@ -110,10 +118,11 @@ public final class GameClientEvents {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void renderTooltip$GatherComponents(RenderTooltipEvent.GatherComponents event) {
         LocalPlayer player = Minecraft.getInstance().player;
-        if (player != null && event.getItemStack().is(TCItems.DEMON_HEART.get())) {
+        ItemStack itemStack = event.getItemStack();
+        if (player != null && itemStack.is(TCItems.DEMON_HEART.get())) {
             CuriosApi.getCuriosInventory(player).ifPresent(iCuriosItemHandler -> {
                 ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
                 Component remainingTimes = Component.translatable(
@@ -122,6 +131,15 @@ public final class GameClientEvents {
                 ).withColor(0xAAAAAA);
                 event.getTooltipElements().add(Either.left(remainingTimes));
             });
+        }
+
+        List<Either<FormattedText, TooltipComponent>> tooltipElements = event.getTooltipElements();
+        if (tooltipElements.isEmpty()) return;
+        Optional<FormattedText> displayName = tooltipElements.getFirst().left();
+        if (displayName.isPresent() && displayName.get() instanceof Component component) {
+            tooltipElements.set(0, Either.left(
+                    component.copy().withColor(ModRarity.getRarity(itemStack).getColor())
+            ));
         }
     }
 }
