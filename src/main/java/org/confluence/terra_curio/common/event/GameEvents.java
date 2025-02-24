@@ -67,7 +67,7 @@ public final class GameEvents {
     @SubscribeEvent
     public static void entityInvulnerabilityCheck(EntityInvulnerabilityCheckEvent event) {
         DamageSource damageSource = event.getSource();
-        if (damageSource.is(DamageTypes.GENERIC_KILL)) return;
+        if (damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || damageSource.is(DamageTypes.GENERIC_KILL)) return;
 
         if (!event.isInvulnerable() && TCUtils.isInvulnerableTo(event.getEntity(), damageSource)) {
             event.setInvulnerable(true);
@@ -242,6 +242,7 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void finalizeSpawn(FinalizeSpawnEvent event) {
+        if (event.isSpawnCancelled()) return;
         if (event.getEntity() instanceof Drowned drowned && drowned.getItemBySlot(EquipmentSlot.HEAD).isEmpty() && drowned.getRandom().nextFloat() < 0.05F) {
             drowned.setItemSlot(EquipmentSlot.HEAD, TCItems.DIVING_HELMET.get().getDefaultInstance());
             ((MobAccessor) drowned).getArmorDropChances()[EquipmentSlot.HEAD.getIndex()] = 1.0F;
