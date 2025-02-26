@@ -23,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LivingEntity.class)
-public abstract class ClientLivingEntityMixin implements IClientLivingEntity, SelfGetter<LivingEntity> {
+public abstract class LivingEntityClientMixin implements IClientLivingEntity, SelfGetter<LivingEntity> {
     @Unique
     private FluidState terra_curio$lastWalkedFluidState = null;
     @Unique

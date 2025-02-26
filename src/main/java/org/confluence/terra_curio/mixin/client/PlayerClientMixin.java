@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
-public abstract class ClientPlayerMixin {
+public abstract class PlayerClientMixin {
     @Unique
     private static final float terra_curio$fix = -(Mth.EPSILON + Mth.EPSILON);
 
