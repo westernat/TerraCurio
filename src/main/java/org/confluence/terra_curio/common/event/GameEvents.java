@@ -37,7 +37,6 @@ import org.confluence.terra_curio.common.item.DivingHelmet;
 import org.confluence.terra_curio.common.item.curio.combat.PaladinsShield;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.mixin.accessor.ItemEntityAccessor;
-import org.confluence.terra_curio.mixin.accessor.MobAccessor;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
@@ -245,7 +244,7 @@ public final class GameEvents {
         if (event.isSpawnCancelled()) return;
         if (event.getEntity() instanceof Drowned drowned && drowned.getItemBySlot(EquipmentSlot.HEAD).isEmpty() && drowned.getRandom().nextFloat() < 0.05F) {
             drowned.setItemSlot(EquipmentSlot.HEAD, TCItems.DIVING_HELMET.get().getDefaultInstance());
-            ((MobAccessor) drowned).getArmorDropChances()[EquipmentSlot.HEAD.getIndex()] = 1.0F;
+            drowned.setDropChance(EquipmentSlot.HEAD, 1.0F);
         }
     }
 }

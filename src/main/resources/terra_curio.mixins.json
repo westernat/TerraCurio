@@ -17,7 +17,6 @@
         "TargetingConditionsMixin",
         "accessor.ItemEntityAccessor",
         "accessor.LivingEntityAccessor",
-        "accessor.MobAccessor",
         "accessor.SmithingTransformRecipeAccessor"
     ],
     "client": [
