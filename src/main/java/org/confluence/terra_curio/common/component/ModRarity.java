@@ -10,7 +10,6 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Rarity;
 import org.confluence.terra_curio.client.animate.ColorAnimation;
 import org.confluence.terra_curio.client.animate.ExpertColorAnimation;
 import org.confluence.terra_curio.client.animate.MasterColorAnimation;
@@ -158,17 +157,12 @@ public class ModRarity implements DataComponentType<ModRarity> {
     public static @Nullable ModRarity getRarity(ItemStack itemStack) {
         ModRarity rarity = itemStack.get(TCDataComponentTypes.MOD_RARITY);
         if (rarity != null) return rarity;
-        Rarity vanilla = itemStack.getRarity();
-        if (vanilla.ordinal() > 3) return null;
-        try {
-            return switch (vanilla) {
-                case COMMON -> COMMON;
-                case UNCOMMON -> UNCOMMON;
-                case RARE -> RARE;
-                case EPIC -> EPIC;
-            };
-        } catch (Exception e) {
-            return null;
-        }
+        return switch (itemStack.getRarity()) {
+            case COMMON -> COMMON;
+            case UNCOMMON -> UNCOMMON;
+            case RARE -> RARE;
+            case EPIC -> EPIC;
+            default -> null;
+        };
     }
 }
