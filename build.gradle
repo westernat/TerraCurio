@@ -136,7 +136,7 @@ dependencies {
 //    runtimeOnly "curse.maven:air-hop-323071:5736739"
 //    runtimeOnly "curse.maven:puzzles-lib-495476:5838627"
 
-    runtimeOnly "curse.maven:the-twilight-forest-227639:6087105"
+    //runtimeOnly "curse.maven:the-twilight-forest-227639:6087105"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
