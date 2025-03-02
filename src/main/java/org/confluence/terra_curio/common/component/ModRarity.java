@@ -159,12 +159,16 @@ public class ModRarity implements DataComponentType<ModRarity> {
         ModRarity rarity = itemStack.get(TCDataComponentTypes.MOD_RARITY);
         if (rarity != null) return rarity;
         Rarity vanilla = itemStack.getRarity();
-        if (vanilla == null) return null;
-        return switch (vanilla) {
-            case COMMON -> COMMON;
-            case UNCOMMON -> UNCOMMON;
-            case RARE -> RARE;
-            case EPIC -> EPIC;
-        };
+        if (vanilla.ordinal() > 3) return null;
+        try {
+            return switch (vanilla) {
+                case COMMON -> COMMON;
+                case UNCOMMON -> UNCOMMON;
+                case RARE -> RARE;
+                case EPIC -> EPIC;
+            };
+        } catch (Exception e) {
+            return null;
+        }
     }
 }
