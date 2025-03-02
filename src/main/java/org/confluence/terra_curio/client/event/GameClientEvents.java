@@ -119,8 +119,10 @@ public final class GameClientEvents {
         if (tooltipElements.isEmpty()) return;
         Optional<FormattedText> displayName = tooltipElements.getFirst().left();
         if (displayName.isPresent() && displayName.get() instanceof Component component) {
+            ModRarity rarity = ModRarity.getRarity(event.getItemStack());
+            if (rarity == null) return;
             tooltipElements.set(0, Either.left(
-                    component.copy().withColor(ModRarity.getRarity(event.getItemStack()).getColor())
+                    component.copy().withColor(rarity.getColor())
             ));
         }
     }
