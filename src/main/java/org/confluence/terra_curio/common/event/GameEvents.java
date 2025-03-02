@@ -1,6 +1,8 @@
 package org.confluence.terra_curio.common.event;
 
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -170,6 +172,11 @@ public final class GameEvents {
         ServerPlayer serverPlayer = (ServerPlayer) player;
         TCUtils.resetClientPacket(serverPlayer);
         InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
+
+        if (!player.getPersistentData().getBoolean("terra_curio:first_in_world")) {
+            serverPlayer.sendSystemMessage(Component.translatable("terra_curio.announce").append(ComponentUtils.copyOnClickText("https://www.curseforge.com/minecraft/mc-mods/confluence")), false);
+            player.getPersistentData().putBoolean("terra_curio:first_in_world", true);
+        }
     }
 
     @SubscribeEvent
