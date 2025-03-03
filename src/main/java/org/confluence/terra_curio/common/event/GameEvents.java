@@ -173,7 +173,7 @@ public final class GameEvents {
         TCUtils.resetClientPacket(serverPlayer);
         InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
 
-        if (!player.getPersistentData().getBoolean("terra_curio:first_in_world")) {
+        if (!TerraCurio.IS_CONFLUENCE_LOADED && !player.getPersistentData().getBoolean("terra_curio:first_in_world")) {
             serverPlayer.sendSystemMessage(Component.translatable("terra_curio.announce").append(ComponentUtils.copyOnClickText("https://www.curseforge.com/minecraft/mc-mods/confluence")), false);
             player.getPersistentData().putBoolean("terra_curio:first_in_world", true);
         }
