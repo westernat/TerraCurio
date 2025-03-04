@@ -18,6 +18,7 @@ import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
@@ -56,12 +57,12 @@ public final class GameEvents {
     @SubscribeEvent
     public static void curios(CurioChangeEvent event) {
         LivingEntity living = event.getEntity();
-        if (!living.level().isClientSide) {
+        if (!living.level().isClientSide && !ItemStack.isSameItem(event.getFrom(), event.getTo())) {
             living.getData(TCAttachments.ACCESSORIES).flushAbility(living);
-        }
-        if (living instanceof ServerPlayer serverPlayer) {
-            TCUtils.resetClientPacket(serverPlayer);
-            TCTriggers.CURIOS_EQUIPPED.get().trigger(serverPlayer, event.getTo());
+            if (living instanceof ServerPlayer serverPlayer) {
+                TCUtils.resetClientPacket(serverPlayer);
+                TCTriggers.CURIOS_EQUIPPED.get().trigger(serverPlayer, event.getTo());
+            }
         }
     }
 
