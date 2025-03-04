@@ -16,7 +16,6 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
-import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.event.AfterAccessoryAbilitiesFlushedEvent;
 import org.confluence.terra_curio.api.event.RegisterAccessoriesComponentUpdateEvent;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
@@ -111,14 +110,12 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
     public void increaseLavaImmuneTicks() {
         if (remainLavaImmuneTicks < getValue(TCItems.LAVA$IMMUNE$TICKS)) {
             this.remainLavaImmuneTicks++;
-            TerraCurio.LOGGER.info("{}", remainLavaImmuneTicks);
         }
     }
 
     public boolean decreaseLavaImmuneTicks() {
         if (remainLavaImmuneTicks > 0) {
             this.remainLavaImmuneTicks--;
-            TerraCurio.LOGGER.info("{}", remainLavaImmuneTicks);
             return true;
         }
         return false;
