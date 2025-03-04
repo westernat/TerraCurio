@@ -2,7 +2,6 @@ package org.confluence.terra_curio.client.handler;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
@@ -66,12 +65,17 @@ public final class PlayerClimbHandler {
     }
 
     private static boolean hasMotionToWall(LocalPlayer localPlayer, double x, double z) {
-        EntityDimensions dimensions = localPlayer.getDimensions(localPlayer.getPose());
-        AABB aabb = dimensions.makeBoundingBox(localPlayer.position())
-                .setMinY(localPlayer.getEyeY())
-                .inflate(0.01)
-                .move(x * 0.1, 0.0, z * 0.1);
-        return !localPlayer.level().noCollision(aabb);
+        AABB aabb = localPlayer.getDimensions(localPlayer.getPose()).makeBoundingBox(localPlayer.position());
+        double u = x * 0.1;
+        double v = z * 0.1;
+        return !localPlayer.level().noCollision(new AABB(
+                aabb.minX - 0.01 + u,
+                localPlayer.getEyeY(),
+                aabb.minZ - 0.01 + v,
+                aabb.maxX + 0.01 + u,
+                aabb.maxY,
+                aabb.maxZ + 0.01 + v
+        ));
     }
 
     private static void wallJump(LocalPlayer localPlayer, double x, double z) {
