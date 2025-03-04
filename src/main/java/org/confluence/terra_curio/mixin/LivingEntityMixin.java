@@ -10,6 +10,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCEffects;
@@ -33,6 +34,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Set;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<LivingEntity> {
@@ -40,6 +42,31 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
     private int terra_curio$totem_cooldown = -1;
     @Unique
     private Map<ResourceLocation, ParticleEmitter> terra_curio$emitters;
+    @Unique
+    private FluidState terra_curio$lastWalkedFluidState = null;
+    @Unique
+    private Set<FluidState> terra_curio$walkableFluidStates;
+
+    @Override
+    public void terra_curio$setLastWalkedFluidState(FluidState fluidState) {
+        this.terra_curio$lastWalkedFluidState = fluidState;
+    }
+
+    @Override
+    public @Nullable FluidState terra_curio$getLastWalkedFluidState() {
+        return terra_curio$lastWalkedFluidState;
+    }
+
+    @Override
+    public void terra_curio$resetLastWalkedFluidState(Set<FluidState> fluidStates) {
+        this.terra_curio$lastWalkedFluidState = null;
+        this.terra_curio$walkableFluidStates = fluidStates;
+    }
+
+    @Override
+    public boolean terra_curio$isFluidWalkable(FluidState fluidState) {
+        return terra_curio$walkableFluidStates != null && terra_curio$walkableFluidStates.contains(fluidState);
+    }
 
     @Override
     public void terra_curio$setTotemCooldown(int cooldown) {
@@ -91,6 +118,29 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3 confused(Vec3 vec3) {
         return hasEffect(TCEffects.CONFUSED) ? vec3.reverse() : vec3;
+    }
+
+    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
+    private Vec3 notSlowdown(Vec3 instance, double factorX, double factorY, double factorZ, Operation<Vec3> original) {
+        if (TCUtils.isFluidWalkable(self(), self().getInBlockState().getFluidState())) {
+            return original.call(instance, 0.94, factorY, 0.94);
+        }
+        return original.call(instance, factorX, factorY, factorZ);
+    }
+
+    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canStandOnFluid(Lnet/minecraft/world/level/material/FluidState;)Z"))
+    private boolean onFluid(LivingEntity instance, FluidState fluidState, Operation<Boolean> original) {
+        if (TCUtils.isFluidWalkable(instance, fluidState)) {
+            return false;
+        }
+        return original.call(instance, fluidState);
+    }
+
+    @Inject(method = "canStandOnFluid", at = @At("RETURN"), cancellable = true)
+    private void standOnFluid(FluidState fluidState, CallbackInfoReturnable<Boolean> cir) {
+        if (!cir.getReturnValue() && TCUtils.isFluidWalkable(self(), fluidState)) {
+            cir.setReturnValue(true);
+        }
     }
 
     @Inject(method = "onChangedBlock", at = @At("TAIL"))

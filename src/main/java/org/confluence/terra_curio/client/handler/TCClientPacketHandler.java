@@ -9,8 +9,6 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -19,8 +17,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
@@ -28,18 +24,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import org.confluence.terra_curio.client.TCClientConfigs;
-import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
-import org.confluence.terra_curio.mixed.IClientLivingEntity;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
-import org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C;
-import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
-import org.confluence.terra_curio.network.s2c.RightClickSubtractorPacketS2C;
-import org.confluence.terra_curio.network.s2c.SetItemEntityPickupDelayPacketS2C;
-import org.confluence.terra_curio.util.CuriosUtils;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.confluence.terra_curio.network.s2c.*;
 
 import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.LUMINANCE_MASK;
 import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.NEPTUNES_SHELL;
@@ -60,7 +47,6 @@ public final class TCClientPacketHandler {
     private static final Int2IntMap remoteLuminance = new Int2IntArrayMap();
     private static final Int2IntMap pickupDelayStorage = new Int2IntArrayMap();
     private static final Int2IntMap pickupDelayCounter = Util.make(new Int2IntArrayMap(), map -> map.defaultReturnValue(0));
-    private static final Set<FluidState> walkableFluidStates = new HashSet<>();
 
     public static boolean couldAutoAttack() {
         return autoAttack;
@@ -121,10 +107,6 @@ public final class TCClientPacketHandler {
         pickupDelayStorage.put(packet.id(), packet.delay());
     }
 
-    public static boolean isFluidWalkable(LivingEntity living, FluidState fluidState) {
-        return walkableFluidStates.contains(fluidState); // Confluence injected here
-    }
-
     public static void handle(Minecraft minecraft, LocalPlayer player) {
         applyAutoAttack(minecraft, player);
         setPickupDelay(player);
@@ -178,14 +160,7 @@ public final class TCClientPacketHandler {
     }
 
     public static void handleFluidWalk(Player player) {
-        walkableFluidStates.clear();
-        ((IClientLivingEntity) player).terra_curio$resetLastWalkedFluidState();
-        Set<TagKey<Fluid>> tagKeys = CuriosUtils.calculateValue(player, TCItems.FLUID$WALK);
-        BuiltInRegistries.FLUID.stream().flatMap(fluid -> fluid.getStateDefinition().getPossibleStates().stream()).forEach(state -> {
-            if (tagKeys.stream().anyMatch(state::is)) {
-                walkableFluidStates.add(state);
-            }
-        });
+        FluidWalkUpdatePacketS2C.reset(player);
     }
 
     public static void handleRender(BroadcastRenderPacketS2C packet, Player player) {
@@ -212,7 +187,6 @@ public final class TCClientPacketHandler {
         luminance = 0;
         pickupDelayStorage.clear();
         pickupDelayCounter.clear();
-        walkableFluidStates.clear();
         remoteLuminance.clear();
         remoteNeptuneShell.clear();
     }

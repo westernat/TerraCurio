@@ -25,6 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.EffectCures;
@@ -270,6 +271,18 @@ public final class TCUtils {
                 player.bob = player.bob + (f - player.bob) * 0.8F;
             }
         }
+    }
+
+    public static boolean isFluidWalkable(LivingEntity living, FluidState fluidState) {
+        if (fluidState.isEmpty() || living.isCrouching() || !(living instanceof Player)) return false;
+        ILivingEntity iLiving = (ILivingEntity) living;
+        if (iLiving.terra_curio$getLastWalkedFluidState() == fluidState) {
+            return true;
+        } else if (iLiving.terra_curio$isFluidWalkable(fluidState)) {
+            iLiving.terra_curio$setLastWalkedFluidState(fluidState);
+            return true;
+        }
+        return false;
     }
 
     public static boolean applyTotemAbility(LivingEntity living) {
