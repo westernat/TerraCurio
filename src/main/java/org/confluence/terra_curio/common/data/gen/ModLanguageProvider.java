@@ -934,6 +934,15 @@ public class ModLanguageProvider extends LanguageProvider {
             });
             TCEntities.ENTITIES.getEntries().forEach(entity -> sidedAdd(entity.get().getDescriptionId(), toTitleCase(entity.getId().getPath()), enData));
             TCEffects.EFFECTS.getEntries().forEach(effect -> sidedAdd(effect.get().getDescriptionId(), toTitleCase(effect.getId().getPath()), enData));
+        } else if (locale.equals("zh_cn")) {
+            sidedAdd(TCEffects.CONFUSED.get().getDescriptionId(), "困惑", zhData);
+            sidedAdd(TCEffects.CEREBRAL_MINDTRICK.get().getDescriptionId(), "控脑术", zhData);
+            sidedAdd(TCEffects.HONEY.get().getDescriptionId(), "蜂蜜", zhData);
+            sidedAdd(TCEffects.PALADINS_SHIELD.get().getDescriptionId(), "圣骑士护盾", zhData);
+            sidedAdd(TCEffects.GRAVITATION.get().getDescriptionId(), "重力", zhData);
+            sidedAdd(TCEntities.BEE_PROJECTILE.get().getDescriptionId(), "蜜蜂射弹", zhData);
+            sidedAdd(TCEntities.STAR_CLOAK.get().getDescriptionId(), "星星斗篷", zhData);
+            sidedAdd(TCEntities.STEP_STOOL.get().getDescriptionId(), "梯凳", zhData);
         }
         add(TCBlocks.WORKSHOP.get().getDescriptionId(), "Workshop", "工匠作坊");
     }
