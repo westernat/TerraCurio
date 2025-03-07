@@ -1,6 +1,8 @@
 package org.confluence.terra_curio.common.event;
 
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -16,6 +18,7 @@ import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
@@ -37,7 +40,6 @@ import org.confluence.terra_curio.common.item.DivingHelmet;
 import org.confluence.terra_curio.common.item.curio.combat.PaladinsShield;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.mixin.accessor.ItemEntityAccessor;
-import org.confluence.terra_curio.mixin.accessor.MobAccessor;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
@@ -55,19 +57,19 @@ public final class GameEvents {
     @SubscribeEvent
     public static void curios(CurioChangeEvent event) {
         LivingEntity living = event.getEntity();
-        if (!living.level().isClientSide) {
+        if (!living.level().isClientSide && !ItemStack.isSameItem(event.getFrom(), event.getTo())) {
             living.getData(TCAttachments.ACCESSORIES).flushAbility(living);
-        }
-        if (living instanceof ServerPlayer serverPlayer) {
-            TCUtils.resetClientPacket(serverPlayer);
-            TCTriggers.CURIOS_EQUIPPED.get().trigger(serverPlayer, event.getTo());
+            if (living instanceof ServerPlayer serverPlayer) {
+                TCUtils.resetClientPacket(serverPlayer);
+                TCTriggers.CURIOS_EQUIPPED.get().trigger(serverPlayer, event.getTo());
+            }
         }
     }
 
     @SubscribeEvent
     public static void entityInvulnerabilityCheck(EntityInvulnerabilityCheckEvent event) {
         DamageSource damageSource = event.getSource();
-        if (damageSource.is(DamageTypes.GENERIC_KILL)) return;
+        if (damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || damageSource.is(DamageTypes.GENERIC_KILL)) return;
 
         if (!event.isInvulnerable() && TCUtils.isInvulnerableTo(event.getEntity(), damageSource)) {
             event.setInvulnerable(true);
@@ -171,6 +173,11 @@ public final class GameEvents {
         ServerPlayer serverPlayer = (ServerPlayer) player;
         TCUtils.resetClientPacket(serverPlayer);
         InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
+
+        if (!TerraCurio.IS_CONFLUENCE_LOADED && !player.getPersistentData().getBoolean("terra_curio:first_in_world")) {
+            serverPlayer.sendSystemMessage(Component.translatable("terra_curio.announce").append(ComponentUtils.copyOnClickText("https://www.curseforge.com/minecraft/mc-mods/confluence")), false);
+            player.getPersistentData().putBoolean("terra_curio:first_in_world", true);
+        }
     }
 
     @SubscribeEvent
@@ -184,6 +191,7 @@ public final class GameEvents {
     public static void playerTick$Post(PlayerTickEvent.Post event) {
         Player player = event.getEntity();
         TCAttributes.applyPickupRange(player);
+        TCUtils.applyFluidWalk(player);
         if (player instanceof ServerPlayer serverPlayer) {
             if (serverPlayer.level().getGameTime() % 200 == 0) {
                 // 每十秒向周围玩家共享一次信息配饰
@@ -242,9 +250,10 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void finalizeSpawn(FinalizeSpawnEvent event) {
+        if (event.isSpawnCancelled()) return;
         if (event.getEntity() instanceof Drowned drowned && drowned.getItemBySlot(EquipmentSlot.HEAD).isEmpty() && drowned.getRandom().nextFloat() < 0.05F) {
             drowned.setItemSlot(EquipmentSlot.HEAD, TCItems.DIVING_HELMET.get().getDefaultInstance());
-            ((MobAccessor) drowned).getArmorDropChances()[EquipmentSlot.HEAD.getIndex()] = 1.0F;
+            drowned.setDropChance(EquipmentSlot.HEAD, 1.0F);
         }
     }
 }

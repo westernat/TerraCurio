@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public class TCCommonConfigs {
+public final class TCCommonConfigs {
     public static final Supplier<String> STRING_SUPPLIER = () -> null;
     public static final Predicate<Object> FILTER_CONFLUENCE = o -> {
         if (o instanceof String s && s.startsWith("confluence:")) {

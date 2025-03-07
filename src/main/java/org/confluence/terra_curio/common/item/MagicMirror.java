@@ -59,9 +59,4 @@ public class MagicMirror extends Item {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.magic_mirror.0"));
     }
-
-    @Override
-    public Component getName(ItemStack stack) {
-        return Component.translatable(getDescriptionId()).withStyle(style -> style.withColor(stack.get(TCDataComponentTypes.MOD_RARITY).getColor()));
-    }
 }

@@ -9,15 +9,22 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.ItemStack;
 import org.confluence.terra_curio.client.animate.ColorAnimation;
 import org.confluence.terra_curio.client.animate.ExpertColorAnimation;
 import org.confluence.terra_curio.client.animate.MasterColorAnimation;
+import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
 
 public class ModRarity implements DataComponentType<ModRarity> {
+    public static final ModRarity COMMON = new ModRarity("common", 16777215);
+    public static final ModRarity UNCOMMON = new ModRarity("uncommon", 16777045);
+    public static final ModRarity RARE = new ModRarity("rare", 5636095);
+    public static final ModRarity EPIC = new ModRarity("epic", 16733695);
+
     public static final ModRarity GRAY = new ModRarity("gray", 0x828282);
     public static final ModRarity WHITE = new ModRarity("white", 0xFFFFFF);
     public static final ModRarity BLUE = new ModRarity("blue", 0x9696FF);
@@ -40,6 +47,10 @@ public class ModRarity implements DataComponentType<ModRarity> {
         map.put(-13, MASTER);
         map.put(-12, EXPERT);
         map.put(-11, QUEST);
+        map.put(-10, COMMON);
+        map.put(-9, UNCOMMON);
+        map.put(-8, RARE);
+        map.put(-7, EPIC);
         map.put(-1, GRAY);
         map.put(0, WHITE);
         map.put(1, BLUE);
@@ -141,5 +152,17 @@ public class ModRarity implements DataComponentType<ModRarity> {
         result = 31 * result + Objects.hashCode(getName());
         result = 31 * result + Objects.hashCode(getStyle());
         return result;
+    }
+
+    public static @Nullable ModRarity getRarity(ItemStack itemStack) {
+        ModRarity rarity = itemStack.get(TCDataComponentTypes.MOD_RARITY);
+        if (rarity != null) return rarity;
+        return switch (itemStack.getRarity()) {
+            case COMMON -> COMMON;
+            case UNCOMMON -> UNCOMMON;
+            case RARE -> RARE;
+            case EPIC -> EPIC;
+            default -> null;
+        };
     }
 }

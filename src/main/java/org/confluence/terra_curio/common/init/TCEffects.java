@@ -12,13 +12,10 @@ import org.confluence.terra_curio.common.effect.beneficial.PaladinsShieldEffect;
 import org.confluence.terra_curio.common.effect.harmful.ConfusedEffect;
 import org.confluence.terra_curio.common.effect.neutral.CerebralMindtrickEffect;
 
-
 public final class TCEffects {
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, TerraCurio.MODID);
     public static final DeferredHolder<MobEffect, MobEffect> CONFUSED = EFFECTS.register("confused", ConfusedEffect::new);
-
     public static final DeferredHolder<MobEffect, MobEffect> GRAVITATION = EFFECTS.register("gravitation", GravitationEffect::new);
-
     public static final DeferredHolder<MobEffect, MobEffect> PALADINS_SHIELD = EFFECTS.register("paladins_shield", PaladinsShieldEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> CEREBRAL_MINDTRICK = EFFECTS.register("cerebral_mindtrick", CerebralMindtrickEffect::new);
     public static final DeferredHolder<MobEffect, MobEffect> HONEY = EFFECTS.register("honey", HoneyEffect::new);

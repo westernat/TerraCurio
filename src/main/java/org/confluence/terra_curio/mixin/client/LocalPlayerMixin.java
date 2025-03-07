@@ -11,7 +11,6 @@ import net.neoforged.neoforge.common.extensions.ILivingEntityExtension;
 import net.neoforged.neoforge.fluids.FluidType;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
-import org.confluence.terra_curio.util.TCUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -56,7 +55,6 @@ public abstract class LocalPlayerMixin implements ILivingEntityExtension {
             }
         } else {
             TCClientPacketHandler.floating = false;
-            TCUtils.applyFluidWalk(self);
         }
     }
 }

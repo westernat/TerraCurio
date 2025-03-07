@@ -125,11 +125,6 @@ public class BaseCurioItem extends Item implements ICurioItem {
         return builder != null && builder.makePiglinsNeutral;
     }
 
-    @Override
-    public Component getName(ItemStack stack) {
-        return Component.translatable(getDescriptionId()).withStyle(style -> style.withColor(stack.get(TCDataComponentTypes.MOD_RARITY).getColor()));
-    }
-
     public static Builder builder(String name, Properties properties) {
         return new Builder(name, properties);
     }

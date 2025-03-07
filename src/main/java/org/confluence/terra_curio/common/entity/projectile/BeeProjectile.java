@@ -102,7 +102,7 @@ public class BeeProjectile extends Projectile {
         Entity entity = entityHitResult.getEntity();
         if (getOwner() != null) {
             float damage = 5.0F + (isGiant() ? random.nextInt(1, 4) : (random.nextBoolean() ? 1 : 0));
-            entity.hurt(damageSources().indirectMagic(getOwner(), this), damage);
+            entity.hurt(damageSources().indirectMagic(this, getOwner()), damage);
             if (isGiant()) {
                 Vec3 motion = entity.position().subtract(position()).normalize().scale(0.5);
                 entity.push(motion.x, motion.y, motion.z);

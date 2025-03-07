@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.item;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionHand;
@@ -10,8 +11,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import net.neoforged.api.distmarker.Dist;
+import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.client.animate.ExpertColorAnimation;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
@@ -31,26 +33,32 @@ public class DemonHeart extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
         ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
-        CuriosApi.getCuriosInventory(pPlayer).ifPresent(iCuriosItemHandler -> {
-            ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
-            if (iCurioStacksHandler != null && iCurioStacksHandler.getSlots() < TCCommonConfigs.MAX_ACCESSORIES.get()) {
-                itemStack.shrink(1);
-                Map<ResourceLocation, AttributeModifier> modifiers = iCurioStacksHandler.getModifiers();
-                double before = modifiers.containsKey(ID) ? modifiers.get(ID).amount() : 0.0;
-                iCurioStacksHandler.removeModifier(ID);
-                iCuriosItemHandler.addPermanentSlotModifier(TerraCurio.CURIO_SLOT, ID, before + 1.0, AttributeModifier.Operation.ADD_VALUE);
-            }
-        });
+        if (!pLevel.isClientSide) {
+            CuriosApi.getCuriosInventory(pPlayer).ifPresent(iCuriosItemHandler -> {
+                ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
+                if (iCurioStacksHandler != null && iCurioStacksHandler.getSlots() < TCCommonConfigs.MAX_ACCESSORIES.get()) {
+                    itemStack.shrink(1);
+                    Map<ResourceLocation, AttributeModifier> modifiers = iCurioStacksHandler.getModifiers();
+                    double before = modifiers.containsKey(ID) ? modifiers.get(ID).amount() : 0.0;
+                    iCurioStacksHandler.removeModifier(ID);
+                    iCuriosItemHandler.addPermanentSlotModifier(TerraCurio.CURIO_SLOT, ID, before + 1.0, AttributeModifier.Operation.ADD_VALUE);
+                }
+            });
+        }
         return InteractionResultHolder.sidedSuccess(itemStack, pLevel.isClientSide);
     }
 
+    @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.demon_heart.0"));
-    }
-
-    @Override
-    public Component getName(ItemStack stack) {
-        return Component.translatable(getDescriptionId()).withStyle(style -> style.withColor(ExpertColorAnimation.INSTANCE.getColor()));
+        CuriosApi.getCuriosInventory(Minecraft.getInstance().player).ifPresent(iCuriosItemHandler -> {
+            ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
+            Component remainingTimes = Component.translatable(
+                    "tooltip.item.terra_curio.demon_heart.1",
+                    TCCommonConfigs.MAX_ACCESSORIES.get() - iCurioStacksHandler.getSlots()
+            ).withColor(0xAAAAAA);
+            tooltipComponents.add(remainingTimes);
+        });
     }
 }

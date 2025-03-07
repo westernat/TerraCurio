@@ -77,6 +77,7 @@ public class ModLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add("creativetab.terra_curio", "Terra Curio", "泰拉饰品");
+        add("terra_curio.announce", "Our main mod 'Confluence: Otherworld' has been announced!", "我们的主模组《汇流来世》已公布！");
 
         add("tooltip.terra_curio.requires_mod_loaded", "This accessory requires any of the following mods: %s", "该配饰需要以下任意模组：%s");
         add("tooltip.terra_curio.hold_and_scroll", "Hold [Left Shift] and scroll the mouse wheel", "按住[左Shift]并滚动鼠标滚轮");
@@ -933,6 +934,15 @@ public class ModLanguageProvider extends LanguageProvider {
             });
             TCEntities.ENTITIES.getEntries().forEach(entity -> sidedAdd(entity.get().getDescriptionId(), toTitleCase(entity.getId().getPath()), enData));
             TCEffects.EFFECTS.getEntries().forEach(effect -> sidedAdd(effect.get().getDescriptionId(), toTitleCase(effect.getId().getPath()), enData));
+        } else if (locale.equals("zh_cn")) {
+            sidedAdd(TCEffects.CONFUSED.get().getDescriptionId(), "困惑", zhData);
+            sidedAdd(TCEffects.CEREBRAL_MINDTRICK.get().getDescriptionId(), "控脑术", zhData);
+            sidedAdd(TCEffects.HONEY.get().getDescriptionId(), "蜂蜜", zhData);
+            sidedAdd(TCEffects.PALADINS_SHIELD.get().getDescriptionId(), "圣骑士护盾", zhData);
+            sidedAdd(TCEffects.GRAVITATION.get().getDescriptionId(), "重力", zhData);
+            sidedAdd(TCEntities.BEE_PROJECTILE.get().getDescriptionId(), "蜜蜂射弹", zhData);
+            sidedAdd(TCEntities.STAR_CLOAK.get().getDescriptionId(), "星星斗篷", zhData);
+            sidedAdd(TCEntities.STEP_STOOL.get().getDescriptionId(), "梯凳", zhData);
         }
         add(TCBlocks.WORKSHOP.get().getDescriptionId(), "Workshop", "工匠作坊");
     }

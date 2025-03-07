@@ -21,7 +21,7 @@ public final class PlayerClimbHandler {
     private static byte climberAmount = 0;
 
     public static void handle(LocalPlayer localPlayer, Vec2 vector, boolean jumping) {
-        if (climberAmount <= 0 || localPlayer.onGround() || (vector.x == 0.0 && vector.y == 0.0)){
+        if (climberAmount <= 0 || localPlayer.onGround() || (vector.x == 0.0 && vector.y == 0.0)) {
             wallJumped = true;
             return;
         }
@@ -65,10 +65,17 @@ public final class PlayerClimbHandler {
     }
 
     private static boolean hasMotionToWall(LocalPlayer localPlayer, double x, double z) {
-        AABB aabb = localPlayer.getDimensions(localPlayer.getPose())
-            .makeBoundingBox(localPlayer.position()).inflate(0.01)
-            .move(x * 0.1, 0.0, z * 0.1);
-        return !localPlayer.level().noCollision(aabb);
+        AABB aabb = localPlayer.getDimensions(localPlayer.getPose()).makeBoundingBox(localPlayer.position());
+        double u = x * 0.1;
+        double v = z * 0.1;
+        return !localPlayer.level().noCollision(new AABB(
+                aabb.minX - 0.01 + u,
+                localPlayer.getEyeY(),
+                aabb.minZ - 0.01 + v,
+                aabb.maxX + 0.01 + u,
+                aabb.maxY,
+                aabb.maxZ + 0.01 + v
+        ));
     }
 
     private static void wallJump(LocalPlayer localPlayer, double x, double z) {
