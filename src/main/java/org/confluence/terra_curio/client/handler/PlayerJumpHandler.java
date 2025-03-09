@@ -147,7 +147,7 @@ public final class PlayerJumpHandler {
         remainFlyTicks = maxFlyTicks;
     }
 
-    private static void multiJump(LocalPlayer localPlayer, double speed) {
+    public static void multiJump(LocalPlayer localPlayer, double speed) {
         Vec3 vec3 = localPlayer.getDeltaMovement();
         double motionY = ((LivingEntityAccessor) localPlayer).callGetJumpPower() * speed;
         localPlayer.setDeltaMovement(vec3.x, motionY, vec3.z);
