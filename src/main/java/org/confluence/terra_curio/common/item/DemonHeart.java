@@ -3,6 +3,7 @@ package org.confluence.terra_curio.common.item;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -17,6 +18,7 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
+import org.confluence.terra_curio.util.TCUtils;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
@@ -31,10 +33,10 @@ public class DemonHeart extends Item {
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
-        if (!pLevel.isClientSide) {
-            CuriosApi.getCuriosInventory(pPlayer).ifPresent(iCuriosItemHandler -> {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (player instanceof ServerPlayer serverPlayer) {
+            CuriosApi.getCuriosInventory(player).ifPresent(iCuriosItemHandler -> {
                 ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
                 if (iCurioStacksHandler != null && iCurioStacksHandler.getSlots() < TCCommonConfigs.MAX_ACCESSORIES.get()) {
                     itemStack.shrink(1);
@@ -42,10 +44,11 @@ public class DemonHeart extends Item {
                     double before = modifiers.containsKey(ID) ? modifiers.get(ID).amount() : 0.0;
                     iCurioStacksHandler.removeModifier(ID);
                     iCuriosItemHandler.addPermanentSlotModifier(TerraCurio.CURIO_SLOT, ID, before + 1.0, AttributeModifier.Operation.ADD_VALUE);
+                    TCUtils.forConfluence$ModifyExpression(serverPlayer);
                 }
             });
         }
-        return InteractionResultHolder.sidedSuccess(itemStack, pLevel.isClientSide);
+        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide);
     }
 
     @OnlyIn(Dist.CLIENT)
