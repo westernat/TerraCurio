@@ -306,7 +306,7 @@ public final class TCUtils {
     }
 
     public static void applyCthulhuTouch(Player player, Entity touched) {
-        if (((IEntity) player).terra_curio$isOnCthulhuSprinting()) {
+        if (((IEntity) player).terra_curio$isOnCthulhuSprinting() && touched instanceof LivingEntity) {
             Vec3 vector = player.getDeltaMovement();
             touched.addDeltaMovement(new Vec3(vector.x * 1.6, 0.6, vector.z * 1.6));
             touched.hurt(player.damageSources().playerAttack(player), 7.8F);
