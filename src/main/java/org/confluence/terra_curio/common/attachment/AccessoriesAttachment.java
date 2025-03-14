@@ -39,6 +39,7 @@ import static org.confluence.terra_curio.util.TCUtils.tryCast;
 @SuppressWarnings("unchecked")
 public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
     public static final List<ValueType<Unit, UnitValue>> UNITS_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
+        list.add(TCItems.FLOAT$ON$LIQUID$SURFACE);
         list.add(TCItems.FIRE$ATTACK);
         list.add(TCItems.BRAIN$OF$CONFUSION);
         list.add(TCItems.HIVE$PACK);
