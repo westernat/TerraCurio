@@ -9,11 +9,11 @@ import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.util.Tuple;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
 import org.jetbrains.annotations.Nullable;
@@ -80,30 +80,72 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     }
 
     public ItemStack assembleAndExtract(RecipeInput input, HolderLookup.Provider registries) {
-        extractInput(input, ingredients, false);
+        consumeShapeless(input, ingredients);
         return assemble(input, registries);
     }
 
-    public static void extractInput(RecipeInput input, NonNullList<Ingredient> ingredients, boolean shaped) {
-        consumeIngredients(input.size(), input::getItem, ingredients, shaped);
+    public static void consumeShapeless(RecipeInput input, NonNullList<Ingredient> ingredients) {
+        consumeShapeless(input.size(), input::getItem, ingredients);
     }
 
-    public static void extractContainer(Container container, NonNullList<Ingredient> ingredients, boolean shaped) {
-        consumeIngredients(container.getContainerSize(), container::getItem, ingredients, shaped);
+    public static void consumeShaped(RecipeInput input, int recipeWidth, int recipeHeight, ShapedRecipePattern pattern) {
+        if (pattern.data.isPresent()) {
+            ShapedRecipePattern.Data data = pattern.data.get();
+            // 计算顶格
+            int tx = 0;
+            int ty = 0;
+            outer:
+            for (int y = 0; y <= recipeHeight - pattern.height(); y++) {
+                for (int x = 0; x <= recipeWidth - pattern.width(); x++) {
+                    boolean match = true;
+                    inner:
+                    for (int py = 0; py < pattern.height(); py++) {
+                        int dy = (y + py) * recipeWidth;
+                        for (int px = 0; px < pattern.width(); px++) {
+                            boolean isBlank = data.pattern().get(py).charAt(px) == ' ';
+                            boolean isEmpty = input.getItem(x + px + dy).isEmpty();
+                            if (isBlank ^ isEmpty) {
+                                match = false;
+                                break inner;
+                            }
+                        }
+                    }
+                    if (match) {
+                        tx = x;
+                        ty = y;
+                        break outer;
+                    }
+                }
+            }
+            // 抽取物品
+            for (int i = 0; i < pattern.height(); i++) {
+                for (int j = 0; j < pattern.width(); j++) {
+                    char c = data.pattern().get(i).charAt(j);
+                    if (c == ' ') continue;
+                    Ingredient ingredient = data.key().get(c);
+                    ItemStack itemStack = input.getItem((j + tx) + (i + ty) * recipeWidth);
+                    if (ingredient.getCustomIngredient() instanceof AmountIngredient ai) {
+                        itemStack.shrink(ai.amount());
+                    } else {
+                        itemStack.shrink(1);
+                    }
+                }
+            }
+        }
     }
 
-    public static void consumeIngredients(int pContainerSize, Int2ObjectFunction<ItemStack> getItemStackCallback, NonNullList<Ingredient> ingredients, boolean shaped) {
+    public static void consumeShapeless(int pContainerSize, Int2ObjectFunction<ItemStack> getItemStackCallback, NonNullList<Ingredient> ingredients) {
         Object2ObjectOpenHashMap<Ingredient, Tuple<Integer, IntArraySet>> requires2Slots = new Object2ObjectOpenHashMap<>();
         outer:
         for (Ingredient ingredient : ingredients) {
             for (int i = 0; i < pContainerSize; i++) {
                 ItemStack itemStack = getItemStackCallback.apply(i);
                 if (itemStack.isEmpty()) continue;
-                if (ingredient.getCustomIngredient() instanceof AmountIngredient ai) {
-                    if (!shaped && ai.amount() == requires2Slots.computeIfAbsent(ingredient, FUNCTION).getB().size()) {
+                if (ingredient.getCustomIngredient() instanceof AmountIngredient(Ingredient ingredient1, int amount)) {
+                    if (amount == requires2Slots.computeIfAbsent(ingredient, FUNCTION).getB().size()) {
                         continue outer;
                     }
-                    if (ai.ingredient().test(itemStack)) {
+                    if (ingredient1.test(itemStack)) {
                         requires2Slots.computeIfAbsent(ingredient, FUNCTION).getB().add(i);
                     }
                 } else if (ingredient.test(itemStack)) {
@@ -114,26 +156,20 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
         for (Tuple<Integer, IntArraySet> tuple : requires2Slots.values()) {
             int requires = tuple.getA();
             int[] slots = tuple.getB().toIntArray();
-            if (shaped) {
-                for (int slot : slots) {
-                    getItemStackCallback.apply(slot).shrink(requires);
-                }
-            } else {
-                int avg = requires / slots.length;
-                int rem = requires % slots.length;
-                boolean shouldConsumeRem = false;
-                if (rem > 0) {
-                    shouldConsumeRem = true;
-                    rem += avg;
-                }
-                for (int slot : slots) {
-                    ItemStack itemStack = getItemStackCallback.apply(slot);
-                    if (shouldConsumeRem && itemStack.getCount() >= rem) {
-                        itemStack.shrink(rem);
-                        shouldConsumeRem = false;
-                    } else {
-                        itemStack.shrink(avg);
-                    }
+            int avg = requires / slots.length;
+            int rem = requires % slots.length;
+            boolean shouldConsumeRem = false;
+            if (rem > 0) {
+                shouldConsumeRem = true;
+                rem += avg;
+            }
+            for (int slot : slots) {
+                ItemStack itemStack = getItemStackCallback.apply(slot);
+                if (shouldConsumeRem && itemStack.getCount() >= rem) {
+                    itemStack.shrink(rem);
+                    shouldConsumeRem = false;
+                } else {
+                    itemStack.shrink(avg);
                 }
             }
         }
