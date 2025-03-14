@@ -76,7 +76,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
         TCUtils.forConfluence$Inject();
         if (TCClientConfigs.speedUp && slotContext.entity() instanceof Player player && player.isLocalPlayer()) {
             int speed = TCUtils.getItemStackNbt(stack).getInt(KEY);
-            if (player.zza > 0 && !player.horizontalCollision) {
+            if (player.zza > 0 && !player.horizontalCollision && !player.isCrouching()) {
                 if (player.onGround()) {
                     if (TCClientPacketHandler.isHasMagiluminescence() || PlayerJumpHandler.isInfiniteFlight()) acceleration *= 2;
                     int actually = Math.min(maxSpeed - speed, acceleration);
