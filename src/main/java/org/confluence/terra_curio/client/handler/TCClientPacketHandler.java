@@ -26,7 +26,10 @@ import net.neoforged.neoforge.common.NeoForgeMod;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
-import org.confluence.terra_curio.network.s2c.*;
+import org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C;
+import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
+import org.confluence.terra_curio.network.s2c.RightClickSubtractorPacketS2C;
+import org.confluence.terra_curio.network.s2c.SetItemEntityPickupDelayPacketS2C;
 
 import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.LUMINANCE_MASK;
 import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.NEPTUNES_SHELL;
@@ -157,10 +160,6 @@ public final class TCClientPacketHandler {
             localPlayer.resetAttackStrengthTicker();
             localPlayer.swing(InteractionHand.MAIN_HAND);
         }
-    }
-
-    public static void handleFluidWalk(Player player) {
-        FluidWalkUpdatePacketS2C.reset(player);
     }
 
     public static void handleRender(BroadcastRenderPacketS2C packet, Player player) {

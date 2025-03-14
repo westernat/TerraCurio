@@ -61,6 +61,7 @@ public final class GameEvents {
             living.getData(TCAttachments.ACCESSORIES).flushAbility(living);
             if (living instanceof ServerPlayer serverPlayer) {
                 TCUtils.resetClientPacket(serverPlayer);
+                TCUtils.updateWalkableFluidStates(serverPlayer);
                 TCTriggers.CURIOS_EQUIPPED.get().trigger(serverPlayer, event.getTo());
             }
         }
@@ -172,6 +173,7 @@ public final class GameEvents {
         player.getData(TCAttachments.ACCESSORIES).flushAbility(player);
         ServerPlayer serverPlayer = (ServerPlayer) player;
         TCUtils.resetClientPacket(serverPlayer);
+        TCUtils.updateWalkableFluidStates(serverPlayer);
         InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
 
         if (!TerraCurio.IS_CONFLUENCE_LOADED && !player.getPersistentData().getBoolean("terra_curio:first_in_world")) {

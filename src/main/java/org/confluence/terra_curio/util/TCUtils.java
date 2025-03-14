@@ -1,10 +1,12 @@
 package org.confluence.terra_curio.util;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.util.Unit;
@@ -25,6 +27,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.RandomPatchConfiguration;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -47,7 +50,9 @@ import org.confluence.terra_curio.network.s2c.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 
 public final class TCUtils {
@@ -192,7 +197,6 @@ public final class TCUtils {
         PlayerJumpPacketS2C.sendToClient(serverPlayer);
         PlayerFlyPacketS2C.sendToClient(serverPlayer);
         RightClickSubtractorPacketS2C.sendToClient(serverPlayer);
-        FluidWalkUpdatePacketS2C.sendToClient(serverPlayer);
         InfiniteFlightPacketS2C.sendToClient(serverPlayer);
         BroadcastRenderPacketS2C.sendToAll(serverPlayer);
     }
@@ -257,6 +261,17 @@ public final class TCUtils {
                 }
             }
         }
+    }
+
+    public static void updateWalkableFluidStates(Player player) {
+        Set<FluidState> walkableFluidStates = new HashSet<>();
+        Set<TagKey<Fluid>> tagKeys = CuriosUtils.calculateValue(player, TCItems.FLUID$WALK);
+        BuiltInRegistries.FLUID.stream().flatMap(fluid -> fluid.getStateDefinition().getPossibleStates().stream()).forEach(state -> {
+            if (tagKeys.stream().anyMatch(state::is)) {
+                walkableFluidStates.add(state);
+            }
+        });
+        ((ILivingEntity) player).terra_curio$resetLastWalkedFluidState(walkableFluidStates);
     }
 
     public static void applyFluidWalk(Player player) {

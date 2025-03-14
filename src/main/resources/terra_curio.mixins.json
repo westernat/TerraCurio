@@ -31,7 +31,8 @@
         "client.accessor.LocalPlayerAccessor",
         "client.accessor.MinecraftAccessor",
         "client.accessor.ModelPartAccessor",
-        "sodiumdynamiclights.DynamicLightHandlersMixin"
+        "integration.curios.CuriosClientPacketsMixin",
+        "integration.sodiumdynamiclights.DynamicLightHandlersMixin"
     ],
     "injectors": {
         "defaultRequire": 1

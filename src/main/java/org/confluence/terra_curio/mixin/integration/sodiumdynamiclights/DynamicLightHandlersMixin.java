@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.mixin.sodiumdynamiclights;
+package org.confluence.terra_curio.mixin.integration.sodiumdynamiclights;
 
 import net.minecraft.world.entity.Entity;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
