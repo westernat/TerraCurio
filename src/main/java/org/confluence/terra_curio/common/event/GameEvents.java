@@ -92,7 +92,7 @@ public final class GameEvents {
         if (damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || damageSource.is(DamageTypes.GENERIC_KILL)) return;
         RandomSource random = living.level().random;
         float amount = event.getNewDamage();
-        if (amount < 0) return; // 防止莫名的负数伤害
+        if (amount <= 0.0F) return; // 防止莫名的负数伤害
 
         TCUtils.applyHoneyComb(living, random);
         TCUtils.applyStarClock(living, random);
