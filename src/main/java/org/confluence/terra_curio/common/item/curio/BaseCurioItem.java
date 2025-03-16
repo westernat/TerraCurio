@@ -52,7 +52,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
     }
 
     public BaseCurioItem(Properties properties) {
-        super(properties);
+        super(properties.stacksTo(1));
     }
 
     @Override
