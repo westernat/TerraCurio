@@ -1,6 +1,8 @@
 package org.confluence.terra_curio.common.event;
 
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.server.level.ServerPlayer;
@@ -219,6 +221,18 @@ public final class GameEvents {
             if (player.level().random.nextFloat() < chance) {
                 event.setDamageMultiplier(1.5F);
                 event.setCriticalHit(true);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void clone(PlayerEvent.Clone event) {
+        CompoundTag old = event.getOriginal().getPersistentData();
+        CompoundTag neo = event.getEntity().getPersistentData();
+        for (String key : old.getAllKeys()) {
+            if (key.startsWith(TerraCurio.MODID)) {
+                Tag value = old.get(key);
+                if (value != null) neo.put(key, value);
             }
         }
     }
