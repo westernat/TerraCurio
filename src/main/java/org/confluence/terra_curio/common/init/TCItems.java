@@ -97,6 +97,7 @@ public final class TCItems { // todo 全换成data map
 
     // both side
     public static final ValueType<Unit, UnitValue> FLOAT$ON$LIQUID$SURFACE = ofUnit("float_on_liquid_surface");
+    public static final ValueType<Unit, UnitValue> ICE$SAFE = ofUnit("ice_safe");
 
     // require updates
     public static final ValueType<Unit, UnitValue> FIRE$ATTACK = ofUnit("fire_attack");

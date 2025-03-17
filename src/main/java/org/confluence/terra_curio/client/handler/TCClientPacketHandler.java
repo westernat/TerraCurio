@@ -42,6 +42,7 @@ public final class TCClientPacketHandler {
     private static boolean hasTabi = false;
     private static boolean hasMagiluminescence = false;
     private static boolean canFloating = false;
+    private static boolean iceSafe = false;
     public static boolean floating = false;
     private static boolean hasNeptunesShell = false;
     private static final Int2BooleanMap remoteNeptuneShell = new Int2BooleanArrayMap();
@@ -69,6 +70,10 @@ public final class TCClientPacketHandler {
 
     public static boolean isCanFloating() {
         return canFloating;
+    }
+
+    public static boolean isIceSafe() {
+        return iceSafe;
     }
 
     public static boolean isHasNeptunesShell() {
@@ -104,6 +109,7 @@ public final class TCClientPacketHandler {
         GravitationHandler.hasGlobe = (item & GRAVITY_GLOBE) != 0;
         hasMagiluminescence = (item & MAGILUMINESCENCE) != 0;
         canFloating = (item & FLOAT_ON_LIQUID_SURFACE) != 0;
+        iceSafe = (item & ICE_SAFE) != 0;
     }
 
     public static void handleItemPickupDelay(SetItemEntityPickupDelayPacketS2C packet) {
