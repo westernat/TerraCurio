@@ -37,6 +37,7 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
+import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.component.NbtComponent;
@@ -368,5 +369,12 @@ public final class TCUtils {
             return component;
         }
         return null;
+    }
+
+    public static boolean isIceSafe(LivingEntity self) {
+        if (self instanceof Player player && player.isLocalPlayer()) {
+            return TCClientPacketHandler.isIceSafe();
+        }
+        return TCUtils.hasAccessoriesType(self, TCItems.ICE$SAFE);
     }
 }
