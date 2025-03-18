@@ -92,7 +92,7 @@ public final class TCUtils {
         if (!(self instanceof LivingEntity living)) return false;
         AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
         Entity attacker = damageSource.getEntity();
-        if (attacker != null && attachment.getValue(TCItems.MOB$IGNORE).contains(attacker.getType())) {
+        if (attacker != null && attacker.getType().is(attachment.getValue(TCItems.MOB$IGNORE))) {
             return true;
         }
         if (((IEntity) living).terra_curio$isOnCthulhuSprinting() && attachment.contains(TCItems.SHIELD$OF$CTHULHU)) {

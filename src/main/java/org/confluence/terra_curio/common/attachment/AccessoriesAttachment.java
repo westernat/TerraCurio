@@ -7,9 +7,11 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
@@ -23,14 +25,17 @@ import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.init.TCItems;
+import org.confluence.terra_curio.common.init.TCTags;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
-import org.confluence.terra_curio.util.MobEntityTypesTest;
 import org.confluence.terra_curio.util.TCUtils;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import static org.confluence.terra_curio.util.TCUtils.tryCast;
 
@@ -144,9 +149,9 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                     TCUtils.forConfluence$Inject();
                 }
             }
-            Set<EntityType<?>> ignores = getValue(TCItems.MOB$IGNORE);
-            if (!ignores.isEmpty()) {
-                living.level().getEntities(new MobEntityTypesTest(ignores), new AABB(living.getOnPos()).inflate(31.5), mob -> true).forEach(mob -> {
+            TagKey<EntityType<?>> ignores = getValue(TCItems.MOB$IGNORE);
+            if (!TCTags.NOTHING.equals(ignores)) {
+                living.level().getEntitiesOfClass(Mob.class, new AABB(living.getOnPos()).inflate(31.5), mob -> mob.getType().is(ignores)).forEach(mob -> {
                     if (mob.getTarget() == living) mob.setTarget(null);
                 });
             }

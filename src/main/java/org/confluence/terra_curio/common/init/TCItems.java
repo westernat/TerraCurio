@@ -129,7 +129,7 @@ public final class TCItems { // todo 全换成data map
     public static final ValueType<Tuple<Float, Integer>, OneTimeJumpAbilityValue> SAND$STORM = ValueType.create("sand_storm", OneTimeJumpAbilityValue.COMBINE_RULE, OneTimeJumpAbilityValue.CODEC, new Tuple<>(0.0F, 0), OneTimeJumpAbilityValue::new);
     public static final ValueType<Float, FloatValue> FART = ValueType.ofFloat("fart", FloatValue.GET_SELF, 0.0F);
     public static final ValueType<Float, FloatValue> TSUNAMI = ValueType.ofFloat("tsunami", FloatValue.GET_SELF, 0.0F);
-    public static final ValueType<Set<EntityType<?>>, EntityTypesValue> MOB$IGNORE = ValueType.create("mob_ignore", EntityTypesValue.EXPANSION, EntityTypesValue.CODEC, Set.of(), EntityTypesValue::new);
+    public static final ValueType<TagKey<EntityType<?>>, EntityTypeTagValue> MOB$IGNORE = ValueType.create("mob_ignore", EntityTypeTagValue.GET_SELF, EntityTypeTagValue.CODEC, TCTags.NOTHING, EntityTypeTagValue::new);
     public static final ValueType<Float, FloatValue> INJURY$FREE = ValueType.ofFloat("injury_free", FloatValue.ADDITION_WITHIN_0_TO_1, 0.0F);
     public static final ValueType<Integer, IntegerValue> TOTEM$WITH$COOLDOWN = ValueType.ofInteger("totem_with_cooldown", IntegerValue.GET_MIN_GREAT_EQUAL_THAN_0, -1);
 
@@ -566,7 +566,7 @@ public final class TCItems { // todo 全换成data map
 
     public static final Supplier<BaseCurioItem> ANGLER_EARRING = registerCurio("angler_earring", builder -> builder.noTooltip()); // 渔夫耳环
 
-    public static final Supplier<BaseCurioItem> ROYAL_GEL = registerCurio("royal_gel", builder -> builder.rarity(EXPERT).accessories(entry(MOB$IGNORE, new EntityTypesValue(EntityType.SLIME)))), // 皇家凝胶
+    public static final Supplier<BaseCurioItem> ROYAL_GEL = registerCurio("royal_gel", builder -> builder.rarity(EXPERT).accessories(entry(MOB$IGNORE, new EntityTypeTagValue(TCTags.SLIME)))), // 皇家凝胶
             SHIELD_OF_CTHULHU = registerCurio("shield_of_cthulhu", builder -> builder.rarity(EXPERT).accessories(units(SHIELD$OF$CTHULHU))), // 克苏鲁护盾
             WORM_SCARF = registerCurio("worm_scarf", builder -> builder.rarity(EXPERT).accessories(of(INJURY$FREE, 0.17F))), // 蠕虫围巾
             BRAIN_OF_CONFUSION = registerCurio("brain_of_confusion", builder -> builder.rarity(EXPERT).accessories(units(BRAIN$OF$CONFUSION)).tooltips(2)), // 混乱之脑
