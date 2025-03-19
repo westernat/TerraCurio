@@ -63,6 +63,7 @@ public final class ModEvents {
         registrar.playToClient(SetItemEntityPickupDelayPacketS2C.TYPE, SetItemEntityPickupDelayPacketS2C.STREAM_CODEC, SetItemEntityPickupDelayPacketS2C::handle);
         registrar.playToClient(BroadcastRenderPacketS2C.TYPE, BroadcastRenderPacketS2C.STREAM_CODEC, BroadcastRenderPacketS2C::handle);
         registrar.playToClient(InfiniteFlightPacketS2C.TYPE, InfiniteFlightPacketS2C.STREAM_CODEC, InfiniteFlightPacketS2C::handle);
+        registrar.playToClient(FluidWalkUpdatePacketS2C.TYPE, FluidWalkUpdatePacketS2C.STREAM_CODEC, FluidWalkUpdatePacketS2C::handle);
 
         registrar.playBidirectional(InfoDisablePacket.TYPE, InfoDisablePacket.STREAM_CODEC, InfoDisablePacket::handle);
     }
