@@ -36,7 +36,7 @@ public class SunStone extends BaseCurioItem {
     public void curioTick(SlotContext slotContext, ItemStack stack) {
         LivingEntity living = slotContext.entity();
         if (living.level().getDayTime() % 24000 < 12000) {
-            TCEffects.healPerSecond(living, 2.0F);
+            TCEffects.healPerSecond(living, 0.4F);
         }
     }
 }

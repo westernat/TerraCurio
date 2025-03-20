@@ -179,7 +179,7 @@ public final class TCItems { // todo 全换成data map
             BEE_CLOAK = registerCurio("bee_cloak", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).accessories(units(HONEY$COMB), of(STAR$CLOCK, false), of(INVULNERABLE$TICKS$MULTIPLIER, 2.0F)).tooltips(1)), // 蜜蜂斗篷
             BLACK_BELT = registerCurio("black_belt", builder -> builder.rarity(LIME).attribute(TCAttributes.getDodgeChance(), 0.1, ADD_VALUE)), // 黑腰带
             SUN_STONE = registerCurio("sun_stone", SunStone::new), // 太阳石
-            MOON_STONE = registerDirectly("moon_stone", (name, builder) -> new NightBonusCurioItem(1.0F, builder.rarity(PINK)
+            MOON_STONE = registerDirectly("moon_stone", (name, builder) -> new NightBonusCurioItem(0.2F, builder.rarity(PINK)
                     .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_DAMAGE, 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)

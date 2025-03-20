@@ -9,7 +9,7 @@ import top.theillusivec4.curios.api.SlotContext;
 
 public class CelestialStone extends HealPerSecondCurioItem {
     public CelestialStone(Builder builder) {
-        super(1.0F, builder);
+        super(0.2F, builder);
     }
 
     @Override

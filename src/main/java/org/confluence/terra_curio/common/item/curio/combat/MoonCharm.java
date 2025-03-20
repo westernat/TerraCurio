@@ -8,7 +8,7 @@ import top.theillusivec4.curios.api.SlotContext;
 
 public class MoonCharm extends NightBonusCurioItem implements ICosmetic {
     public MoonCharm(Builder builder) {
-        super(0.5F, builder);
+        super(0.1F, builder);
     }
 
     @Override

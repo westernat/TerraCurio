@@ -57,6 +57,6 @@ public class CelestialShell extends BaseCurioItem implements ICosmetic {
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
         boolean isNight = slotContext.entity().level().getGameTime() % 24000L > 12000L;
-        TCEffects.healPerSecond(slotContext.entity(), isNight ? 1.5F : 1.0F);
+        TCEffects.healPerSecond(slotContext.entity(), isNight ? 0.3F : 0.2F);
     }
 }

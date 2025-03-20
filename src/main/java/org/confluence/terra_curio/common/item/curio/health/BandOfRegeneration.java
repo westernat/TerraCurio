@@ -14,6 +14,6 @@ public class BandOfRegeneration extends BaseCurioItem {
 
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
-        TCEffects.healPerSecond(slotContext.entity(), 1.0F);
+        TCEffects.healPerSecond(slotContext.entity(), 0.2F);
     }
 }
