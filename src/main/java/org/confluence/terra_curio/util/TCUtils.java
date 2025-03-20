@@ -98,13 +98,20 @@ public final class TCUtils {
         if (((IEntity) living).terra_curio$isOnCthulhuSprinting() && attachment.contains(TCItems.SHIELD$OF$CTHULHU)) {
             return true;
         }
-        if (attachment.contains(TCItems.FIRE$IMMUNE) && (damageSource.is(DamageTypes.IN_FIRE) ||
+        if (attachment.contains(TCItems.FIRE$IMMUNE) && isFire(damageSource)
+        ) return true;
+        return TCAttributes.applyDodge(living, living.getRandom());
+    }
+
+    /**
+     * 不包括熔岩
+     */
+    public static boolean isFire(DamageSource damageSource) {
+        return damageSource.is(DamageTypes.IN_FIRE) ||
                 damageSource.is(DamageTypes.ON_FIRE) ||
                 damageSource.is(DamageTypes.HOT_FLOOR) ||
                 damageSource.is(DamageTypes.UNATTRIBUTED_FIREBALL) ||
-                damageSource.is(DamageTypes.FIREBALL))
-        ) return true;
-        return TCAttributes.applyDodge(living, living.getRandom());
+                damageSource.is(DamageTypes.FIREBALL);
     }
 
     public static float applyInjuryFree(LivingEntity living, float amount) {
