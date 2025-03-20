@@ -126,7 +126,7 @@ public class BeeProjectile extends Projectile {
 
     @Override
     protected boolean canHitEntity(Entity target) {
-        return target.canBeHitByProjectile() && target != getOwner();
+        return target.canBeHitByProjectile() && target != getOwner() && (!(target instanceof LivingEntity living) || living.canBeSeenAsEnemy());
     }
 
     @Override
