@@ -13,7 +13,7 @@ public class HoneyEffect extends MobEffect {
 
     @Override
     public boolean applyEffectTick(LivingEntity living, int amplifier) {
-        living.heal(0.5F);
+        living.heal(0.2F);
         return true;
     }
 
