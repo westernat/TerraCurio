@@ -16,7 +16,9 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
+import org.confluence.terra_curio.util.PatternMatcher;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Vector2i;
 
 import java.util.HashSet;
 
@@ -92,38 +94,21 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
         if (pattern.data.isPresent()) {
             ShapedRecipePattern.Data data = pattern.data.get();
             // 计算顶格
-            int tx = 0;
-            int ty = 0;
-            outer:
-            for (int y = 0; y <= recipeHeight - pattern.height(); y++) {
-                for (int x = 0; x <= recipeWidth - pattern.width(); x++) {
-                    boolean match = true;
-                    inner:
-                    for (int py = 0; py < pattern.height(); py++) {
-                        int dy = (y + py) * recipeWidth;
-                        for (int px = 0; px < pattern.width(); px++) {
-                            boolean isBlank = data.pattern().get(py).charAt(px) == ' ';
-                            boolean isEmpty = input.getItem(x + px + dy).isEmpty();
-                            if (isBlank ^ isEmpty) {
-                                match = false;
-                                break inner;
-                            }
-                        }
-                    }
-                    if (match) {
-                        tx = x;
-                        ty = y;
-                        break outer;
-                    }
-                }
-            }
+            int patternWidth = data.pattern().getFirst().length();
+            int patternHeight = data.pattern().size();
+            Vector2i patternTopLeft = PatternMatcher.findPatternTopLeft(data.pattern(), patternWidth, patternHeight);
+            Vector2i containerTopLeft = PatternMatcher.findContainerTopLeft(input, recipeWidth, recipeHeight);
             // 抽取物品
-            for (int i = 0; i < pattern.height(); i++) {
-                for (int j = 0; j < pattern.width(); j++) {
-                    char c = data.pattern().get(i).charAt(j);
+            for (int i = 0; i < patternHeight; i++) {
+                if (i >= patternHeight - patternTopLeft.y) continue;
+                String row = data.pattern().get(i + patternTopLeft.y);
+                int dy = (i + containerTopLeft.y) * recipeWidth;
+                for (int j = 0; j < patternWidth; j++) {
+                    if (j >= patternWidth - patternTopLeft.x) continue;
+                    char c = row.charAt(j + patternTopLeft.x);
                     if (c == ' ') continue;
                     Ingredient ingredient = data.key().get(c);
-                    ItemStack itemStack = input.getItem((j + tx) + (i + ty) * recipeWidth);
+                    ItemStack itemStack = input.getItem(j + containerTopLeft.x + dy);
                     if (ingredient.getCustomIngredient() instanceof AmountIngredient ai) {
                         itemStack.shrink(ai.amount());
                     } else {
