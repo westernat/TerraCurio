@@ -68,16 +68,16 @@ public final class GameClientEvents {
             GravitationHandler.handle(localPlayer, jumping);
         } else {
             MobEffectInstance effect = localPlayer.getEffect(TCEffects.GRAVITATION);
-            if (effect != null) {
+            if (effect == null) {
+                GravitationHandler.expire();
+                PlayerJumpHandler.handle(localPlayer, jumping);
+                PlayerClimbHandler.handle(localPlayer, input.getMoveVector(), jumping);
+            } else {
                 if (effect.getAmplifier() > 0) {
                     GravitationHandler.force(localPlayer);
                 } else {
                     GravitationHandler.handle(localPlayer, jumping);
                 }
-            } else {
-                GravitationHandler.expire();
-                PlayerJumpHandler.handle(localPlayer, jumping);
-                PlayerClimbHandler.handle(localPlayer, input.getMoveVector(), jumping);
             }
         }
         if (TCClientPacketHandler.isHasTabi()) PlayerSprintingHandler.handle(localPlayer, input);
