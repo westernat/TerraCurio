@@ -36,6 +36,16 @@ public final class GravitationHandler {
         }
     }
 
+    public static void force(LocalPlayer localPlayer) {
+        if (StepStoolHandler.onStool() || localPlayer.getAbilities().flying) return;
+
+        if (!shouldRot) {
+            shouldRot = true;
+            localPlayer.resetFallDistance();
+            PacketDistributor.sendToServer(new GravitationPacketC2S(true));
+        }
+    }
+
     public static void expire() {
         if (shouldRot) {
             shouldRot = false;

@@ -7,6 +7,7 @@ import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
@@ -63,12 +64,21 @@ public final class GameClientEvents {
         boolean jumping = input.jumping;
         if (jumping && !localPlayer.mayFly() && !NeoForge.EVENT_BUS.post(new PerformJumpingEvent(localPlayer)).isCanPerform()) {
             input.jumping = false;
-        } else if (GravitationHandler.isHasGlobe() || localPlayer.hasEffect(TCEffects.GRAVITATION)) {
+        } else if (GravitationHandler.isHasGlobe()) {
             GravitationHandler.handle(localPlayer, jumping);
         } else {
-            GravitationHandler.expire();
-            PlayerJumpHandler.handle(localPlayer, jumping);
-            PlayerClimbHandler.handle(localPlayer, input.getMoveVector(), jumping);
+            MobEffectInstance effect = localPlayer.getEffect(TCEffects.GRAVITATION);
+            if (effect != null) {
+                if (effect.getAmplifier() > 0) {
+                    GravitationHandler.force(localPlayer);
+                } else {
+                    GravitationHandler.handle(localPlayer, jumping);
+                }
+            } else {
+                GravitationHandler.expire();
+                PlayerJumpHandler.handle(localPlayer, jumping);
+                PlayerClimbHandler.handle(localPlayer, input.getMoveVector(), jumping);
+            }
         }
         if (TCClientPacketHandler.isHasTabi()) PlayerSprintingHandler.handle(localPlayer, input);
     }
