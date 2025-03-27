@@ -7,41 +7,30 @@ import java.util.List;
 
 public class PatternMatcher {
     public static Vector2i findPatternTopLeft(List<String> pattern, int patternWidth, int patternHeight) {
-        int x = -1, y = -1;
-        for (int j = 0; j < patternHeight; j++) {
-            String row = pattern.get(j);
-            for (int i = 0; i < patternWidth; i++) {
-                if (row.charAt(i) != ' ') {
-                    y = j;
-                    x = i;
-                    break;
+        int x = patternWidth - 1, y = patternHeight - 1;
+        for (int i = 0; i < patternHeight; i++) {
+            String s = pattern.get(i);
+            for (int j = 0; j < patternWidth; j++) {
+                if (s.charAt(j) != ' ') {
+                    if (x > j) x = j;
+                    if (y > i) y = i;
                 }
             }
-            if (y != -1) {
-                break;
-            }
         }
-        if (x == -1) x = 0;
-        if (y == -1) y = 0;
         return new Vector2i(x, y);
     }
 
     public static Vector2i findContainerTopLeft(RecipeInput container, int recipeWidth, int recipeHeight) {
-        int x = -1, y = -1;
-        for (int j = 0; j < recipeHeight; j++) {
-            for (int i = 0; i < recipeWidth; i++) {
-                if (!container.getItem(i + j * recipeWidth).isEmpty()) {
-                    y = j;
-                    x = i;
-                    break;
+        int x = recipeWidth - 1, y = recipeHeight - 1;
+        for (int i = 0; i < recipeHeight; i++) {
+            int dy = i * recipeWidth;
+            for (int j = 0; j < recipeWidth; j++) {
+                if (!container.getItem(j + dy).isEmpty()) {
+                    if (x > j) x = j;
+                    if (y > i) y = i;
                 }
             }
-            if (y != -1) {
-                break;
-            }
         }
-        if (x == -1) x = 0;
-        if (y == -1) y = 0;
         return new Vector2i(x, y);
     }
 }
