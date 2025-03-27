@@ -11,10 +11,7 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.network.InfoDisablePacket;
-import org.confluence.terra_curio.network.c2s.GravitationPacketC2S;
-import org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S;
-import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
-import org.confluence.terra_curio.network.c2s.StepStoolSteppingPacketC2S;
+import org.confluence.terra_curio.network.c2s.*;
 import org.confluence.terra_curio.network.s2c.*;
 
 @EventBusSubscriber(modid = TerraCurio.MODID, bus = EventBusSubscriber.Bus.MOD)
@@ -49,6 +46,7 @@ public final class ModEvents {
         registrar.playToServer(StepStoolSteppingPacketC2S.TYPE, StepStoolSteppingPacketC2S.STREAM_CODEC, StepStoolSteppingPacketC2S::handle);
         registrar.playToServer(PlayerJumpPacketC2S.TYPE, PlayerJumpPacketC2S.STREAM_CODEC, PlayerJumpPacketC2S::handle);
         registrar.playToServer(SpeedBootsNBTPacketC2S.TYPE, SpeedBootsNBTPacketC2S.STREAM_CODEC, SpeedBootsNBTPacketC2S::handle);
+        registrar.playToServer(PlayerSprintPacketC2S.TYPE, PlayerSprintPacketC2S.STREAM_CODEC, PlayerSprintPacketC2S::handle);
 
         registrar.playToClient(BroadcastGravitationRotPacketS2C.TYPE, BroadcastGravitationRotPacketS2C.STREAM_CODEC, BroadcastGravitationRotPacketS2C::handle);
         registrar.playToClient(CurioExistsPacketS2C.TYPE, CurioExistsPacketS2C.STREAM_CODEC, CurioExistsPacketS2C::handle);

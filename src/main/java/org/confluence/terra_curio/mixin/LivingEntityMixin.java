@@ -12,7 +12,6 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.NeoForge;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.common.init.TCItems;

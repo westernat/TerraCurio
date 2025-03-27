@@ -59,6 +59,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         list.add(TCItems.DIVING);
         list.add(TCItems.INFINITE$FLIGHT);
         list.add(TCItems.ICE$SAFE);
+        list.add(TCItems.SHIELD$OF$CTHULHU);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.UnitType(list));
     });
     public static final List<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {

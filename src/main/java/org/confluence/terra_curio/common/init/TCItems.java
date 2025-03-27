@@ -89,7 +89,6 @@ public final class TCItems { // todo 全换成data map
     // client side
     public static final ValueType<Set<TagKey<Fluid>>, FluidTagsValue> FLUID$WALK = ValueType.create("fluid_walk", FluidTagsValue.EXPANSION, FluidTagsValue.CODEC, Set.of(), FluidTagsValue::new);
     public static final ValueType<Unit, UnitValue> AUTO$ATTACK = ofUnit("auto_attack");
-    public static final ValueType<Unit, UnitValue> SHIELD$OF$CTHULHU = ofUnit("shield_of_cthulhu");
     public static final ValueType<Unit, UnitValue> SPRINTING = ofUnit("sprinting");
     public static final ValueType<Unit, UnitValue> SCOPE = ofUnit("scope");
     public static final ValueType<Unit, UnitValue> GRAVITY$GLOBE = ofUnit("gravity_globe");
@@ -98,6 +97,7 @@ public final class TCItems { // todo 全换成data map
     // both side
     public static final ValueType<Unit, UnitValue> FLOAT$ON$LIQUID$SURFACE = ofUnit("float_on_liquid_surface");
     public static final ValueType<Unit, UnitValue> ICE$SAFE = ofUnit("ice_safe");
+    public static final ValueType<Unit, UnitValue> SHIELD$OF$CTHULHU = ofUnit("shield_of_cthulhu");
 
     // require updates
     public static final ValueType<Unit, UnitValue> FIRE$ATTACK = ofUnit("fire_attack");

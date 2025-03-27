@@ -26,6 +26,7 @@ import org.confluence.terra_curio.client.renderer.tooltip.MultiFunctionTooltip;
 import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
+import org.confluence.terra_curio.util.TCUtils;
 
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +52,7 @@ public final class GameClientEvents {
             TCClientPacketHandler.handle(minecraft, localPlayer);
             InformationHandler.handle(localPlayer);
             ScopeFovHandler.handle(localPlayer);
+            TCUtils.applyCthulhuSprinting(minecraft.options.keySprint.isDown(), localPlayer);
         }
 
         ExpertColorAnimation.INSTANCE.updateColor();

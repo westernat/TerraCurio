@@ -33,6 +33,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.EffectCures;
 import net.neoforged.neoforge.common.NeoForgeMod;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
@@ -47,6 +48,7 @@ import org.confluence.terra_curio.common.init.*;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.network.InfoDisablePacket;
+import org.confluence.terra_curio.network.c2s.PlayerSprintPacketC2S;
 import org.confluence.terra_curio.network.s2c.*;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -330,23 +332,37 @@ public final class TCUtils {
     }
 
     public static void applyCthulhuTouch(Player player, Entity touched) {
-        if (((IEntity) player).terra_curio$isOnCthulhuSprinting() && touched instanceof LivingEntity) {
+        if (player != touched && ((IEntity) player).terra_curio$isOnCthulhuSprinting() && touched instanceof LivingEntity) {
             Vec3 vector = player.getDeltaMovement();
-            touched.addDeltaMovement(new Vec3(vector.x * 1.6, 0.6, vector.z * 1.6));
+            touched.addDeltaMovement(new Vec3(vector.x * 1.2, 0.2, vector.z * 1.2));
             touched.hurt(player.damageSources().playerAttack(player), 7.8F);
             player.setDeltaMovement(vector.scale(-0.9));
             ((IEntity) player).terra_curio$setCthulhuSprintingTime(20);
         }
     }
 
-    public static void applyCthulhuSprinting(boolean bool, Level level, Entity self) {
-        if (bool && !level.isClientSide && self instanceof LivingEntity living) {
-            if (((IEntity) self).terra_curio$getCthulhuSprintingTime() == 0 && TCUtils.hasAccessoriesType(living, TCItems.SHIELD$OF$CTHULHU)) {
-                float f = living.getYRot() * Mth.DEG_TO_RAD;
-                double factor = living.onGround() ? 1.6 : 1.2;
-                living.setDeltaMovement(living.getDeltaMovement().add(-Mth.sin(f) * factor, 0.0D, Mth.cos(f) * factor));
-                ((IEntity) self).terra_curio$setCthulhuSprintingTime(32);
+    private static boolean sprintKeyDown = false;
+
+    public static void applyCthulhuSprinting(boolean down, Player player) {
+        boolean sprint = false;
+        if (player.isLocalPlayer()) {
+            if (down) {
+                if (!sprintKeyDown && ((IEntity) player).terra_curio$getCthulhuSprintingTime() == 0 && TCClientPacketHandler.isHasCthulhu()) {
+                    PacketDistributor.sendToServer(new PlayerSprintPacketC2S());
+                    sprintKeyDown = true;
+                    sprint = true;
+                }
+            } else {
+                sprintKeyDown = false;
             }
+        } else if (((IEntity) player).terra_curio$getCthulhuSprintingTime() == 0 && hasAccessoriesType(player, TCItems.SHIELD$OF$CTHULHU)) {
+            sprint = true;
+        }
+        if (sprint) {
+            float f = player.getYRot() * Mth.DEG_TO_RAD;
+            double factor = player.onGround() ? 1.6 : 1.2;
+            player.setDeltaMovement(player.getDeltaMovement().add(-Mth.sin(f) * factor, 0.0D, Mth.cos(f) * factor));
+            ((IEntity) player).terra_curio$setCthulhuSprintingTime(32);
         }
     }
 

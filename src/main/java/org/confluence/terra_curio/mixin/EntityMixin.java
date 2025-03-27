@@ -87,21 +87,18 @@ public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
         return original;
     }
 
-
-
-    @Inject(method = "setSprinting", at = @At("TAIL"))
-    private void sprinting(boolean bool, CallbackInfo ci) {
-        TCUtils.applyCthulhuSprinting(bool, level, self());
-    }
-
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/profiling/ProfilerFiller;pop()V"))
     private void tickProfiler(CallbackInfo ci) {
         if (terra_curio$cthulhuSprintingTime > 0) this.terra_curio$cthulhuSprintingTime--;
     }
 
-    @Inject(method = "playerTouch", at = @At("TAIL"))
-    private void collidingCheck(Player player, CallbackInfo ci) {
-        TCUtils.applyCthulhuTouch(player, self());
+    @Inject(method = "push(Lnet/minecraft/world/entity/Entity;)V", at = @At("TAIL"))
+    private void collidingCheck(Entity entity, CallbackInfo ci) {
+        if (self() instanceof Player player) {
+            TCUtils.applyCthulhuTouch(player, entity);
+        } else if (entity instanceof Player player) {
+            TCUtils.applyCthulhuTouch(player, self());
+        }
     }
 
     @Inject(method = "getOnPosLegacy", at = @At("RETURN"), cancellable = true)
