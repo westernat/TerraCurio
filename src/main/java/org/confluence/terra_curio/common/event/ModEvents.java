@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.event;
 
+import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -7,6 +8,7 @@ import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.registries.RegisterEvent;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
@@ -25,8 +27,14 @@ public final class ModEvents {
     }
 
     @SubscribeEvent
+    public static void register(RegisterEvent event) {
+        if (event.getRegistryKey() == Registries.ATTRIBUTE) {
+            TCAttributes.prepareReplacements();
+        }
+    }
+
+    @SubscribeEvent
     public static void entityAttributeModification(EntityAttributeModificationEvent event) {
-        TCAttributes.prepareReplacements();
         TCAttributes.registerAttribute(TCAttributes.CRIT_CHANCE, event::add);
         TCAttributes.registerAttribute(TCAttributes.RANGED_VELOCITY, event::add);
         TCAttributes.registerAttribute(TCAttributes.RANGED_DAMAGE, event::add);

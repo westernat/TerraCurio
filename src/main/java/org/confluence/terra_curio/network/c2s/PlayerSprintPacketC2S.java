@@ -10,8 +10,9 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.util.TCUtils;
 
 public record PlayerSprintPacketC2S() implements CustomPacketPayload {
+    public static final PlayerSprintPacketC2S INSTANCE = new PlayerSprintPacketC2S();
     public static final Type<PlayerSprintPacketC2S> TYPE = new Type<>(TerraCurio.asResource("player_sprint"));
-    public static final StreamCodec<ByteBuf, PlayerSprintPacketC2S> STREAM_CODEC = StreamCodec.unit(new PlayerSprintPacketC2S());
+    public static final StreamCodec<ByteBuf, PlayerSprintPacketC2S> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
     @Override
     public Type<PlayerSprintPacketC2S> type() {

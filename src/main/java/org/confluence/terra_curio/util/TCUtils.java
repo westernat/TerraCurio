@@ -344,18 +344,19 @@ public final class TCUtils {
     private static boolean sprintKeyDown = false;
 
     public static void applyCthulhuSprinting(boolean down, Player player) {
+        if (((IEntity) player).terra_curio$getCthulhuSprintingTime() != 0) return;
         boolean sprint = false;
         if (player.isLocalPlayer()) {
             if (down) {
-                if (!sprintKeyDown && ((IEntity) player).terra_curio$getCthulhuSprintingTime() == 0 && TCClientPacketHandler.isHasCthulhu()) {
-                    PacketDistributor.sendToServer(new PlayerSprintPacketC2S());
+                if (!sprintKeyDown && TCClientPacketHandler.isHasCthulhu()) {
+                    PacketDistributor.sendToServer(PlayerSprintPacketC2S.INSTANCE);
                     sprintKeyDown = true;
                     sprint = true;
                 }
             } else {
                 sprintKeyDown = false;
             }
-        } else if (((IEntity) player).terra_curio$getCthulhuSprintingTime() == 0 && hasAccessoriesType(player, TCItems.SHIELD$OF$CTHULHU)) {
+        } else if (hasAccessoriesType(player, TCItems.SHIELD$OF$CTHULHU)) {
             sprint = true;
         }
         if (sprint) {
