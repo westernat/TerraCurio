@@ -36,6 +36,7 @@ public class WorkshopCategory implements IRecipeCategory<WorkshopRecipe> {
         return TITLE;
     }
 
+    @SuppressWarnings("removal")
     @Override
     public @NotNull IDrawable getBackground() {
         return ModJeiPlugin.HALF_BACKGROUND;

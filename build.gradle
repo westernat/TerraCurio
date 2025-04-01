@@ -125,9 +125,9 @@ dependencies {
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
     implementation jarJar(project(":ParticleStorm"))
 
-    compileOnly("mezz.jei:jei-1.21-common-api:${jei_version}")
-    compileOnly("mezz.jei:jei-1.21-neoforge-api:${jei_version}")
-    runtimeOnly("mezz.jei:jei-1.21-neoforge:${jei_version}")
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    runtimeOnly "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 
     compileOnly "curse.maven:dynamiclights-reforged-551736:5807536"
     //runtimeOnly "curse.maven:dynamiclights-reforged-551736:5807536"
