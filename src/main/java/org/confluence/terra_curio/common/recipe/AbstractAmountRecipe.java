@@ -1,5 +1,7 @@
 package org.confluence.terra_curio.common.recipe;
 
+import com.mojang.serialization.DataResult;
+import com.mojang.serialization.MapCodec;
 import it.unimi.dsi.fastutil.ints.Int2ObjectFunction;
 import it.unimi.dsi.fastutil.ints.IntArraySet;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -23,6 +25,14 @@ import org.joml.Vector2i;
 import java.util.HashSet;
 
 public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
+    public static final MapCodec<NonNullList<Ingredient>> INGREDIENTS_CODEC = Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").flatXmap(list -> {
+        Ingredient[] ingredients = list.toArray(Ingredient[]::new);
+        if (ingredients.length == 0) {
+            return DataResult.error(() -> "No ingredients for recipe");
+        } else {
+            return DataResult.success(NonNullList.of(AmountIngredient.EMPTY, ingredients));
+        }
+    }, DataResult::success);
     private static final Object2ObjectFunction<Ingredient, Tuple<Integer, IntArraySet>> FUNCTION = I -> new Tuple<>(((Ingredient) I).getCustomIngredient() instanceof AmountIngredient ai ? ai.amount() : 1, new IntArraySet());
     public final ItemStack result;
     public final NonNullList<Ingredient> ingredients;
