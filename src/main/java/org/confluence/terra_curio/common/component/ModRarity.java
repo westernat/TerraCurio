@@ -139,11 +139,10 @@ public final class ModRarity implements DataComponentType<ModRarity> {
     }
 
     @Override
-    public final boolean equals(Object object) {
+    public boolean equals(Object object) {
         if (this == object) return true;
         if (!(object instanceof ModRarity modRarity)) return false;
-
-        return Objects.equals(getAnimation(), modRarity.getAnimation()) && Objects.equals(getName(), modRarity.getName()) && Objects.equals(getStyle(), modRarity.getStyle());
+        return Objects.equals(getName(), modRarity.getName()) && Objects.equals(getStyle(), modRarity.getStyle());
     }
 
     @Override
