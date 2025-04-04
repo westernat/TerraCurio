@@ -24,7 +24,7 @@ import org.joml.Vector2i;
 
 import java.util.HashSet;
 
-public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
+public abstract class AbstractAmountRecipe<T extends RecipeInput> implements Recipe<T> {
     public static final MapCodec<NonNullList<Ingredient>> INGREDIENTS_CODEC = Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").flatXmap(list -> {
         Ingredient[] ingredients = list.toArray(Ingredient[]::new);
         if (ingredients.length == 0) {
@@ -51,7 +51,7 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
-    public boolean matches(RecipeInput input, Level pLevel) {
+    public boolean matches(T input, Level pLevel) {
         return matches(input.size(), input::getItem, ingredients);
     }
 
@@ -87,11 +87,11 @@ public abstract class AbstractAmountRecipe implements Recipe<RecipeInput> {
     }
 
     @Override
-    public ItemStack assemble(RecipeInput input, HolderLookup.Provider registries) {
+    public ItemStack assemble(T input, HolderLookup.Provider registries) {
         return getResultItem(registries).copy();
     }
 
-    public ItemStack assembleAndExtract(RecipeInput input, HolderLookup.Provider registries) {
+    public ItemStack assembleAndExtract(T input, HolderLookup.Provider registries) {
         consumeShapeless(input, ingredients);
         return assemble(input, registries);
     }

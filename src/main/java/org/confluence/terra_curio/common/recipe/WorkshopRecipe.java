@@ -15,7 +15,7 @@ import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCRecipes;
 import org.confluence.terra_curio.util.TCUtils;
 
-public class WorkshopRecipe extends AbstractAmountRecipe {
+public class WorkshopRecipe extends AbstractAmountRecipe<RecipeInput> {
     public WorkshopRecipe(ItemStack pResult, NonNullList<Ingredient> pIngredients) {
         super(pResult, pIngredients);
     }
