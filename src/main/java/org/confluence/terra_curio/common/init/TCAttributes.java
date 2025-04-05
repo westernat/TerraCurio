@@ -87,7 +87,7 @@ public final class TCAttributes {
     }
 
     public static boolean hasCustomAttribute(Holder<Attribute> attribute) {
-        return MAP.get(attribute) != null;
+        return MAP.getOrDefault(attribute, attribute) != attribute;
     }
 
     public static void registerAttribute(Holder<Attribute> attribute, BiConsumer<EntityType<? extends LivingEntity>, Holder<Attribute>> consumer) {
@@ -208,14 +208,14 @@ public final class TCAttributes {
                 TerraCurio.LOGGER.warn("Bad format of '{}', which must contains exactly one '='", attribute);
                 continue;
             }
-            Holder<Attribute> holder = available.get(split[0]);
+            Holder<Attribute> holder = available.get(split[0].strip());
             if (holder == null) {
-                TerraCurio.LOGGER.warn("Unsupported attribute: {}", split[0]);
+                TerraCurio.LOGGER.warn("Unsupported attribute: {}", split[0].strip());
                 continue;
             }
-            Optional<Holder.Reference<Attribute>> optional = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(split[1]));
+            Optional<Holder.Reference<Attribute>> optional = BuiltInRegistries.ATTRIBUTE.getHolder(ResourceLocation.parse(split[1].strip()));
             if (optional.isEmpty()) {
-                TerraCurio.LOGGER.warn("Unknown attribute: {}", split[1]);
+                TerraCurio.LOGGER.warn("Unknown attribute: {}", split[1].strip());
             } else {
                 MAP.replace(holder, optional.get());
             }

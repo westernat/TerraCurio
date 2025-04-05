@@ -945,6 +945,45 @@ public class ModLanguageProvider extends LanguageProvider {
             sidedAdd(TCEntities.STEP_STOOL.get().getDescriptionId(), "梯凳", zhData);
         }
         add(TCBlocks.WORKSHOP.get().getDescriptionId(), "Workshop", "工匠作坊");
+
+        add("terra_curio.configuration.Speed Shoes", "Speed Shoes", "加速靴");
+        add("terra_curio.configuration.rareBlocks", "Rare Blocks", "稀有方块");
+        add("terra_curio.configuration.attributeReplacements", "Attribute Replacements", "属性替换");
+        add("terra_curio.configuration.enable", "Enable", "启用");
+        add("terra_curio.configuration.Random Attack Damage", "Random Attack Damage", "随机攻击伤害");
+        add("terra_curio.configuration.Max Accessory Amount", "Max Accessory Amount", "最大配饰数量");
+        add("terra_curio.configuration.min", "Min damage multiplier", "最低伤害乘算");
+        add("terra_curio.configuration.rareCreatures", "Rare Creatures", "稀有生物");
+        add("terra_curio.configuration.Information HUD", "Information HUD", "信息HUD");
+        add("terra_curio.configuration.max", "Max damage multiplier", "最高伤害乘算");
+        add("terra_curio.configuration.Functional", "Functional", "功能性");
+        add("terra_curio.configuration.rareBlocks.button", "Configurations for Metal Detector", "金属探测器的配置");
+        add("terra_curio.configuration.Speed Shoes.tooltip", "Configurations for Speed Shoes", "加速类靴子的配置");
+        add("terra_curio.configuration.Functional.tooltip", "Configurations for functional accessories", "功能类配饰的配置");
+        add("terra_curio.configuration.attributeReplacements.button", "Allows you to replace some attributes", "允许部分属性的替换");
+        //add("terra_curio.configuration.enable.tooltip", "When enabled, it will random get value through followed Min and Max multiplier", "启用后，将以以下最大、最小乘算进行随机取值");
+        //add("terra_curio.configuration.max.tooltip", "", "");
+        //add("terra_curio.configuration.rareCreatures.button", "", "");
+        //add("terra_curio.configuration.rareCreatures.tooltip", "", "");
+        //add("terra_curio.configuration.min.tooltip", "", "");
+        //add("terra_curio.configuration.rareBlocks.tooltip", "", "");
+        //add("terra_curio.configuration.Random Attack Damage.button", "", "");
+        //add("terra_curio.configuration.Information HUD.button", "", "");
+        //add("terra_curio.configuration.Functional.button", "", "");
+        //add("terra_curio.configuration.Random Attack Damage.tooltip", "", "");
+        //add("terra_curio.configuration.Information HUD.tooltip", "", "");
+        //add("terra_curio.configuration.Max Accessory Amount.tooltip", "", "");
+        //add("terra_curio.configuration.Speed Shoes.button", "", "");
+        add("terra_curio.configuration.top", "Relative to the top of the screen as a percentage of distance", "相对屏幕顶部距离百分比");
+        add("terra_curio.configuration.isLeft", "Whether it is placed on the left", "是否置于左边");
+        add("terra_curio.configuration.rightClickDelay", "Right Click Delay Decrease", "右击延迟降低");
+        add("terra_curio.configuration.rightClickDelay.tooltip", "Configurations for construction accessories", "建筑类配饰的配置");
+        add("terra_curio.configuration.speedUp", "Enable speed up", "启用加速");
+        add("terra_curio.configuration.playSound", "Play sound", "播放音效");
+        add("terra_curio.configuration.showParticle", "Show Particle", "显示粒子");
+        add("terra_curio.configuration.shoesSoundVolume", "Shoes Sound Volume", "靴子音效音量");
+        add("terra_curio.configuration.autoAttack", "Auto Attack", "自动攻击");
+        add("terra_curio.configuration.autoAttack.tooltip", "Auto Attack", "启用近战武器自动挥动");
     }
 
     private static String toTitleCase(String raw) {
