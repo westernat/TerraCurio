@@ -97,7 +97,7 @@ public final class TCUtils {
         if (attacker != null && attacker.getType().is(attachment.getValue(TCItems.MOB$IGNORE))) {
             return true;
         }
-        if (((IEntity) living).terra_curio$isOnCthulhuSprinting() && attachment.contains(TCItems.SHIELD$OF$CTHULHU)) {
+        if (((IEntity) living).terra_curio$getCthulhuSprintingTime() > 10 && attachment.contains(TCItems.SHIELD$OF$CTHULHU)) {
             return true;
         }
         if (attachment.contains(TCItems.FIRE$IMMUNE) && isFire(damageSource)
