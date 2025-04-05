@@ -332,7 +332,7 @@ public final class TCUtils {
     }
 
     public static void applyCthulhuTouch(Player player, Entity touched) {
-        if (player != touched && ((IEntity) player).terra_curio$isOnCthulhuSprinting() && touched instanceof LivingEntity) {
+        if (player != touched && ((IEntity) player).terra_curio$getCthulhuSprintingTime() > 20 && touched instanceof LivingEntity) {
             Vec3 vector = player.getDeltaMovement();
             touched.addDeltaMovement(new Vec3(vector.x * 1.2, 0.2, vector.z * 1.2));
             touched.hurt(player.damageSources().playerAttack(player), 7.8F);
@@ -344,7 +344,7 @@ public final class TCUtils {
     private static boolean sprintKeyDown = false;
 
     public static void applyCthulhuSprinting(boolean down, Player player) {
-        if (((IEntity) player).terra_curio$getCthulhuSprintingTime() != 0) return;
+        if (((IEntity) player).terra_curio$getCthulhuSprintingTime() > 0) return;
         boolean sprint = false;
         if (player.isLocalPlayer()) {
             if (down) {

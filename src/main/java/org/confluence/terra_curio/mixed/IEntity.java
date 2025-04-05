@@ -5,10 +5,6 @@ public interface IEntity {
 
     void terra_curio$setCthulhuSprintingTime(int amount);
 
-    default boolean terra_curio$isOnCthulhuSprinting() {
-        return terra_curio$getCthulhuSprintingTime() > 20;
-    }
-
     void terra_curio$setShouldRot(boolean bool);
 
     boolean terra_curio$isShouldRot();
