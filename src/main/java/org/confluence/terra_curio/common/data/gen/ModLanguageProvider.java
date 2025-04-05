@@ -212,11 +212,11 @@ public class ModLanguageProvider extends LanguageProvider {
                         "Increases jump height"
                 },
                 new String[]{
-                        "可让持有者二连跳",
+                        "可让持有者二段跳",
                         "增加跳跃高度"
                 }
         );
-        onlyTooltip(TCItems.BLIZZARD_IN_A_BOTTLE, "暴雪瓶", "Allows the holder to double jump", "可让持有者二连跳");
+        onlyTooltip(TCItems.BLIZZARD_IN_A_BOTTLE, "暴雪瓶", "Allows the holder to double jump", "可让持有者二段跳");
         onlyTooltips(TCItems.BLUE_HORSESHOE_BALLOON, "蓝马掌气球",
                 new String[]{
                         "Allows the holder to double jump",
@@ -224,7 +224,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "Negates fall damage"
                 },
                 new String[]{
-                        "可让持有者二连跳",
+                        "可让持有者二段跳",
                         "增加跳跃高度",
                         "消除掉落伤害"
                 }
@@ -236,7 +236,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "Negates fall damage"
                 },
                 new String[]{
-                        "可让持有者二连跳",
+                        "可让持有者二段跳",
                         "增加跳跃高度",
                         "消除掉落伤害"
                 }
@@ -303,11 +303,11 @@ public class ModLanguageProvider extends LanguageProvider {
                         "Increases jump height"
                 },
                 new String[]{
-                        "可让持有者二连跳",
+                        "可让持有者二段跳",
                         "增加跳跃高度"
                 }
         );
-        tooltipAndJeiInfo(TCItems.CLOUD_IN_A_BOTTLE, "云朵瓶", "Allows the holder to double jump", "可让持有者二连跳", "It can be found in Chests in the Mineshaft and Dungeon.", "它可以在矿井和地牢的宝箱中找到。");
+        tooltipAndJeiInfo(TCItems.CLOUD_IN_A_BOTTLE, "云朵瓶", "Allows the holder to double jump", "可让持有者二段跳", "It can be found in Chests in the Mineshaft and Dungeon.", "它可以在矿井和地牢的宝箱中找到。");
         tooltipAndJeiInfo(TCItems.COBALT_SHIELD, "钴护盾", "Grants immunity to knockback", "对击退免疫", "It has a Chance to be dropped from Ravager.", "它有几率从劫掠兽身上掉落。");
         tooltipAndJeiInfo(TCItems.COMPASS, "罗盘", "Displays horizontal position", "显示水平位置", "The Compass has a Chance to be dropped from Bats.", "它有几率从蝙蝠身上掉落。");
         onlyTooltip(TCItems.COPPER_WATCH, "铜表", "Tell the time", "报时");
@@ -351,11 +351,11 @@ public class ModLanguageProvider extends LanguageProvider {
                         "Increases jump height"
                 },
                 new String[]{
-                        "可让持有者二连跳",
+                        "可让持有者二段跳",
                         "增加跳跃高度"
                 }
         );
-        tooltipAndJeiInfo(TCItems.FART_IN_A_JAR, "罐中臭屁", "Allows the holder to double jump", "可让持有者二连跳", "It has a Chance to be dropped from Ghost.", "它有几率从恶魂身上掉落");
+        tooltipAndJeiInfo(TCItems.FART_IN_A_JAR, "罐中臭屁", "Allows the holder to double jump", "可让持有者二段跳", "It has a Chance to be dropped from Ghost.", "它有几率从恶魂身上掉落");
         tooltipAndJeiInfo(TCItems.FAST_CLOCK, "快走时钟", "Immunity to Slowness", "对缓慢免疫", "It has a Chance to be dropped from Stray.", "它有几率从流浪者身上掉落。");
         tooltipAndJeiInfo(TCItems.FERAL_CLAWS, "狂爪手套", "Enables auto swing for melee weapons", "启用近战武器自动挥动", "It can be discovered in chests found within Jungle Pyramids.", "它可以在丛林神庙内的箱子中找到");
         onlyTooltips(TCItems.FIRE_GAUNTLET, "烈火手套",
@@ -497,7 +497,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "Negates fall damage"
                 },
                 new String[]{
-                        "可让持有者二连跳",
+                        "可让持有者二段跳",
                         "增加跳跃高度",
                         "消除掉落伤害"
                 }
@@ -671,7 +671,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "Negates fall damage"
                 },
                 new String[]{
-                        "可让持有者二连跳",
+                        "可让持有者二段跳",
                         "增加跳跃高度",
                         "消除掉落伤害"
                 }
@@ -683,7 +683,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "Negates fall damage"
                 },
                 new String[]{
-                        "可让持有者二连跳",
+                        "可让持有者二段跳",
                         "增加跳跃高度",
                         "消除掉落伤害"
                 }
@@ -749,11 +749,11 @@ public class ModLanguageProvider extends LanguageProvider {
                         "Increases jump height"
                 },
                 new String[]{
-                        "可让持有者二连跳",
+                        "可让持有者二段跳",
                         "增加跳跃高度"
                 }
         );
-        tooltipAndJeiInfo(TCItems.SANDSTORM_IN_A_BOTTLE, "沙暴瓶", "Allows the holder to double jump", "可让持有者二连跳", "It can be found in Chests in the Desert Pyramid.", "它可以在沙漠神殿的宝箱中找到。");
+        tooltipAndJeiInfo(TCItems.SANDSTORM_IN_A_BOTTLE, "沙暴瓶", "Allows the holder to double jump", "可让持有者二段跳", "It can be found in Chests in the Desert Pyramid.", "它可以在沙漠神殿的宝箱中找到。");
         onlyTooltip(TCItems.SEARCHLIGHT, "探照灯", "Immunity to Blindness and Darkness", "对失明和黑暗免疫");
         tooltipAndJeiInfo(TCItems.SEXTANT, "六分仪", "Displays the phase of the moon", "显示月相", "This item can be located in the chests found within Fisherman Villagers' houses.", "这件物品可以在渔夫村民家中的箱子中找到。");
         onlyJeiInfo(TCItems.SHACKLE, "脚镣", "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。");
@@ -764,7 +764,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "Increases jump height"
                 },
                 new String[]{
-                        "可让持有者二连跳",
+                        "可让持有者二段跳",
                         "增加跳跃高度"
                 }
         );
@@ -853,7 +853,7 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyJeiInfo(TCItems.TOOLBOX, "工具箱", "It can be located in the chests found within Toolsmith Villagers' houses.", "它可以在工具匠村民家中的箱子中找到");
         tooltipAndJeiInfo(TCItems.TREASURE_MAGNET, "宝藏磁石", "Expanded item pickup", "扩大物品拾取范围", "It can be discovered in chests found within Desert Pyramids, End City, Jungle Pyramids, or Ancient Cities.", "它可以在沙漠神殿、末地城、丛林神庙或古代城内的宝箱中找到。");
         tooltipAndJeiInfo(TCItems.TRIFOLD_MAP, "三折地图", "Immunity to Nausea", "对反胃免疫", "It can be found in Chests in the Stronghold Library.", "它可以在要塞图书馆的宝箱中找到。");
-        tooltipAndJeiInfo(TCItems.TSUNAMI_IN_A_BOTTLE, "海啸瓶", "Allows the holder to double jump", "可让持有者二连跳", "It can be found in Shipwreck Chests.", "它可以在沉船宝箱中找到。");
+        tooltipAndJeiInfo(TCItems.TSUNAMI_IN_A_BOTTLE, "海啸瓶", "Allows the holder to double jump", "可让持有者二段跳", "It can be found in Shipwreck Chests.", "它可以在沉船宝箱中找到。");
         tooltipAndJeiInfo(TCItems.VITAMINS, "维生素", "Immunity to Weakness", "对虚弱免疫", "It has a Chance to be dropped from Witch.", "它有几率从女巫身上掉落。");
         onlyJeiInfo(TCItems.WARRIOR_EMBLEM, "战士徽章", "It has a Chance to be dropped from Vindicator.", "它有几率从卫道士身上掉落。");
         tooltipAndJeiInfo(TCItems.WATER_WALKING_BOOTS, "水上漂靴", "Provides the ability to walk on water & honey", "提供在水和蜂蜜上行走的能力", "It can be found in Ocean Ruins Chests.", "它可以在海洋废墟宝箱中找到。");
