@@ -20,11 +20,11 @@ public class ApothicHelper {
 
     public static void preset(Map<Holder<Attribute>, Holder<Attribute>> map) {
         if (LOADED) {
-            map.put(TCAttributes.CRIT_CHANCE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.CRIT_CHANCE).orElseThrow());
-            map.put(TCAttributes.RANGED_VELOCITY, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARROW_VELOCITY).orElseThrow());
-            map.put(TCAttributes.RANGED_DAMAGE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARROW_DAMAGE).orElseThrow());
-            map.put(TCAttributes.DODGE_CHANCE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.DODGE_CHANCE).orElseThrow());
-            map.put(TCAttributes.ARMOR_PASS, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARMOR_PIERCE).orElseThrow());
+            map.put(TCAttributes.CRIT_CHANCE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.CRIT_CHANCE).orElse(null));
+            map.put(TCAttributes.RANGED_VELOCITY, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARROW_VELOCITY).orElse(null));
+            map.put(TCAttributes.RANGED_DAMAGE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARROW_DAMAGE).orElse(null));
+            map.put(TCAttributes.DODGE_CHANCE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.DODGE_CHANCE).orElse(null));
+            map.put(TCAttributes.ARMOR_PASS, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARMOR_PIERCE).orElse(null));
         }
     }
 }
