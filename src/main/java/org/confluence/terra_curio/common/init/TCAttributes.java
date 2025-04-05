@@ -87,7 +87,8 @@ public final class TCAttributes {
     }
 
     public static boolean hasCustomAttribute(Holder<Attribute> attribute) {
-        return MAP.getOrDefault(attribute, attribute) != attribute;
+        Holder<Attribute> holder = MAP.get(attribute);
+        return holder != null && holder != attribute;
     }
 
     public static void registerAttribute(Holder<Attribute> attribute, BiConsumer<EntityType<? extends LivingEntity>, Holder<Attribute>> consumer) {
