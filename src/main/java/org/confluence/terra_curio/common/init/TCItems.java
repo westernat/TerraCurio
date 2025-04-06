@@ -311,7 +311,7 @@ public final class TCItems { // todo 全换成data map
             OBSIDIAN_SHIELD = registerCurio("obsidian_shield", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).accessories(units(FIRE$IMMUNE))
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)
                     .attribute(Attributes.ARMOR, 2.0, ADD_VALUE)), // 黑曜石护盾
-            OBSIDIAN_SKULL = registerCurio("obsidian_skull", builder -> builder.jeiInfos(0).rarity(GREEN).accessories(units(FIRE$IMMUNE))), // 黑曜石骷髅头
+            OBSIDIAN_SKULL = registerCurio("obsidian_skull", builder -> builder.jeiInfos(0).rarity(GREEN).accessories(units(FIRE$IMMUNE)).attribute(Attributes.ARMOR, 1, ADD_VALUE)), // 黑曜石骷髅头
             MOLTEN_SKULL_ROSE = registerCurio("molten_skull_rose", builder -> builder.rarity(LIGHT_PURPLE).jeiInfos(0).tooltips(2)
                     .accessories(units(FIRE$IMMUNE), of(LAVA$IMMUNE$TICKS, 140), of(LAVA$HURT$REDUCE, 0.5F))), // 熔火骷髅头玫瑰
             OBSIDIAN_SKULL_ROSE = registerCurio("obsidian_skull_rose", builder -> builder.jeiInfos(0).rarity(PINK).accessories(units(FIRE$IMMUNE), of(LAVA$HURT$REDUCE, 0.5F)).tooltips(1)), // 黑曜石骷髅头玫瑰
@@ -567,7 +567,7 @@ public final class TCItems { // todo 全换成data map
     public static final Supplier<BaseCurioItem> ANGLER_EARRING = registerCurio("angler_earring", builder -> builder.noTooltip()); // 渔夫耳环
 
     public static final Supplier<BaseCurioItem> ROYAL_GEL = registerCurio("royal_gel", builder -> builder.rarity(EXPERT).accessories(entry(MOB$IGNORE, new EntityTypeTagValue(TCTags.SLIME)))), // 皇家凝胶
-            SHIELD_OF_CTHULHU = registerCurio("shield_of_cthulhu", builder -> builder.rarity(EXPERT).accessories(units(SHIELD$OF$CTHULHU))), // 克苏鲁护盾
+            SHIELD_OF_CTHULHU = registerCurio("shield_of_cthulhu", builder -> builder.rarity(EXPERT).accessories(units(SHIELD$OF$CTHULHU)).attribute(Attributes.ARMOR, 2, ADD_VALUE)), // 克苏鲁护盾
             WORM_SCARF = registerCurio("worm_scarf", builder -> builder.rarity(EXPERT).accessories(of(INJURY$FREE, 0.17F))), // 蠕虫围巾
             BRAIN_OF_CONFUSION = registerCurio("brain_of_confusion", builder -> builder.rarity(EXPERT).accessories(units(BRAIN$OF$CONFUSION)).tooltips(2)), // 混乱之脑
             HIVE_PACK = registerCurio("hive_pack", builder -> builder.rarity(EXPERT).accessories(units(HIVE$PACK))), // 蜂巢背包
