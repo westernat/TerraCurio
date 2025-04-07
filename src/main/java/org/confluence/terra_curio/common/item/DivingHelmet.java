@@ -8,9 +8,9 @@ import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.terra_curio.common.component.ModRarity;
+import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCArmorMaterials;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCTags;
 
 public class DivingHelmet extends ArmorItem {
@@ -18,7 +18,7 @@ public class DivingHelmet extends ArmorItem {
 
     public DivingHelmet() {
         super(TCArmorMaterials.DIVING, Type.HELMET, new Properties().fireResistant()
-                .component(TCDataComponentTypes.MOD_RARITY, ModRarity.GREEN)
+                .component(ConfluenceMagicLib.MOD_RARITY, ModRarity.GREEN)
                 .durability(ArmorItem.Type.HELMET.getDurability(15))
         );
     }

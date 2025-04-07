@@ -34,6 +34,8 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.EffectCures;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.common.component.NbtComponent;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
@@ -41,7 +43,6 @@ import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.terra_curio.common.component.NbtComponent;
 import org.confluence.terra_curio.common.entity.projectile.BeeProjectile;
 import org.confluence.terra_curio.common.entity.projectile.StarCloakEntity;
 import org.confluence.terra_curio.common.init.*;
@@ -213,17 +214,17 @@ public final class TCUtils {
     }
 
     public static CompoundTag getItemStackNbt(ItemStack itemStack) {
-        NbtComponent nbtComponent = itemStack.get(TCDataComponentTypes.NBT);
+        NbtComponent nbtComponent = itemStack.get(ConfluenceMagicLib.NBT);
         if (nbtComponent == null) {
             CompoundTag nbt = new CompoundTag();
-            itemStack.set(TCDataComponentTypes.NBT, new NbtComponent(nbt));
+            itemStack.set(ConfluenceMagicLib.NBT, new NbtComponent(nbt));
             return nbt;
         }
         return nbtComponent.nbt().copy();
     }
 
     public static void updateItemStackNbt(ItemStack itemStack, Consumer<CompoundTag> consumer) {
-        NbtComponent nbtComponent = itemStack.get(TCDataComponentTypes.NBT);
+        NbtComponent nbtComponent = itemStack.get(ConfluenceMagicLib.NBT);
         CompoundTag nbt;
         if (nbtComponent == null) {
             nbt = new CompoundTag();
@@ -231,7 +232,7 @@ public final class TCUtils {
             nbt = nbtComponent.nbt().copy();
         }
         consumer.accept(nbt);
-        itemStack.set(TCDataComponentTypes.NBT, new NbtComponent(nbt));
+        itemStack.set(ConfluenceMagicLib.NBT, new NbtComponent(nbt));
     }
 
     public static float applyLavaHurtReduce(LivingEntity living, DamageSource damageSource, float amount) {

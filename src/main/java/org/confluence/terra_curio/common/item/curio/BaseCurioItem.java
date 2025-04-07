@@ -17,13 +17,14 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.common.component.ModRarity;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.api.primitive.ComponentsValue;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCDataMaps;
 import org.confluence.terra_curio.common.init.TCItems;
@@ -247,7 +248,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         @ApiStatus.Internal
         public Builder initialize() {
-            properties.stacksTo(1).component(TCDataComponentTypes.MOD_RARITY, rarity);
+            properties.stacksTo(1).component(ConfluenceMagicLib.MOD_RARITY, rarity);
             this.attributes = attributesBuilder.build();
             this.attributesBuilder = null;
             return this;

@@ -19,9 +19,10 @@ import net.minecraft.world.level.material.Fluid;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.common.component.ModRarity;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.*;
-import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.item.*;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.common.item.curio.NightBonusCurioItem;
@@ -42,11 +43,11 @@ import java.util.function.Supplier;
 
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
 import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE;
+import static org.confluence.lib.common.component.ModRarity.*;
 import static org.confluence.terra_curio.api.primitive.ValueType.create;
 import static org.confluence.terra_curio.api.primitive.ValueType.ofUnit;
 import static org.confluence.terra_curio.common.component.AccessoriesComponent.of;
 import static org.confluence.terra_curio.common.component.AccessoriesComponent.units;
-import static org.confluence.terra_curio.common.component.ModRarity.*;
 
 @SuppressWarnings("all")
 public final class TCItems { // todo 全换成data map
@@ -596,7 +597,7 @@ public final class TCItems { // todo 全换成data map
 
     public static Supplier<BaseCurioItem> registerCurio(String name, ModRarity rarity) {
         return CURIOS.register(name, () -> {
-            Item.Properties properties = new Item.Properties().component(TCDataComponentTypes.MOD_RARITY, rarity);
+            Item.Properties properties = new Item.Properties().component(ConfluenceMagicLib.MOD_RARITY, rarity);
             if (rarity != WHITE && rarity != GRAY) properties.fireResistant();
             return new BaseCurioItem(properties);
         });

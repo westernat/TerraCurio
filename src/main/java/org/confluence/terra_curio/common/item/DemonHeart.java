@@ -14,10 +14,10 @@ import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.common.component.ModRarity;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.util.TCUtils;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
@@ -29,7 +29,7 @@ public class DemonHeart extends Item {
     public static final ResourceLocation ID = TerraCurio.asResource("demon_heart");
 
     public DemonHeart() {
-        super(new Properties().component(TCDataComponentTypes.MOD_RARITY, ModRarity.EXPERT).stacksTo(1).fireResistant());
+        super(new Properties().component(ConfluenceMagicLib.MOD_RARITY, ModRarity.EXPERT).stacksTo(1).fireResistant());
     }
 
     @Override

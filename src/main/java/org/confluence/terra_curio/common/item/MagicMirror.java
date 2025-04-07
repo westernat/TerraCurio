@@ -10,15 +10,15 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.portal.DimensionTransition;
-import org.confluence.terra_curio.common.component.ModRarity;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
+import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCSoundEvents;
 
 import java.util.List;
 
 public class MagicMirror extends Item {
     public MagicMirror(ModRarity rarity) {
-        super(new Properties().component(TCDataComponentTypes.MOD_RARITY, rarity).fireResistant().stacksTo(1));
+        super(new Properties().component(ConfluenceMagicLib.MOD_RARITY, rarity).fireResistant().stacksTo(1));
     }
 
     public MagicMirror(Properties properties) {

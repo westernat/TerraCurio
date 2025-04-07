@@ -4,7 +4,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import org.confluence.terra_curio.common.component.ModRarity;
+import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 
 import java.util.List;
@@ -17,7 +18,7 @@ import static org.confluence.terra_curio.common.init.TCItems.INFORMATION;
 public class CellPhone extends MagicMirror implements IFunctionCouldEnable.Multi {
     public CellPhone() {
         super(new Properties().fireResistant().stacksTo(1)
-                .component(TCDataComponentTypes.MOD_RARITY, ModRarity.LIME)
+                .component(ConfluenceMagicLib.MOD_RARITY, ModRarity.LIME)
                 .component(TCDataComponentTypes.ACCESSORIES, of(INFORMATION, FULL_INFO)));
     }
 
