@@ -11,6 +11,8 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
+import org.confluence.lib.recipe.AbstractAmountRecipe;
+import org.confluence.lib.recipe.AmountIngredient;
 import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCRecipes;
 import org.confluence.terra_curio.util.TCUtils;

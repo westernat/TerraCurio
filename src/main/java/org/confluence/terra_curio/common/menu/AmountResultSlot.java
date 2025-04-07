@@ -4,7 +4,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.terra_curio.common.recipe.AbstractAmountRecipe;
+import org.confluence.lib.recipe.AbstractAmountRecipe;
 import org.jetbrains.annotations.Nullable;
 
 @javax.annotation.ParametersAreNonnullByDefault
