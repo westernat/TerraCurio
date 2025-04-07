@@ -6,11 +6,7 @@ import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.effect.beneficial.GravitationEffect;
-import org.confluence.terra_curio.common.effect.beneficial.HoneyEffect;
-import org.confluence.terra_curio.common.effect.beneficial.PaladinsShieldEffect;
-import org.confluence.terra_curio.common.effect.harmful.ConfusedEffect;
-import org.confluence.terra_curio.common.effect.neutral.CerebralMindtrickEffect;
+import org.confluence.terra_curio.common.effect.*;
 
 public final class TCEffects {
     public static final DeferredRegister<MobEffect> EFFECTS = DeferredRegister.create(Registries.MOB_EFFECT, TerraCurio.MODID);

@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.common.effect.neutral;
+package org.confluence.terra_curio.common.effect;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffect;

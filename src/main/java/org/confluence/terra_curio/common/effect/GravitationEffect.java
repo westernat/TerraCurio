@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.common.effect.beneficial;
+package org.confluence.terra_curio.common.effect;
 
 import com.google.common.collect.ImmutableMultimap;
 import net.minecraft.core.Holder;

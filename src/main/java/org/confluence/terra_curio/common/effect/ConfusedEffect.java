@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.common.effect.harmful;
+package org.confluence.terra_curio.common.effect;
 
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
