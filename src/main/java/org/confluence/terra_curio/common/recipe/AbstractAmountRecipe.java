@@ -18,11 +18,11 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.common.crafting.ICustomIngredient;
-import org.confluence.terra_curio.util.PatternMatcher;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 
 import java.util.HashSet;
+import java.util.List;
 
 public abstract class AbstractAmountRecipe<T extends RecipeInput> implements Recipe<T> {
     public static final MapCodec<NonNullList<Ingredient>> INGREDIENTS_CODEC = Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").flatXmap(list -> {
@@ -106,8 +106,8 @@ public abstract class AbstractAmountRecipe<T extends RecipeInput> implements Rec
             // 计算顶格
             int patternWidth = data.pattern().getFirst().length();
             int patternHeight = data.pattern().size();
-            Vector2i patternTopLeft = PatternMatcher.findPatternTopLeft(data.pattern(), patternWidth, patternHeight);
-            Vector2i containerTopLeft = PatternMatcher.findContainerTopLeft(input, recipeWidth, recipeHeight);
+            Vector2i patternTopLeft = findPatternTopLeft(data.pattern(), patternWidth, patternHeight);
+            Vector2i containerTopLeft = findContainerTopLeft(input, recipeWidth, recipeHeight);
             // 抽取物品
             for (int i = 0; i < patternHeight; i++) {
                 if (i >= patternHeight - patternTopLeft.y) continue;
@@ -185,4 +185,32 @@ public abstract class AbstractAmountRecipe<T extends RecipeInput> implements Rec
     public abstract String getGroup();
 
     public abstract ItemStack getToastSymbol();
+
+    public static Vector2i findPatternTopLeft(List<String> pattern, int patternWidth, int patternHeight) {
+        int x = patternWidth - 1, y = patternHeight - 1;
+        for (int i = 0; i < patternHeight; i++) {
+            String s = pattern.get(i);
+            for (int j = 0; j < patternWidth; j++) {
+                if (s.charAt(j) != ' ') {
+                    if (x > j) x = j;
+                    if (y > i) y = i;
+                }
+            }
+        }
+        return new Vector2i(x, y);
+    }
+
+    public static Vector2i findContainerTopLeft(RecipeInput container, int recipeWidth, int recipeHeight) {
+        int x = recipeWidth - 1, y = recipeHeight - 1;
+        for (int i = 0; i < recipeHeight; i++) {
+            int dy = i * recipeWidth;
+            for (int j = 0; j < recipeWidth; j++) {
+                if (!container.getItem(j + dy).isEmpty()) {
+                    if (x > j) x = j;
+                    if (y > i) y = i;
+                }
+            }
+        }
+        return new Vector2i(x, y);
+    }
 }

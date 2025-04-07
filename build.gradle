@@ -121,9 +121,17 @@ repositories {
     }
 }
 
+var dev = true
+
 dependencies {
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
-    implementation jarJar(project(":ParticleStorm"))
+    if (dev) {
+        implementation project(":ParticleStorm")
+        implementation project(":Confluence-Magic-Lib")
+    } else {
+        implementation jarJar(project(":ParticleStorm"))
+        implementation jarJar(project(":Confluence-Magic-Lib"))
+    }
 
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"

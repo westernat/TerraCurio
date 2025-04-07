@@ -14,8 +14,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import org.confluence.lib.mixed.SelfGetter;
 import org.confluence.terra_curio.mixed.IEntity;
-import org.confluence.terra_curio.mixed.SelfGetter;
 import org.confluence.terra_curio.util.TCUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -79,7 +79,7 @@ public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
 
     @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isInLava()Z", ordinal = 1))
     private boolean resetLavaImmune(boolean original) {
-        Entity self = self();
+        Entity self = confluence$self();
         if (self instanceof LivingEntity) {
             original = TCUtils.applyLavaImmune(original, self);
             this.terra_curio$dimensionHeight = terra_curio$isShouldRot ? getDimensions(getPose()).height() : 0.0F;
@@ -94,10 +94,10 @@ public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
 
     @Inject(method = "push(Lnet/minecraft/world/entity/Entity;)V", at = @At("TAIL"))
     private void collidingCheck(Entity entity, CallbackInfo ci) {
-        if (self() instanceof Player player) {
+        if (confluence$self() instanceof Player player) {
             TCUtils.applyCthulhuTouch(player, entity);
         } else if (entity instanceof Player player) {
-            TCUtils.applyCthulhuTouch(player, self());
+            TCUtils.applyCthulhuTouch(player, confluence$self());
         }
     }
 

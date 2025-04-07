@@ -8,11 +8,11 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.lib.mixed.SelfGetter;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.StepStoolHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.mixed.IClientLivingEntity;
-import org.confluence.terra_curio.mixed.SelfGetter;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,7 +37,7 @@ public abstract class LivingEntityClientMixin implements IClientLivingEntity, Se
 
     @Inject(method = "checkFallDamage", at = @At("HEAD"))
     private void fall(double motionY, boolean onGround, BlockState blockState, BlockPos blockPos, CallbackInfo ci) {
-        if (motionY > 0.0 && GravitationHandler.isShouldRot() && self() instanceof LocalPlayer self) {
+        if (motionY > 0.0 && GravitationHandler.isShouldRot() && confluence$self() instanceof LocalPlayer self) {
             self.fallDistance += (float) motionY;
         }
     }
@@ -45,9 +45,9 @@ public abstract class LivingEntityClientMixin implements IClientLivingEntity, Se
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3 confused(Vec3 vec3) {
         if (GravitationHandler.isShouldRot()) {
-            return self() instanceof LocalPlayer ? new Vec3(-vec3.x, vec3.y, vec3.z) : vec3;
+            return confluence$self() instanceof LocalPlayer ? new Vec3(-vec3.x, vec3.y, vec3.z) : vec3;
         } else if (StepStoolHandler.onStool()) {
-            return self() instanceof LocalPlayer ? Vec3.ZERO : vec3;
+            return confluence$self() instanceof LocalPlayer ? Vec3.ZERO : vec3;
         }
         return vec3;
     }
@@ -55,13 +55,13 @@ public abstract class LivingEntityClientMixin implements IClientLivingEntity, Se
     @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
     private Vec3 notSlowdown(Vec3 instance, double factorX, double factorY, double factorZ, Operation<Vec3> original) {
         if (TCClientPacketHandler.floating && TCClientPacketHandler.isCanFloating()) {
-            if (self() instanceof LocalPlayer) return original.call(instance, factorX, 1.0, factorZ);
+            if (confluence$self() instanceof LocalPlayer) return original.call(instance, factorX, 1.0, factorZ);
         }
         return original.call(instance, factorX, factorY, factorZ);
     }
 
     @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1))
     private boolean neptunesShell(boolean original) {
-        return original || (TCClientPacketHandler.isHasNeptunesShell() && self() instanceof LocalPlayer);
+        return original || (TCClientPacketHandler.isHasNeptunesShell() && confluence$self() instanceof LocalPlayer);
     }
 }

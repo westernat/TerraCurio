@@ -12,12 +12,12 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.lib.mixed.SelfGetter;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.mixed.ILivingEntity;
-import org.confluence.terra_curio.mixed.SelfGetter;
 import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -96,7 +96,7 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
 
     @ModifyArg(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"), index = 2)
     private double modifyParticlePosY(double pPosY) {
-        IEntity self = (IEntity) self();
+        IEntity self = (IEntity) confluence$self();
         if (self.terra_curio$isShouldRot()) {
             return pPosY + self.terra_curio$getDimensionHeight();
         }
@@ -105,7 +105,7 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
 
     @Inject(method = "canFreeze", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
     private void checkFreeze(CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValue() && TCUtils.hasAccessoriesType(self(), TCItems.FROZEN$IMMUNE)) {
+        if (cir.getReturnValue() && TCUtils.hasAccessoriesType(confluence$self(), TCItems.FROZEN$IMMUNE)) {
             cir.setReturnValue(false);
         }
     }
@@ -122,7 +122,7 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
 
     @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
     private Vec3 notSlowdown(Vec3 instance, double factorX, double factorY, double factorZ, Operation<Vec3> original) {
-        if (TCUtils.isFluidWalkable(self(), self().getInBlockState().getFluidState())) {
+        if (TCUtils.isFluidWalkable(confluence$self(), confluence$self().getInBlockState().getFluidState())) {
             return original.call(instance, 0.94, factorY, 0.94);
         }
         return original.call(instance, factorX, factorY, factorZ);
@@ -138,19 +138,19 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
 
     @Inject(method = "canStandOnFluid", at = @At("RETURN"), cancellable = true)
     private void standOnFluid(FluidState fluidState, CallbackInfoReturnable<Boolean> cir) {
-        if (!cir.getReturnValue() && TCUtils.isFluidWalkable(self(), fluidState)) {
+        if (!cir.getReturnValue() && TCUtils.isFluidWalkable(confluence$self(), fluidState)) {
             cir.setReturnValue(true);
         }
     }
 
     @Inject(method = "onChangedBlock", at = @At("TAIL"))
     private void onMoved(ServerLevel level, BlockPos pos, CallbackInfo ci) {
-        TCUtils.onChangedBlock(self(), level);
+        TCUtils.onChangedBlock(confluence$self(), level);
     }
 
     @Inject(method = "checkTotemDeathProtection", at = @At(value = "CONSTANT", args = "nullValue=true"), cancellable = true)
     private void useTotemAbility(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
-        if (TCUtils.applyTotemAbility(self())) cir.setReturnValue(true);
+        if (TCUtils.applyTotemAbility(confluence$self())) cir.setReturnValue(true);
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
