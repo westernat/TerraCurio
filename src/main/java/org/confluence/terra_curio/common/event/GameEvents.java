@@ -121,7 +121,9 @@ public final class GameEvents {
     @SubscribeEvent
     public static void livingDeath(LivingDeathEvent event) {
         LivingEntity living = event.getEntity();
-        if (event.getSource().getEntity() instanceof ServerPlayer serverPlayer) {
+        DamageSource damageSource = event.getSource();
+        // 未知模组导致的null
+        if (damageSource != null && damageSource.getEntity() instanceof ServerPlayer serverPlayer) {
             EntityType<?> entityType = living.getType();
             EntityKilledPacketS2C.sendToClient(serverPlayer, entityType);
         }
