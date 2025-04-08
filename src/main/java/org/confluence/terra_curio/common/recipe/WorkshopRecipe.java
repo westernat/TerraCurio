@@ -13,9 +13,9 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.level.Level;
 import org.confluence.lib.common.recipe.AbstractAmountRecipe;
 import org.confluence.lib.common.recipe.AmountIngredient;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCRecipes;
-import org.confluence.terra_curio.util.TCUtils;
 
 public class WorkshopRecipe extends AbstractAmountRecipe<RecipeInput> {
     public WorkshopRecipe(ItemStack pResult, NonNullList<Ingredient> pIngredients) {
@@ -24,7 +24,7 @@ public class WorkshopRecipe extends AbstractAmountRecipe<RecipeInput> {
 
     @Override
     public boolean matches(RecipeInput input, Level pLevel) {
-        return TCUtils.forConfluence$ModifyExpression(super.matches(input, pLevel));
+        return LibUtils.forConfluence$ModifyExpression(super.matches(input, pLevel));
     }
 
     @Override

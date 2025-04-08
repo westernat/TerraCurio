@@ -16,12 +16,12 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.Tags;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
-import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -185,12 +185,12 @@ public final class InformationHandler {
         } else if (level.isThundering()) {
             weather = "thunder";
         }
-        TCUtils.forConfluence$Inject();
+        LibUtils.forConfluence$Inject();
         return Component.translatable("info.terra_curio.weather_radio." + weather);
     }
 
     private static Component getFishingPowerInfo(Player player) {
-        float fishingPower = TCUtils.forConfluence$ModifyExpression(player.getLuck());
+        float fishingPower = LibUtils.forConfluence$ModifyExpression(player.getLuck());
         return Component.translatable(
                 "info.terra_curio.fishermans_pocket_guide",
                 "%.2f".formatted(fishingPower)

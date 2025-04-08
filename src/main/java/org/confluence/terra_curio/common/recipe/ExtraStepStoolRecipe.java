@@ -12,10 +12,10 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SmithingRecipeInput;
 import net.minecraft.world.item.crafting.SmithingTransformRecipe;
 import net.minecraft.world.level.Level;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.item.curio.movement.StepStool;
 import org.confluence.terra_curio.mixin.accessor.SmithingTransformRecipeAccessor;
-import org.confluence.terra_curio.util.TCUtils;
 
 public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
     public ExtraStepStoolRecipe(Ingredient base, Ingredient addition, ItemStack result) {
@@ -27,7 +27,7 @@ public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
         ItemStack base = input.getItem(1);
         ItemStack addition = input.getItem(2);
         if (isBaseIngredient(base) && isAdditionIngredient(addition)) {
-            CompoundTag tag = TCUtils.getItemStackNbt(base);
+            CompoundTag tag = LibUtils.getItemStackNbt(base);
             return tag.getInt("extraStep") + tag.getInt("extraStep") < 15;
         }
         return false;
@@ -35,7 +35,7 @@ public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
 
     @Override
     public boolean isBaseIngredient(ItemStack pStack) {
-        CompoundTag tag = TCUtils.getItemStackNbt(pStack);
+        CompoundTag tag = LibUtils.getItemStackNbt(pStack);
         return pStack.getItem() instanceof StepStool && tag.getInt("extraStep") < 15;
     }
 
@@ -47,8 +47,8 @@ public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
     @Override
     public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider registries) {
         ItemStack base = input.getItem(1).copyWithCount(1);
-        int additional = TCUtils.getItemStackNbt(input.getItem(2)).getInt("extraStep");
-        TCUtils.updateItemStackNbt(base, nbt -> nbt.putInt("extraStep", nbt.getInt("extraStep") + additional + 1));
+        int additional = LibUtils.getItemStackNbt(input.getItem(2)).getInt("extraStep");
+        LibUtils.updateItemStackNbt(base, nbt -> nbt.putInt("extraStep", nbt.getInt("extraStep") + additional + 1));
         return base;
     }
 

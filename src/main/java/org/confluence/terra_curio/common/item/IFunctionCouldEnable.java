@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.Util;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.init.TCItems;
@@ -19,11 +20,11 @@ public interface IFunctionCouldEnable {
     }
 
     default boolean isEnabled(ItemStack itemStack, @Nullable TooltipComponentsValue.Storage storage) {
-        return !TCUtils.getItemStackNbt(itemStack).getBoolean(getDisableKey());
+        return !LibUtils.getItemStackNbt(itemStack).getBoolean(getDisableKey());
     }
 
     default void cycleEnable(ItemStack itemStack) {
-        TCUtils.updateItemStackNbt(itemStack, tag -> {
+        LibUtils.updateItemStackNbt(itemStack, tag -> {
             String key = getDisableKey();
             tag.putBoolean(key, !tag.getBoolean(key));
         });
@@ -58,7 +59,7 @@ public interface IFunctionCouldEnable {
             if (storage == null) return false;
             int index = INDEX_MAP.getOrDefault(storage, -1);
             if (index == -1) return false;
-            return !TCUtils.getItemStackNbt(itemStack).getBoolean(Integer.toString(index));
+            return !LibUtils.getItemStackNbt(itemStack).getBoolean(Integer.toString(index));
         }
 
         @Override

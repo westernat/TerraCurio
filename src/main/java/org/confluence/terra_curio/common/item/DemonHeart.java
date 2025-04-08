@@ -16,9 +16,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.common.component.ModRarity;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
-import org.confluence.terra_curio.util.TCUtils;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
@@ -44,7 +44,7 @@ public class DemonHeart extends Item {
                     double before = modifiers.containsKey(ID) ? modifiers.get(ID).amount() : 0.0;
                     iCurioStacksHandler.removeModifier(ID);
                     iCuriosItemHandler.addPermanentSlotModifier(TerraCurio.CURIO_SLOT, ID, before + 1.0, AttributeModifier.Operation.ADD_VALUE);
-                    TCUtils.forConfluence$ModifyExpression(serverPlayer);
+                    LibUtils.forConfluence$ModifyExpression(serverPlayer);
                 }
             });
         }

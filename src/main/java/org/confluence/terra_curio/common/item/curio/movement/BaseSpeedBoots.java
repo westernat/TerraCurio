@@ -15,6 +15,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.client.TCClientConfigs;
@@ -28,7 +29,6 @@ import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
 import org.confluence.terra_curio.util.CuriosUtils;
-import org.confluence.terra_curio.util.TCUtils;
 import org.joml.Vector3f;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 import top.theillusivec4.curios.api.SlotContext;
@@ -69,13 +69,13 @@ public class BaseSpeedBoots extends BaseCurioItem {
     @Override
     public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
         super.onUnequip(slotContext, newStack, stack);
-        TCUtils.getItemStackNbt(stack).putInt(KEY, 0);
+        LibUtils.getItemStackNbt(stack).putInt(KEY, 0);
     }
 
     protected void speedUp(SlotContext slotContext, ItemStack stack, int acceleration, int maxSpeed) {
-        TCUtils.forConfluence$Inject();
+        LibUtils.forConfluence$Inject();
         if (TCClientConfigs.speedUp && slotContext.entity() instanceof Player player && player.isLocalPlayer()) {
-            int speed = TCUtils.getItemStackNbt(stack).getInt(KEY);
+            int speed = LibUtils.getItemStackNbt(stack).getInt(KEY);
             if (player.zza > 0 && !player.horizontalCollision && !player.isCrouching()) {
                 if (player.onGround()) {
                     if (TCClientPacketHandler.isHasMagiluminescence() || PlayerJumpHandler.isInfiniteFlight()) acceleration *= 2;
@@ -107,7 +107,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
         if (component != null && (value = component.get(TCItems.ATTRIBUTES)) != null) {
             builder1.putAll(value.get());
         }
-        double speed = TCUtils.getItemStackNbt(stack).getInt(KEY) * 0.01;
+        double speed = LibUtils.getItemStackNbt(stack).getInt(KEY) * 0.01;
         if (speed > 0.0) {
             builder1.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(ID, speed, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }

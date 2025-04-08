@@ -7,8 +7,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.util.TCUtils;
 
 public final class TCTabs {
     public static final DeferredRegister<CreativeModeTab> TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, TerraCurio.MODID);
@@ -17,7 +17,7 @@ public final class TCTabs {
             () -> CreativeModeTab.builder().icon(() -> TCItems.ICON.get().getDefaultInstance())
                     .title(Component.translatable("creativetab.terra_curio"))
                     .displayItems((parameters, output) -> {
-                        TCUtils.forConfluence$Inject();
+                        LibUtils.forConfluence$Inject();
                         output.accept(TCItems.WORKSHOP.get());
                         output.accept(TCItems.DEMON_HEART.get());
                         output.accept(TCItems.MAGIC_MIRROR.get());

@@ -12,9 +12,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.common.init.TCDamageTypes;
 import org.confluence.terra_curio.common.init.TCEntities;
-import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 
 @javax.annotation.ParametersAreNonnullByDefault
@@ -84,7 +84,7 @@ public class StarCloakEntity extends Projectile {
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
         if (isManaState()) {
-            TCUtils.forConfluence$Inject();
+            LibUtils.forConfluence$Inject();
         } else {
             pResult.getEntity().hurt(TCDamageTypes.of(level(), TCDamageTypes.STAR_CLOAK, getOwner()), 10.0F);
         }

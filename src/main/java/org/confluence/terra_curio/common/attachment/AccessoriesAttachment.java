@@ -18,6 +18,7 @@ import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.api.event.AfterAccessoryAbilitiesFlushedEvent;
 import org.confluence.terra_curio.api.event.RegisterAccessoriesComponentUpdateEvent;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
@@ -147,7 +148,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                     }
 
                     if (!panicNecklace && item instanceof PanicNecklace) this.panicNecklace = true;
-                    TCUtils.forConfluence$Inject();
+                    LibUtils.forConfluence$Inject();
                 }
             }
             TagKey<EntityType<?>> ignores = getValue(TCItems.MOB$IGNORE);

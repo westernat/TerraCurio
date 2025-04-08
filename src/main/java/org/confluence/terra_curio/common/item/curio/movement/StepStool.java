@@ -5,11 +5,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.common.entity.StepStoolEntity;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.network.s2c.StepStoolSteppingPacketS2C;
 import org.confluence.terra_curio.util.CuriosUtils;
-import org.confluence.terra_curio.util.TCUtils;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
@@ -24,7 +24,7 @@ public class StepStool extends BaseCurioItem {
         if (prevStack.getItem() == stack.getItem()) return;
         super.onEquip(slotContext, prevStack, stack);
         if (!slotContext.entity().level().isClientSide) {
-            StepStoolSteppingPacketS2C.sendToClient(slotContext, TCUtils.getItemStackNbt(stack).getInt("extraStep") + 1);
+            StepStoolSteppingPacketS2C.sendToClient(slotContext, LibUtils.getItemStackNbt(stack).getInt("extraStep") + 1);
         }
     }
 
@@ -35,7 +35,7 @@ public class StepStool extends BaseCurioItem {
         Level level = slotContext.entity().level();
         if (!level.isClientSide) {
             StepStoolSteppingPacketS2C.resetStep(slotContext.entity());
-            if (level.getEntity(TCUtils.getItemStackNbt(stack).getInt("id")) instanceof StepStoolEntity stepStool) {
+            if (level.getEntity(LibUtils.getItemStackNbt(stack).getInt("id")) instanceof StepStoolEntity stepStool) {
                 stepStool.setOwner(null);
             }
         }
@@ -50,7 +50,7 @@ public class StepStool extends BaseCurioItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         tooltipComponents.add(Component.translatable(
-                "tooltip.item.terra_curio.step_stool.1", TCUtils.getItemStackNbt(stack).getInt("extraStep")
+                "tooltip.item.terra_curio.step_stool.1", LibUtils.getItemStackNbt(stack).getInt("extraStep")
         ).withStyle(style -> style.withColor(ChatFormatting.BLUE)));
     }
 }

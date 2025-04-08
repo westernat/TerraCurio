@@ -2,7 +2,6 @@ package org.confluence.terra_curio.util;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.BlockTags;
@@ -34,8 +33,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.EffectCures;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.lib.ConfluenceMagicLib;
-import org.confluence.lib.common.component.NbtComponent;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
@@ -57,18 +54,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.function.Consumer;
 
 public final class TCUtils {
     public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(TerraCurio.asResource("ice_speed"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-
-    @ApiStatus.Internal
-    public static void forConfluence$Inject() {}
-
-    @ApiStatus.Internal
-    public static <T> T forConfluence$ModifyExpression(T value) {
-        return value;
-    }
 
     @ApiStatus.Internal
     @SuppressWarnings("unchecked")
@@ -211,28 +199,6 @@ public final class TCUtils {
         InfiniteFlightPacketS2C.sendToClient(serverPlayer);
         BroadcastRenderPacketS2C.sendToAll(serverPlayer);
         FluidWalkUpdatePacketS2C.sendToClient(serverPlayer);
-    }
-
-    public static CompoundTag getItemStackNbt(ItemStack itemStack) {
-        NbtComponent nbtComponent = itemStack.get(ConfluenceMagicLib.NBT);
-        if (nbtComponent == null) {
-            CompoundTag nbt = new CompoundTag();
-            itemStack.set(ConfluenceMagicLib.NBT, new NbtComponent(nbt));
-            return nbt;
-        }
-        return nbtComponent.nbt().copy();
-    }
-
-    public static void updateItemStackNbt(ItemStack itemStack, Consumer<CompoundTag> consumer) {
-        NbtComponent nbtComponent = itemStack.get(ConfluenceMagicLib.NBT);
-        CompoundTag nbt;
-        if (nbtComponent == null) {
-            nbt = new CompoundTag();
-        } else {
-            nbt = nbtComponent.nbt().copy();
-        }
-        consumer.accept(nbt);
-        itemStack.set(ConfluenceMagicLib.NBT, new NbtComponent(nbt));
     }
 
     public static float applyLavaHurtReduce(LivingEntity living, DamageSource damageSource, float amount) {

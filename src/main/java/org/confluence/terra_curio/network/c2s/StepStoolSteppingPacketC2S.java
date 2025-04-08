@@ -9,11 +9,11 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.entity.StepStoolEntity;
 import org.confluence.terra_curio.common.item.curio.movement.StepStool;
 import org.confluence.terra_curio.util.CuriosUtils;
-import org.confluence.terra_curio.util.TCUtils;
 
 import java.util.function.Predicate;
 
@@ -47,9 +47,9 @@ public record StepStoolSteppingPacketC2S(int slot, byte step) implements CustomP
                     StepStoolEntity pEntity = new StepStoolEntity(serverPlayer);
                     serverPlayer.level().addFreshEntity(pEntity);
                     serverPlayer.teleportRelative(0.0, 1.001, 0.0);
-                    TCUtils.updateItemStackNbt(itemStack, nbt -> nbt.putInt("id", pEntity.getId()));
+                    LibUtils.updateItemStackNbt(itemStack, nbt -> nbt.putInt("id", pEntity.getId()));
                 } else {
-                    int id = TCUtils.getItemStackNbt(itemStack).getInt("id");
+                    int id = LibUtils.getItemStackNbt(itemStack).getInt("id");
                     Entity entity = serverPlayer.level().getEntity(id);
                     if (entity instanceof StepStoolEntity stepStool) {
                         if (actualStep == 0) {
