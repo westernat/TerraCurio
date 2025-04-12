@@ -9,7 +9,7 @@ import net.minecraft.world.inventory.*;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.confluence.lib.common.menu.AmountResultSlot;
-import org.confluence.lib.common.menu.RecipeInputContainer;
+import org.confluence.lib.common.recipe.MenuRecipeInput;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCMenus;
@@ -24,7 +24,7 @@ import java.util.List;
 public class WorkshopMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
     private final Player player;
-    private final RecipeInputContainer input;
+    private final MenuRecipeInput input;
     private final ResultContainer result = new ResultContainer();
     private final DataSlot selectedRecipeIndex = DataSlot.standalone();
     private List<RecipeHolder<WorkshopRecipe>> recipes = new ArrayList<>();
@@ -43,7 +43,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
         super(TCMenus.WORKSHOP.get(), pContainerId);
         this.player = pPlayerInventory.player;
         this.access = LibUtils.forConfluence$ModifyExpression(pAccess);
-        this.input = LibUtils.forConfluence$ModifyExpression(new RecipeInputContainer(this, 12));
+        this.input = LibUtils.forConfluence$ModifyExpression(new MenuRecipeInput(this, 12));
         addSlot(new AmountResultSlot(input, result, 0, 62, 35) {
             @Override
             protected void updateMenu() {
