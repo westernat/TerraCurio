@@ -53,6 +53,9 @@ public final class TCCommonConfigs {
                 "The higher the block in the list, the higher the value"
         ).defineListAllowEmpty("rareBlocks", List.of(
                 "confluence:life_crystal_block",
+                "confluence:opal_ore",
+                "confluence:gelstone_ore",
+                "confluence:cold_crystal_ore",
                 "confluence:tr_crimson_ore",
                 "confluence:deepslate_tr_crimson_ore",
                 "confluence:demonite_ore",
@@ -95,7 +98,9 @@ public final class TCCommonConfigs {
                 "You need to fill the list with string like 'modid:entity'",
                 "The higher the creature in the list, the higher the value"
         ).defineListAllowEmpty("rareCreatures", List.of(
-                "confluence:pink_slime",
+                "terra_entity:nymph",
+                "terra_entity:wandering_eye_fish",
+                "terra_entity:pink_slime",
                 "minecraft:skeleton_horse",
                 "minecraft:sniffer",
                 "minecraft:allay",
