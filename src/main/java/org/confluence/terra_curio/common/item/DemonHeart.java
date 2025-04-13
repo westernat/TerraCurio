@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.item;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -54,7 +55,7 @@ public class DemonHeart extends Item {
     @OnlyIn(Dist.CLIENT)
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.demon_heart.0"));
+        tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.demon_heart.0").withStyle(ChatFormatting.GREEN));
         CuriosApi.getCuriosInventory(Minecraft.getInstance().player).ifPresent(iCuriosItemHandler -> {
             ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
             Component remainingTimes = Component.translatable(
