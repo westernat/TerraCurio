@@ -25,12 +25,13 @@ public class WorkshopMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
     private final Player player;
     private final MenuRecipeInput input;
-    private final ResultContainer result = new ResultContainer();
+    private final ResultContainer result;
+    private final AmountResultSlot<WorkshopRecipe> resultSlot;
     private final DataSlot selectedRecipeIndex = DataSlot.standalone();
     private List<RecipeHolder<WorkshopRecipe>> recipes = new ArrayList<>();
 
-    public WorkshopMenu(int pContainerId, Inventory inventory) {
-        this(pContainerId, inventory, ContainerLevelAccess.NULL);
+    public WorkshopMenu(int containerId, Inventory inventory) {
+        this(containerId, inventory, ContainerLevelAccess.NULL);
     }
 
     /*
@@ -39,12 +40,12 @@ public class WorkshopMenu extends AbstractContainerMenu {
      * 10       05
      * 09 08 07 06
      */
-    public WorkshopMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
-        super(TCMenus.WORKSHOP.get(), pContainerId);
+    public WorkshopMenu(int containerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
+        super(TCMenus.WORKSHOP.get(), containerId);
         this.player = pPlayerInventory.player;
         this.access = LibUtils.forConfluence$ModifyExpression(pAccess);
         this.input = LibUtils.forConfluence$ModifyExpression(new MenuRecipeInput(this, 12));
-        addSlot(new AmountResultSlot(input, result, 0, 62, 35) {
+        addSlot(this.resultSlot = new AmountResultSlot<>(input, this.result = new ResultContainer(), 0, 62, 35) {
             @Override
             protected void updateMenu() {
                 WorkshopMenu.this.setupResultSlot();
@@ -144,7 +145,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
             ItemStack itemStack = recipe.getResultItem(null).copy();
             if (itemStack.isItemEnabled(player.level().enabledFeatures())) {
                 result.setItem(0, itemStack);
-                setCurrentRecipe(recipe);
+                resultSlot.setCurrentRecipe(recipe);
             } else {
                 result.setItem(0, ItemStack.EMPTY);
             }
@@ -181,19 +182,13 @@ public class WorkshopMenu extends AbstractContainerMenu {
                     if (selectedRecipeIndex.get() == -1) selectedRecipeIndex.set(0);
                     WorkshopRecipe recipe = recipes.get(selectedRecipeIndex.get()).value();
                     itemStack = recipe.getResultItem(null).copy();
-                    setCurrentRecipe(recipe);
+                    resultSlot.setCurrentRecipe(recipe);
                 }
                 result.setItem(0, itemStack);
                 setRemoteSlot(0, itemStack);
                 serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 0, itemStack));
             }
         });
-    }
-
-    private void setCurrentRecipe(WorkshopRecipe recipe) {
-        if (getSlot(0) instanceof AmountResultSlot amountResultSlot) {
-            amountResultSlot.setCurrentRecipe(recipe);
-        }
     }
 
     @Override
