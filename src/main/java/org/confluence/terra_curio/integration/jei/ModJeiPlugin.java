@@ -5,7 +5,6 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.helpers.IJeiHelpers;
-import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
@@ -81,9 +80,9 @@ public final class ModJeiPlugin implements IModPlugin {
     public static void addInput(IRecipeLayoutBuilder builder, int x, int y, Ingredient ingredient) {
         if (!ingredient.isEmpty()) {
             if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
-                builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredients(VanillaTypes.ITEM_STACK, amountIngredient.getItems().toList());
+                builder.addInputSlot(x, y).addIngredients(VanillaTypes.ITEM_STACK, amountIngredient.getItems().toList());
             } else {
-                builder.addSlot(RecipeIngredientRole.INPUT, x, y).addIngredients(ingredient);
+                builder.addInputSlot(x, y).addIngredients(ingredient);
             }
         }
     }
