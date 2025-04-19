@@ -8,6 +8,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.terra_curio.TerraCurio;
 
 import java.util.ArrayList;
@@ -19,7 +20,7 @@ public final class TCCommonConfigs {
     public static final Supplier<String> STRING_SUPPLIER = () -> "";
     public static final Predicate<Object> FILTER_CONFLUENCE = o -> {
         if (o instanceof String s && s.startsWith("confluence:")) {
-            return TerraCurio.IS_CONFLUENCE_LOADED;
+            return ConfluenceMagicLib.IS_CONFLUENCE_LOADED;
         }
         return true;
     };

@@ -3,12 +3,10 @@ package org.confluence.terra_curio;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLEnvironment;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
 import org.confluence.terra_curio.common.init.*;
@@ -17,10 +15,9 @@ import org.slf4j.LoggerFactory;
 
 @Mod(TerraCurio.MODID)
 public class TerraCurio {
-    public static final String MODID = ConfluenceMagicLib.TERRA_CURIO_ID;
+    public static final String MODID = "terra_curio";
     public static final Logger LOGGER = LoggerFactory.getLogger("Terra Curio");
     public static final String CURIO_SLOT = "accessory";
-    public static final boolean IS_CONFLUENCE_LOADED = ModList.get().isLoaded(ConfluenceMagicLib.CONFLUENCE_ID);
 
     public TerraCurio(IEventBus eventBus, ModContainer modContainer) {
         TCStartupConfigs.register(modContainer);

@@ -16,6 +16,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCItems;
@@ -42,7 +43,7 @@ public final class ModJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(@NotNull IRecipeRegistration registration) {
-        if (!TerraCurio.IS_CONFLUENCE_LOADED) {
+        if (!ConfluenceMagicLib.IS_CONFLUENCE_LOADED) {
             registration.addItemStackInfo(TCItems.DEMON_HEART.get().getDefaultInstance(), Component.translatable("jei.tooltip.item.terra_curio.demon_heart.0"));
             registration.addItemStackInfo(TCItems.DIVING_HELMET.get().getDefaultInstance(), Component.translatable("jei.tooltip.item.terra_curio.diving_helmet.0"), Component.translatable("jei.tooltip.item.terra_curio.diving_helmet.1"));
             TCItems.CURIOS.getEntries().forEach(entry -> {
@@ -59,13 +60,6 @@ public final class ModJeiPlugin implements IModPlugin {
         if (level == null) return;
         RecipeManager recipeManager = level.getRecipeManager();
         registration.addRecipes(WorkshopCategory.TYPE, recipeManager.getAllRecipesFor(TCRecipes.WORKSHOP_TYPE.get()).stream().map(RecipeHolder::value).toList());
-    }
-
-    private static String getTranslationKey(String original) {
-        if (TerraCurio.IS_CONFLUENCE_LOADED) {
-            return original.replaceFirst("terra_curio", "confluence");
-        }
-        return original;
     }
 
     @Override

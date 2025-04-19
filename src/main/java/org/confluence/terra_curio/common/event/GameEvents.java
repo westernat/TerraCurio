@@ -33,6 +33,7 @@ import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.CriticalHitEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
@@ -177,7 +178,7 @@ public final class GameEvents {
         TCUtils.resetClientPacket(serverPlayer);
         InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
 
-        if (!TerraCurio.IS_CONFLUENCE_LOADED && !player.getPersistentData().getBoolean("terra_curio:first_in_world")) {
+        if (!ConfluenceMagicLib.IS_CONFLUENCE_LOADED && !player.getPersistentData().getBoolean("terra_curio:first_in_world")) {
             serverPlayer.sendSystemMessage(Component.translatable("terra_curio.announce").append(ComponentUtils.copyOnClickText("https://www.curseforge.com/minecraft/mc-mods/confluence")), false);
             player.getPersistentData().putBoolean("terra_curio:first_in_world", true);
         }

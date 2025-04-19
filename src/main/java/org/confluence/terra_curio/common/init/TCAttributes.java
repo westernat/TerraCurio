@@ -24,6 +24,7 @@ import net.neoforged.neoforge.common.PercentageAttribute;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
+import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.event.RangePickupItemEvent;
 import org.confluence.terra_curio.integration.apothic.ApothicHelper;
@@ -128,7 +129,7 @@ public final class TCAttributes {
     }
 
     public static float applyCritDamage(RandomSource random, LivingEntity living, float amount) {
-        if (TerraCurio.IS_CONFLUENCE_LOADED || hasCustomAttribute(CRIT_CHANCE)) return amount;
+        if (ConfluenceMagicLib.IS_CONFLUENCE_LOADED || hasCustomAttribute(CRIT_CHANCE)) return amount;
         AttributeInstance instance = living.getAttribute(CRIT_CHANCE);
         if (instance != null && random.nextFloat() < instance.getValue()) {
             amount *= 1.5F;

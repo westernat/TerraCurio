@@ -9,6 +9,7 @@ import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import net.neoforged.neoforge.registries.RegisterEvent;
+import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
@@ -40,7 +41,7 @@ public final class ModEvents {
         TCAttributes.registerAttribute(TCAttributes.RANGED_DAMAGE, event::add);
         TCAttributes.registerAttribute(TCAttributes.DODGE_CHANCE, event::add);
         TCAttributes.registerAttribute(TCAttributes.AGGRO, event::add);
-        if (TerraCurio.IS_CONFLUENCE_LOADED) {
+        if (ConfluenceMagicLib.IS_CONFLUENCE_LOADED) {
             TCAttributes.registerAttribute(TCAttributes.MAGIC_DAMAGE, event::add);
         }
         TCAttributes.registerAttribute(TCAttributes.ARMOR_PASS, event::add);
