@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.entity.projectile;
 
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -24,21 +25,23 @@ public class BeeProjectile extends Projectile {
     private static final EntityDimensions GIANT = TCEntities.BEE_PROJECTILE.get().getDimensions();
 
     private int blockHitCount;
-    private int lifeTime;
-    private Entity target;
+    private float baseDamage = 5.0F;
+    private transient Entity target;
 
     public BeeProjectile(EntityType<BeeProjectile> entityType, Level level) {
         super(entityType, level);
         this.blockHitCount = 0;
-        this.lifeTime = 0;
     }
 
     public BeeProjectile(Level level, @Nullable LivingEntity owner, boolean isGiant) {
         this(TCEntities.BEE_PROJECTILE.get(), level);
         setOwner(owner);
         this.blockHitCount = 0;
-        this.lifeTime = 0;
         entityData.set(DATA_IS_GIANT, isGiant);
+    }
+
+    public void setBaseDamage(float baseDamage) {
+        this.baseDamage = baseDamage;
     }
 
     @Override
@@ -73,7 +76,7 @@ public class BeeProjectile extends Projectile {
                 addDeltaMovement(vec3.scale(0.95).scale(isGiant() ? 0.15 : 0.05));
             }
         }
-        if (lifeTime % 4 == 0) {
+        if (tickCount % 4 == 0) {
             AABB boundingBox = getBoundingBox().inflate(1.0);
             HitResult hitresult = ProjectileUtil.getEntityHitResult(level(), this, boundingBox.getMinPosition(), boundingBox.getMaxPosition(), boundingBox, this::canHitEntity);
             if (hitresult instanceof EntityHitResult entityHitResult) {
@@ -94,14 +97,14 @@ public class BeeProjectile extends Projectile {
             blockHitCount++;
         }
         if (getInBlockState().liquid()) discard();
-        else if (blockHitCount > (isGiant() ? 2 : 1) || lifeTime++ > (isGiant() ? 220 : 200)) discard();
+        else if (blockHitCount > (isGiant() ? 2 : 1) || tickCount > (isGiant() ? 220 : 200)) discard();
     }
 
     @Override
     protected void onHitEntity(EntityHitResult entityHitResult) {
         Entity entity = entityHitResult.getEntity();
         if (getOwner() != null) {
-            float damage = 5.0F + (isGiant() ? random.nextInt(1, 4) : (random.nextBoolean() ? 1 : 0));
+            float damage = baseDamage + (isGiant() ? random.nextInt(1, 4) : (random.nextBoolean() ? 1 : 0));
             entity.hurt(damageSources().indirectMagic(this, getOwner()), damage);
             if (isGiant()) {
                 Vec3 motion = entity.position().subtract(position()).normalize().scale(0.5);
@@ -142,5 +145,21 @@ public class BeeProjectile extends Projectile {
     @Override
     public boolean shouldRender(double x, double y, double z) {
         return true;
+    }
+
+    @Override
+    protected void readAdditionalSaveData(CompoundTag compound) {
+        super.readAdditionalSaveData(compound);
+        this.tickCount = compound.getInt("Age");
+        this.blockHitCount = compound.getInt("BlockHitCount");
+        this.baseDamage = compound.getFloat("BaseDamage");
+    }
+
+    @Override
+    protected void addAdditionalSaveData(CompoundTag compound) {
+        super.addAdditionalSaveData(compound);
+        compound.putInt("Age", tickCount);
+        compound.putInt("BlockHitCount", blockHitCount);
+        compound.putFloat("BaseDamage", baseDamage);
     }
 }
