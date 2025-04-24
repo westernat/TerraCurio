@@ -19,7 +19,7 @@ public final class ScopeFovHandler {
     public static void handle(Player player) {
         if (hasScope && player.isCrouching() && Minecraft.getInstance().options.getCameraType().isFirstPerson() && player.getItemInHand(InteractionHand.MAIN_HAND).is(Tags.Items.RANGED_WEAPON_TOOLS)) {
             if (!scoping) {
-                if (fovModifier != 1.0) {
+                if (fovModifier != 1.0F) {
                     player.playSound(SoundEvents.SPYGLASS_USE);
                 }
                 scoping = true;
