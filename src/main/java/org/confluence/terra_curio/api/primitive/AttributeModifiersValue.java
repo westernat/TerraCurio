@@ -66,4 +66,15 @@ public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, A
         }
         return list;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        return o instanceof AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, AttributeModifier> value1) && value1.equals(value);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(value);
+    }
 }
