@@ -19,14 +19,12 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.PercentageAttribute;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.api.event.RangePickupItemEvent;
 import org.confluence.terra_curio.integration.apothic.ApothicHelper;
 
 import java.util.HashMap;
@@ -167,18 +165,22 @@ public final class TCAttributes {
 
     public static void applyPickupRange(Player player) {
         AttributeInstance instance = player.getAttribute(PICKUP_RANGE);
-        float originalRange = instance == null ? 0.0F : (float) instance.getValue();
-        float range = NeoForge.EVENT_BUS.post(new RangePickupItemEvent.Pre(player, originalRange)).getRange();
+        float[] ranges = new float[3];
+        float range = instance == null ? 0.0F : (float) instance.getValue();
         if (range <= 0.0F) return;
         player.level().getEntitiesOfClass(
                 ItemEntity.class,
-                new AABB(player.getOnPos()).inflate(range),
+                new AABB(player.blockPosition()).inflate(Math.max(Math.max(Math.max(range, ranges[0]), ranges[1]), ranges[2])),
                 itemEntity -> !itemEntity.hasPickUpDelay()
         ).forEach(itemEntity -> {
-            if (itemEntity.isRemoved() || NeoForge.EVENT_BUS.post(new RangePickupItemEvent.Post(player, itemEntity, originalRange)).isCanceled()) return;
+            if (itemEntity.isRemoved() || forConfluence$skip(player, itemEntity, ranges)) return;
             itemEntity.addDeltaMovement(player.position().subtract(itemEntity.getX(), itemEntity.getY(), itemEntity.getZ()).normalize().scale(0.05F).add(0, 0.04F, 0));
             itemEntity.move(MoverType.SELF, itemEntity.getDeltaMovement());
         });
+    }
+
+    private static boolean forConfluence$skip(Player player, ItemEntity itemEntity, float[] ranges) {
+        return false;
     }
 
     public static float applyArmorPass(DamageSource damageSource, float armorValue) {

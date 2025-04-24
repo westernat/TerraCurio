@@ -78,4 +78,15 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
                 ", factory=" + factory +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        return o instanceof ValueType<?, ?> valueType && valueType.key.equals(key);
+    }
+
+    @Override
+    public int hashCode() {
+        return key.hashCode();
+    }
 }
