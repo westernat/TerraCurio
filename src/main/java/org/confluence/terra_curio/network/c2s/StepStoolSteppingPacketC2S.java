@@ -18,8 +18,8 @@ import org.confluence.terra_curio.util.CuriosUtils;
 import java.util.function.Predicate;
 
 public record StepStoolSteppingPacketC2S(int slot, byte step) implements CustomPacketPayload {
-    public static final byte STEP_MASK = 31;
-    public static final byte INCREASE = 64;
+    public static final byte STEP_MASK = 0b0111111;
+    public static final byte INCREASE  = 0b1000000;
 
     public static final Type<StepStoolSteppingPacketC2S> TYPE = new Type<>(TerraCurio.asResource("step_stool_stepping_c2s"));
     public static final StreamCodec<ByteBuf, StepStoolSteppingPacketC2S> STREAM_CODEC = StreamCodec.composite(
