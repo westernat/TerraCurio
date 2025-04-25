@@ -44,7 +44,7 @@ public final class ModEvents {
         if (ConfluenceMagicLib.IS_CONFLUENCE_LOADED) {
             TCAttributes.registerAttribute(TCAttributes.MAGIC_DAMAGE, event::add);
         }
-        TCAttributes.registerAttribute(TCAttributes.ARMOR_PASS, event::add);
+        TCAttributes.registerAttribute(TCAttributes.ARMOR_PENETRATION, event::add);
         TCAttributes.registerAttribute(TCAttributes.PICKUP_RANGE, event::add);
     }
 

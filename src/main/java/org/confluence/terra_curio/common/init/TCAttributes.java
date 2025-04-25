@@ -41,7 +41,7 @@ public final class TCAttributes {
     public static final DeferredHolder<Attribute, Attribute> RANGED_DAMAGE = ATTRIBUTES.register("generic.ranged_damage", () -> new RangedAttribute("attribute.name.generic.ranged_damage", 1.0, 0.0, 10.0).setSyncable(true)); // MULTIPLY_TOTAL
     public static final DeferredHolder<Attribute, Attribute> DODGE_CHANCE = ATTRIBUTES.register("generic.dodge_chance", () -> new PercentageAttribute("attribute.name.generic.dodge_chance", 0.0, 0.0, 1.0).setSyncable(true)); // ADDITION
     public static final DeferredHolder<Attribute, Attribute> MAGIC_DAMAGE = ATTRIBUTES.register("generic.magic_damage", () -> new RangedAttribute("attribute.name.generic.magic_damage", 1.0, 0.0, 10.0).setSyncable(true)); // MULTIPLY_TOTAL
-    public static final DeferredHolder<Attribute, Attribute> ARMOR_PASS = ATTRIBUTES.register("generic.armor_pass", () -> new RangedAttribute("attribute.name.generic.armor_pass", 0.0, 0.0, 10000).setSyncable(true)); // ADDITION
+    public static final DeferredHolder<Attribute, Attribute> ARMOR_PENETRATION = ATTRIBUTES.register("generic.armor_penetration", () -> new RangedAttribute("attribute.name.generic.armor_penetration", 0.0, 0.0, 10000).setSyncable(true)); // ADDITION
 
     public static final DeferredHolder<Attribute, Attribute> PICKUP_RANGE = ATTRIBUTES.register("player.pickup_range", () -> new RangedAttribute("attribute.name.player.pickup_range", 0.0, 0.0, 64.0).setSyncable(true)); // ADDITION
     public static final DeferredHolder<Attribute, Attribute> AGGRO = ATTRIBUTES.register("player.aggro", () -> new RangedAttribute("attribute.name.generic.aggro", 0.0, -10000.0, 10000.0).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE)); // ADDITION
@@ -52,7 +52,7 @@ public final class TCAttributes {
         table.put(RANGED_VELOCITY, null);
         table.put(DODGE_CHANCE, null);
         table.put(MAGIC_DAMAGE, null);
-        table.put(ARMOR_PASS, null);
+        table.put(ARMOR_PENETRATION, null);
     });
 
     public static Holder<Attribute> getCriticalChance() {
@@ -75,8 +75,8 @@ public final class TCAttributes {
         return getCustomAttribute(MAGIC_DAMAGE);
     }
 
-    public static Holder<Attribute> getArmorPass() {
-        return getCustomAttribute(ARMOR_PASS);
+    public static Holder<Attribute> getArmorPenetration() {
+        return getCustomAttribute(ARMOR_PENETRATION);
     }
 
     public static Holder<Attribute> getCustomAttribute(Holder<Attribute> attribute) {
@@ -183,9 +183,9 @@ public final class TCAttributes {
         return false;
     }
 
-    public static float applyArmorPass(DamageSource damageSource, float armorValue) {
-        if (!hasCustomAttribute(ARMOR_PASS) && damageSource.getEntity() instanceof LivingEntity attacker) {
-            AttributeInstance attributeInstance = attacker.getAttribute(ARMOR_PASS);
+    public static float applyArmorPenetration(DamageSource damageSource, float armorValue) {
+        if (!hasCustomAttribute(ARMOR_PENETRATION) && damageSource.getEntity() instanceof LivingEntity attacker) {
+            AttributeInstance attributeInstance = attacker.getAttribute(ARMOR_PENETRATION);
             if (attributeInstance != null) armorValue -= (float) attributeInstance.getValue();
             if (damageSource.is(TCDamageTypes.STAR_CLOAK)) armorValue -= 3.0F;
             return Math.max(armorValue, 0.0F);
@@ -200,7 +200,7 @@ public final class TCAttributes {
                 "ranged_damage", RANGED_DAMAGE,
                 "dodge_chance", DODGE_CHANCE,
                 "magic_damage", MAGIC_DAMAGE,
-                "armor_pass", ARMOR_PASS
+                "armor_penetration", ARMOR_PENETRATION
         );
 
         ApothicHelper.preset(MAP);

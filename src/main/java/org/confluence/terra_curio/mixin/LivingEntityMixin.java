@@ -111,8 +111,8 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
     }
 
     @WrapOperation(method = "getDamageAfterArmorAbsorb", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(Lnet/minecraft/world/entity/LivingEntity;FLnet/minecraft/world/damagesource/DamageSource;FF)F"))
-    private float passArmor(LivingEntity entity, float damage, DamageSource damageSource, float armorValue, float armorToughness, Operation<Float> original) {
-        return original.call(entity, damage, damageSource, TCAttributes.applyArmorPass(damageSource, armorValue), armorToughness);
+    private float armorPenetration(LivingEntity entity, float damage, DamageSource damageSource, float armorValue, float armorToughness, Operation<Float> original) {
+        return original.call(entity, damage, damageSource, TCAttributes.applyArmorPenetration(damageSource, armorValue), armorToughness);
     }
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)

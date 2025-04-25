@@ -123,7 +123,7 @@ public class ModLanguageProvider extends LanguageProvider {
         add("attribute.name.generic.ranged_damage", "Ranged Damage", "远程伤害");
         add("attribute.name.generic.dodge_chance", "Dodge Chance", "闪避率");
         add("attribute.name.generic.magic_damage", "Magic Damage", "魔法伤害");
-        add("attribute.name.generic.armor_pass", "Armor Pass", "护甲穿透");
+        add("attribute.name.generic.armorPenetration", "Armor Penetration", "护甲穿透");
         add("attribute.name.player.pickup_range", "Pickup Range", "拾取范围");
         add("attribute.name.generic.aggro", "Aggro", "仇恨");
 

@@ -24,7 +24,7 @@ public class ApothicHelper {
             map.put(TCAttributes.RANGED_VELOCITY, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARROW_VELOCITY).orElse(null));
             map.put(TCAttributes.RANGED_DAMAGE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARROW_DAMAGE).orElse(null));
             map.put(TCAttributes.DODGE_CHANCE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.DODGE_CHANCE).orElse(null));
-            map.put(TCAttributes.ARMOR_PASS, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARMOR_PIERCE).orElse(null));
+            map.put(TCAttributes.ARMOR_PENETRATION, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARMOR_PIERCE).orElse(null));
         }
     }
 }

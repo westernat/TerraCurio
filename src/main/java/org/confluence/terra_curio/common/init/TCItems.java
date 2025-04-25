@@ -286,8 +286,8 @@ public final class TCItems { // todo 全换成data map
                     .accessories(units(FROZEN$TURTLE$SHELL)).attribute(Attributes.ARMOR, 6.0, ADD_VALUE)
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE))), // 冰冻护盾
             HONEY_COMB = registerCurio("honey_comb", builder -> builder.rarity(GREEN).accessories(units(HONEY$COMB))), // 蜂窝
-            SHARK_TOOTH_NECKLACE = registerCurio("shark_tooth_necklace", builder -> builder.noTooltip().attribute(TCAttributes.getArmorPass(), 5.0, ADD_VALUE)), // 鲨牙项链
-            STINGER_NECKLACE = registerCurio("stinger_necklace", builder -> builder.rarity(PINK).jeiInfos(0).accessories(units(HONEY$COMB)).attribute(TCAttributes.getArmorPass(), 5.0, ADD_VALUE)), // 毒刺项链
+            SHARK_TOOTH_NECKLACE = registerCurio("shark_tooth_necklace", builder -> builder.noTooltip().attribute(TCAttributes.getArmorPenetration(), 5.0, ADD_VALUE)), // 鲨牙项链
+            STINGER_NECKLACE = registerCurio("stinger_necklace", builder -> builder.rarity(PINK).jeiInfos(0).accessories(units(HONEY$COMB)).attribute(TCAttributes.getArmorPenetration(), 5.0, ADD_VALUE)), // 毒刺项链
             PANIC_NECKLACE = registerDirectly("panic_necklace", name -> new PanicNecklace(BaseCurioItem.builder(name))), // 恐慌项链
             SWEETHEART_NECKLACE = registerDirectly("sweetheart_necklace", name -> new PaladinsShield(BaseCurioItem.builder(name).jeiInfos(0).rarity(ORANGE).accessories(units(HONEY$COMB)))), // 甜心项链
             MAGIC_QUIVER = registerCurio("magic_quiver", builder -> builder.rarity(LIGHT_RED).accessories(units(MAGIC$QUIVER))
