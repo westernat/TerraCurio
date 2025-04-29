@@ -43,6 +43,8 @@ public final class TCClientPacketHandler {
     private static boolean hasMagiluminescence = false;
     private static boolean canFloating = false;
     private static boolean iceSafe = false;
+    private static boolean boneGlove = false;
+
     public static boolean floating = false;
     private static boolean hasNeptunesShell = false;
     private static final Int2BooleanMap remoteNeptuneShell = new Int2BooleanArrayMap();
@@ -74,6 +76,10 @@ public final class TCClientPacketHandler {
 
     public static boolean isIceSafe() {
         return iceSafe;
+    }
+
+    public static boolean isBoneGlove() {
+        return boneGlove;
     }
 
     public static boolean isHasNeptunesShell() {
@@ -110,6 +116,7 @@ public final class TCClientPacketHandler {
         hasMagiluminescence = (item & MAGILUMINESCENCE) != 0;
         canFloating = (item & FLOAT_ON_LIQUID_SURFACE) != 0;
         iceSafe = (item & ICE_SAFE) != 0;
+        boneGlove = (item & BONE_GLOVE) != 0;
     }
 
     public static void handleItemPickupDelay(SetItemEntityPickupDelayPacketS2C packet) {

@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.common.entity.projectile;
+package org.confluence.terra_curio.common.entity;
 
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;

@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.client.event;
 
+import net.minecraft.client.renderer.entity.NoopRenderer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -55,6 +56,7 @@ public final class ModClientEvent {
         event.registerEntityRenderer(TCEntities.BEE_PROJECTILE.get(), BeeProjectileRenderer::new);
         event.registerEntityRenderer(TCEntities.STEP_STOOL.get(), StepStoolRenderer::new);
         event.registerEntityRenderer(TCEntities.STAR_CLOAK.get(), StarCloakEntityRenderer::new);
+        event.registerEntityRenderer(TCEntities.X_BONE.get(), NoopRenderer::new); // todo 模型
     }
 
     @SubscribeEvent

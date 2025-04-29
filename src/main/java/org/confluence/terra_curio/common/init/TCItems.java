@@ -96,6 +96,7 @@ public final class TCItems { // todo 全换成data map
     public static final ValueType<Unit, UnitValue> SCOPE = ofUnit("scope");
     public static final ValueType<Unit, UnitValue> GRAVITY$GLOBE = ofUnit("gravity_globe");
     public static final ValueType<Unit, UnitValue> $MAGILUMINESCENCE = ofUnit("magiluminescence");
+    public static final ValueType<Unit, UnitValue> BONE$GLOVE = ofUnit("bone_glove");
 
     // both side
     public static final ValueType<Unit, UnitValue> FLOAT$ON$LIQUID$SURFACE = ofUnit("float_on_liquid_surface");
@@ -574,7 +575,7 @@ public final class TCItems { // todo 全换成data map
             WORM_SCARF = registerCurio("worm_scarf", builder -> builder.rarity(EXPERT).accessories(of(INJURY$FREE, 0.17F))), // 蠕虫围巾
             BRAIN_OF_CONFUSION = registerCurio("brain_of_confusion", builder -> builder.rarity(EXPERT).accessories(units(BRAIN$OF$CONFUSION)).tooltips(2)), // 混乱之脑
             HIVE_PACK = registerCurio("hive_pack", builder -> builder.rarity(EXPERT).accessories(units(HIVE$PACK))), // 蜂巢背包
-    /* 骨头手套 */
+            BONE_GLOVE = registerCurio("bone_glove", builder -> builder.rarity(EXPERT).accessories(units(BONE$GLOVE))), // 骨头手套
     /* 骸骨头盔 */
     /* 挥发明胶 */
     /* 孢子囊 */

@@ -35,6 +35,7 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     public static final int MAGILUMINESCENCE = register(TCItems.$MAGILUMINESCENCE);
     public static final int FLOAT_ON_LIQUID_SURFACE = register(TCItems.FLOAT$ON$LIQUID$SURFACE);
     public static final int ICE_SAFE = register(TCItems.ICE$SAFE);
+    public static final int BONE_GLOVE = register(TCItems.BONE$GLOVE);
 
     private static int register(ValueType<Unit, UnitValue> type) {
         int i = 1 << MAP.size();

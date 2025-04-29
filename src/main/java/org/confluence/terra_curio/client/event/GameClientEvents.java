@@ -16,6 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.lib.client.animate.ExpertColorAnimation;
 import org.confluence.lib.client.animate.MasterColorAnimation;
 import org.confluence.lib.common.component.ModRarity;
@@ -26,6 +27,7 @@ import org.confluence.terra_curio.client.handler.*;
 import org.confluence.terra_curio.client.renderer.tooltip.MultiFunctionTooltip;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
+import org.confluence.terra_curio.network.c2s.ShootXBonePacketC2S;
 import org.confluence.terra_curio.util.TCUtils;
 
 import java.util.List;
@@ -107,6 +109,9 @@ public final class GameClientEvents {
             MinecraftAccessor instance = (MinecraftAccessor) Minecraft.getInstance();
             int delay = instance.getRightClickDelay() - TCClientPacketHandler.getRightClickSubtractor();
             instance.setRightClickDelay(Math.max(0, delay));
+        }
+        if (TCClientPacketHandler.isBoneGlove() && event.isAttack()) {
+            PacketDistributor.sendToServer(ShootXBonePacketC2S.INSTANCE);
         }
     }
 

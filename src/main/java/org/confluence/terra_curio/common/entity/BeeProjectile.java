@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.common.entity.projectile;
+package org.confluence.terra_curio.common.entity;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -6,7 +6,9 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
@@ -129,7 +131,9 @@ public class BeeProjectile extends Projectile {
 
     @Override
     protected boolean canHitEntity(Entity target) {
-        return target.canBeHitByProjectile() && target != getOwner() && (!(target instanceof LivingEntity living) || living.canBeSeenAsEnemy());
+        Entity owner = getOwner();
+        if (!target.canBeHitByProjectile() || target instanceof ArmorStand || target instanceof Npc) return false;
+        return owner == null || (owner != target && !owner.isPassengerOfSameVehicle(target));
     }
 
     @Override
