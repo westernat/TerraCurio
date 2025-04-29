@@ -63,6 +63,7 @@
         "terra_curio:entities/bat",
         "terra_curio:entities/wither",
         "terra_curio:entities/guardian",
+        "terra_curio:entities/skeleton_horse",
         "terra_curio:entities/iron_golem",
         "terra_curio:blocks/moss_block",
         "terra_curio:gameplay/cat_morning_gift",

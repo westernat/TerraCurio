@@ -859,6 +859,7 @@ public class ModLanguageProvider extends LanguageProvider {
         tooltipAndJeiInfo(TCItems.WATER_WALKING_BOOTS, "水上漂靴", "Provides the ability to walk on water & honey", "提供在水和蜂蜜上行走的能力", "It can be found in Ocean Ruins Chests.", "它可以在海洋废墟宝箱中找到。");
         tooltipAndJeiInfo(TCItems.WEATHER_RADIO, "天气收音机", "Displays the weather", "显示天气", "This item can be located in the chests found within Fisherman Villagers' houses.", "这件物品可以在渔夫村民家中的箱子中找到。");
         tooltipAndJeiInfo(TCItems.WORM_SCARF, "蠕虫围巾", "Reduces damage taken by 17%", "所受伤害减少17%", "When a player has a tamed cat, the cat may give the player this item when they wake up.", "当玩家有一只被驯服的猫时，猫可能会在玩家醒来时给玩家这个物品。");
+        tooltipAndJeiInfo(TCItems.BONE_GLOVE, "骨头手套", "Shoots crossbones at enemies while you are attacking", "在你攻击时向敌人射出交叉骨", "It has a Chance to be dropped from Skeleton Horse.", "它有几率从骷髅马身上掉落。");
         tooltipAndJeiInfos(TCItems.DIVING_HELMET, "潜水头盔",
                 "Greatly extends underwater breathing",
                 "大大延长水下呼吸时间",
