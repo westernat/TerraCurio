@@ -16,6 +16,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.lib.client.animate.ExpertColorAnimation;
 import org.confluence.lib.client.animate.MasterColorAnimation;
@@ -110,7 +111,7 @@ public final class GameClientEvents {
             int delay = instance.getRightClickDelay() - TCClientPacketHandler.getRightClickSubtractor();
             instance.setRightClickDelay(Math.max(0, delay));
         }
-        if (TCClientPacketHandler.isBoneGlove() && event.isAttack()) {
+        if (TCClientPacketHandler.isBoneGlove() && Minecraft.getInstance().player.getMainHandItem().is(Tags.Items.TOOLS)) {
             PacketDistributor.sendToServer(ShootXBonePacketC2S.INSTANCE);
         }
     }
