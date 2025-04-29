@@ -87,6 +87,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
     private final Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> valueMap = new HashMap<>();
     private boolean panicNecklace;
     private transient int remainLavaImmuneTicks;
+    private transient int totalLavaImmuneTicks;
 
     public AccessoriesAttachment() {
         setToDefaultValue();
@@ -96,6 +97,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         this.valueMap.clear();
         this.panicNecklace = false;
         this.remainLavaImmuneTicks = 0;
+        this.totalLavaImmuneTicks = 0;
     }
 
     public <T, V extends PrimitiveValue<T>> T getValue(ValueType<T, V> type) {
@@ -117,7 +119,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
     }
 
     public void increaseLavaImmuneTicks() {
-        if (remainLavaImmuneTicks < getValue(TCItems.LAVA$IMMUNE$TICKS)) {
+        if (remainLavaImmuneTicks < totalLavaImmuneTicks) {
             this.remainLavaImmuneTicks++;
         }
     }
@@ -157,6 +159,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                     if (mob.getTarget() == living) mob.setTarget(null);
                 });
             }
+            this.totalLavaImmuneTicks = getValue(TCItems.LAVA$IMMUNE$TICKS);
         });
         NeoForge.EVENT_BUS.post(new AfterAccessoryAbilitiesFlushedEvent(living));
     }

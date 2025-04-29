@@ -71,10 +71,11 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void entityInvulnerabilityCheck(EntityInvulnerabilityCheckEvent event) {
+        if (event.isInvulnerable()) return;
         DamageSource damageSource = event.getSource();
         if (damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || damageSource.is(DamageTypes.GENERIC_KILL)) return;
 
-        if (!event.isInvulnerable() && TCUtils.isInvulnerableTo(event.getEntity(), damageSource)) {
+        if (TCUtils.isInvulnerableTo(event.getEntity(), damageSource)) {
             event.setInvulnerable(true);
         }
     }
@@ -88,13 +89,13 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void livingDamage$Pre(LivingDamageEvent.Pre event) {
+        float amount = event.getNewDamage();
+        if (amount <= 0.0F) return; // 防止莫名的负数伤害
         LivingEntity living = event.getEntity();
         if (living.level().isClientSide) return;
         DamageSource damageSource = event.getSource();
         if (damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || damageSource.is(DamageTypes.GENERIC_KILL)) return;
         RandomSource random = living.level().random;
-        float amount = event.getNewDamage();
-        if (amount <= 0.0F) return; // 防止莫名的负数伤害
 
         TCUtils.applyHoneyComb(living, random);
         TCUtils.applyStarClock(living, random);

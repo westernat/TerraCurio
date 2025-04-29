@@ -44,7 +44,7 @@ public final class TCAttributes {
     public static final DeferredHolder<Attribute, Attribute> ARMOR_PENETRATION = ATTRIBUTES.register("generic.armor_penetration", () -> new RangedAttribute("attribute.name.generic.armor_penetration", 0.0, 0.0, 10000).setSyncable(true)); // ADDITION
 
     public static final DeferredHolder<Attribute, Attribute> PICKUP_RANGE = ATTRIBUTES.register("player.pickup_range", () -> new RangedAttribute("attribute.name.player.pickup_range", 0.0, 0.0, 64.0).setSyncable(true)); // ADDITION
-    public static final DeferredHolder<Attribute, Attribute> AGGRO = ATTRIBUTES.register("player.aggro", () -> new RangedAttribute("attribute.name.generic.aggro", 0.0, -10000.0, 10000.0).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE)); // ADDITION
+    public static final DeferredHolder<Attribute, Attribute> AGGRO = ATTRIBUTES.register("player.aggro", () -> new RangedAttribute("attribute.name.player.aggro", 0.0, -10000.0, 10000.0).setSyncable(true).setSentiment(Attribute.Sentiment.NEGATIVE)); // ADDITION
 
     private static final Map<Holder<Attribute>, Holder<Attribute>> MAP = Util.make(new HashMap<>(), table -> {
         table.put(CRIT_CHANCE, null);
@@ -121,7 +121,7 @@ public final class TCAttributes {
     }
 
     public static boolean applyDodge(LivingEntity living, RandomSource random) {
-        if (hasCustomAttribute(DODGE_CHANCE)) return false;
+        if (hasCustomAttribute(DODGE_CHANCE) || !living.getAttributes().hasAttribute(DODGE_CHANCE)) return false;
         AttributeInstance instance = living.getAttribute(DODGE_CHANCE);
         return instance != null && random.nextFloat() < instance.getValue();
     }
