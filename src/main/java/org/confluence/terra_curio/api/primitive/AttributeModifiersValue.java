@@ -10,7 +10,6 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 
@@ -34,13 +33,29 @@ public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, A
     );
     public static final StreamCodec<RegistryFriendlyByteBuf, AttributeModifiersValue> STREAM_CODEC = new StreamCodec<>() {
         @Override
-        public @NotNull AttributeModifiersValue decode(RegistryFriendlyByteBuf buffer) {
-            return buffer.readJsonWithCodec(CODEC);
+        public AttributeModifiersValue decode(RegistryFriendlyByteBuf buffer) {
+            int size = buffer.readInt();
+            ImmutableListMultimap.Builder<Holder<Attribute>, AttributeModifier> builder = ImmutableListMultimap.builder();
+            for (int i = 0; i < size; i++) {
+                Holder<Attribute> holder = Attribute.STREAM_CODEC.decode(buffer);
+                int amount = buffer.readInt();
+                for (int j = 0; j < amount; j++) {
+                    builder.put(holder, AttributeModifier.STREAM_CODEC.decode(buffer));
+                }
+            }
+            return new AttributeModifiersValue(builder.build());
         }
 
         @Override
-        public void encode(RegistryFriendlyByteBuf buffer, @NotNull AttributeModifiersValue value) {
-            buffer.writeJsonWithCodec(CODEC, value);
+        public void encode(RegistryFriendlyByteBuf buffer, AttributeModifiersValue value) {
+            buffer.writeInt(value.value.keySet().size());
+            for (Map.Entry<Holder<Attribute>, Collection<AttributeModifier>> entry : value.value.asMap().entrySet()) {
+                Attribute.STREAM_CODEC.encode(buffer, entry.getKey());
+                buffer.writeInt(entry.getValue().size());
+                for (AttributeModifier modifier : entry.getValue()) {
+                    AttributeModifier.STREAM_CODEC.encode(buffer, modifier);
+                }
+            }
         }
     };
     public static final CombineRule<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> GET_SELF = CombineRule.register(PrimitiveValue.identity(), "attributes_modifiers_get_self");

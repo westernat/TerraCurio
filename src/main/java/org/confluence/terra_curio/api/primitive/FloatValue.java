@@ -3,7 +3,7 @@ package org.confluence.terra_curio.api.primitive;
 import com.mojang.serialization.Codec;
 import net.minecraft.util.Mth;
 
-public class FloatValue implements PrimitiveValue<Float> {
+public final class FloatValue implements PrimitiveValue<Float> {
     public static final Codec<FloatValue> CODEC = Codec.FLOAT.xmap(FloatValue::new, FloatValue::get);
     public static final CombineRule<Float, FloatValue> GET_SELF = CombineRule.register(PrimitiveValue.identity(), "float_get_self");
     public static final CombineRule<Float, FloatValue> GET_MAX = CombineRule.register(Math::max, "float_get_max");

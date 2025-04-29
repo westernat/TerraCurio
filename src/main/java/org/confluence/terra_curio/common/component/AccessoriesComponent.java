@@ -2,9 +2,10 @@ package org.confluence.terra_curio.common.component;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -16,7 +17,6 @@ import net.neoforged.neoforge.registries.datamaps.DataMapValueRemover;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
@@ -32,18 +32,7 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
         component.types.forEach((type, value) -> table.put(type.key(), value));
         return table;
     });
-    public static final StreamCodec<FriendlyByteBuf, AccessoriesComponent> STREAM_CODEC = new StreamCodec<>() {
-        @Override
-        public void encode(FriendlyByteBuf buffer, AccessoriesComponent value) {
-            buffer.writeJsonWithCodec(CODEC, value);
-        }
-
-        @Override
-        @NotNull
-        public AccessoriesComponent decode(FriendlyByteBuf buffer) {
-            return buffer.readJsonWithCodec(CODEC);
-        }
-    };
+    public static final StreamCodec<ByteBuf, AccessoriesComponent> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
 
     public static <T, V extends PrimitiveValue<T>> AccessoriesComponent entry(ValueType<T, V> type, V value) {
         Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>();
@@ -85,7 +74,7 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
     }
 
     @Override
-    public StreamCodec<FriendlyByteBuf, AccessoriesComponent> streamCodec() {
+    public StreamCodec<ByteBuf, AccessoriesComponent> streamCodec() {
         return STREAM_CODEC;
     }
 

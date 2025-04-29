@@ -2,7 +2,7 @@ package org.confluence.terra_curio.api.primitive;
 
 import com.mojang.serialization.Codec;
 
-public class IntegerValue implements PrimitiveValue<Integer> {
+public final class IntegerValue implements PrimitiveValue<Integer> {
     public static final Codec<IntegerValue> CODEC = Codec.INT.xmap(IntegerValue::new, IntegerValue::get);
     public static final CombineRule<Integer, IntegerValue> GET_MAX = CombineRule.register(Math::max, "integer_get_max");
     public static final CombineRule<Integer, IntegerValue> GET_ABS_MAX = CombineRule.register((a, b) -> {
