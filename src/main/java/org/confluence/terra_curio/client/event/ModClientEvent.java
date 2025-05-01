@@ -20,9 +20,11 @@ import org.confluence.terra_curio.client.gui.InfoHudOverlay;
 import org.confluence.terra_curio.client.gui.WorkshopScreen;
 import org.confluence.terra_curio.client.model.entity.BeeProjectileModel;
 import org.confluence.terra_curio.client.model.entity.StepStoolModel;
+import org.confluence.terra_curio.client.model.entity.XBoneProjectileModel;
 import org.confluence.terra_curio.client.renderer.entity.BeeProjectileRenderer;
 import org.confluence.terra_curio.client.renderer.entity.StarCloakEntityRenderer;
 import org.confluence.terra_curio.client.renderer.entity.StepStoolRenderer;
+import org.confluence.terra_curio.client.renderer.entity.XBoneProjectileRenderer;
 import org.confluence.terra_curio.client.renderer.tooltip.MultiFunctionTooltip;
 import org.confluence.terra_curio.common.init.TCEntities;
 import org.confluence.terra_curio.common.init.TCMenus;
@@ -48,6 +50,7 @@ public final class ModClientEvent {
     public static void registerEntityLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         CuriosClient.registerLayers(event::registerLayerDefinition);
         event.registerLayerDefinition(BeeProjectileModel.LAYER_LOCATION, BeeProjectileModel::createBodyLayer);
+        event.registerLayerDefinition(XBoneProjectileModel.LAYER_LOCATION, XBoneProjectileModel::createBodyLayer);
         event.registerLayerDefinition(StepStoolModel.LAYER_LOCATION, StepStoolModel::createBodyLayer);
     }
 
@@ -56,7 +59,7 @@ public final class ModClientEvent {
         event.registerEntityRenderer(TCEntities.BEE_PROJECTILE.get(), BeeProjectileRenderer::new);
         event.registerEntityRenderer(TCEntities.STEP_STOOL.get(), StepStoolRenderer::new);
         event.registerEntityRenderer(TCEntities.STAR_CLOAK.get(), StarCloakEntityRenderer::new);
-        event.registerEntityRenderer(TCEntities.X_BONE.get(), NoopRenderer::new); // todo 模型
+        event.registerEntityRenderer(TCEntities.X_BONE.get(), XBoneProjectileRenderer::new);
     }
 
     @SubscribeEvent
