@@ -10,7 +10,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.model.entity.XBoneProjectileModel;
-import org.confluence.terra_curio.common.entity.BeeProjectile;
 import org.confluence.terra_curio.common.entity.XBoneProjectile;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,9 +31,8 @@ public class XBoneProjectileRenderer extends EntityRenderer<XBoneProjectile> {
     public void render(XBoneProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int packedLight) {
         poseStack.pushPose();
         poseStack.scale(0.75F, 0.75F, 0.75F);
-        poseStack.translate(0.00F, 0.2F, 0);
         poseStack.mulPose(Axis.YP.rotationDegrees(entity.getYRot() - 90.0F));
-        poseStack.mulPose(Axis.ZP.rotation(-Mth.lerp(partialTick, entity.rotateO, entity.rotateVal)));
+        poseStack.mulPose(Axis.ZP.rotation(-Mth.lerp(partialTick, entity.rotate.old, entity.rotate.neo)));
         poseStack.mulPose(Axis.YP.rotation(-Mth.HALF_PI));
         model.renderToBuffer(poseStack, multiBufferSource.getBuffer(model.renderType(TEXTURE)), packedLight, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();
