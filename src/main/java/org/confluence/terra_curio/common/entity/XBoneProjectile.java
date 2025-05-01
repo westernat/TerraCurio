@@ -2,6 +2,7 @@ package org.confluence.terra_curio.common.entity;
 
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -23,6 +24,10 @@ public class XBoneProjectile extends Projectile implements IAxisZRotate {
     public final Rotate rotate = new Rotate();
     private int collideCount = 0;
     private final Set<Entity> passThrough = new HashSet<>();
+    // 新增旋转相关变量
+    public float rotateO = 0.0F;
+    public float rotateVal = 0.0F;
+    public static final float DIAMETER = 1.0F;
 
     public XBoneProjectile(EntityType<XBoneProjectile> entityType, Level level) {
         super(entityType, level);
@@ -31,6 +36,7 @@ public class XBoneProjectile extends Projectile implements IAxisZRotate {
     @Override
     protected void defineSynchedData(SynchedEntityData.Builder builder) {}
 
+
     @Override
     public void tick() {
         if (!(getOwner() instanceof LivingEntity owner)) {
@@ -38,6 +44,14 @@ public class XBoneProjectile extends Projectile implements IAxisZRotate {
             return;
         }
         super.tick();
+
+        Vec3 delta = getDeltaMovement().scale(0.99);
+        setDeltaMovement(delta);
+        float s = (float) delta.length();
+        float r = 2.0F * s / DIAMETER;
+        if (rotateVal > Mth.TWO_PI) this.rotateVal -= Mth.TWO_PI;
+        this.rotateO = rotateVal;
+        this.rotateVal += r;
 
         Vec3 vec3 = getDeltaMovement();
         move(MoverType.SELF, vec3.add(0.0, -getDefaultGravity(), 0.0));

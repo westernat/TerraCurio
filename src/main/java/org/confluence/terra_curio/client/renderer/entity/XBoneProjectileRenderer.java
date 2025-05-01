@@ -31,10 +31,10 @@ public class XBoneProjectileRenderer extends EntityRenderer<XBoneProjectile> {
     @Override
     public void render(XBoneProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int packedLight) {
         poseStack.pushPose();
-        poseStack.translate(0.00F, -0.75F, 0);
         poseStack.scale(0.75F, 0.75F, 0.75F);
-        poseStack.mulPose(Axis.YP.rotationDegrees(Mth.lerp(partialTick, entity.yRotO, entity.getYRot()) - 90.0F));
-        poseStack.mulPose(Axis.ZP.rotationDegrees(Mth.lerp(partialTick, entity.xRotO, entity.getXRot())));
+        poseStack.translate(0.00F, 0.2F, 0);
+        poseStack.mulPose(Axis.YP.rotationDegrees(entity.getYRot() - 90.0F));
+        poseStack.mulPose(Axis.ZP.rotation(-Mth.lerp(partialTick, entity.rotateO, entity.rotateVal)));
         poseStack.mulPose(Axis.YP.rotation(-Mth.HALF_PI));
         model.renderToBuffer(poseStack, multiBufferSource.getBuffer(model.renderType(TEXTURE)), packedLight, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();
