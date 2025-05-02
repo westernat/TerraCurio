@@ -17,6 +17,7 @@ public final class ScopeFovHandler {
     private static double cameraMoveFactor = 0.125;
 
     public static void handle(Player player) {
+        // confluence mixin here
         if (hasScope && player.isCrouching() && Minecraft.getInstance().options.getCameraType().isFirstPerson() && player.getItemInHand(InteractionHand.MAIN_HAND).is(Tags.Items.RANGED_WEAPON_TOOLS)) {
             if (!scoping) {
                 if (fovModifier != 1.0F) {

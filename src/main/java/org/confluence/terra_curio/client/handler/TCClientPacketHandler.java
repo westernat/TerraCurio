@@ -97,9 +97,9 @@ public final class TCClientPacketHandler {
     public static int getLuminance(Entity entity) {
         int ret = entity == Minecraft.getInstance().player ? luminance : remoteLuminance.getOrDefault(entity.getId(), 0);
         if (ret < 0) { // 只能在水下发光
-            return entity.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value()) ? -ret : 0;
+            return entity.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value()) ? -ret : 0; // confluence mixin here
         }
-        return ret;
+        return ret; // confluence mixin here
     }
 
     public static void handleSubstractor(RightClickSubtractorPacketS2C packet) {

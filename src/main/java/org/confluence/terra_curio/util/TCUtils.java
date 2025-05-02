@@ -275,7 +275,7 @@ public final class TCUtils {
             iLiving.terra_curio$setLastWalkedFluidState(fluidState);
             return true;
         }
-        return false; // confluence injected here
+        return false; // confluence mixin here
     }
 
     public static boolean applyTotemAbility(LivingEntity living) {

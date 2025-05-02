@@ -165,7 +165,7 @@ public final class TCAttributes {
 
     public static void applyPickupRange(Player player) {
         AttributeInstance instance = player.getAttribute(PICKUP_RANGE);
-        float[] ranges = new float[3];
+        float[] ranges = new float[3]; // confluence mixin here
         float range = instance == null ? 0.0F : (float) instance.getValue();
         if (range <= 0.0F) return;
         player.level().getEntitiesOfClass(
@@ -180,7 +180,7 @@ public final class TCAttributes {
     }
 
     private static boolean forConfluence$skip(Player player, ItemEntity itemEntity, float[] ranges) {
-        return false;
+        return false; // confluence mixin here
     }
 
     public static float applyArmorPenetration(DamageSource damageSource, float armorValue) {
