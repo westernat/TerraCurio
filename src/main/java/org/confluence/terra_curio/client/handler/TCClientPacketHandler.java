@@ -19,6 +19,7 @@ import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -161,16 +162,24 @@ public final class TCClientPacketHandler {
             MinecraftAccessor accessor = (MinecraftAccessor) minecraft;
             if (accessor.getMissTime() > 0) accessor.setMissTime(0);
             double reach = Math.max(localPlayer.entityInteractionRange(), localPlayer.blockInteractionRange());
+            double squared = Mth.square(reach);
             Vec3 from = localPlayer.getEyePosition(1.0F);
+            HitResult hitResult = localPlayer.pick(reach, 1.0F, false);
+            double sqr = hitResult.getLocation().distanceToSqr(from);
+            if (hitResult.getType() != HitResult.Type.MISS) {
+                squared = sqr;
+                reach = Math.sqrt(sqr);
+            }
             Vec3 viewVector = localPlayer.getViewVector(1.0F);
             Vec3 to = from.add(viewVector.x * reach, viewVector.y * reach, viewVector.z * reach);
-            EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(
-                    localPlayer, from, to, new AABB(from, to),
-                    entity -> !entity.isSpectator() && entity.isPickable(), reach);
-            if (entityhitresult != null && minecraft.gameMode != null) {
-                minecraft.gameMode.attack(localPlayer, entityhitresult.getEntity());
+            AABB aabb = localPlayer.getBoundingBox().expandTowards(viewVector.scale(reach)).inflate(1.0, 1.0, 1.0);
+            EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(
+                    localPlayer, from, to, aabb,
+                    entity -> !entity.isSpectator() && entity.isPickable(), squared);
+            if (entityHitResult != null && entityHitResult.getLocation().distanceToSqr(from) < sqr) {
+                minecraft.gameMode.attack(localPlayer, entityHitResult.getEntity());
             }
-            localPlayer.resetAttackStrengthTicker();
+            //localPlayer.resetAttackStrengthTicker();
             localPlayer.swing(InteractionHand.MAIN_HAND);
         }
     }
