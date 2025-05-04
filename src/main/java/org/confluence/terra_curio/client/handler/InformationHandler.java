@@ -230,7 +230,7 @@ public final class InformationHandler {
     }
 
     public static boolean hasMechanicalView() {
-        return INFO_DATA[MECHANICAL_LENS] != 0;
+        return INFO_DATA[MECHANICAL_LENS] != 0; // confluence mixin here
     }
 
     public static Int2ObjectMap<Component> getInformation() {
