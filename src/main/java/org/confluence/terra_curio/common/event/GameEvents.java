@@ -196,7 +196,9 @@ public final class GameEvents {
     public static void playerTick$Post(PlayerTickEvent.Post event) {
         Player player = event.getEntity();
         TCAttributes.applyPickupRange(player);
-        TCUtils.applyFluidWalk(player);
+        if (!player.isPassenger()) {
+            TCUtils.applyFluidWalk(player);
+        }
         if (player instanceof ServerPlayer serverPlayer) {
             if (serverPlayer.level().getGameTime() % 200 == 0) {
                 // 每十秒向周围玩家共享一次信息配饰
