@@ -145,7 +145,7 @@ public final class GameClientEvents {
             ModRarity rarity = ModRarity.getRarity(itemStack);
             if (rarity == null) return;
             tooltipElements.set(0, Either.left(
-                    component.copy().withColor(rarity.getColor())
+                    component.copy().withColor(rarity.color())
             ));
         }
     }
