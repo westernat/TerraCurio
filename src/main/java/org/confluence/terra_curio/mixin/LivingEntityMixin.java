@@ -2,6 +2,9 @@ package org.confluence.terra_curio.mixin;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
+import com.llamalad7.mixinextras.sugar.Share;
+import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
@@ -10,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.mixed.SelfGetter;
@@ -120,17 +124,28 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
         return hasEffect(TCEffects.CONFUSED) ? vec3.reverse() : vec3;
     }
 
+    @Inject(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z", ordinal = 0))
+    private void cacheFluidWalkable(Vec3 travelVector, CallbackInfo ci, @Local FluidState fluidState, @Share("isFluidWalkable") LocalBooleanRef isFluidWalkable) {
+        isFluidWalkable.set(TCUtils.isFluidWalkable(confluence$self(), fluidState));
+    }
+
+    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getAttributeValue(Lnet/minecraft/core/Holder;)D", ordinal = 0))
+    private double skipEfficiency(LivingEntity instance, Holder<Attribute> attribute, Operation<Double> original, @Share("isFluidWalkable") LocalBooleanRef isFluidWalkable) {
+        if (isFluidWalkable.get()) return 0;
+        return original.call(instance, attribute);
+    }
+
     @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
-    private Vec3 notSlowdown(Vec3 instance, double factorX, double factorY, double factorZ, Operation<Vec3> original) {
-        if (TCUtils.isFluidWalkable(confluence$self(), confluence$self().getInBlockState().getFluidState())) {
+    private Vec3 notSlowdown(Vec3 instance, double factorX, double factorY, double factorZ, Operation<Vec3> original, @Share("isFluidWalkable") LocalBooleanRef isFluidWalkable) {
+        if (isFluidWalkable.get()) {
             return original.call(instance, 0.94, factorY, 0.94);
         }
         return original.call(instance, factorX, factorY, factorZ);
     }
 
     @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canStandOnFluid(Lnet/minecraft/world/level/material/FluidState;)Z"))
-    private boolean onFluid(LivingEntity instance, FluidState fluidState, Operation<Boolean> original) {
-        if (TCUtils.isFluidWalkable(instance, fluidState)) {
+    private boolean onFluid(LivingEntity instance, FluidState fluidState, Operation<Boolean> original, @Share("isFluidWalkable") LocalBooleanRef isFluidWalkable) {
+        if (isFluidWalkable.get()) {
             return false;
         }
         return original.call(instance, fluidState);
