@@ -126,10 +126,10 @@ var dev = true
 dependencies {
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
     if (dev) {
-        implementation project(":ParticleStorm")
+        implementation("curse.maven:particle-storm-1124172:${particle_storm_version}")
         implementation project(":Confluence-Magic-Lib")
     } else {
-        implementation jarJar(project(":ParticleStorm"))
+        implementation(jarJar("curse.maven:particle-storm-1124172:${particle_storm_version}"))
         implementation jarJar(project(":Confluence-Magic-Lib"))
     }
 
