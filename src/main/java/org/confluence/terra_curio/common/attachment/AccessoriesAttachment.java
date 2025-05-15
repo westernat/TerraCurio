@@ -150,7 +150,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                     }
 
                     if (!panicNecklace && item instanceof PanicNecklace) this.panicNecklace = true;
-                    LibUtils.forConfluence$Inject();
+                    LibUtils.forMixin$Inject();
                 }
             }
             TagKey<EntityType<?>> ignores = getValue(TCItems.MOB$IGNORE);

@@ -22,7 +22,7 @@ public class WorkshopRecipe extends AbstractAmountRecipe<RecipeInput> {
 
     @Override
     public boolean matches(RecipeInput input, Level pLevel) {
-        return LibUtils.forConfluence$ModifyExpression(super.matches(input, pLevel));
+        return LibUtils.forMixin$ModifyExpression(super.matches(input, pLevel));
     }
 
     @Override

@@ -73,7 +73,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
     }
 
     protected void speedUp(SlotContext slotContext, ItemStack stack, int acceleration, int maxSpeed) {
-        LibUtils.forConfluence$Inject();
+        LibUtils.forMixin$Inject();
         if (TCClientConfigs.speedUp && slotContext.entity() instanceof Player player && player.isLocalPlayer()) {
             int speed = LibUtils.getItemStackNbt(stack).getInt(KEY);
             if (player.zza > 0 && !player.horizontalCollision && !player.isCrouching()) {

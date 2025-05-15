@@ -185,12 +185,12 @@ public final class InformationHandler {
         } else if (level.isThundering()) {
             weather = "thunder";
         }
-        LibUtils.forConfluence$Inject();
+        LibUtils.forMixin$Inject();
         return Component.translatable("info.terra_curio.weather_radio." + weather);
     }
 
     private static Component getFishingPowerInfo(Player player) {
-        float fishingPower = LibUtils.forConfluence$ModifyExpression(player.getLuck());
+        float fishingPower = LibUtils.forMixin$ModifyExpression(player.getLuck());
         return Component.translatable(
                 "info.terra_curio.fishermans_pocket_guide",
                 "%.2f".formatted(fishingPower)

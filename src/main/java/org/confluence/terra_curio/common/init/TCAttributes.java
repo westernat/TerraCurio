@@ -173,13 +173,13 @@ public final class TCAttributes {
                 new AABB(player.blockPosition()).inflate(Math.max(Math.max(Math.max(range, ranges[0]), ranges[1]), ranges[2])),
                 itemEntity -> !itemEntity.hasPickUpDelay()
         ).forEach(itemEntity -> {
-            if (itemEntity.isRemoved() || forConfluence$skip(player, itemEntity, ranges)) return;
+            if (itemEntity.isRemoved() || forMixin$skip(player, itemEntity, ranges)) return;
             itemEntity.addDeltaMovement(player.position().subtract(itemEntity.getX(), itemEntity.getY(), itemEntity.getZ()).normalize().scale(0.05F).add(0, 0.04F, 0));
             itemEntity.move(MoverType.SELF, itemEntity.getDeltaMovement());
         });
     }
 
-    private static boolean forConfluence$skip(Player player, ItemEntity itemEntity, float[] ranges) {
+    private static boolean forMixin$skip(Player player, ItemEntity itemEntity, float[] ranges) {
         return false; // confluence mixin here
     }
 

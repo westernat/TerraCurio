@@ -84,7 +84,7 @@ public class StarCloakEntity extends Projectile {
     @Override
     protected void onHitEntity(EntityHitResult pResult) {
         if (isManaState()) {
-            LibUtils.forConfluence$Inject();
+            LibUtils.forMixin$Inject();
         } else {
             pResult.getEntity().hurt(TCDamageTypes.of(level(), TCDamageTypes.STAR_CLOAK, getOwner()), 10.0F);
         }

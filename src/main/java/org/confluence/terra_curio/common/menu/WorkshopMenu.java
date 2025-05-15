@@ -43,8 +43,8 @@ public class WorkshopMenu extends AbstractContainerMenu {
     public WorkshopMenu(int containerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
         super(TCMenus.WORKSHOP.get(), containerId);
         this.player = pPlayerInventory.player;
-        this.access = LibUtils.forConfluence$ModifyExpression(pAccess);
-        this.input = LibUtils.forConfluence$ModifyExpression(new MenuRecipeInput(this, 12));
+        this.access = LibUtils.forMixin$ModifyExpression(pAccess);
+        this.input = LibUtils.forMixin$ModifyExpression(new MenuRecipeInput(this, 12));
         this.result = new ResultContainer();
         addSlot(this.resultSlot = new AmountResultSlot<>(input, result, 0, 62, 35) {
             @Override

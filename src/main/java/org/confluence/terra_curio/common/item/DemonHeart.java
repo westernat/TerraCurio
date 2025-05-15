@@ -45,7 +45,7 @@ public class DemonHeart extends Item {
                     double before = modifiers.containsKey(ID) ? modifiers.get(ID).amount() : 0.0;
                     iCurioStacksHandler.removeModifier(ID);
                     iCuriosItemHandler.addPermanentSlotModifier(TerraCurio.CURIO_SLOT, ID, before + 1.0, AttributeModifier.Operation.ADD_VALUE);
-                    LibUtils.forConfluence$ModifyExpression(serverPlayer);
+                    LibUtils.forMixin$ModifyExpression(serverPlayer);
                 }
             });
         }

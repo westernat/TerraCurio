@@ -153,8 +153,9 @@ public final class TCClientPacketHandler {
 
     private static void applyAutoAttack(Minecraft minecraft, LocalPlayer localPlayer) {
         if (!TCClientConfigs.autoAttack || minecraft.gameMode == null || minecraft.gameMode.isDestroying()) return;
+        ItemStack itemStack = localPlayer.getItemInHand(InteractionHand.MAIN_HAND);
+        if (itemStack.onEntitySwing(localPlayer, InteractionHand.MAIN_HAND)) return;
         if (BetterCombatHelper.LOADED) {
-            ItemStack itemStack = localPlayer.getItemInHand(InteractionHand.MAIN_HAND);
             if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
         }
         if (TCClientPacketHandler.couldAutoAttack() && minecraft.options.keyAttack.isDown()) {

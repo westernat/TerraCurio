@@ -17,7 +17,7 @@ public final class TCTabs {
             () -> CreativeModeTab.builder().icon(() -> TCItems.ICON.get().getDefaultInstance())
                     .title(Component.translatable("creativetab.terra_curio"))
                     .displayItems((parameters, output) -> {
-                        LibUtils.forConfluence$Inject();
+                        LibUtils.forMixin$Inject();
                         output.accept(TCItems.WORKSHOP.get());
                         output.accept(TCItems.DEMON_HEART.get());
                         output.accept(TCItems.MAGIC_MIRROR.get());
