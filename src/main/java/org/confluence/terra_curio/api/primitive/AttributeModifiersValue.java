@@ -82,6 +82,10 @@ public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, A
         return list;
     }
 
+    public boolean isEmpty() {
+        return value.isEmpty();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == this) return true;
