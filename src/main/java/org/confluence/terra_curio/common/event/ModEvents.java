@@ -1,9 +1,11 @@
 package org.confluence.terra_curio.common.event;
 
+import net.minecraft.client.RecipeBookCategories;
 import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterRecipeBookCategoriesEvent;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -13,6 +15,7 @@ import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
+import org.confluence.terra_curio.common.init.TCRecipes;
 import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.c2s.*;
 import org.confluence.terra_curio.network.s2c.*;
@@ -74,5 +77,10 @@ public final class ModEvents {
         registrar.playToClient(FluidWalkUpdatePacketS2C.TYPE, FluidWalkUpdatePacketS2C.STREAM_CODEC, FluidWalkUpdatePacketS2C::handle);
 
         registrar.playBidirectional(InfoDisablePacket.TYPE, InfoDisablePacket.STREAM_CODEC, InfoDisablePacket::handle);
+    }
+
+    @SubscribeEvent
+    public static void registerRecipeBookCategories(RegisterRecipeBookCategoriesEvent event) {
+        event.registerRecipeCategoryFinder(TCRecipes.WORKSHOP_TYPE.get(), recipeHolder -> RecipeBookCategories.UNKNOWN);
     }
 }
