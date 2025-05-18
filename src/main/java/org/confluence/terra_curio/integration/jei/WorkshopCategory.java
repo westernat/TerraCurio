@@ -8,17 +8,22 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.recipe.WorkshopRecipe;
-import org.jetbrains.annotations.NotNull;
 
-public class WorkshopCategory implements IRecipeCategory<WorkshopRecipe> {
-    public static final RecipeType<WorkshopRecipe> TYPE = RecipeType.create(TerraCurio.MODID, "workshop", WorkshopRecipe.class);
+import javax.annotation.ParametersAreNonnullByDefault;
+
+@ParametersAreNonnullByDefault
+@MethodsReturnNonnullByDefault
+public class WorkshopCategory implements IRecipeCategory<RecipeHolder<WorkshopRecipe>> {
+    public static final RecipeType<RecipeHolder<WorkshopRecipe>> TYPE = RecipeType.createRecipeHolderType(TerraCurio.asResource("workshop"));
     private static final Component TITLE = Component.translatable("title.terra_curio.workshop");
     private final IDrawable icon;
 
@@ -27,30 +32,30 @@ public class WorkshopCategory implements IRecipeCategory<WorkshopRecipe> {
     }
 
     @Override
-    public @NotNull RecipeType<WorkshopRecipe> getRecipeType() {
+    public RecipeType<RecipeHolder<WorkshopRecipe>> getRecipeType() {
         return TYPE;
     }
 
     @Override
-    public @NotNull Component getTitle() {
+    public Component getTitle() {
         return TITLE;
     }
 
     @SuppressWarnings("removal")
     @Override
-    public @NotNull IDrawable getBackground() {
+    public IDrawable getBackground() {
         return ModJeiPlugin.HALF_BACKGROUND;
     }
 
     @Override
-    public @NotNull IDrawable getIcon() {
+    public IDrawable getIcon() {
         return icon;
     }
 
     @Override
-    public void setRecipe(@NotNull IRecipeLayoutBuilder builder, @NotNull WorkshopRecipe recipe, @NotNull IFocusGroup focusGroup) {
+    public void setRecipe(IRecipeLayoutBuilder builder, RecipeHolder<WorkshopRecipe> recipe, IFocusGroup focusGroup) {
         // input
-        int size = recipe.getIngredients().size();
+        int size = recipe.value().getIngredients().size();
         int line = size / 3;
         boolean remain = size % 3 != 0;
         int x = 0;
@@ -64,7 +69,7 @@ public class WorkshopCategory implements IRecipeCategory<WorkshopRecipe> {
         } else if (line == 3) {
             y = remain ? 0 : 8;
         }
-        for (Ingredient ingredient : recipe.getIngredients()) {
+        for (Ingredient ingredient : recipe.value().getIngredients()) {
             ModJeiPlugin.addInput(builder, x, y, ingredient);
             x += 16;
             if (x == 48) {
@@ -73,11 +78,11 @@ public class WorkshopCategory implements IRecipeCategory<WorkshopRecipe> {
             }
         }
         // output
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 96, 24).addItemStack(recipe.getResultItem(null));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 96, 24).addItemStack(recipe.value().getResultItem(null));
     }
 
     @Override
-    public void draw(@NotNull WorkshopRecipe recipe, @NotNull IRecipeSlotsView recipeSlotsView, @NotNull GuiGraphics guiGraphics, double mouseX, double mouseY) {
+    public void draw(RecipeHolder<WorkshopRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         ModJeiPlugin.drawArrowRight(guiGraphics, 50, 22, true);
     }
 }
