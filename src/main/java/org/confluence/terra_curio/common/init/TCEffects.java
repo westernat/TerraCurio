@@ -22,7 +22,6 @@ public final class TCEffects {
 
     public static void healPerSecond(LivingEntity living, float amount) {
         if (living.level().getGameTime() % 20L == 0) {
-            if (living.hasEffect(HONEY)) amount += 1.0F;
             living.heal(amount);
         }
     }
