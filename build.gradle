@@ -121,7 +121,7 @@ repositories {
     }
 }
 
-var dev = true
+boolean dev = true
 
 dependencies {
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
