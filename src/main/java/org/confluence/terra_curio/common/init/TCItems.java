@@ -423,36 +423,54 @@ public final class TCItems { // todo 全换成data map
                             of(FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)),
                             of(LAVA$IMMUNE$TICKS, 140),
                             of(LAVA$HURT$REDUCE, 0.5F)
-                    ).attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL)
+                    )
+                    .attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.STEP_HEIGHT, 0.5, ADD_VALUE))), // 泰拉闪耀靴
-            CLOUD_IN_A_BOTTLE = registerDirectly("cloud_in_a_bottle", (name, builder) -> new CloudInABottle(builder.particle(TerraCurio.asResource("cloud")).accessories(of(CLOUD, 1.3F)))), // 云朵瓶
-            BLIZZARD_IN_A_BOTTLE = registerDirectly("blizzard_in_a_bottle", (name, builder) -> new BlizzardInABottle(builder.jeiInfos(0).particle(TerraCurio.asResource("blizzard")).accessories(of(BLIZZARD, new Tuple<>(0.4F, 14))))), // 暴雪瓶
-            SANDSTORM_IN_A_BOTTLE = registerDirectly("sandstorm_in_a_bottle", (name, builder) -> new SandstormInABottle(builder.rarity(GREEN).particle(TerraCurio.asResource("sandstorm")).accessories(of(SAND$STORM, new Tuple<>(0.45F, 17))))), // 沙暴瓶
-            FART_IN_A_JAR = registerCurio("fart_in_a_jar", builder -> builder.rarity(GREEN).accessories(of(FART, 1.7F))), // 罐中臭屁
-            TSUNAMI_IN_A_BOTTLE = registerDirectly("tsunami_in_a_bottle", (name, builder) -> new TsunamiInABottle(builder.particle(TerraCurio.asResource("tsunami")).accessories(of(TSUNAMI, 1.5F)))), // 海啸瓶
+            CLOUD_IN_A_BOTTLE = registerDirectly("cloud_in_a_bottle", (name, builder) -> new CloudInABottle(builder.particle(TerraCurio.asResource("cloud"))
+                    .accessories(of(CLOUD, 1.3F))
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE))), // 云朵瓶
+            BLIZZARD_IN_A_BOTTLE = registerDirectly("blizzard_in_a_bottle", (name, builder) -> new BlizzardInABottle(builder.jeiInfos(0).particle(TerraCurio.asResource("blizzard"))
+                    .accessories(of(BLIZZARD, new Tuple<>(0.4F, 14)))
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE))), // 暴雪瓶
+            SANDSTORM_IN_A_BOTTLE = registerDirectly("sandstorm_in_a_bottle", (name, builder) -> new SandstormInABottle(builder.rarity(GREEN).particle(TerraCurio.asResource("sandstorm"))
+                    .accessories(of(SAND$STORM, new Tuple<>(0.45F, 17)))
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE))), // 沙暴瓶
+            FART_IN_A_JAR = registerCurio("fart_in_a_jar", builder -> builder.rarity(GREEN)
+                    .accessories(of(FART, 1.7F))
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE)), // 罐中臭屁
+            TSUNAMI_IN_A_BOTTLE = registerDirectly("tsunami_in_a_bottle", (name, builder) -> new TsunamiInABottle(builder.particle(TerraCurio.asResource("tsunami"))
+                    .accessories(of(TSUNAMI, 1.5F))
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE))), // 海啸瓶
             SHINY_RED_BALLOON = registerCurio("shiny_red_balloon", builder -> builder.attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)), // 闪亮红气球
             BALLOON_PUFFERFISH = registerCurio("balloon_pufferfish", builder -> builder.jeiInfos(0).attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)), // 气球河豚鱼
             CLOUD_IN_A_BALLOON = registerCurio("cloud_in_a_balloon", builder -> builder.rarity(LIGHT_RED)
                     .tooltips(1)
                     .jeiInfos(0)
                     .accessories(of(CLOUD, 1.3F))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)), // 云朵气球
+                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE)), // 云朵气球
             BLIZZARD_IN_A_BALLOON = registerCurio("blizzard_in_a_balloon", builder -> builder.jeiInfos(0).rarity(LIGHT_RED)
                     .tooltips(1)
                     .jeiInfos(0)
                     .accessories(of(BLIZZARD, new Tuple<>(0.4F, 14)))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)), // 暴雪气球
+                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE)), // 暴雪气球
             SANDSTORM_IN_A_BALLOON = registerCurio("sandstorm_in_a_balloon", builder -> builder.rarity(LIGHT_RED)
                     .tooltips(1)
                     .jeiInfos(0)
                     .accessories(of(SAND$STORM, new Tuple<>(0.45F, 17)))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)), // 沙暴气球
+                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE)), // 沙暴气球
             FART_IN_A_BALLOON = registerCurio("fart_in_a_balloon", builder -> builder.rarity(LIGHT_RED)
                     .tooltips(1)
                     .jeiInfos(0)
                     .accessories(of(FART, 1.1F))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)), // 臭屁气球
-            SHARKRON_BALLOON = registerCurio("sharkron_balloon", builder -> builder.jeiInfos(0).accessories(of(TSUNAMI, 1.3F)).attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)), // 鲨鱼龙气球
+                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE)), // 臭屁气球
+            SHARKRON_BALLOON = registerCurio("sharkron_balloon", builder -> builder.jeiInfos(0)
+                    .accessories(of(TSUNAMI, 1.3F))
+                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE)), // 鲨鱼龙气球
             HONEY_BALLOON = registerCurio("honey_balloon", builder -> builder.rarity(GREEN)
                     .tooltips(1)
                     .jeiInfos(0)
@@ -465,7 +483,9 @@ public final class TCItems { // todo 全换成data map
                             of(SAND$STORM, new Tuple<>(0.45F, 17)),
                             of(BLIZZARD, new Tuple<>(0.4F, 14)),
                             of(CLOUD, 1.3F)
-                    ).attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)), // 气球束
+                    )
+                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 6, ADD_VALUE)), // 气球束
             LUCKY_HORSESHOE = registerCurio("lucky_horseshoe", builder -> builder
                     .tooltips(1)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
