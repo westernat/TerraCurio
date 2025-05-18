@@ -573,7 +573,7 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyTooltips(TCItems.MAGMA_SKULL, "岩浆骷髅头",
                 new String[]{
                         "Provides 7 seconds of immunity to lava",
-                        "Immunity to fire blocks, melee attacks deal fire damage"
+                        "Grants immunity to fire blocks"
                 },
                 new String[]{
                         "对熔岩免疫7秒",
