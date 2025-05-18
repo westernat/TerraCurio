@@ -577,7 +577,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 },
                 new String[]{
                         "对熔岩免疫7秒",
-                        "对火块免疫、近战攻击造成火焰伤害"
+                        "对火块免疫"
                 }
         );
         tooltipAndJeiInfo(TCItems.MAGMA_STONE, "岩浆石", "Melee attacks inflict fire damage", "近战攻击造成火焰伤害", "It has a Chance to be dropped from Blaze.", "它有几率从烈焰人掉落");
