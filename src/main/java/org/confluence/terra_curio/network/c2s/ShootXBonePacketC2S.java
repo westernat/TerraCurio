@@ -7,6 +7,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.entity.XBoneProjectile;
 import org.confluence.terra_curio.common.init.TCEntities;
@@ -23,16 +24,16 @@ public record ShootXBonePacketC2S() implements CustomPacketPayload {
 
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
-            if (context.player() instanceof ServerPlayer serverPlayer) {
-                long l = serverPlayer.getPersistentData().getLong("terra_curio:last_x_bone");
-                Level level = serverPlayer.level();
+            if (context.player() instanceof ServerPlayer player) {
+                long l = LibUtils.getOrCreatePersistedData(player).getLong("terra_curio:last_x_bone");
+                Level level = player.level();
                 long gameTime = level.getGameTime();
                 if (gameTime - l > 20) {
-                    serverPlayer.getPersistentData().putLong("terra_curio:last_x_bone", gameTime);
+                    LibUtils.getOrCreatePersistedData(player).putLong("terra_curio:last_x_bone", gameTime);
                     XBoneProjectile projectile = new XBoneProjectile(TCEntities.X_BONE.get(), level);
-                    projectile.setPos(serverPlayer.getX(), serverPlayer.getEyeY() - 0.1, serverPlayer.getZ());
-                    projectile.shootFromRotation(serverPlayer, serverPlayer.getXRot(), serverPlayer.getYRot(), 0, 1.2F, 0);
-                    projectile.setOwner(serverPlayer);
+                    projectile.setPos(player.getX(), player.getEyeY() - 0.1, player.getZ());
+                    projectile.shootFromRotation(player, player.getXRot(), player.getYRot(), 0, 1.2F, 0);
+                    projectile.setOwner(player);
                     level.addFreshEntity(projectile);
                 }
             }

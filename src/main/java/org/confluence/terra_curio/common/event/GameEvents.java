@@ -1,8 +1,6 @@
 package org.confluence.terra_curio.common.event;
 
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentUtils;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,6 +32,7 @@ import net.neoforged.neoforge.event.entity.player.CriticalHitEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
@@ -179,9 +178,9 @@ public final class GameEvents {
         TCUtils.resetClientPacket(serverPlayer);
         InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
 
-        if (!ConfluenceMagicLib.IS_CONFLUENCE_LOADED && !player.getPersistentData().getBoolean("terra_curio:first_in_world")) {
+        if (!ConfluenceMagicLib.IS_CONFLUENCE_LOADED && !LibUtils.getOrCreatePersistedData(player).getBoolean("terra_curio:first_in_world")) {
             serverPlayer.sendSystemMessage(Component.translatable("terra_curio.announce").append(ComponentUtils.copyOnClickText("https://www.curseforge.com/minecraft/mc-mods/confluence")), false);
-            player.getPersistentData().putBoolean("terra_curio:first_in_world", true);
+            LibUtils.getOrCreatePersistedData(player).putBoolean("terra_curio:first_in_world", true);
         }
     }
 
@@ -224,18 +223,6 @@ public final class GameEvents {
             if (player.level().random.nextFloat() < chance) {
                 event.setDamageMultiplier(1.5F);
                 event.setCriticalHit(true);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void clone(PlayerEvent.Clone event) {
-        CompoundTag old = event.getOriginal().getPersistentData();
-        CompoundTag neo = event.getEntity().getPersistentData();
-        for (String key : old.getAllKeys()) {
-            if (key.startsWith(TerraCurio.MODID)) {
-                Tag value = old.get(key);
-                if (value != null) neo.put(key, value);
             }
         }
     }
