@@ -77,7 +77,6 @@ public class ModLanguageProvider extends LanguageProvider {
     @Override
     protected void addTranslations() {
         add("creativetab.terra_curio", "Terra Curio", "泰拉饰品");
-        add("terra_curio.announce", "Our main mod 'Confluence: Otherworld' has been announced!", "我们的主模组《汇流来世》已公布！");
 
         add("tooltip.terra_curio.requires_mod_loaded", "This accessory requires any of the following mods: %s", "该配饰需要以下任意模组：%s");
         add("tooltip.terra_curio.hold_and_scroll", "Hold [Left Shift] and scroll the mouse wheel", "按住[左Shift]并滚动鼠标滚轮");
