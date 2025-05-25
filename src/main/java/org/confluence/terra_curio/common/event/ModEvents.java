@@ -41,7 +41,7 @@ public final class ModEvents {
         TCAttributes.registerAttribute(TCAttributes.RANGED_DAMAGE, event::add);
         TCAttributes.registerAttribute(TCAttributes.DODGE_CHANCE, event::add);
         TCAttributes.registerAttribute(TCAttributes.AGGRO, event::add);
-        if (ConfluenceMagicLib.IS_CONFLUENCE_LOADED) {
+        if (ConfluenceMagicLib.isConfluenceLoaded()) {
             TCAttributes.registerAttribute(TCAttributes.MAGIC_DAMAGE, event::add);
         }
         TCAttributes.registerAttribute(TCAttributes.ARMOR_PENETRATION, event::add);

@@ -20,7 +20,7 @@ public final class TCCommonConfigs {
     public static final Supplier<String> STRING_SUPPLIER = () -> "";
     public static final Predicate<Object> FILTER_CONFLUENCE = o -> {
         if (o instanceof String s && s.startsWith("confluence:")) {
-            return ConfluenceMagicLib.IS_CONFLUENCE_LOADED;
+            return ConfluenceMagicLib.isConfluenceLoaded();
         }
         return true;
     };
