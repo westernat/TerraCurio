@@ -17,21 +17,30 @@ public final class TCKeyBindings {
     public static void keyBinding(RegisterKeyMappingsEvent event) {
         event.register(METAL_DETECTOR.get());
         event.register(STEP_STOOL.get());
+        event.register(CTHULHU_SPRINTING.get());
     }
 
     public static final Lazy<KeyMapping> METAL_DETECTOR = Lazy.of(() -> new KeyMapping(
-        "key.terra_curio.metal_detector",
-        KeyConflictContext.IN_GAME,
-        InputConstants.Type.KEYSYM,
-        GLFW.GLFW_KEY_RIGHT_CONTROL,
-        "key.categories.misc"
+            "key.terra_curio.metal_detector",
+            KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_RIGHT_CONTROL,
+            "key.terra_curio.gameplay"
     ));
 
     public static final Lazy<KeyMapping> STEP_STOOL = Lazy.of(() -> new KeyMapping(
-        "key.terra_curio.step_stool",
-        KeyConflictContext.IN_GAME,
-        InputConstants.Type.KEYSYM,
-        GLFW.GLFW_KEY_UP,
-        "key.categories.gameplay"
+            "key.terra_curio.step_stool",
+            KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_UP,
+            "key.terra_curio.gameplay"
+    ));
+
+    public static final Lazy<KeyMapping> CTHULHU_SPRINTING = Lazy.of(() -> new KeyMapping(
+            "key.terra_curio.cthulhu_sprinting",
+            KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_LEFT_CONTROL,
+            "key.terra_curio.gameplay"
     ));
 }

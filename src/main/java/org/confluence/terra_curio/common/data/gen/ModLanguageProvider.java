@@ -128,8 +128,10 @@ public class ModLanguageProvider extends LanguageProvider {
 
         add("death.attack.star_cloak", "%1$s was squashed by a falling star", "%1%s 被坠星压扁了");
 
+        add("key.terra_curio.gameplay", "Terra Curio", "泰拉饰品");
         add("key.terra_curio.metal_detector", "Detect Metal", "检测矿物");
         add("key.terra_curio.step_stool", "Step Stool", "上梯凳");
+        add("key.terra_curio.cthulhu_sprinting", "Cthulhu Sprinting", "克苏鲁冲刺");
 
         add("curios.identifier.accessory", "Accessory", "配饰");
         add("accessories.slot.accessory", "Accessory", "配饰");
@@ -767,7 +769,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "增加跳跃高度"
                 }
         );
-        tooltipAndJeiInfo(TCItems.SHIELD_OF_CTHULHU, "克苏鲁护盾", "Allows the player to dash into the enemy, press sprint key once to dash", "允许冲刺，按一次疾跑键以冲刺", "It has a Chance to be dropped from Ravager.", "它有几率从劫掠兽身上掉落。");
+        tooltipAndJeiInfo(TCItems.SHIELD_OF_CTHULHU, "克苏鲁护盾", "Allows the player to dash into the enemy, tap [%s] once to dash", "允许冲刺，按一次[%s]以冲刺", "It has a Chance to be dropped from Ravager.", "它有几率从劫掠兽身上掉落。");
         tooltipAndJeiInfo(TCItems.SHINY_RED_BALLOON, "闪亮红气球", "Allows the holder to double jump", "增加跳跃高度", "When the player has the Hero of the Village effect, the librarian has a chance to give the player this item.It can be found in chests in plains villages.", "它可以在平原村庄中的宝箱中找到。当玩家拥有村庄英雄效果时，图书管理员有几率将此物品交给玩家。");
         tooltipsAndJeiInfo(TCItems.SHOE_SPIKES, "鞋钉",
                 new String[]{
