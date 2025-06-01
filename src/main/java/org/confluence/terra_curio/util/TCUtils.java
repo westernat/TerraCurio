@@ -311,7 +311,7 @@ public final class TCUtils {
     private static boolean sprintKeyDown = false;
 
     public static void applyCthulhuSprinting(boolean down, Player player) {
-        if (((IEntity) player).terra_curio$getCthulhuSprintingTime() > 0) return;
+        if (((IEntity) player).terra_curio$getCthulhuSprintingTime() > 0 || player.isFallFlying()) return;
         boolean sprint = false;
         if (player.isLocalPlayer()) {
             if (down) {
