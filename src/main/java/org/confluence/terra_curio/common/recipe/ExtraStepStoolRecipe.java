@@ -35,8 +35,7 @@ public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
 
     @Override
     public boolean isBaseIngredient(ItemStack pStack) {
-        CompoundTag tag = LibUtils.getItemStackNbt(pStack);
-        return pStack.getItem() instanceof StepStool && tag.getInt("extraStep") < 15;
+        return pStack.getItem() instanceof StepStool && LibUtils.getItemStackNbt(pStack).getInt("extraStep") < 15;
     }
 
     @Override
