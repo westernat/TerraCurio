@@ -54,11 +54,12 @@ public final class TCCommonConfigs {
                 "The higher the block in the list, the higher the value"
         ).defineListAllowEmpty("rareBlocks", List.of(
                 "confluence:life_crystal_block",
+                "confluence:golden_chest",
                 "confluence:opal_ore",
                 "confluence:gelstone_ore",
                 "confluence:cold_crystal_ore",
                 "confluence:crimtane_ore",
-                "confluence:deepslate_tcrimtane_ore",
+                "confluence:deepslate_crimtane_ore",
                 "confluence:demonite_ore",
                 "confluence:deepslate_demonite_ore",
                 "minecraft:ancient_debris",
@@ -68,7 +69,6 @@ public final class TCCommonConfigs {
                 "confluence:deepslate_platinum_ore",
                 "minecraft:gold_ore",
                 "minecraft:deepslate_gold_ore",
-                "minecraft:chest",
                 "confluence:forest_pot",
                 "confluence:tundra_pot",
                 "confluence:spider_nest_pot",

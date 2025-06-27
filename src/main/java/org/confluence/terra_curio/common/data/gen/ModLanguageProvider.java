@@ -548,7 +548,7 @@ public class ModLanguageProvider extends LanguageProvider {
         tooltipsAndJeiInfo(TCItems.LUCKY_HORSESHOE, "幸运马掌",
                 new String[]{
                         "'Said to bring good fortune and keep evil spirits at bay'",
-                        "Grants immunity to fire blocks"
+                        "Negates fall damage"
 
                 },
                 new String[]{
