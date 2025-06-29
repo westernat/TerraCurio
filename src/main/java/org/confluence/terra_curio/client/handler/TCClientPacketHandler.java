@@ -23,6 +23,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
@@ -180,8 +181,8 @@ public final class TCClientPacketHandler {
             if (entityHitResult != null && entityHitResult.getLocation().distanceToSqr(from) < sqr) {
                 minecraft.gameMode.attack(localPlayer, entityHitResult.getEntity());
             }
-            //localPlayer.resetAttackStrengthTicker();
             localPlayer.swing(InteractionHand.MAIN_HAND);
+            CommonHooks.onEmptyLeftClick(localPlayer);
         }
     }
 
