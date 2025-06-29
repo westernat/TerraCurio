@@ -44,10 +44,7 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     }
 
     public static final Type<CurioExistsPacketS2C> TYPE = new Type<>(TerraCurio.asResource("curio_exists"));
-    public static final StreamCodec<ByteBuf, CurioExistsPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, p -> p.item,
-            CurioExistsPacketS2C::new
-    );
+    public static final StreamCodec<ByteBuf, CurioExistsPacketS2C> STREAM_CODEC = ByteBufCodecs.VAR_INT.map(CurioExistsPacketS2C::new, CurioExistsPacketS2C::item);
 
     @Override
     public Type<CurioExistsPacketS2C> type() {

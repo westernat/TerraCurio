@@ -49,7 +49,7 @@ public final class TCClientPacketHandler {
     public static boolean floating = false;
     private static boolean hasNeptunesShell = false;
     private static final Int2BooleanMap remoteNeptuneShell = new Int2BooleanArrayMap();
-    private static int rightClickSubtractor = 0;
+    private static byte rightClickSubtractor = 0;
     private static int luminance = 0;
     private static final Int2IntMap remoteLuminance = new Int2IntArrayMap();
     private static final Int2IntMap pickupDelayStorage = new Int2IntArrayMap();
@@ -91,7 +91,7 @@ public final class TCClientPacketHandler {
         return ((hasNeptunesShell && living.getClass() == LocalPlayer.class) || (living.getClass() == RemotePlayer.class && remoteNeptuneShell.get(living.getId()))) && living.isInWaterOrBubble();
     }
 
-    public static int getRightClickSubtractor() {
+    public static byte getRightClickSubtractor() {
         return rightClickSubtractor;
     }
 

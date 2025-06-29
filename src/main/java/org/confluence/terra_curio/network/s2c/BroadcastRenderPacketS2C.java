@@ -20,8 +20,8 @@ public record BroadcastRenderPacketS2C(int playerId, short render) implements Cu
     public static final short MOON_CHARM = 0b100000;
     public static final Type<BroadcastRenderPacketS2C> TYPE = new Type<>(TerraCurio.asResource("broadcast_render"));
     public static final StreamCodec<ByteBuf, BroadcastRenderPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, p -> p.playerId,
-            ByteBufCodecs.SHORT, p -> p.render,
+            ByteBufCodecs.VAR_INT, BroadcastRenderPacketS2C::playerId,
+            ByteBufCodecs.SHORT, BroadcastRenderPacketS2C::render,
             BroadcastRenderPacketS2C::new
     );
 

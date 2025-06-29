@@ -23,8 +23,8 @@ public record StepStoolSteppingPacketC2S(int slot, byte step) implements CustomP
 
     public static final Type<StepStoolSteppingPacketC2S> TYPE = new Type<>(TerraCurio.asResource("step_stool_stepping_c2s"));
     public static final StreamCodec<ByteBuf, StepStoolSteppingPacketC2S> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, p -> p.slot,
-            ByteBufCodecs.BYTE, p -> p.step,
+            ByteBufCodecs.VAR_INT, StepStoolSteppingPacketC2S::slot,
+            ByteBufCodecs.BYTE, StepStoolSteppingPacketC2S::step,
             StepStoolSteppingPacketC2S::new
     );
     private static final Predicate<ItemStack> PREDICATE = itemStack -> itemStack.getItem() instanceof StepStool;

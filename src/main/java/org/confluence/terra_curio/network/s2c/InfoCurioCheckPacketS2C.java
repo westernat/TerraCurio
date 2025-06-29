@@ -26,8 +26,8 @@ import java.util.Set;
 public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements CustomPacketPayload {
     public static final Type<InfoCurioCheckPacketS2C> TYPE = new Type<>(TerraCurio.asResource("info_curio_check"));
     public static final StreamCodec<ByteBuf, InfoCurioCheckPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, p -> p.playerId,
-            ByteBufCodecs.BYTE_ARRAY, p -> p.enabled,
+            ByteBufCodecs.VAR_INT, InfoCurioCheckPacketS2C::playerId,
+            ByteBufCodecs.BYTE_ARRAY, InfoCurioCheckPacketS2C::enabled,
             InfoCurioCheckPacketS2C::new
     );
     public static final int ARRAY_LENGTH = 13;

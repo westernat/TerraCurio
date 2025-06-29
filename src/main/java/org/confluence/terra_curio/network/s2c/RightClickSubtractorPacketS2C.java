@@ -13,12 +13,9 @@ import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
 
-public record RightClickSubtractorPacketS2C(int amount) implements CustomPacketPayload {
+public record RightClickSubtractorPacketS2C(byte amount) implements CustomPacketPayload {
     public static final Type<RightClickSubtractorPacketS2C> TYPE = new Type<>(TerraCurio.asResource("right_click_sub"));
-    public static final StreamCodec<ByteBuf, RightClickSubtractorPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, p -> p.amount,
-            RightClickSubtractorPacketS2C::new
-    );
+    public static final StreamCodec<ByteBuf, RightClickSubtractorPacketS2C> STREAM_CODEC = ByteBufCodecs.BYTE.map(RightClickSubtractorPacketS2C::new, RightClickSubtractorPacketS2C::amount);
 
     @Override
     public Type<RightClickSubtractorPacketS2C> type() {

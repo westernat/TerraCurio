@@ -15,19 +15,18 @@ import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.common.init.TCItems;
 
 import static net.minecraft.network.codec.ByteBufCodecs.FLOAT;
-import static net.minecraft.network.codec.ByteBufCodecs.INT;
+import static net.minecraft.network.codec.ByteBufCodecs.VAR_INT;
 
-public record PlayerJumpPacketS2C(float fartSpeed, float sandstormSpeed, int sandstormTicks, float blizzardSpeed, int blizzardTicks, float tsunamiSpeed,
-                                  float cloudSpeed) implements CustomPacketPayload {
+public record PlayerJumpPacketS2C(float fartSpeed, float sandstormSpeed, int sandstormTicks, float blizzardSpeed, int blizzardTicks, float tsunamiSpeed, float cloudSpeed) implements CustomPacketPayload {
     public static final Type<PlayerJumpPacketS2C> TYPE = new Type<>(TerraCurio.asResource("player_jump_s2c"));
     public static final StreamCodec<ByteBuf, PlayerJumpPacketS2C> STREAM_CODEC = new StreamCodec<>() {
         @Override
         public void encode(ByteBuf buffer, PlayerJumpPacketS2C value) {
             FLOAT.encode(buffer, value.fartSpeed);
             FLOAT.encode(buffer, value.sandstormSpeed);
-            INT.encode(buffer, value.sandstormTicks);
+            VAR_INT.encode(buffer, value.sandstormTicks);
             FLOAT.encode(buffer, value.blizzardSpeed);
-            INT.encode(buffer, value.blizzardTicks);
+            VAR_INT.encode(buffer, value.blizzardTicks);
             FLOAT.encode(buffer, value.tsunamiSpeed);
             FLOAT.encode(buffer, value.cloudSpeed);
         }
@@ -36,9 +35,9 @@ public record PlayerJumpPacketS2C(float fartSpeed, float sandstormSpeed, int san
         public PlayerJumpPacketS2C decode(ByteBuf buffer) {
             float t1 = FLOAT.decode(buffer);
             float t2 = FLOAT.decode(buffer);
-            int t3 = INT.decode(buffer);
+            int t3 = VAR_INT.decode(buffer);
             float t4 = FLOAT.decode(buffer);
-            int t5 = INT.decode(buffer);
+            int t5 = VAR_INT.decode(buffer);
             float t6 = FLOAT.decode(buffer);
             float t7 = FLOAT.decode(buffer);
             return new PlayerJumpPacketS2C(t1, t2, t3, t4, t5, t6, t7);

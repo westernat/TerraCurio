@@ -15,10 +15,7 @@ import org.confluence.terra_curio.util.TCUtils;
 
 public record InfiniteFlightPacketS2C(boolean enable) implements CustomPacketPayload {
     public static final Type<InfiniteFlightPacketS2C> TYPE = new Type<>(TerraCurio.asResource("infinite_flight"));
-    public static final StreamCodec<ByteBuf, InfiniteFlightPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.BOOL, p -> p.enable,
-            InfiniteFlightPacketS2C::new
-    );
+    public static final StreamCodec<ByteBuf, InfiniteFlightPacketS2C> STREAM_CODEC = ByteBufCodecs.BOOL.map(InfiniteFlightPacketS2C::new, InfiniteFlightPacketS2C::enable);
 
     @Override
     public Type<InfiniteFlightPacketS2C> type() {

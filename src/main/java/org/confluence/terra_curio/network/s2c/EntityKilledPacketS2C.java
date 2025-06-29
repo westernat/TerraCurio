@@ -18,8 +18,8 @@ import org.confluence.terra_curio.client.handler.InformationHandler;
 public record EntityKilledPacketS2C(int amount, ResourceLocation entityType) implements CustomPacketPayload {
     public static final Type<EntityKilledPacketS2C> TYPE = new Type<>(TerraCurio.asResource("entity_killed"));
     public static final StreamCodec<ByteBuf, EntityKilledPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, p -> p.amount,
-            ResourceLocation.STREAM_CODEC, p -> p.entityType,
+            ByteBufCodecs.VAR_INT, EntityKilledPacketS2C::amount,
+            ResourceLocation.STREAM_CODEC, EntityKilledPacketS2C::entityType,
             EntityKilledPacketS2C::new
     );
 

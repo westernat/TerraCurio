@@ -18,10 +18,7 @@ import org.confluence.terra_curio.network.s2c.BroadcastGravitationRotPacketS2C;
 
 public record GravitationPacketC2S(boolean enable) implements CustomPacketPayload {
     public static final Type<GravitationPacketC2S> TYPE = new Type<>(TerraCurio.asResource("gravitation"));
-    public static final StreamCodec<ByteBuf, GravitationPacketC2S> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.BOOL, p -> p.enable,
-            GravitationPacketC2S::new
-    );
+    public static final StreamCodec<ByteBuf, GravitationPacketC2S> STREAM_CODEC = ByteBufCodecs.BOOL.map(GravitationPacketC2S::new, GravitationPacketC2S::enable);
 
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {

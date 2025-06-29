@@ -18,8 +18,8 @@ import java.util.function.Predicate;
 public record SpeedBootsNBTPacketC2S(int slot, int value) implements CustomPacketPayload {
     public static final Type<SpeedBootsNBTPacketC2S> TYPE = new Type<>(TerraCurio.asResource("speed_boots_nbt"));
     public static final StreamCodec<ByteBuf, SpeedBootsNBTPacketC2S> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, p -> p.slot,
-            ByteBufCodecs.INT, p -> p.value,
+            ByteBufCodecs.VAR_INT, SpeedBootsNBTPacketC2S::slot,
+            ByteBufCodecs.VAR_INT, SpeedBootsNBTPacketC2S::value,
             SpeedBootsNBTPacketC2S::new
     );
     private static final Predicate<ItemStack> PREDICATE = itemStack -> itemStack.getItem() instanceof BaseSpeedBoots;

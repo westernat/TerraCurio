@@ -12,8 +12,8 @@ import org.confluence.terra_curio.client.handler.GravitationHandler;
 public record BroadcastGravitationRotPacketS2C(int entityId, boolean enabled) implements CustomPacketPayload {
     public static final Type<BroadcastGravitationRotPacketS2C> TYPE = new Type<>(TerraCurio.asResource("broadcast_gravitation_rot"));
     public static final StreamCodec<ByteBuf, BroadcastGravitationRotPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, p -> p.entityId,
-            ByteBufCodecs.BOOL, p -> p.enabled,
+            ByteBufCodecs.VAR_INT, BroadcastGravitationRotPacketS2C::entityId,
+            ByteBufCodecs.BOOL, BroadcastGravitationRotPacketS2C::enabled,
             BroadcastGravitationRotPacketS2C::new
     );
 

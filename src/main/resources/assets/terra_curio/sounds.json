@@ -4,11 +4,6 @@
             "terra_curio:transmission"
         ]
     },
-    "waving": {
-        "sounds": [
-            "terra_curio:waving"
-        ]
-    },
     "fart_sound": {
         "sounds": [
             "terra_curio:fart_sound"
@@ -19,24 +14,23 @@
             "terra_curio:double_jump"
         ]
     },
-    "shoes_fly": {
-        "sounds": [
-            "terra_curio:shoes_fly"
-        ]
-    },
-    "shoes_fly_jet": {
-        "sounds": [
-            "terra_curio:shoes_fly_jet"
-        ]
-    },
     "shoes_walk": {
         "sounds": [
             "terra_curio:shoes_walk"
         ]
     },
-    "achievements": {
+    "rocket_boots_boost": {
         "sounds": [
-            "terra_curio:achievements"
+            "terra_curio:rocket_boots_boost_0",
+            "terra_curio:rocket_boots_boost_1",
+            "terra_curio:rocket_boots_boost_2"
+        ]
+    },
+    "rocket_boots_stop": {
+        "sounds": [
+            "terra_curio:rocket_boots_stop_0",
+            "terra_curio:rocket_boots_stop_1",
+            "terra_curio:rocket_boots_stop_2"
         ]
     }
 }

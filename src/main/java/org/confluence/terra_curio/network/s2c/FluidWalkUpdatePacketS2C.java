@@ -12,13 +12,8 @@ import org.confluence.terra_curio.util.TCUtils;
 
 public record FluidWalkUpdatePacketS2C() implements CustomPacketPayload {
     public static final Type<FluidWalkUpdatePacketS2C> TYPE = new Type<>(TerraCurio.asResource("fluid_walk_update"));
-    public static final StreamCodec<ByteBuf, FluidWalkUpdatePacketS2C> STREAM_CODEC = CustomPacketPayload.codec(FluidWalkUpdatePacketS2C::encode, FluidWalkUpdatePacketS2C::decode);
-
-    private void encode(ByteBuf byteBuf) {}
-
-    private static FluidWalkUpdatePacketS2C decode(ByteBuf byteBuf) {
-        return new FluidWalkUpdatePacketS2C();
-    }
+    private static final FluidWalkUpdatePacketS2C INSTANCE = new FluidWalkUpdatePacketS2C();
+    public static final StreamCodec<ByteBuf, FluidWalkUpdatePacketS2C> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 
     @Override
     public Type<FluidWalkUpdatePacketS2C> type() {
@@ -38,6 +33,6 @@ public record FluidWalkUpdatePacketS2C() implements CustomPacketPayload {
 
     public static void sendToClient(ServerPlayer serverPlayer) {
         TCUtils.updateWalkableFluidStates(serverPlayer);
-        PacketDistributor.sendToPlayer(serverPlayer, new FluidWalkUpdatePacketS2C());
+        PacketDistributor.sendToPlayer(serverPlayer, INSTANCE);
     }
 }
