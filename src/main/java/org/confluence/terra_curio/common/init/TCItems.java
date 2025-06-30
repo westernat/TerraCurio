@@ -611,7 +611,7 @@ public final class TCItems { // todo 全换成data map
                     .attribute(Attributes.JUMP_STRENGTH, 0.8, ADD_MULTIPLIED_TOTAL)), // 翱翔徽章
             GRAVITY_GLOBE = registerCurio("gravity_globe", builder -> builder.rarity(EXPERT).accessories(units(GRAVITY$GLOBE)).tooltips(1)), // 重力球
             CELESTIAL_STARBOARD = registerCurio("celestial_starboard", builder -> builder.rarity(EXPERT).tooltips(2)
-                    .accessories(of(MAY$FLY, MayFlyAbilityValue.of("celestial_starboard", 1.0F, 60, true, true)))
+                    .accessories(of(MAY$FLY, MayFlyAbilityValue.of("celestial_starboard", 1100, 1.0F, 60, true, true)))
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)); // 天界星盘
 
     public static DeferredItem<BaseCurioItem> registerCurio(String name, Consumer<BaseCurioItem.Builder> consumer) {
