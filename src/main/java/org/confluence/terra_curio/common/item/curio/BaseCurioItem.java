@@ -136,7 +136,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
-        return enchantment.is(EnchantmentTags.CURSE);
+        return enchantment.is(EnchantmentTags.CURSE) || stack.is(enchantment.value().definition().supportedItems());
     }
 
     public static class Builder {
