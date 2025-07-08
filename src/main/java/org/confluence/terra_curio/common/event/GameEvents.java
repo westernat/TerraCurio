@@ -2,6 +2,7 @@ package org.confluence.terra_curio.common.event;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -90,7 +91,7 @@ public final class GameEvents {
         LivingEntity living = event.getEntity();
         if (living.level().isClientSide) return;
         DamageSource damageSource = event.getSource();
-        if (damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || damageSource.is(DamageTypes.GENERIC_KILL)) return;
+        if (damageSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
         RandomSource random = living.level().random;
 
         TCUtils.applyHoneyComb(living, random);
