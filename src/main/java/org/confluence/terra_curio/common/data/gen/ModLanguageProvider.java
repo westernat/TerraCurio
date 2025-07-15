@@ -145,6 +145,14 @@ public class ModLanguageProvider extends LanguageProvider {
 
         add("tooltip.item.terra_curio.demon_heart.1", "Remaining Times: %s", "剩余次数: %s");
 
+        add("terra_curio.subtitle.transmission", "Transmission Magic: Activated", "传送魔法：开启");
+        add("terra_curio.subtitle.fart_sound", "Player: Fart Sound", "玩家：放屁声");
+        add("terra_curio.subtitle.double_jump", "Player: Double Jump", "玩家：二段跳");
+        add("terra_curio.subtitle.shoes_walk", "Shoes: Walking", "鞋：跑动");
+        add("terra_curio.subtitle.rocket_boots_boost", "Rocket Boots: Boost", "火箭靴：助推");
+        add("terra_curio.subtitle.rocket_boots_stop", "Rocket Boots: Stop", "火箭靴：关闭");
+
+
         onlyTooltip(TCItems.BASE_POINT, "基点", "'Can you hear the sound in this silence?'", "“你可听闻这寂静之声？”");
         add(TCItems.EVERLASTING.get().getDescriptionId(), "Everlasting", "亘古");
         add(TCItems.CELL_PHONE.get().getDescriptionId(), "Cell Phone", "手机");
