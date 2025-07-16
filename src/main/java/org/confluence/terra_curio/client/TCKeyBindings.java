@@ -25,7 +25,7 @@ public final class TCKeyBindings {
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_RIGHT_CONTROL,
-            "key.terra_curio.gameplay"
+            category()
     ));
 
     public static final Lazy<KeyMapping> STEP_STOOL = Lazy.of(() -> new KeyMapping(
@@ -33,7 +33,7 @@ public final class TCKeyBindings {
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UP,
-            "key.terra_curio.gameplay"
+            category()
     ));
 
     public static final Lazy<KeyMapping> CTHULHU_SPRINTING = Lazy.of(() -> new KeyMapping(
@@ -41,6 +41,10 @@ public final class TCKeyBindings {
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_LEFT_CONTROL,
-            "key.terra_curio.gameplay"
+            category()
     ));
+
+    private static String category() {
+        return "key.terra_curio.gameplay"; // confluence mixin here
+    }
 }
