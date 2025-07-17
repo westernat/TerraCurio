@@ -366,7 +366,7 @@ public class ModLanguageProvider extends LanguageProvider {
         );
         tooltipAndJeiInfo(TCItems.FART_IN_A_JAR, "罐中臭屁", "Allows the holder to double jump", "可让持有者二段跳", "It has a Chance to be dropped from Ghost.", "它有几率从恶魂身上掉落");
         tooltipAndJeiInfo(TCItems.FAST_CLOCK, "快走时钟", "Immunity to Slowness", "对缓慢免疫", "It has a Chance to be dropped from Stray.", "它有几率从流浪者身上掉落。");
-        tooltipAndJeiInfo(TCItems.FERAL_CLAWS, "狂爪手套", "Enables auto swing for melee weapons", "启用近战武器自动挥动", "It can be discovered in chests found within Jungle Pyramids.", "它可以在丛林神庙内的箱子中找到");
+        tooltipAndJeiInfo(TCItems.FERAL_CLAWS, "猛爪手套", "Enables auto swing for melee weapons", "启用近战武器自动挥动", "It can be discovered in chests found within Jungle Pyramids.", "它可以在丛林神庙内的箱子中找到");
         onlyTooltips(TCItems.FIRE_GAUNTLET, "烈火手套",
                 new String[]{
                         "Enables auto swing for melee weapons",
