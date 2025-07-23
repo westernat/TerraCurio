@@ -54,7 +54,7 @@ import static org.confluence.terra_curio.common.component.AccessoriesComponent.o
 import static org.confluence.terra_curio.common.component.AccessoriesComponent.units;
 
 @SuppressWarnings("all")
-public final class TCItems { // todo 全换成data map
+public final class TCItems {
     public static final DeferredRegister.Items OTHERS = DeferredRegister.createItems(TerraCurio.MODID);
     public static final DeferredRegister.Items CURIOS = DeferredRegister.createItems(TerraCurio.MODID);
 
@@ -344,7 +344,7 @@ public final class TCItems { // todo 全换成data map
                     .attribute(Attributes.BLOCK_BREAK_SPEED, 0.25, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.PICKUP_RANGE, 6.25, ADD_VALUE))); // 创造之手
 
-    public static final DeferredItem<BaseCurioItem> BAND_OF_REGENERATION = registerDirectly("band_of_regeneration", name -> new BandOfRegeneration(BaseCurioItem.builder(name))); // todo 浅浅削弱一下，有点过强
+    public static final DeferredItem<BaseCurioItem> BAND_OF_REGENERATION = registerDirectly("band_of_regeneration", name -> new BandOfRegeneration(BaseCurioItem.builder(name)));
 
     public static final DeferredItem<BaseCurioItem> COPPER_WATCH = registerCurio("copper_watch", builder -> builder.rarity(WHITE).jeiInfos(0).accessories(of(INFORMATION, List.of(HOUR$WATCH)))), // 铜表
             TIN_WATCH = registerCurio("tin_watch", builder -> builder.jeiInfos(0).rarity(WHITE).accessories(of(INFORMATION, List.of(HOUR$WATCH)))), // 锡表
