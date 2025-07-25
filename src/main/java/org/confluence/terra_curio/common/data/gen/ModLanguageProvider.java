@@ -159,7 +159,7 @@ public class ModLanguageProvider extends LanguageProvider {
         add(TCItems.MAGIC_MIRROR.get().getDescriptionId(), "Magic Mirror", "魔镜");
         add(TCItems.DEMON_HEART.get().getDescriptionId(), "Demon Heart", "恶魔之心");
 
-        onlyJeiInfo(TCItems.AGLET, "金属带扣", "It can be found in Shipwreck Chests.", "它出现在沉船宝箱中");
+        onlyJeiInfo(TCItems.AGLET, "鞋带束头", "It can be found in Shipwreck Chests.", "它出现在沉船宝箱中");
         onlyTooltips(TCItems.AMBER_HORSESHOE_BALLOON, "琥珀马掌气球",
                 new String[]{
                         "Increases jump height",
@@ -190,7 +190,7 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyTooltips(TCItems.ANKH_SHIELD, "十字章护盾", new String[]{"Grants immunity to most debuffs.", "Grants immunity to fire blocks"}, new String[]{"对大部分减益免疫。", "对火块免疫"});
         onlyZhName(TCItems.ANKLET_OF_THE_WIND, "疾风脚镯");
         onlyTooltip(TCItems.ARCHITECT_GIZMO_PACK, "建筑师发明背包", "Decreased 'Right Click Delay' by 2, cannot stack the decrease of its materials", "右键点击延迟降低2，且降低效果不能与其材料的降低效果叠加。");
-        onlyZhName(TCItems.AVENGER_EMBLEM, "复仇者勋章");
+        onlyZhName(TCItems.AVENGER_EMBLEM, "复仇者徽章");
         onlyTooltip(TCItems.BALLOON_PUFFERFISH, "气球河豚鱼", "Increases jump height", "增加跳跃高度");
         tooltipAndJeiInfo(TCItems.BAND_OF_REGENERATION, "再生手环", "Slowly regenerates life", "缓慢再生生命", "The Band of Regeneration is an accessory that has a Chance to be dropped from Witch", "它有几率从女巫身上掉落。");
         onlyTooltips(TCItems.BEE_CLOAK, "蜜蜂斗篷",
@@ -325,7 +325,7 @@ public class ModLanguageProvider extends LanguageProvider {
         tooltipAndJeiInfo(TCItems.CROSS_NECKLACE, "十字项链", "Increases length of invincibility after taking damage", "增加受到伤害后的无敌时间", "It has a Chance to be dropped from Evoker.", "它有几率从唤魔者身上掉落。");
         tooltipAndJeiInfo(TCItems.DEMON_HEART, "恶魔之心", "Permanently increases the number of accessory slots", "永久增加配饰栏数量", "It is dropped by the Wither.", "它必定从凋零身上掉落。");
         tooltipAndJeiInfo(TCItems.DEPTH_METER, "深度计", "Displays depth", "显示深度", "The Compass has a Chance to be dropped from Bats.", "它有几率从蝙蝠身上掉落。");
-        onlyZhName(TCItems.DESTROYER_EMBLEM, "毁灭者勋章");
+        onlyZhName(TCItems.DESTROYER_EMBLEM, "毁灭者徽章");
         onlyTooltip(TCItems.DETOXIFICATION_CAPSULE, "解毒囊", "Immunity to Poison and Wither", "对中毒和凋零免疫");
         tooltipAndJeiInfo(TCItems.DPS_METER, "每秒伤害计数器", "Displays your damage per second", "显示你的每秒伤害", "The DPS Meter has a Chance to be dropped from Creeper.", "它有几率从苦力怕身上掉落。");
         tooltipsAndJeiInfo(TCItems.DUNERIDER_BOOTS, "沙丘行者靴",
