@@ -86,7 +86,7 @@ public final class GameClientEvents {
                 }
             }
         }
-        if (TCClientPacketHandler.isHasTabi() /* confluence mixed here */) {
+        if (TCClientPacketHandler.isHasTabi() /* confluence mixin here */) {
             PlayerSprintingHandler.handle(localPlayer, input);
         }
     }
