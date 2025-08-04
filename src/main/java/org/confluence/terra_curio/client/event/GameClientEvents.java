@@ -12,8 +12,6 @@ import net.neoforged.neoforge.client.event.*;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.lib.client.animate.ExpertColorAnimation;
-import org.confluence.lib.client.animate.MasterColorAnimation;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.event.PerformJumpingEvent;
 import org.confluence.terra_curio.client.TCClientConfigs;
@@ -48,9 +46,6 @@ public final class GameClientEvents {
             ScopeFovHandler.handle(localPlayer);
             TCUtils.applyCthulhuSprinting(TCKeyBindings.CTHULHU_SPRINTING.get().isDown(), localPlayer);
         }
-
-        ExpertColorAnimation.INSTANCE.updateColor();
-        MasterColorAnimation.INSTANCE.updateColor();
     }
 
     @SubscribeEvent
