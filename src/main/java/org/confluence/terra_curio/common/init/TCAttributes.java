@@ -127,7 +127,7 @@ public final class TCAttributes {
     }
 
     public static float applyCritDamage(RandomSource random, LivingEntity living, float amount) {
-        if (ConfluenceMagicLib.isConfluenceLoaded() || hasCustomAttribute(CRIT_CHANCE)) return amount;
+        if (ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get() || hasCustomAttribute(CRIT_CHANCE)) return amount;
         AttributeInstance instance = living.getAttribute(CRIT_CHANCE);
         if (instance != null && random.nextFloat() < instance.getValue()) {
             amount *= 1.5F;
