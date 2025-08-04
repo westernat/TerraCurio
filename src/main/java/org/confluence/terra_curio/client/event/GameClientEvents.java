@@ -1,17 +1,11 @@
 package org.confluence.terra_curio.client.event;
 
 
-import com.mojang.datafixers.util.Either;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
@@ -20,7 +14,6 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.lib.client.animate.ExpertColorAnimation;
 import org.confluence.lib.client.animate.MasterColorAnimation;
-import org.confluence.lib.common.component.ModRarity;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.event.PerformJumpingEvent;
 import org.confluence.terra_curio.client.TCClientConfigs;
@@ -31,9 +24,6 @@ import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
 import org.confluence.terra_curio.network.c2s.ShootXBonePacketC2S;
 import org.confluence.terra_curio.util.TCUtils;
-
-import java.util.List;
-import java.util.Optional;
 
 @EventBusSubscriber(modid = TerraCurio.MODID, value = Dist.CLIENT)
 public final class GameClientEvents {
@@ -132,22 +122,6 @@ public final class GameClientEvents {
             MultiFunctionTooltip.mouseScrollY -= (int) event.getScrollDeltaY();
         } else {
             MultiFunctionTooltip.mouseScrollY = 0;
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public static void renderTooltip$GatherComponents(RenderTooltipEvent.GatherComponents event) {
-        ItemStack itemStack = event.getItemStack();
-        if (itemStack.isEmpty()) return;
-        List<Either<FormattedText, TooltipComponent>> tooltipElements = event.getTooltipElements();
-        if (tooltipElements.isEmpty()) return;
-        Optional<FormattedText> displayName = tooltipElements.getFirst().left();
-        if (displayName.isPresent() && displayName.get() instanceof Component component) {
-            ModRarity rarity = ModRarity.getRarity(itemStack);
-            if (rarity == null) return;
-            tooltipElements.set(0, Either.left(
-                    component.copy().withColor(rarity.color())
-            ));
         }
     }
 }
