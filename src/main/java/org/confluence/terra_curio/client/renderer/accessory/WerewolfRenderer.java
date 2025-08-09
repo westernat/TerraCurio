@@ -9,6 +9,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import org.confluence.lib.util.LibDateUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.client.model.accessory.WerewolfModel;
@@ -28,7 +29,7 @@ public class WerewolfRenderer implements ICurioRenderer {
     @Override
     public <T extends LivingEntity, M extends EntityModel<T>> void render(ItemStack itemStack, SlotContext slotContext, PoseStack poseStack, RenderLayerParent<T, M> renderLayerParent, MultiBufferSource multiBufferSource, int light, float limbSwing, float limbSwingAmount, float partialTicks, float ageInTicks, float netHeadYaw, float headPitch) {
         LivingEntity living = slotContext.entity();
-        if (living.level().getDayTime() % 24000L > 12000L && !TCClientPacketHandler.canShowNeptunesShell(living)) {
+        if (LibDateUtils.isNight(living.level()) && !TCClientPacketHandler.canShowNeptunesShell(living)) {
             ICurioRenderer.followBodyRotations(living, model);
             ICurioRenderer.followHeadRotations(living, model.head);
             model.renderToBuffer(poseStack, multiBufferSource.getBuffer(CUTOUT), light, OverlayTexture.NO_OVERLAY);

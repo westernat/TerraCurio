@@ -11,7 +11,6 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -200,19 +199,15 @@ public final class InformationHandler {
     private static Component getMetalDetectorInfo(Player localPlayer) {
         AtomicReference<Component> atomic = new AtomicReference<>(Component.translatable("info.terra_curio.metal_detector.none"));
         localPlayer.level().getBlockStates(new AABB(localPlayer.getOnPos()).inflate(15.5))
-                .filter(TCCommonConfigs.rareBlocks::contains)
-                .min(Comparator.comparingInt(TCCommonConfigs.rareBlocks::indexOf))
-                .ifPresent(blockState -> {
-                    Block block = blockState.getBlock();
-                    atomic.set(Component.translatable("info.terra_curio.metal_detector", block.getName()));
-                });
+                .filter(TCCommonConfigs.rareBlocks::containsKey).min(Comparator.comparingInt(TCCommonConfigs.rareBlocks::getInt))
+                .ifPresent(blockState -> atomic.set(Component.translatable("info.terra_curio.metal_detector", blockState.getBlock().getName())));
         return atomic.get();
     }
 
     private static Component getLifeFormAnalyzerInfo(Player localPlayer) {
         AtomicReference<Component> atomic = new AtomicReference<>(Component.translatable("info.terra_curio.life_form_analyzer.none"));
-        localPlayer.level().getEntities(localPlayer, new AABB(localPlayer.getOnPos()).inflate(47.5), entity -> TCCommonConfigs.rareCreatures.contains(entity.getType()))
-                .stream().min(Comparator.comparingInt(entity -> TCCommonConfigs.rareCreatures.indexOf(entity.getType())))
+        localPlayer.level().getEntities(localPlayer, new AABB(localPlayer.getOnPos()).inflate(47.5), entity -> TCCommonConfigs.rareCreatures.containsKey(entity.getType()))
+                .stream().min(Comparator.comparingInt(entity -> TCCommonConfigs.rareCreatures.getInt(entity.getType())))
                 .ifPresent(entity -> atomic.set(Component.translatable("info.terra_curio.life_form_analyzer", entity.getType().getDescription())));
         return atomic.get();
     }

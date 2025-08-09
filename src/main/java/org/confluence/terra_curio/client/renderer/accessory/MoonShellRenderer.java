@@ -8,6 +8,7 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import org.confluence.lib.util.LibDateUtils;
 import org.confluence.terra_curio.client.model.accessory.MermanModel;
 import org.confluence.terra_curio.client.model.accessory.WerewolfModel;
 import org.confluence.terra_curio.mixed.IClientLivingEntity;
@@ -31,7 +32,7 @@ public class MoonShellRenderer implements ICurioRenderer {
             ICurioRenderer.followHeadRotations(living, mermanModel.head);
             mermanModel.renderToBuffer(poseStack, multiBufferSource.getBuffer(MermanRenderer.CUTOUT), light, OverlayTexture.NO_OVERLAY);
             ((IClientLivingEntity) living).terra_curio$setShowingCosmetic(true);
-        } else if (living.level().getDayTime() % 24000L > 12000L) {
+        } else if (LibDateUtils.isNight(living.level())) {
             ICurioRenderer.followBodyRotations(living, werewolfModel);
             ICurioRenderer.followHeadRotations(living, werewolfModel.head);
             werewolfModel.renderToBuffer(poseStack, multiBufferSource.getBuffer(WerewolfRenderer.CUTOUT), light, OverlayTexture.NO_OVERLAY);
