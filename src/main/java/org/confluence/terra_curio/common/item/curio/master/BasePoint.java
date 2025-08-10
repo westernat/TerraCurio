@@ -32,7 +32,7 @@ public class BasePoint extends BaseSpeedBoots {
     @Override
     protected void speedUp(SlotContext slotContext, ItemStack stack, int acceleration, int maxSpeed) {
         if (slotContext.entity() instanceof Player player && player.isLocalPlayer()) {
-            int speed = LibUtils.getItemStackNbt(stack).getInt(KEY);
+            int speed = LibUtils.getItemStackNbtNoCopy(stack).getInt(KEY);
             if (player.zza != 0.0F || player.xxa != 0.0F) {
                 if (TCClientPacketHandler.isHasMagiluminescence()) acceleration *= 3;
                 int actually = Math.min(maxSpeed - speed, acceleration);

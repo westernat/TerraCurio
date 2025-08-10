@@ -27,7 +27,7 @@ public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
         ItemStack base = input.getItem(1);
         ItemStack addition = input.getItem(2);
         if (isBaseIngredient(base) && isAdditionIngredient(addition)) {
-            CompoundTag tag = LibUtils.getItemStackNbt(base);
+            CompoundTag tag = LibUtils.getItemStackNbtNoCopy(base);
             return tag.getInt("extraStep") + tag.getInt("extraStep") < 15;
         }
         return false;
@@ -35,7 +35,7 @@ public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
 
     @Override
     public boolean isBaseIngredient(ItemStack pStack) {
-        return pStack.getItem() instanceof StepStool && LibUtils.getItemStackNbt(pStack).getInt("extraStep") < 15;
+        return pStack.getItem() instanceof StepStool && LibUtils.getItemStackNbtNoCopy(pStack).getInt("extraStep") < 15;
     }
 
     @Override
@@ -46,7 +46,7 @@ public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
     @Override
     public ItemStack assemble(SmithingRecipeInput input, HolderLookup.Provider registries) {
         ItemStack base = input.getItem(1).copyWithCount(1);
-        int additional = LibUtils.getItemStackNbt(input.getItem(2)).getInt("extraStep");
+        int additional = LibUtils.getItemStackNbtNoCopy(input.getItem(2)).getInt("extraStep");
         LibUtils.updateItemStackNbt(base, nbt -> nbt.putInt("extraStep", nbt.getInt("extraStep") + additional + 1));
         return base;
     }

@@ -69,13 +69,13 @@ public class BaseSpeedBoots extends BaseCurioItem {
     @Override
     public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
         super.onUnequip(slotContext, newStack, stack);
-        LibUtils.getItemStackNbt(stack).putInt(KEY, 0);
+        LibUtils.updateItemStackNbt(stack, tag -> tag.putInt(KEY, 0));
     }
 
     protected void speedUp(SlotContext slotContext, ItemStack stack, int acceleration, int maxSpeed) {
         LibUtils.forMixin$Inject();
         if (TCClientConfigs.speedUp && slotContext.entity() instanceof Player player && player.isLocalPlayer()) {
-            int speed = LibUtils.getItemStackNbt(stack).getInt(KEY);
+            int speed = LibUtils.getItemStackNbtNoCopy(stack).getInt(KEY);
             if (player.zza > 0 && !player.horizontalCollision && !player.isCrouching()) {
                 if (player.onGround()) {
                     if (TCClientPacketHandler.isHasMagiluminescence() || PlayerJumpHandler.isInfiniteFlight()) acceleration *= 2;
@@ -107,7 +107,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
         if (component != null && (value = component.get(TCItems.ATTRIBUTES)) != null) {
             builder1.putAll(value.get());
         }
-        double speed = LibUtils.getItemStackNbt(stack).getInt(KEY) * 0.01;
+        double speed = LibUtils.getItemStackNbtNoCopy(stack).getInt(KEY) * 0.01;
         if (speed > 0.0) {
             builder1.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(ID, speed, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }

@@ -44,12 +44,12 @@ public record StepStoolSteppingPacketC2S(int slot, byte step) implements CustomP
                 boolean increase = (step & INCREASE) == INCREASE;
 
                 if (actualStep == 1 && increase) {
-                    StepStoolEntity pEntity = new StepStoolEntity(serverPlayer);
-                    serverPlayer.level().addFreshEntity(pEntity);
+                    StepStoolEntity entity = new StepStoolEntity(serverPlayer);
+                    serverPlayer.level().addFreshEntity(entity);
                     serverPlayer.teleportRelative(0.0, 1.001, 0.0);
-                    LibUtils.updateItemStackNbt(itemStack, nbt -> nbt.putInt("id", pEntity.getId()));
+                    LibUtils.updateItemStackNbt(itemStack, nbt -> nbt.putInt("id", entity.getId()));
                 } else {
-                    int id = LibUtils.getItemStackNbt(itemStack).getInt("id");
+                    int id = LibUtils.getItemStackNbtNoCopy(itemStack).getInt("id");
                     Entity entity = serverPlayer.level().getEntity(id);
                     if (entity instanceof StepStoolEntity stepStool) {
                         if (actualStep == 0) {

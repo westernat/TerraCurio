@@ -24,7 +24,7 @@ public class StepStool extends BaseCurioItem {
         if (prevStack.getItem() == stack.getItem()) return;
         super.onEquip(slotContext, prevStack, stack);
         if (!slotContext.entity().level().isClientSide) {
-            StepStoolSteppingPacketS2C.sendToClient(slotContext, LibUtils.getItemStackNbt(stack).getInt("extraStep") + 1);
+            StepStoolSteppingPacketS2C.sendToClient(slotContext, LibUtils.getItemStackNbtNoCopy(stack).getInt("extraStep") + 1);
         }
     }
 
@@ -35,7 +35,7 @@ public class StepStool extends BaseCurioItem {
         Level level = slotContext.entity().level();
         if (!level.isClientSide) {
             StepStoolSteppingPacketS2C.resetStep(slotContext.entity());
-            if (level.getEntity(LibUtils.getItemStackNbt(stack).getInt("id")) instanceof StepStoolEntity stepStool) {
+            if (level.getEntity(LibUtils.getItemStackNbtNoCopy(stack).getInt("id")) instanceof StepStoolEntity stepStool) {
                 stepStool.setOwner(null);
             }
         }
@@ -50,7 +50,7 @@ public class StepStool extends BaseCurioItem {
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
         tooltipComponents.add(Component.translatable(
-                "tooltip.item.terra_curio.step_stool.1", LibUtils.getItemStackNbt(stack).getInt("extraStep")
+                "tooltip.item.terra_curio.step_stool.1", LibUtils.getItemStackNbtNoCopy(stack).getInt("extraStep")
         ).withStyle(style -> style.withColor(ChatFormatting.BLUE)));
     }
 }

@@ -20,7 +20,7 @@ public interface IFunctionCouldEnable {
     }
 
     default boolean isEnabled(ItemStack itemStack, @Nullable TooltipComponentsValue.Storage storage) {
-        return !LibUtils.getItemStackNbt(itemStack).getBoolean(getDisableKey());
+        return !LibUtils.getItemStackNbtNoCopy(itemStack).getBoolean(getDisableKey());
     }
 
     default void cycleEnable(ItemStack itemStack) {
@@ -59,7 +59,7 @@ public interface IFunctionCouldEnable {
             if (storage == null) return false;
             int index = INDEX_MAP.getOrDefault(storage, -1);
             if (index == -1) return false;
-            return !LibUtils.getItemStackNbt(itemStack).getBoolean(Integer.toString(index));
+            return !LibUtils.getItemStackNbtNoCopy(itemStack).getBoolean(Integer.toString(index));
         }
 
         @Override
