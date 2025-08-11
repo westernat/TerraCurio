@@ -57,8 +57,6 @@ public final class InformationHandler {
     private static Component lifeFormAnalyzerInfo = Component.translatable("info.terra_curio.life_form_analyzer.none");
     private static Component radarInfo = Component.translatable("info.terra_curio.radar", 0);
     private static Component tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter.unknown");
-    private static long lastAttackTime = 0;
-    private static float cachedDamage = 0.0F;
     private static Component dpsMeterInfo = Component.translatable("info.terra_curio.dps_meter", 0.00F);
 
     public static void handle(LocalPlayer localPlayer) {
@@ -117,7 +115,7 @@ public final class InformationHandler {
         }
 
         if (!DISABLE[DPS_METER] && INFO_DATA[DPS_METER] != 0) {
-            INFORMATION.put(DPS_METER, dpsMeterInfo);
+            INFORMATION.put(DPS_METER, Component.translatable("info.terra_curio.dps_meter", "%.2f".formatted(DPSMeter.getDPS(gameTime))));
         }
 
         if (!DISABLE[STOPWATCH] && INFO_DATA[STOPWATCH] != 0) {
@@ -301,16 +299,6 @@ public final class InformationHandler {
     }
 
     public static void handleAttackDamage(AttackDamagePacketS2C packet, Player player) {
-        long gameTime = player.level().getGameTime();
-        long delta = gameTime - lastAttackTime;
-        if (delta == gameTime) delta = 20; // 防止第一次攻击
-        else if (delta == 0) delta = 1; // 防止极端攻击
-        else if (delta > 100) { // 大于五秒重置
-            cachedDamage = 0.0F;
-            delta = 20;
-        }
-        lastAttackTime = gameTime;
-        cachedDamage += packet.amount();
-        dpsMeterInfo = Component.translatable("info.terra_curio.dps_meter", "%.2f".formatted(cachedDamage / delta));
+        DPSMeter.addDPS(packet.amount(), player.level().getGameTime());
     }
 }

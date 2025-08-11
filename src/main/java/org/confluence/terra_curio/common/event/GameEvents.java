@@ -31,6 +31,8 @@ import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.CriticalHitEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
@@ -113,8 +115,14 @@ public final class GameEvents {
                     TCCommonConfigs.RANDOM_ATTACK_DAMAGE_MAX.get().floatValue()
             );
         }
-        AttackDamagePacketS2C.sendToClient(amount, damageSource.getEntity());
         event.setNewDamage(amount);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void livingDamage$Post(LivingDamageEvent.Post event) {
+        if (!event.getEntity().level().isClientSide) {
+            AttackDamagePacketS2C.sendToClient(event.getNewDamage(), event.getSource().getEntity());
+        }
     }
 
     @SubscribeEvent
@@ -207,12 +215,11 @@ public final class GameEvents {
     }
 
     @SubscribeEvent
-    public static void criticalHit(CriticalHitEvent event) {
-        if (TCAttributes.hasCustomAttribute(TCAttributes.CRIT_CHANCE)) return;
-        Player player = event.getEntity();
+    public static void criticalHit(CriticalHitEvent event) { // 仅近战暴击，于是由汇流来世托管
+        if (TCAttributes.hasCustomAttribute(TCAttributes.CRIT_CHANCE) || ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get()) return;
         if (!event.isVanillaCritical()) {
-            double chance = player.getAttributeValue(TCAttributes.CRIT_CHANCE);
-            if (player.level().random.nextFloat() < chance) {
+            Player player = event.getEntity();
+            if (LibUtils.checkChance(player.getAttributeValue(TCAttributes.CRIT_CHANCE), player.getRandom())) {
                 event.setDamageMultiplier(1.5F);
                 event.setCriticalHit(true);
             }

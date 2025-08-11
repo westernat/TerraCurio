@@ -39,6 +39,7 @@ public final class GameClientEvents {
             PlayerSprintingHandler.reset();
             ScopeFovHandler.reset();
         } else {
+            DPSMeter.checkDPSTime(localPlayer.level().getGameTime());
             GravitationHandler.handle(localPlayer);
             StepStoolHandler.handle(localPlayer);
             TCClientPacketHandler.handle(minecraft, localPlayer);
