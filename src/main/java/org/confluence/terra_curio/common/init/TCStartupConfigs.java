@@ -19,7 +19,7 @@ public final class TCStartupConfigs {
                 "ranged_damage = terra_curio:generic.ranged_damage",
                 "dodge_chance = terra_curio:generic.dodge_chance",
                 "magic_damage = terra_curio:generic.magic_damage",
-                "armor_pass = terra_curio:generic.armor_penetration"
+                "armor_penetration = terra_curio:generic.armor_penetration"
         ), () -> "", o -> true);
 
         container.registerConfig(ModConfig.Type.STARTUP, BUILDER.build());
