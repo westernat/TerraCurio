@@ -176,8 +176,8 @@ public final class TCClientPacketHandler {
             Vec3 to = from.add(viewVector.x * reach, viewVector.y * reach, viewVector.z * reach);
             AABB aabb = localPlayer.getBoundingBox().expandTowards(viewVector.scale(reach)).inflate(1.0, 1.0, 1.0);
             EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(
-                    localPlayer, from, to, aabb,
-                    entity -> !entity.isSpectator() && entity.isPickable(), squared);
+                    localPlayer, from, to, aabb, entity -> !entity.isSpectator() && entity.isPickable(), squared
+            );
             if (entityHitResult != null && entityHitResult.getLocation().distanceToSqr(from) < sqr) {
                 minecraft.gameMode.attack(localPlayer, entityHitResult.getEntity());
             }

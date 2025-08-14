@@ -1,6 +1,6 @@
 package org.confluence.terra_curio.client.handler;
 
-public class DPSMeter {
+public final class DPSMeter {
     private static boolean dpsStarted;
     private static long dpsLastHit;
     private static float dpsDamage;
