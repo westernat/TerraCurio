@@ -8,6 +8,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.confluence.lib.common.data.gen.AbstractRecipeProvider;
+import org.confluence.lib.common.recipe.EnvironmentLevelAccess;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.recipe.WorkshopRecipe;
@@ -26,6 +27,11 @@ public class WorkshopProvider extends AbstractRecipeProvider {
 
     protected void recipe(RecipeOutput recipeOutput, ItemStack result, Ingredient... ingredients) {
         ResourceLocation id = TerraCurio.asResource(getItemName(result.getItem()));
-        recipeOutput.accept(id, new WorkshopRecipe(result, NonNullList.of(Ingredient.EMPTY, ingredients)), null);
+        recipeOutput.accept(id, new WorkshopRecipe(result, NonNullList.of(Ingredient.EMPTY, ingredients), EnvironmentLevelAccess.Matcher.EMPTY), null);
+    }
+
+    protected void recipe(RecipeOutput recipeOutput, ItemStack result, EnvironmentLevelAccess.Matcher environment, Ingredient... ingredients) {
+        ResourceLocation id = TerraCurio.asResource(getItemName(result.getItem()));
+        recipeOutput.accept(id, new WorkshopRecipe(result, NonNullList.of(Ingredient.EMPTY, ingredients), environment), null);
     }
 }

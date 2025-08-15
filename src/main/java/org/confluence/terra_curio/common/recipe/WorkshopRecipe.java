@@ -6,23 +6,16 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.level.Level;
-import org.confluence.lib.common.recipe.AbstractAmountRecipe;
-import org.confluence.lib.util.LibUtils;
+import org.confluence.lib.common.recipe.EnvironmentAmountRecipe;
+import org.confluence.lib.common.recipe.EnvironmentLevelAccess;
 import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCRecipes;
 
-public class WorkshopRecipe extends AbstractAmountRecipe<RecipeInput> {
-    public WorkshopRecipe(ItemStack pResult, NonNullList<Ingredient> pIngredients) {
-        super(pResult, pIngredients);
-    }
-
-    @Override
-    public boolean matches(RecipeInput input, Level pLevel) {
-        return LibUtils.forMixin$ModifyExpression(super.matches(input, pLevel));
+public class WorkshopRecipe extends EnvironmentAmountRecipe {
+    public WorkshopRecipe(ItemStack result, NonNullList<Ingredient> ingredients, EnvironmentLevelAccess.Matcher environment) {
+        super(result, ingredients, environment);
     }
 
     @Override
@@ -51,8 +44,8 @@ public class WorkshopRecipe extends AbstractAmountRecipe<RecipeInput> {
     }
 
     public static class Serializer implements RecipeSerializer<WorkshopRecipe> {
-        public static final MapCodec<WorkshopRecipe> CODEC = shapelessSerializerMapCodec(WorkshopRecipe::new);
-        public static final StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> STREAM_CODEC = shapelessSerializerSteamCodec(WorkshopRecipe::new);
+        public static final MapCodec<WorkshopRecipe> CODEC = environmentShapelessSerializerMapCodec(WorkshopRecipe::new);
+        public static final StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> STREAM_CODEC = environmentShapelessSerializerSteamCodec(WorkshopRecipe::new);
 
         @Override
         public MapCodec<WorkshopRecipe> codec() {
