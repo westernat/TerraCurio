@@ -19,10 +19,11 @@ import org.confluence.terra_curio.util.TCUtils;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
+import java.util.function.IntFunction;
 
 public record PlayerFlyPacketS2C(Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack> flyStacks) implements CustomPacketPayload {
     public static final Type<PlayerFlyPacketS2C> TYPE = new Type<>(TerraCurio.asResource("player_fly"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, PlayerFlyPacketS2C> STREAM_CODEC = ByteBufCodecs.<RegistryFriendlyByteBuf, ResourceKey<Item>, MayFlyAbilityValue.FlyStack, Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack>>map(IdentityHashMap::new, ResourceKey.streamCodec(Registries.ITEM), MayFlyAbilityValue.FlyStack.STREAM_CODEC).map(PlayerFlyPacketS2C::new, PlayerFlyPacketS2C::flyStacks);
+    public static final StreamCodec<RegistryFriendlyByteBuf, PlayerFlyPacketS2C> STREAM_CODEC = ByteBufCodecs.map((IntFunction<Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack>>) IdentityHashMap::new, ResourceKey.streamCodec(Registries.ITEM), MayFlyAbilityValue.FlyStack.STREAM_CODEC).map(PlayerFlyPacketS2C::new, PlayerFlyPacketS2C::flyStacks);
 
     @Override
     public Type<PlayerFlyPacketS2C> type() {
