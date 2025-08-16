@@ -1,6 +1,7 @@
 package org.confluence.terra_curio.integration.jei;
 
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IJeiHelpers;
@@ -88,5 +89,11 @@ public class WorkshopCategory implements IRecipeCategory<RecipeHolder<WorkshopRe
     @Override
     public void draw(RecipeHolder<WorkshopRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
         ModJeiPlugin.drawArrowRight(guiGraphics, 50, 22, true);
+    }
+
+    @Override
+    public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<WorkshopRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+        IRecipeCategory.super.getTooltip(tooltip, recipe, recipeSlotsView, mouseX, mouseY);
+        tooltip.addAll(recipe.value().getEnvironment().toDescriptions());
     }
 }
