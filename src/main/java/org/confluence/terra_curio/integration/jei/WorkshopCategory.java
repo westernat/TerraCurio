@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.integration.jei;
 
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.ITooltipBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -12,9 +13,11 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.recipe.WorkshopRecipe;
@@ -24,6 +27,7 @@ import javax.annotation.ParametersAreNonnullByDefault;
 @ParametersAreNonnullByDefault
 @MethodsReturnNonnullByDefault
 public class WorkshopCategory implements IRecipeCategory<RecipeHolder<WorkshopRecipe>> {
+    public static final ResourceLocation ARROW_RIGHT = TerraCurio.asResource("textures/gui/arrow_right.png");
     public static final RecipeType<RecipeHolder<WorkshopRecipe>> TYPE = RecipeType.createRecipeHolderType(TerraCurio.asResource("workshop"));
     private static final Component TITLE = Component.translatable("title.terra_curio.workshop");
     private final IDrawable icon;
@@ -75,7 +79,13 @@ public class WorkshopCategory implements IRecipeCategory<RecipeHolder<WorkshopRe
             y = remain ? 0 : 8;
         }
         for (Ingredient ingredient : recipe.value().getIngredients()) {
-            ModJeiPlugin.addInput(builder, x, y, ingredient);
+            if (!ingredient.isEmpty()) {
+                if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
+                    builder.addInputSlot(x, y).addIngredients(VanillaTypes.ITEM_STACK, amountIngredient.getItems().toList());
+                } else {
+                    builder.addInputSlot(x, y).addIngredients(ingredient);
+                }
+            }
             x += 16;
             if (x == 48) {
                 x = 0;
@@ -88,7 +98,7 @@ public class WorkshopCategory implements IRecipeCategory<RecipeHolder<WorkshopRe
 
     @Override
     public void draw(RecipeHolder<WorkshopRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY) {
-        ModJeiPlugin.drawArrowRight(guiGraphics, 50, 22, true);
+        guiGraphics.blit(ARROW_RIGHT, 50, 22, 0, 0, 28, 21, 28, 21);
     }
 
     @Override

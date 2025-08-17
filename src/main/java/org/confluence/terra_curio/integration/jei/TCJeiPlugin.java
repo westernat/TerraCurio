@@ -24,9 +24,8 @@ import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.jetbrains.annotations.NotNull;
 
 @JeiPlugin
-public final class ModJeiPlugin implements IModPlugin {
+public final class TCJeiPlugin implements IModPlugin {
     public static final ResourceLocation UID = TerraCurio.asResource("jei_plugin");
-    public static final ResourceLocation ARROW_RIGHT = TerraCurio.asResource("textures/gui/arrow_right.png");
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
@@ -66,16 +65,6 @@ public final class ModJeiPlugin implements IModPlugin {
     }
 
     public static void drawArrowRight(GuiGraphics guiGraphics, int x, int y, boolean usable) {
-        guiGraphics.blit(ARROW_RIGHT, x, y, 0, usable ? 0 : 21, 28, 21, 42, 42);
-    }
 
-    public static void addInput(IRecipeLayoutBuilder builder, int x, int y, Ingredient ingredient) {
-        if (!ingredient.isEmpty()) {
-            if (ingredient.getCustomIngredient() instanceof AmountIngredient amountIngredient) {
-                builder.addInputSlot(x, y).addIngredients(VanillaTypes.ITEM_STACK, amountIngredient.getItems().toList());
-            } else {
-                builder.addInputSlot(x, y).addIngredients(ingredient);
-            }
-        }
     }
 }
