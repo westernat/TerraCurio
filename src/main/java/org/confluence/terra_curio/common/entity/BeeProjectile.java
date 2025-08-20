@@ -19,8 +19,6 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.common.init.TCEntities;
 import org.jetbrains.annotations.Nullable;
 
-@javax.annotation.ParametersAreNonnullByDefault
-@net.minecraft.MethodsReturnNonnullByDefault
 public class BeeProjectile extends Projectile {
     private static final EntityDataAccessor<Boolean> DATA_IS_GIANT = SynchedEntityData.defineId(BeeProjectile.class, EntityDataSerializers.BOOLEAN);
     private static final EntityDimensions SMALL = TCEntities.BEE_PROJECTILE.get().getDimensions().scale(0.5f);
