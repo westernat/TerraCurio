@@ -1,6 +1,7 @@
 package org.confluence.terra_curio.api.primitive;
 
 import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.Registries;
@@ -16,7 +17,11 @@ import java.util.Map;
 
 public record MayFlyAbilityValue(Map<ResourceKey<Item>, FlyStack> flyStacks) implements PrimitiveValue<Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack>> {
     public static final Codec<MayFlyAbilityValue> CODEC = Codec.unboundedMap(ResourceKey.codec(Registries.ITEM), FlyStack.CODEC).xmap(MayFlyAbilityValue::new, MayFlyAbilityValue::get);
-    public static final CombineRule<Map<ResourceKey<Item>, FlyStack>, MayFlyAbilityValue> COMBINE_RULE = CombineRule.register((a, b) -> ImmutableMap.<ResourceKey<Item>, FlyStack>builder().putAll(a).putAll(b).build(), "may_fly_ability");
+    public static final CombineRule<Map<ResourceKey<Item>, FlyStack>, MayFlyAbilityValue> COMBINE_RULE = CombineRule.register((a, b) -> {
+        Map<ResourceKey<Item>, FlyStack> map = Maps.newHashMap(a);
+        map.putAll(b);
+        return ImmutableMap.copyOf(map);
+    }, "may_fly_ability");
 
     @Override
     public Map<ResourceKey<Item>, FlyStack> get() {
