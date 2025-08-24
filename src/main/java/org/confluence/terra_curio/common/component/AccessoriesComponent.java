@@ -2,9 +2,9 @@ package org.confluence.terra_curio.common.component;
 
 import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
-import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
@@ -23,16 +23,12 @@ import java.util.*;
 
 @SuppressWarnings("unchecked")
 public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> types) implements DataComponentType<AccessoriesComponent> {
-    public static final Codec<AccessoriesComponent> CODEC = Codec.dispatchedMap(ResourceLocation.CODEC, ValueType.VALUE_CODECS::get).xmap(map -> {
-        Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> table = new Hashtable<>();
-        map.forEach((key, value) -> table.put(ValueType.TYPES.get(key), value));
-        return new AccessoriesComponent(table);
-    }, component -> {
-        Map<ResourceLocation, PrimitiveValue<?>> table = new Hashtable<>();
-        component.types.forEach((type, value) -> table.put(type.key(), value));
-        return table;
-    });
-    public static final StreamCodec<ByteBuf, AccessoriesComponent> STREAM_CODEC = ByteBufCodecs.fromCodec(CODEC);
+    public static final Codec<AccessoriesComponent> CODEC = Codec
+            .<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>>dispatchedMap(
+                    ResourceLocation.CODEC.xmap(ValueType.TYPES::get, ValueType::key), ValueType.VALUE_CODECS::get)
+            .xmap(AccessoriesComponent::new, AccessoriesComponent::types);
+
+    public static final StreamCodec<RegistryFriendlyByteBuf, AccessoriesComponent> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
 
     public static <T, V extends PrimitiveValue<T>> AccessoriesComponent entry(ValueType<T, V> type, V value) {
         Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>();
@@ -74,7 +70,7 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
     }
 
     @Override
-    public StreamCodec<ByteBuf, AccessoriesComponent> streamCodec() {
+    public StreamCodec<RegistryFriendlyByteBuf, AccessoriesComponent> streamCodec() {
         return STREAM_CODEC;
     }
 
