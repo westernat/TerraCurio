@@ -8,7 +8,6 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.entity.BeeProjectile;
 import org.confluence.terra_curio.common.entity.XBoneProjectile;
 
 public class XBoneProjectileModel extends EntityModel<XBoneProjectile> {
