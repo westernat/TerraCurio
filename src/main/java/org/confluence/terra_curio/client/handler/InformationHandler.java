@@ -11,6 +11,7 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.api.distmarker.OnlyIn;
@@ -57,7 +58,6 @@ public final class InformationHandler {
     private static Component lifeFormAnalyzerInfo = Component.translatable("info.terra_curio.life_form_analyzer.none");
     private static Component radarInfo = Component.translatable("info.terra_curio.radar", 0);
     private static Component tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter.unknown");
-    private static Component dpsMeterInfo = Component.translatable("info.terra_curio.dps_meter", 0.00F);
 
     public static void handle(LocalPlayer localPlayer) {
         INFORMATION.clear();
@@ -194,31 +194,37 @@ public final class InformationHandler {
         );
     }
 
-    private static Component getMetalDetectorInfo(Player localPlayer) {
+    private static Component getMetalDetectorInfo(Player player) {
         AtomicReference<Component> atomic = new AtomicReference<>(Component.translatable("info.terra_curio.metal_detector.none"));
-        localPlayer.level().getBlockStates(new AABB(localPlayer.getOnPos()).inflate(15.5))
-                .filter(TCCommonConfigs.rareBlocks::containsKey).min(Comparator.comparingInt(TCCommonConfigs.rareBlocks::getInt))
+        player.level().getBlockStates(new AABB(player.getOnPos()).inflate(15.5)).distinct()
+                .map(state -> mapCloakedBlock(player, state))
+                .filter(TCCommonConfigs.rareBlocks::containsKey)
+                .min(Comparator.comparingInt(TCCommonConfigs.rareBlocks::getInt))
                 .ifPresent(blockState -> atomic.set(Component.translatable("info.terra_curio.metal_detector", blockState.getBlock().getName())));
         return atomic.get();
     }
 
-    private static Component getLifeFormAnalyzerInfo(Player localPlayer) {
+    private static BlockState mapCloakedBlock(Player player, BlockState original) {
+        return original; // confluence mixin here
+    }
+
+    private static Component getLifeFormAnalyzerInfo(Player player) {
         AtomicReference<Component> atomic = new AtomicReference<>(Component.translatable("info.terra_curio.life_form_analyzer.none"));
-        localPlayer.level().getEntities(localPlayer, new AABB(localPlayer.getOnPos()).inflate(47.5), entity -> TCCommonConfigs.rareCreatures.containsKey(entity.getType()))
+        player.level().getEntities(player, new AABB(player.getOnPos()).inflate(47.5), entity -> TCCommonConfigs.rareCreatures.containsKey(entity.getType()))
                 .stream().min(Comparator.comparingInt(entity -> TCCommonConfigs.rareCreatures.getInt(entity.getType())))
                 .ifPresent(entity -> atomic.set(Component.translatable("info.terra_curio.life_form_analyzer", entity.getType().getDescription())));
         return atomic.get();
     }
 
-    private static Component getCompassInfo(Player localPlayer) {
-        double x = localPlayer.getX();
-        double z = localPlayer.getZ();
+    private static Component getCompassInfo(Player player) {
+        double x = player.getX();
+        double z = player.getZ();
         return Component.translatable("info.terra_curio.compass." + (x > 0 ? "east" : "west"), "%.2f".formatted(x))
                 .append(Component.translatable("info.terra_curio.compass." + (z > 0 ? "south" : "north"), "%.2f".formatted(z)));
     }
 
-    private static Component getDepthMeterInfo(Player localPlayer) {
-        double y = localPlayer.getY();
+    private static Component getDepthMeterInfo(Player player) {
+        double y = player.getY();
         return Component.translatable("info.terra_curio.depth_meter." + (y > 63 ? "surface" : "underground"), "%.2f".formatted(y));
     }
 
