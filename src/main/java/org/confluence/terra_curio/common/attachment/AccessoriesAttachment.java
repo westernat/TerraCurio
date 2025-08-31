@@ -35,10 +35,7 @@ import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.confluence.terra_curio.util.TCUtils.tryCast;
 
@@ -46,7 +43,7 @@ import static org.confluence.terra_curio.util.TCUtils.tryCast;
 @net.minecraft.MethodsReturnNonnullByDefault
 @SuppressWarnings("unchecked")
 public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
-    public static final List<ValueType<Unit, UnitValue>> UNITS_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
+    public static final Set<ValueType<Unit, UnitValue>> UNITS_REQUIRE_UPDATE = Util.make(new LinkedHashSet<>(), list -> {
         list.add(TCItems.FLOAT$ON$LIQUID$SURFACE);
         list.add(TCItems.FIRE$ATTACK);
         list.add(TCItems.BRAIN$OF$CONFUSION);
@@ -65,7 +62,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         list.add(TCItems.SHIELD$OF$CTHULHU);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.UnitType(list));
     });
-    public static final List<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
+    public static final Set<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new LinkedHashSet<>(), list -> {
         list.add(TCItems.NEPTUNES$SHELL);
         list.add(TCItems.STAR$CLOCK);
         list.add(TCItems.INJURY$FREE);

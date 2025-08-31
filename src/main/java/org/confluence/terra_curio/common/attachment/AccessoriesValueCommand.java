@@ -25,7 +25,7 @@ import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.init.TCAttachments;
 
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
@@ -84,7 +84,7 @@ public class AccessoriesValueCommand {
         @Override
         public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
             if (AVAILABLE == null) {
-                AVAILABLE = new HashSet<>(AccessoriesAttachment.UNITS_REQUIRE_UPDATE.stream().map(MAPPER).toList());
+                AVAILABLE = new LinkedHashSet<>(AccessoriesAttachment.UNITS_REQUIRE_UPDATE.stream().map(MAPPER).toList());
                 AVAILABLE.addAll(AccessoriesAttachment.OTHER_REQUIRE_UPDATE.stream().map(MAPPER).toList());
             }
             return SharedSuggestionProvider.suggest(AVAILABLE, builder);
