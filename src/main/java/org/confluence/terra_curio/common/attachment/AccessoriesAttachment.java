@@ -1,11 +1,13 @@
 package org.confluence.terra_curio.common.attachment;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
@@ -207,10 +209,12 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
             CompoundTag compoundTag = (CompoundTag) tag;
             String key = compoundTag.getAllKeys().stream().findFirst().orElse(null);
             if (key == null) continue;
-            ResourceLocation location = ResourceLocation.parse(key);
-            ValueType.VALUE_CODECS.get(location).parse(NbtOps.INSTANCE, compoundTag.get(key)).result().ifPresent(
-                    value -> valueMap.put(ValueType.TYPES.get(location), value)
-            );
+            ValueType<?, ? extends PrimitiveValue<?>> type = ValueType.TYPES.get(ResourceLocation.tryParse(key));
+            if (type == null) continue;
+            Codec<PrimitiveValue<?>> codec = ValueType.VALUE_CODECS.get(type);
+            if (codec == null) continue;
+            RegistryOps<Tag> ops = provider.createSerializationContext(NbtOps.INSTANCE);
+            codec.parse(ops, compoundTag.get(key)).result().ifPresent(value -> valueMap.put(type, value));
         }
         this.panicNecklace = nbt.getBoolean("panicNecklace");
     }

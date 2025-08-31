@@ -24,7 +24,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     private final Function<T, V> factory;
 
     // 不允许从外部创建，这样是不安全的
-    ValueType(ResourceLocation key, CombineRule<T, V> combineRule, T defaultValue, Function<T, V> factory) {
+    private ValueType(ResourceLocation key, CombineRule<T, V> combineRule, T defaultValue, Function<T, V> factory) {
         this.key = key;
         this.combineRule = combineRule;
         this.defaultValue = defaultValue;
