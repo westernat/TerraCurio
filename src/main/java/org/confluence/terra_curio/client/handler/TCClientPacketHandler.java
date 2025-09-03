@@ -182,6 +182,7 @@ public final class TCClientPacketHandler {
                 minecraft.gameMode.attack(localPlayer, entityHitResult.getEntity());
             }
             localPlayer.swing(InteractionHand.MAIN_HAND);
+            localPlayer.resetAttackStrengthTicker();
             CommonHooks.onEmptyLeftClick(localPlayer);
         }
     }
