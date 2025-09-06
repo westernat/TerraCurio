@@ -23,6 +23,10 @@ public interface IFunctionCouldEnable {
         return !LibUtils.getItemStackNbtNoCopy(itemStack).getBoolean(getDisableKey());
     }
 
+    default boolean isEnabled(ItemStack itemStack) {
+        return isEnabled(itemStack, null);
+    }
+
     default void cycleEnable(ItemStack itemStack) {
         LibUtils.updateItemStackNbt(itemStack, tag -> {
             String key = getDisableKey();
