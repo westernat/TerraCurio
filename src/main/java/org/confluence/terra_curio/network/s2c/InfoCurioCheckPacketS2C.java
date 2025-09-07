@@ -16,7 +16,7 @@ import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.client.handler.InformationHandler;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.init.TCItems;
-import org.confluence.terra_curio.common.item.IFunctionCouldEnable;
+import org.confluence.terra_curio.common.item.IMultiFunctionCouldEnable;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.confluence.terra_curio.util.TCUtils;
 
@@ -50,7 +50,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
     }
 
     private static byte checkEnabled(byte original, byte target, ItemStack itemStack, TooltipComponentsValue.Storage storage) {
-        if (itemStack.getItem() instanceof IFunctionCouldEnable function) {
+        if (itemStack.getItem() instanceof IMultiFunctionCouldEnable function) {
             return function.isEnabled(itemStack, storage) ? target : original;
         }
         return target;

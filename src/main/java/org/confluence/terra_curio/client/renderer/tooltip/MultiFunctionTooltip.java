@@ -13,7 +13,7 @@ import net.minecraft.util.Mth;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.client.handler.InformationHandler;
-import org.confluence.terra_curio.common.item.IFunctionCouldEnable;
+import org.confluence.terra_curio.common.item.IMultiFunctionCouldEnable;
 import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -85,7 +85,7 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
                 pose.scale(SCALE, SCALE, SCALE);
                 TooltipComponentsValue.Storage storage = storages.get(i);
                 guiGraphics.blit(storage.texture(), 2, 2, 0, 0, 14, 14, 14, 14);
-                int index = IFunctionCouldEnable.Multi.INDEX_MAP.getOrDefault(storage, -1);
+                int index = IMultiFunctionCouldEnable.INDEX_MAP.getOrDefault(storage, -1);
                 if (index != -1 && !InformationHandler.DISABLE[index]) {
                     guiGraphics.blit(ENABLED, 0, 0, 0,0 , 18, 18, 18, 18);
                 }
@@ -96,7 +96,7 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
             }
         } else {
             if (mouseScrollY > 0) {
-                int index = IFunctionCouldEnable.Multi.INDEX_MAP.getOrDefault(storages.get(mouseScrollY - 1), -1);
+                int index = IMultiFunctionCouldEnable.INDEX_MAP.getOrDefault(storages.get(mouseScrollY - 1), -1);
                 if (index != -1) {
                     InformationHandler.DISABLE[index] = !InformationHandler.DISABLE[index];
                 }

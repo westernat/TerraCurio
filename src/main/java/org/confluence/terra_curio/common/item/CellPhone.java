@@ -15,7 +15,7 @@ import static org.confluence.terra_curio.common.component.AccessoriesComponent.o
 import static org.confluence.terra_curio.common.init.TCItems.FULL_INFO;
 import static org.confluence.terra_curio.common.init.TCItems.INFORMATION;
 
-public class CellPhone extends MagicMirror implements IFunctionCouldEnable.Multi {
+public class CellPhone extends MagicMirror implements IMultiFunctionCouldEnable {
     public CellPhone() {
         super(new Properties().fireResistant().stacksTo(1)
                 .component(ConfluenceMagicLib.MOD_RARITY, ModRarity.LIME)
