@@ -168,11 +168,10 @@ public final class TCAttributes {
     public static void applyPickupRange(Player player) {
         AttributeInstance instance = player.getAttribute(PICKUP_RANGE);
         float[] ranges = new float[3]; // confluence mixin here
-        float range = instance == null ? 0.0F : (float) instance.getValue();
-        if (range <= 0.0F) return;
-        player.level().getEntitiesOfClass(
+        float range = Math.max(Math.max(Math.max(instance == null ? 0.0F : (float) instance.getValue(), ranges[0]), ranges[1]), ranges[2]);
+        if (range > 0.0F) player.level().getEntitiesOfClass(
                 ItemEntity.class,
-                new AABB(player.blockPosition()).inflate(Math.max(Math.max(Math.max(range, ranges[0]), ranges[1]), ranges[2])),
+                new AABB(player.blockPosition()).inflate(range),
                 itemEntity -> !itemEntity.hasPickUpDelay()
         ).forEach(itemEntity -> {
             if (itemEntity.isRemoved() || forMixin$skip(player, itemEntity, ranges)) return;
