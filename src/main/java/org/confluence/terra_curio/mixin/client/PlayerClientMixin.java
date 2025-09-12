@@ -7,6 +7,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.lib.mixed.SelfGetter;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.spongepowered.asm.mixin.Mixin;
@@ -14,10 +15,11 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
-public abstract class PlayerClientMixin {
+public abstract class PlayerClientMixin implements SelfGetter<Player> {
     @Unique
     private static final float terra_curio$fix = -(Mth.EPSILON + Mth.EPSILON);
 
@@ -49,5 +51,14 @@ public abstract class PlayerClientMixin {
             return terra_curio$fix - maxUpStep - ((IEntity) instance).terra_curio$getDimensionHeight();
         }
         return maxUpStep;
+    }
+
+    @Inject(method = "jumpFromGround", at = @At("TAIL"))
+    private void flipJump(CallbackInfo ci) {
+        Player self = confluence$self();
+        if (self.isLocalPlayer() && GravitationHandler.isShouldRot()) {
+            Vec3 vec3 = self.getDeltaMovement();
+            self.setDeltaMovement(vec3.x, -vec3.y, vec3.z);
+        }
     }
 }
