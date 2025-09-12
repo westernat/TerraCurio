@@ -14,9 +14,11 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.mixed.SelfGetter;
+import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.common.init.TCItems;
@@ -181,5 +183,13 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void readData(CompoundTag compound, CallbackInfo ci) {
         this.terra_curio$totem_cooldown = compound.getInt("terra_curio:totem_cooldown");
+    }
+
+    @WrapOperation(method = "jumpFromGround", at= @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(DDD)V"))
+    private void flipJump(LivingEntity instance, double x, double y, double z, Operation<Void> original) {
+        if (instance instanceof Player player && player.isLocalPlayer() && GravitationHandler.isShouldRot()) {
+            y = -y;
+        }
+        original.call(instance, x, y, z);
     }
 }

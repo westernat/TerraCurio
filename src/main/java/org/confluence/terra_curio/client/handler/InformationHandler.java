@@ -13,8 +13,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.Tags;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.client.TCKeyBindings;
@@ -29,7 +27,6 @@ import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.LongFunction;
 
-@OnlyIn(Dist.CLIENT)
 public final class InformationHandler {
     public static final int WATCH = 0;
     public static final int WEATHER_RADIO = 1;

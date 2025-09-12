@@ -11,15 +11,12 @@ import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.handler.InformationHandler;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.jetbrains.annotations.NotNull;
 
-@OnlyIn(Dist.CLIENT)
 public class InfoHudOverlay implements LayeredDraw.Layer {
     private static final int background = (0x90 << 24) + 0x505050;
     private static final int textColor = 0xE0E0E0;

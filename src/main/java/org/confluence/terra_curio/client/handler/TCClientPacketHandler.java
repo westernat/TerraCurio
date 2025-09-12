@@ -21,8 +21,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import org.confluence.terra_curio.client.TCClientConfigs;
@@ -37,7 +35,6 @@ import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.LU
 import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.NEPTUNES_SHELL;
 import static org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C.*;
 
-@OnlyIn(Dist.CLIENT)
 public final class TCClientPacketHandler {
     private static boolean autoAttack = false;
     private static boolean hasCthulhu = false;

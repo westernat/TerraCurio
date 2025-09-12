@@ -6,25 +6,22 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.mixin.client.accessor.LocalPlayerAccessor;
 import org.confluence.terra_curio.network.c2s.GravitationPacketC2S;
 import org.confluence.terra_curio.network.s2c.BroadcastGravitationRotPacketS2C;
 
-@OnlyIn(Dist.CLIENT)
 public final class GravitationHandler {
     public static final Vec3 DOWN = new Vec3(0.0, -0.3000001, 0.0);
     private static boolean keyDown = false;
     private static boolean shouldRot = false;
     static boolean hasGlobe = false;
 
-    public static void handle(LocalPlayer localPlayer, boolean jumping) {
-        if (StepStoolHandler.onStool() || localPlayer.getAbilities().flying) return;
+    public static void handle(LocalPlayer localPlayer, boolean flipGravitation) {
+        if (StepStoolHandler.onStool()) return;
 
-        if (jumping) {
+        if (flipGravitation) {
             if (!keyDown) {
                 shouldRot = !shouldRot;
                 localPlayer.resetFallDistance();

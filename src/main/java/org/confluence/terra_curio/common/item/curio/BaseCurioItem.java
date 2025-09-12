@@ -15,8 +15,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.common.component.ModRarity;
 import org.confluence.terra_curio.TerraCurio;
@@ -75,7 +73,6 @@ public class BaseCurioItem extends Item implements ICurioItem {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
         if (emitter.isRemoved()) {
             ((ILivingEntity) living).terra_curio$getOrCreateParticleEmitters().remove(particle);

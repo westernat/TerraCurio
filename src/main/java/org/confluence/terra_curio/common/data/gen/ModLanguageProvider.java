@@ -131,6 +131,7 @@ public class ModLanguageProvider extends LanguageProvider {
         add("key.terra_curio.gameplay", "Terra Curio", "泰拉饰品");
         add("key.terra_curio.metal_detector", "Detect Metal", "检测矿物");
         add("key.terra_curio.step_stool", "Step Stool", "上梯凳");
+        add("key.terra_curio.flip_gravitation", "Flip Gravitation", "反转重力");
         add("key.terra_curio.cthulhu_sprinting", "Cthulhu Sprinting", "克苏鲁冲刺");
 
         add("curios.identifier.accessory", "Accessory", "配饰");
@@ -494,7 +495,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 },
                 new String[]{
                         "可让持有者反转重力",
-                        "按跳跃键可改变重力"
+                        "按 ↑ 键可改变重力"
                 },
                 "It has a Chance to be dropped from Shulker.",
                 "它有几率从潜影贝身上掉落。"

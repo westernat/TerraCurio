@@ -1,10 +1,15 @@
 package org.confluence.terra_curio.client.event;
 
 
+import com.mojang.datafixers.util.Either;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -18,10 +23,16 @@ import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.client.handler.*;
 import org.confluence.terra_curio.client.renderer.tooltip.MultiFunctionTooltip;
+import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.common.init.TCEffects;
+import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
 import org.confluence.terra_curio.network.c2s.ShootXBonePacketC2S;
 import org.confluence.terra_curio.util.TCUtils;
+import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
+
+import java.util.List;
 
 @EventBusSubscriber(modid = TerraCurio.MODID, value = Dist.CLIENT)
 public final class GameClientEvents {
@@ -57,7 +68,7 @@ public final class GameClientEvents {
         if (jumping && !localPlayer.mayFly() && !NeoForge.EVENT_BUS.post(new PerformJumpingEvent(localPlayer)).isCanPerform()) {
             input.jumping = false;
         } else if (GravitationHandler.isHasGlobe()) {
-            GravitationHandler.handle(localPlayer, jumping);
+            GravitationHandler.handle(localPlayer, TCKeyBindings.FLIP_GRAVITATION.get().isDown());
         } else {
             MobEffectInstance effect = localPlayer.getEffect(TCEffects.GRAVITATION);
             if (effect == null) {
@@ -68,7 +79,7 @@ public final class GameClientEvents {
                 if (effect.getAmplifier() > 0) {
                     GravitationHandler.force(localPlayer);
                 } else {
-                    GravitationHandler.handle(localPlayer, jumping);
+                    GravitationHandler.handle(localPlayer, TCKeyBindings.FLIP_GRAVITATION.get().isDown());
                 }
             }
         }
@@ -118,6 +129,21 @@ public final class GameClientEvents {
             MultiFunctionTooltip.mouseScrollY -= (int) event.getScrollDeltaY();
         } else {
             MultiFunctionTooltip.mouseScrollY = 0;
+        }
+    }
+
+    @SubscribeEvent
+    public static void renderTooltip$GatherComponents(RenderTooltipEvent.GatherComponents event) {
+        if (event.getItemStack().is(TCItems.DEMON_HEART)) {
+            List<Either<FormattedText, TooltipComponent>> list = event.getTooltipElements();
+            list.add(1, Either.left(Component.translatable("tooltip.item.terra_curio.demon_heart.0").withStyle(ChatFormatting.GREEN)));
+            CuriosApi.getCuriosInventory(Minecraft.getInstance().player).ifPresent(iCuriosItemHandler -> {
+                ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
+                list.add(2, Either.left(Component.translatable(
+                        "tooltip.item.terra_curio.demon_heart.1",
+                        TCCommonConfigs.MAX_ACCESSORIES.get() - iCurioStacksHandler.getSlots()
+                ).withStyle(ChatFormatting.GRAY)));
+            });
         }
     }
 }

@@ -5,11 +5,8 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.Tags;
 
-@OnlyIn(Dist.CLIENT)
 public final class ScopeFovHandler {
     static boolean hasScope = false;
     private static boolean scoping = false;

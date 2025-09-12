@@ -1,8 +1,5 @@
 package org.confluence.terra_curio.common.item;
 
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
@@ -11,10 +8,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.common.component.ModRarity;
 import org.confluence.lib.util.LibUtils;
@@ -23,7 +17,6 @@ import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
-import java.util.List;
 import java.util.Map;
 
 public class DemonHeart extends Item {
@@ -50,19 +43,5 @@ public class DemonHeart extends Item {
             });
         }
         return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.demon_heart.0").withStyle(ChatFormatting.GREEN));
-        CuriosApi.getCuriosInventory(Minecraft.getInstance().player).ifPresent(iCuriosItemHandler -> {
-            ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
-            Component remainingTimes = Component.translatable(
-                    "tooltip.item.terra_curio.demon_heart.1",
-                    TCCommonConfigs.MAX_ACCESSORIES.get() - iCurioStacksHandler.getSlots()
-            ).withColor(0xAAAAAA);
-            tooltipComponents.add(remainingTimes);
-        });
     }
 }

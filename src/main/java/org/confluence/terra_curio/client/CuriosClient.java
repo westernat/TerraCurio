@@ -9,8 +9,6 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import org.confluence.terra_curio.client.model.accessory.*;
 import org.confluence.terra_curio.client.renderer.accessory.*;
 import org.confluence.terra_curio.common.init.TCItems;
@@ -19,7 +17,6 @@ import top.theillusivec4.curios.api.client.CuriosRendererRegistry;
 import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
-@OnlyIn(Dist.CLIENT)
 public final class CuriosClient {
     public static void registerRenderers() {
         EntityModelSet entityModels = Minecraft.getInstance().getEntityModels();

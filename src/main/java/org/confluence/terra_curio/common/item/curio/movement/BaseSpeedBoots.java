@@ -12,8 +12,6 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
@@ -52,7 +50,6 @@ public class BaseSpeedBoots extends BaseCurioItem {
         speedUp(slotContext, stack, acceleration, maxSpeed);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
         if (GravitationHandler.isShouldRot() && living.getClass() == LocalPlayer.class) {

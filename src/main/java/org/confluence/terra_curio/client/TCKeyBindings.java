@@ -17,6 +17,7 @@ public final class TCKeyBindings {
     public static void keyBinding(RegisterKeyMappingsEvent event) {
         event.register(METAL_DETECTOR.get());
         event.register(STEP_STOOL.get());
+        event.register(FLIP_GRAVITATION.get());
         event.register(CTHULHU_SPRINTING.get());
     }
 
@@ -30,6 +31,14 @@ public final class TCKeyBindings {
 
     public static final Lazy<KeyMapping> STEP_STOOL = Lazy.of(() -> new KeyMapping(
             "key.terra_curio.step_stool",
+            KeyConflictContext.IN_GAME,
+            InputConstants.Type.KEYSYM,
+            GLFW.GLFW_KEY_UP,
+            category()
+    ));
+
+    public static final Lazy<KeyMapping> FLIP_GRAVITATION = Lazy.of(() -> new KeyMapping(
+            "key.terra_curio.flip_gravitation",
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
             GLFW.GLFW_KEY_UP,
