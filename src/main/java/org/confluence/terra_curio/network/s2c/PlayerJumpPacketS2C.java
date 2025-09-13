@@ -2,47 +2,32 @@ package org.confluence.terra_curio.network.s2c;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Tuple;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.confluence.lib.util.LibStreamCodecUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.common.init.TCItems;
 
-import static net.minecraft.network.codec.ByteBufCodecs.FLOAT;
-import static net.minecraft.network.codec.ByteBufCodecs.VAR_INT;
-
 public record PlayerJumpPacketS2C(float fartSpeed, float sandstormSpeed, int sandstormTicks, float blizzardSpeed, int blizzardTicks, float tsunamiSpeed, float cloudSpeed) implements CustomPacketPayload {
     public static final Type<PlayerJumpPacketS2C> TYPE = new Type<>(TerraCurio.asResource("player_jump_s2c"));
-    public static final StreamCodec<ByteBuf, PlayerJumpPacketS2C> STREAM_CODEC = new StreamCodec<>() {
-        @Override
-        public void encode(ByteBuf buffer, PlayerJumpPacketS2C value) {
-            FLOAT.encode(buffer, value.fartSpeed);
-            FLOAT.encode(buffer, value.sandstormSpeed);
-            VAR_INT.encode(buffer, value.sandstormTicks);
-            FLOAT.encode(buffer, value.blizzardSpeed);
-            VAR_INT.encode(buffer, value.blizzardTicks);
-            FLOAT.encode(buffer, value.tsunamiSpeed);
-            FLOAT.encode(buffer, value.cloudSpeed);
-        }
-
-        @Override
-        public PlayerJumpPacketS2C decode(ByteBuf buffer) {
-            float t1 = FLOAT.decode(buffer);
-            float t2 = FLOAT.decode(buffer);
-            int t3 = VAR_INT.decode(buffer);
-            float t4 = FLOAT.decode(buffer);
-            int t5 = VAR_INT.decode(buffer);
-            float t6 = FLOAT.decode(buffer);
-            float t7 = FLOAT.decode(buffer);
-            return new PlayerJumpPacketS2C(t1, t2, t3, t4, t5, t6, t7);
-        }
-    };
+    public static final StreamCodec<ByteBuf, PlayerJumpPacketS2C> STREAM_CODEC = LibStreamCodecUtils.composite(
+            ByteBufCodecs.FLOAT, PlayerJumpPacketS2C::fartSpeed,
+            ByteBufCodecs.FLOAT, PlayerJumpPacketS2C::sandstormSpeed,
+            ByteBufCodecs.VAR_INT, PlayerJumpPacketS2C::sandstormTicks,
+            ByteBufCodecs.FLOAT, PlayerJumpPacketS2C::blizzardSpeed,
+            ByteBufCodecs.VAR_INT, PlayerJumpPacketS2C::blizzardTicks,
+            ByteBufCodecs.FLOAT, PlayerJumpPacketS2C::tsunamiSpeed,
+            ByteBufCodecs.FLOAT, PlayerJumpPacketS2C::cloudSpeed,
+            PlayerJumpPacketS2C::new
+    );
 
     @Override
     public Type<PlayerJumpPacketS2C> type() {

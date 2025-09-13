@@ -5,6 +5,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.DamageTypeTags;
+import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
@@ -167,20 +168,22 @@ public final class TCAttributes {
 
     public static void applyPickupRange(Player player) {
         AttributeInstance instance = player.getAttribute(PICKUP_RANGE);
-        float[] ranges = new float[3]; // confluence mixin here
-        float range = Math.max(Math.max(Math.max(instance == null ? 0.0F : (float) instance.getValue(), ranges[0]), ranges[1]), ranges[2]);
-        if (range > 0.0F) player.level().getEntitiesOfClass(
+        float[] rangesSqr = new float[3]; // confluence mixin here
+        float range = instance == null ? 0.0F : (float) instance.getValue();
+        float rangeSqr = Math.max(Math.max(Math.max(Mth.square(range), rangesSqr[0]), rangesSqr[1]), rangesSqr[2]);
+        if (rangeSqr > 0.0F) player.level().getEntitiesOfClass(
                 ItemEntity.class,
-                new AABB(player.blockPosition()).inflate(range),
+                new AABB(player.blockPosition()).inflate(Mth.sqrt(rangeSqr)),
                 itemEntity -> !itemEntity.hasPickUpDelay()
         ).forEach(itemEntity -> {
-            if (itemEntity.isRemoved() || forMixin$skip(player, itemEntity, ranges)) return;
+            if (itemEntity.isRemoved() || forMixin$skip(player, itemEntity, rangesSqr)) return;
+            if (range <= 0.0) return;
             itemEntity.addDeltaMovement(player.position().subtract(itemEntity.getX(), itemEntity.getY(), itemEntity.getZ()).normalize().scale(0.05F).add(0, 0.04F, 0));
             itemEntity.move(MoverType.SELF, itemEntity.getDeltaMovement());
         });
     }
 
-    private static boolean forMixin$skip(Player player, ItemEntity itemEntity, float[] ranges) {
+    private static boolean forMixin$skip(Player player, ItemEntity itemEntity, float[] rangesSqr) {
         return false; // confluence mixin here
     }
 
