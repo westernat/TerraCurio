@@ -4,9 +4,9 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.animal.Animal;
 import net.minecraft.world.entity.monster.piglin.AbstractPiglin;
 import net.minecraft.world.entity.player.Player;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.common.init.TCEffects;
 
 @javax.annotation.ParametersAreNonnullByDefault
@@ -28,7 +28,7 @@ public class HoneyEffect extends MobEffect {
     }
 
     public static void applyHoneyEffect(LivingEntity living) {
-        if (living instanceof Animal || living instanceof Player) {
+        if (LibUtils.isAnimal(living) || living instanceof Player) {
             MobEffectInstance effect = living.getEffect(TCEffects.HONEY);
             if (effect == null || effect.getDuration() < 220) {
                 living.addEffect(new MobEffectInstance(TCEffects.HONEY, 600));
