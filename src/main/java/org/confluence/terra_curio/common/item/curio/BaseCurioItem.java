@@ -64,7 +64,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
             if (emitter == null) {
                 Map<ResourceLocation, ParticleEmitter> emitters = iLiving.terra_curio$getOrCreateParticleEmitters();
                 emitter = new ParticleEmitter(living.level(), living.position(), builder.particle);
-                emitter.attached = living;
+                emitter.attachEntity(living);
                 PSGameClient.LOADER.addEmitter(emitter, false);
                 emitters.put(builder.particle, emitter);
             }
