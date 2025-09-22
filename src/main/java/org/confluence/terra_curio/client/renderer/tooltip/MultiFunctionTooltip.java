@@ -22,8 +22,8 @@ import java.util.List;
 
 public class MultiFunctionTooltip implements ClientTooltipComponent {
     private static final Component TOOLTIP = Component.translatable("tooltip.terra_curio.hold_and_scroll");
-    private static final ResourceLocation ENABLED = TerraCurio.asResource("textures/gui/information/enabled.png");
-    public static final float SCALE = 10.0F / 18.0F;
+    public static final ResourceLocation HIGHLIGHT = TerraCurio.asResource("textures/gui/information/highlight.png");
+    public static final float SCALE = 10.0F / 9.0F;
     public static int mouseScrollY = 0;
     public static boolean isShowing = false;
 
@@ -84,10 +84,10 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
                 pose.translate(x - 2.0F, y - 1.0F + i * 10.0F,0.0F);
                 pose.scale(SCALE, SCALE, SCALE);
                 TooltipComponentsValue.Storage storage = storages.get(i);
-                guiGraphics.blit(storage.texture(), 2, 2, 0, 0, 14, 14, 14, 14);
+                guiGraphics.blit(storage.texture(), 1, 1, 0, 0, 7, 7, 7, 7);
                 int index = IMultiFunctionCouldEnable.INDEX_MAP.getOrDefault(storage, -1);
                 if (index != -1 && !InformationHandler.DISABLE[index]) {
-                    guiGraphics.blit(ENABLED, 0, 0, 0,0 , 18, 18, 18, 18);
+                    guiGraphics.blit(HIGHLIGHT, 0, 0, 0,0 , 9, 9, 9, 9);
                 }
                 pose.popPose();
             }

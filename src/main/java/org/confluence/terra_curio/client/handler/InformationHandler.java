@@ -44,7 +44,7 @@ public final class InformationHandler {
 
     public static final boolean[] DISABLE = new boolean[InfoCurioCheckPacketS2C.ARRAY_LENGTH];
 
-    private static final Int2ObjectMap<Component> INFORMATION = new Int2ObjectArrayMap<>();
+    private static Int2ObjectMap<Component> INFORMATION = new Int2ObjectArrayMap<>();
     private static final byte[] INFO_DATA = new byte[InfoCurioCheckPacketS2C.ARRAY_LENGTH];
     private static final Int2ObjectOpenHashMap<byte[]> REMOTE_DATA = new Int2ObjectOpenHashMap<>();
 
@@ -57,7 +57,7 @@ public final class InformationHandler {
     private static Component tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter.unknown");
 
     public static void handle(LocalPlayer localPlayer) {
-        INFORMATION.clear();
+        INFORMATION = new Int2ObjectArrayMap<>();
         long gameTime = localPlayer.level().getGameTime();
 
         byte b = INFO_DATA[WATCH];
@@ -154,7 +154,7 @@ public final class InformationHandler {
 
     public static void reset() {
         if (!INFORMATION.isEmpty()) {
-            INFORMATION.clear();
+            INFORMATION = new Int2ObjectArrayMap<>();
             Arrays.fill(INFO_DATA, (byte) 0);
             REMOTE_DATA.clear();
         }
@@ -294,6 +294,10 @@ public final class InformationHandler {
         byte c = INFO_DATA[index];
         // 玩家发给自己的信息 || 收到别人共享的信息
         if ((b >= 0 && c >= 0) || (b != -128 && c <= 0)) INFO_DATA[index] = b;
+    }
+
+    public static boolean hasInfoData(int index) {
+        return INFO_DATA[index] != 0;
     }
 
     public static void handleEntityKilled(EntityKilledPacketS2C packet) {
