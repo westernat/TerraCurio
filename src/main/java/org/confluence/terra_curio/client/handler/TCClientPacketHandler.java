@@ -149,38 +149,38 @@ public final class TCClientPacketHandler {
         }
     }
 
-    private static void applyAutoAttack(Minecraft minecraft, LocalPlayer localPlayer) {
+    private static void applyAutoAttack(Minecraft minecraft, LocalPlayer player) {
         if (!TCClientConfigs.autoAttack || minecraft.gameMode == null || minecraft.gameMode.isDestroying()) return;
-        ItemStack itemStack = localPlayer.getMainHandItem();
-        if (itemStack.onEntitySwing(localPlayer, InteractionHand.MAIN_HAND)) return;
+        ItemStack itemStack = player.getMainHandItem();
+        if (itemStack.onEntitySwing(player, InteractionHand.MAIN_HAND)) return;
         if (BetterCombatHelper.LOADED) {
             if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
         }
         if (TCClientPacketHandler.couldAutoAttack() && minecraft.options.keyAttack.isDown()) {
-            if (localPlayer.getAttackStrengthScale(0.5F) < 1.0F - Mth.EPSILON) return;
+            if (player.getAttackStrengthScale(0.5F) < 1.0F - Mth.EPSILON) return;
             MinecraftAccessor accessor = (MinecraftAccessor) minecraft;
             if (accessor.getMissTime() > 0) accessor.setMissTime(0);
-            double reach = Math.max(localPlayer.entityInteractionRange(), localPlayer.blockInteractionRange());
+            double reach = Math.max(player.entityInteractionRange(), player.blockInteractionRange());
             double squared = Mth.square(reach);
-            Vec3 from = localPlayer.getEyePosition(1.0F);
-            HitResult hitResult = localPlayer.pick(reach, 1.0F, false);
+            Vec3 from = player.getEyePosition(1.0F);
+            HitResult hitResult = player.pick(reach, 1.0F, false);
             double sqr = hitResult.getLocation().distanceToSqr(from);
             if (hitResult.getType() != HitResult.Type.MISS) {
                 squared = sqr;
                 reach = Math.sqrt(sqr);
             }
-            Vec3 viewVector = localPlayer.getViewVector(1.0F);
+            Vec3 viewVector = player.getViewVector(1.0F);
             Vec3 to = from.add(viewVector.x * reach, viewVector.y * reach, viewVector.z * reach);
-            AABB aabb = localPlayer.getBoundingBox().expandTowards(viewVector.scale(reach)).inflate(1.0, 1.0, 1.0);
+            AABB aabb = player.getBoundingBox().expandTowards(viewVector.scale(reach)).inflate(1.0);
             EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(
-                    localPlayer, from, to, aabb, entity -> !entity.isSpectator() && entity.isPickable(), squared
+                    player, from, to, aabb, entity -> !entity.isSpectator() && entity.isPickable(), squared
             );
             if (entityHitResult != null && entityHitResult.getLocation().distanceToSqr(from) < sqr) {
-                minecraft.gameMode.attack(localPlayer, entityHitResult.getEntity());
+                minecraft.gameMode.attack(player, entityHitResult.getEntity());
             }
-            localPlayer.swing(InteractionHand.MAIN_HAND);
-            localPlayer.resetAttackStrengthTicker();
-            CommonHooks.onEmptyLeftClick(localPlayer);
+            player.swing(InteractionHand.MAIN_HAND);
+            player.resetAttackStrengthTicker();
+            CommonHooks.onEmptyLeftClick(player);
         }
     }
 
