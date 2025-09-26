@@ -29,7 +29,6 @@ import javax.annotation.ParametersAreNonnullByDefault;
 public class WorkshopCategory implements IRecipeCategory<RecipeHolder<WorkshopRecipe>> {
     public static final ResourceLocation ARROW_RIGHT = TerraCurio.asResource("textures/gui/arrow_right.png");
     public static final RecipeType<RecipeHolder<WorkshopRecipe>> TYPE = RecipeType.createRecipeHolderType(TerraCurio.asResource("workshop"));
-    private static final Component TITLE = Component.translatable("title.terra_curio.workshop");
     private final IDrawable icon;
 
     public WorkshopCategory(IJeiHelpers jeiHelpers) {
@@ -43,7 +42,7 @@ public class WorkshopCategory implements IRecipeCategory<RecipeHolder<WorkshopRe
 
     @Override
     public Component getTitle() {
-        return TITLE;
+        return Component.translatable("title.terra_curio.workshop");
     }
 
     @Override
@@ -103,7 +102,6 @@ public class WorkshopCategory implements IRecipeCategory<RecipeHolder<WorkshopRe
 
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<WorkshopRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
-        IRecipeCategory.super.getTooltip(tooltip, recipe, recipeSlotsView, mouseX, mouseY);
         tooltip.addAll(recipe.value().getEnvironment().toDescriptions());
     }
 }
