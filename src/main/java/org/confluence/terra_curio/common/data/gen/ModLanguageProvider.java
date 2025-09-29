@@ -488,18 +488,13 @@ public class ModLanguageProvider extends LanguageProvider {
                         "显示水平位置"
                 }
         );
-        tooltipsAndJeiInfo(TCItems.GRAVITY_GLOBE, "重力球",
-                new String[]{
-                        "Allows the holder to reverse gravity",
-                        "Press Jump to change gravity"
-                },
-                new String[]{
-                        "可让持有者反转重力",
-                        "按 ↑ 键可改变重力"
-                },
+        tooltipAndJeiInfo(TCItems.GRAVITY_GLOBE, "重力球",
+                "Allows the holder to reverse gravity",
+                "可让持有者反转重力",
                 "It has a Chance to be dropped from Shulker.",
                 "它有几率从潜影贝身上掉落。"
         );
+        addTooltip(TCItems.GRAVITY_GLOBE, 1, "Press [%s] to change gravity", "按 [%s] 可改变重力");
         onlyTooltips(TCItems.GREEN_HORSESHOE_BALLOON, "绿马掌气球",
                 new String[]{
                         "Allows the holder to double jump",

@@ -30,6 +30,7 @@ import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.common.item.curio.NightBonusCurioItem;
 import org.confluence.terra_curio.common.item.curio.RequiresModLoadedCurioItem;
 import org.confluence.terra_curio.common.item.curio.combat.*;
+import org.confluence.terra_curio.common.item.curio.expert.GravityGlobe;
 import org.confluence.terra_curio.common.item.curio.expert.ShieldOfCthulhu;
 import org.confluence.terra_curio.common.item.curio.expert.ShinnyStone;
 import org.confluence.terra_curio.common.item.curio.health.BandOfRegeneration;
@@ -609,7 +610,7 @@ public final class TCItems {
                     .accessories(units(INFINITE$FLIGHT))
                     .attribute(Attributes.MOVEMENT_SPEED, 0.075, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.JUMP_STRENGTH, 0.8, ADD_MULTIPLIED_TOTAL)), // 翱翔徽章
-            GRAVITY_GLOBE = registerCurio("gravity_globe", builder -> builder.rarity(EXPERT).accessories(units(GRAVITY$GLOBE)).tooltips(1)), // 重力球
+            GRAVITY_GLOBE = registerDirectly("gravity_globe", (name, builder) -> new GravityGlobe(builder.rarity(EXPERT).accessories(units(GRAVITY$GLOBE)))), // 重力球
             CELESTIAL_STARBOARD = registerCurio("celestial_starboard", builder -> builder.rarity(EXPERT).tooltips(2)
                     .accessories(of(MAY$FLY, MayFlyAbilityValue.of("celestial_starboard", 1100, 1.0F, 60, true, true)))
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)); // 天界星盘
