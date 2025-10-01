@@ -6,16 +6,16 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSources;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityDimensions;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Pose;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
+import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.util.TCUtils;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -41,9 +41,13 @@ public abstract class EntityMixin implements IEntity {
 
     @Shadow
     public float fallDistance;
-
     @Shadow
     private Level level;
+    @Shadow
+    public boolean verticalCollisionBelow;
+
+    @Shadow
+    public boolean verticalCollision;
     @Unique
     private int terra_curio$cthulhuSprintingTime = 0;
     @Unique
@@ -141,5 +145,12 @@ public abstract class EntityMixin implements IEntity {
     @ModifyArg(method = "spawnSprintParticle", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;addParticle(Lnet/minecraft/core/particles/ParticleOptions;DDDDDD)V"), index = 5)
     private double modifyParticleSpeedY(double y) {
         return terra_curio$isShouldRot ? -y : y;
+    }
+
+    @Inject(method = "move", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/Entity;verticalCollisionBelow:Z", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
+    private void flip(MoverType type, Vec3 pos, CallbackInfo ci) {
+        if (GravitationHandler.isShouldRot(confluence$self())) {
+            this.verticalCollisionBelow = verticalCollision && pos.y > 0.0;
+        }
     }
 }

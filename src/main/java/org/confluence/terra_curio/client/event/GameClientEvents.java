@@ -14,11 +14,9 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.api.event.PerformJumpingEvent;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.client.handler.*;
@@ -51,7 +49,7 @@ public final class GameClientEvents {
             ScopeFovHandler.reset();
         } else {
             DPSMeter.checkDPSTime(localPlayer.level().getGameTime());
-            GravitationHandler.handle(localPlayer);
+            GravitationHandler.tryExpire(localPlayer);
             StepStoolHandler.handle(localPlayer);
             TCClientPacketHandler.handle(minecraft, localPlayer);
             InformationHandler.handle(localPlayer);
@@ -62,29 +60,28 @@ public final class GameClientEvents {
 
     @SubscribeEvent
     public static void movementInputUpdate(MovementInputUpdateEvent event) {
-        LocalPlayer localPlayer = (LocalPlayer) event.getEntity();
+        LocalPlayer player = (LocalPlayer) event.getEntity();
         Input input = event.getInput();
         boolean jumping = input.jumping;
-        if (jumping && !localPlayer.mayFly() && !NeoForge.EVENT_BUS.post(new PerformJumpingEvent(localPlayer)).isCanPerform()) {
-            input.jumping = false;
-        } else if (GravitationHandler.isHasGlobe()) {
-            GravitationHandler.handle(localPlayer, TCKeyBindings.FLIP_GRAVITATION.get().isDown());
-        } else {
-            MobEffectInstance effect = localPlayer.getEffect(TCEffects.GRAVITATION);
-            if (effect == null) {
-                GravitationHandler.expire();
-                PlayerJumpHandler.handle(localPlayer, jumping);
-                PlayerClimbHandler.handle(localPlayer, input.getMoveVector(), jumping);
+
+        MobEffectInstance effect = player.getEffect(TCEffects.GRAVITATION);
+        if (effect != null) {
+            if (effect.getAmplifier() > 0) {
+                GravitationHandler.force(player);
             } else {
-                if (effect.getAmplifier() > 0) {
-                    GravitationHandler.force(localPlayer);
-                } else {
-                    GravitationHandler.handle(localPlayer, TCKeyBindings.FLIP_GRAVITATION.get().isDown());
-                }
+                GravitationHandler.handle(player);
             }
+        } else if (GravitationHandler.isHasGlobe()) {
+            GravitationHandler.handle(player);
+        } else {
+            GravitationHandler.expire();
         }
+
+        PlayerJumpHandler.handle(player, jumping);
+        PlayerClimbHandler.handle(player, input.getMoveVector(), jumping);
+
         if (TCClientPacketHandler.isHasTabi() /* confluence mixin here */) {
-            PlayerSprintingHandler.handle(localPlayer, input);
+            PlayerSprintingHandler.handle(player, input);
         }
     }
 

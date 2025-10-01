@@ -15,7 +15,6 @@ import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
-import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.util.CuriosUtils;
 import top.theillusivec4.curios.api.SlotContext;
 
@@ -39,8 +38,8 @@ public class PanicNecklace extends BaseCurioItem {
 
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
-        if (!IEntity.of(slotContext.entity()).terra_curio$isPlayer()) return EMPTY_ATTRIBUTE;
-        return LibUtils.getOrCreatePersistedData((Player) slotContext.entity()).getLong(KEY) == 0 ? EMPTY_ATTRIBUTE : super.getAttributeModifiers(slotContext, id, stack);
+        if (!(slotContext.entity() instanceof Player player)) return EMPTY_ATTRIBUTE;
+        return LibUtils.getOrCreatePersistedData(player).getLong(KEY) == 0 ? EMPTY_ATTRIBUTE : super.getAttributeModifiers(slotContext, id, stack);
     }
 
     @Override

@@ -42,6 +42,11 @@ public abstract class LocalPlayerMixin implements SelfGetter<Player> {
         return true;
     }
 
+    @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Abilities;getFlyingSpeed()F"))
+    private float flip(float original) {
+        return original * GravitationHandler.getJumpDir();
+    }
+
     @Inject(method = "tick", at = @At("TAIL"))
     private void floating(CallbackInfo ci) {
         Player self = confluence$self();

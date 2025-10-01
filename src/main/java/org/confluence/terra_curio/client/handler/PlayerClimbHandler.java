@@ -23,7 +23,7 @@ public final class PlayerClimbHandler {
             return;
         }
         Vec3 motion = localPlayer.getDeltaMovement();
-        double motionY = motion.y;
+        double motionY = motion.y * GravitationHandler.getJumpDir();
         if (motionY > 0.0) return;
         float rad = localPlayer.getYRot() * Mth.DEG_TO_RAD;
         float cos = Mth.cos(rad);
@@ -47,7 +47,10 @@ public final class PlayerClimbHandler {
                 motionY = -0.05;
             } else if (climberAmount >= 2) {
                 motionY = 0.0;
+            } else {
+                return;
             }
+            motionY *= GravitationHandler.getJumpDir();
             localPlayer.hasImpulse = true;
             localPlayer.fallDistance = 0.0F;
             localPlayer.setDeltaMovement(motion.x * 0.93, motionY, motion.z * 0.93);
@@ -76,7 +79,7 @@ public final class PlayerClimbHandler {
     }
 
     private static void wallJump(LocalPlayer localPlayer, double x, double z) {
-        double motionY = ((LivingEntityAccessor) localPlayer).callGetJumpPower() * 1.1;
+        double motionY = ((LivingEntityAccessor) localPlayer).callGetJumpPower(GravitationHandler.getJumpDir()) * 1.1;
         Vec3 vec3 = localPlayer.getDeltaMovement();
         localPlayer.setDeltaMovement(vec3.add(vec3.x - x * 0.11, motionY, vec3.z - z * 0.11));
         localPlayer.hasImpulse = true;

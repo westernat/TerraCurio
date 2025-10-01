@@ -80,7 +80,7 @@ public final class PlayerJumpHandler {
         }
 
         if (localPlayer.onGround()) {
-            reset(true);
+             reset(true);
         } else if (jumping) {
             if (AirHopHelper.LOADED && AirHopHelper.notFinishJump(localPlayer)) {
                 jumpKeyDown = true;
@@ -190,7 +190,7 @@ public final class PlayerJumpHandler {
 
     public static void multiJump(LocalPlayer localPlayer, float speed) {
         Vec3 vec3 = localPlayer.getDeltaMovement();
-        double motionY = ((LivingEntityAccessor) localPlayer).callGetJumpPower() * speed;
+        double motionY = ((LivingEntityAccessor) localPlayer).callGetJumpPower(GravitationHandler.getJumpDir()) * speed;
         localPlayer.setDeltaMovement(vec3.x, motionY, vec3.z);
         if (localPlayer.isSprinting()) {
             float f = localPlayer.getYRot() * Mth.DEG_TO_RAD;
@@ -202,6 +202,7 @@ public final class PlayerJumpHandler {
     }
 
     private static void oneTimeJump(LocalPlayer localPlayer, float speed) {
+        speed *= GravitationHandler.getJumpDir();
         Vec3 vec3 = localPlayer.getDeltaMovement();
         localPlayer.setDeltaMovement(vec3.x, speed, vec3.z);
         localPlayer.hasImpulse = true;
@@ -210,7 +211,7 @@ public final class PlayerJumpHandler {
     }
 
     private static void fly(LocalPlayer localPlayer, float speed) {
-        float y = (float) localPlayer.getDeltaMovement().y;
+        float y = Math.abs((float) localPlayer.getDeltaMovement().y);
         if (y < speed) {
             y += speed / 2.5F;
         } else {
@@ -228,12 +229,15 @@ public final class PlayerJumpHandler {
     }
 
     private static void airMove(LocalPlayer localPlayer, float y, float h) {
+        float jumpDir = GravitationHandler.getJumpDir();
+        y *= jumpDir;
+        h *= jumpDir;
         float rad = localPlayer.getYRot() * Mth.DEG_TO_RAD;
         float cos = Mth.cos(rad);
         float sin = Mth.sin(rad);
         float v = h * 0.15F;
         float x = localPlayer.xxa * v;
-        float z = localPlayer.zza * v;
+        float z = localPlayer.zza * v * jumpDir;
         double mx = x * cos + z * -sin;
         double mz = x * sin + z * cos;
         Vec3 motion = localPlayer.getDeltaMovement();

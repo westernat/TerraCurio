@@ -2,7 +2,6 @@ package org.confluence.terra_curio.common.item.curio.movement;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -52,14 +51,17 @@ public class BaseSpeedBoots extends BaseCurioItem {
 
     @Override
     protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
-        if (GravitationHandler.isShouldRot() && living.getClass() == LocalPlayer.class) {
-            emitter.active = false;
-        } else {
-            emitter.offsetPos = new Vec3(0.0, 0.0, living.zza * 0.5);
-            if (emitter.parentRotation == null) {
-                emitter.parentRotation = new Vector3f();
+        if (emitter.parentRotation == null) {
+            emitter.parentRotation = new Vector3f();
+        }
+        emitter.active = living.zza > 0.0F && !living.horizontalCollision;
+
+        if (emitter.active) {
+            if (GravitationHandler.isShouldRot(living)) {
+                emitter.offsetPos = new Vec3(0, living.getBbHeight(), 0);
+            } else {
+                emitter.offsetPos = Vec3.ZERO;
             }
-            emitter.active = living.zza > 0.0F && !living.horizontalCollision;
         }
     }
 
