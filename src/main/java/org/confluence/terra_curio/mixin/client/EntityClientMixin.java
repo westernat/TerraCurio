@@ -1,9 +1,7 @@
 package org.confluence.terra_curio.mixin.client;
 
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import org.confluence.lib.mixed.SelfGetter;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.mixed.IEntity;
@@ -24,23 +22,21 @@ public abstract class EntityClientMixin implements SelfGetter<Entity> {
 
     @Inject(method = "getEyeHeight()F", at = @At("RETURN"), cancellable = true)
     private void eyeHeight(CallbackInfoReturnable<Float> cir) {
-        if (confluence$self() instanceof LocalPlayer && GravitationHandler.isShouldRot()) {
-            cir.setReturnValue(((IEntity) confluence$self()).terra_curio$getDimensionHeight() * 0.15F);
+        if (GravitationHandler.isShouldRot(confluence$self())) {
+            cir.setReturnValue(IEntity.of(confluence$self()).terra_curio$getDimensionHeight() * 0.15F);
         }
     }
 
     @ModifyVariable(method = "setOnGroundWithMovement", at = @At("HEAD"), argsOnly = true)
     private boolean checkVertical(boolean bool) {
-        if (!bool) return verticalCollision && confluence$self() instanceof LocalPlayer && GravitationHandler.isShouldRot();
+        if (!bool) return verticalCollision && GravitationHandler.isShouldRot(confluence$self());
         return true;
     }
 
     @Inject(method = "getOnPosLegacy", at = @At("RETURN"), cancellable = true)
     private void getOnPosAbove(CallbackInfoReturnable<BlockPos> cir) {
-        if (confluence$self() instanceof Player player) {
-            if (player.isLocalPlayer() ? GravitationHandler.isShouldRot() : ((IEntity) player).terra_curio$isShouldRot()) {
-                cir.setReturnValue(getOnPos(-2.2F));
-            }
+        if (GravitationHandler.isShouldRot(confluence$self())) {
+            cir.setReturnValue(getOnPos(-2.2F));
         }
     }
 }

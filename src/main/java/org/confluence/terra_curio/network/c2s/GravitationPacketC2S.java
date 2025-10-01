@@ -31,7 +31,7 @@ public record GravitationPacketC2S(boolean enable) implements CustomPacketPayloa
                     AttributeInstance attributeInstance = attributeMap.getInstance(Attributes.GRAVITY);
                     if (attributeInstance != null) attributeInstance.removeModifier(GravitationEffect.ID);
                 }
-                ((IEntity) serverPlayer).terra_curio$setShouldRot(enable);
+                IEntity.of(serverPlayer).terra_curio$setShouldRot(enable);
                 PacketDistributor.sendToAllPlayers(new BroadcastGravitationRotPacketS2C(serverPlayer.getId(), enable));
             }
         }).exceptionally(e -> {

@@ -80,7 +80,12 @@ public final class GravitationHandler {
     public static void handleRemoteRot(BroadcastGravitationRotPacketS2C packet, Player player) {
         Entity entity = player.level().getEntity(packet.entityId());
         if (entity != null) {
-            ((IEntity) entity).terra_curio$setShouldRot(packet.enabled());
+            IEntity.of(entity).terra_curio$setShouldRot(packet.enabled());
         }
+    }
+
+    public static boolean isShouldRot(Entity entity) {
+        IEntity iEntity = IEntity.of(entity);
+        return iEntity.terra_curio$isPlayer() && (((Player) entity).isLocalPlayer() ? isShouldRot() : iEntity.terra_curio$isShouldRot());
     }
 }

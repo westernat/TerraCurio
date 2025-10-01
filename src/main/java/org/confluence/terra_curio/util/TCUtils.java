@@ -86,7 +86,7 @@ public final class TCUtils {
         if (attacker != null && attacker.getType().is(attachment.getValue(TCItems.MOB$IGNORE))) {
             return true;
         }
-        if (((IEntity) living).terra_curio$getCthulhuSprintingTime() > 10 && attachment.contains(TCItems.SHIELD$OF$CTHULHU)) {
+        if (IEntity.of(living).terra_curio$getCthulhuSprintingTime() > 10 && attachment.contains(TCItems.SHIELD$OF$CTHULHU)) {
             return true;
         }
         if (attachment.contains(TCItems.FIRE$IMMUNE) && isFire(damageSource)
@@ -267,7 +267,7 @@ public final class TCUtils {
     }
 
     public static boolean isFluidWalkable(LivingEntity living, FluidState fluidState) {
-        if (fluidState.isEmpty() || living.isCrouching() || !(living instanceof Player)) return false;
+        if (fluidState.isEmpty() || living.isCrouching() || !IEntity.of(living).terra_curio$isPlayer()) return false;
         ILivingEntity iLiving = (ILivingEntity) living;
         if (iLiving.terra_curio$getLastWalkedFluidState() == fluidState) {
             return true;
@@ -299,19 +299,19 @@ public final class TCUtils {
     }
 
     public static void applyCthulhuTouch(Player player, Entity touched) {
-        if (player != touched && ((IEntity) player).terra_curio$getCthulhuSprintingTime() > 20 && touched instanceof LivingEntity) {
+        if (player != touched && IEntity.of(player).terra_curio$getCthulhuSprintingTime() > 20 && touched instanceof LivingEntity) {
             Vec3 vector = player.getDeltaMovement();
             touched.addDeltaMovement(new Vec3(vector.x * 1.2, 0.2, vector.z * 1.2));
             touched.hurt(player.damageSources().playerAttack(player), 7.8F);
             player.setDeltaMovement(vector.scale(-0.9));
-            ((IEntity) player).terra_curio$setCthulhuSprintingTime(20);
+            IEntity.of(player).terra_curio$setCthulhuSprintingTime(20);
         }
     }
 
     private static boolean sprintKeyDown = false;
 
     public static void applyCthulhuSprinting(boolean down, Player player) {
-        if (((IEntity) player).terra_curio$getCthulhuSprintingTime() > 0 || player.isFallFlying()) return;
+        if (IEntity.of(player).terra_curio$getCthulhuSprintingTime() > 0 || player.isFallFlying()) return;
         boolean sprint = false;
         if (player.isLocalPlayer()) {
             if (down) {
@@ -330,7 +330,7 @@ public final class TCUtils {
             float f = player.getYRot() * Mth.DEG_TO_RAD;
             double factor = player.onGround() ? 1.6 : 1.2;
             player.setDeltaMovement(player.getDeltaMovement().add(-Mth.sin(f) * factor, 0.0D, Mth.cos(f) * factor));
-            ((IEntity) player).terra_curio$setCthulhuSprintingTime(32);
+            IEntity.of(player).terra_curio$setCthulhuSprintingTime(32);
         }
     }
 
@@ -364,7 +364,7 @@ public final class TCUtils {
     }
 
     public static boolean isIceSafe(LivingEntity self) {
-        if (self instanceof Player player && player.isLocalPlayer()) {
+        if (IEntity.of(self).terra_curio$isPlayer() && ((Player) self).isLocalPlayer()) {
             return TCClientPacketHandler.isIceSafe();
         }
         return TCUtils.hasAccessoriesType(self, TCItems.ICE$SAFE);

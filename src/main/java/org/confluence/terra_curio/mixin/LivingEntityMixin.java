@@ -100,7 +100,7 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
 
     @ModifyArg(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"), index = 2)
     private double modifyParticlePosY(double pPosY) {
-        IEntity self = (IEntity) confluence$self();
+        IEntity self = IEntity.of(confluence$self());
         if (self.terra_curio$isShouldRot()) {
             return pPosY + self.terra_curio$getDimensionHeight();
         }

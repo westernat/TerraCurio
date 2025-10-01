@@ -14,7 +14,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import org.confluence.lib.mixed.SelfGetter;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.util.TCUtils;
 import org.spongepowered.asm.mixin.Mixin;
@@ -27,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
+public abstract class EntityMixin implements IEntity {
     @Shadow
     public abstract DamageSources damageSources();
 
@@ -51,6 +50,8 @@ public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
     private boolean terra_curio$isShouldRot = false;
     @Unique
     private float terra_curio$dimensionHeight = 0.0F;
+    @Unique
+    private final boolean terra_curio$isPlayer = confluence$self() instanceof Player;
 
     @Override
     public int terra_curio$getCthulhuSprintingTime() {
@@ -77,6 +78,11 @@ public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
         return terra_curio$dimensionHeight;
     }
 
+    @Override
+    public boolean terra_curio$isPlayer() {
+        return terra_curio$isPlayer;
+    }
+
     @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;isInLava()Z", ordinal = 1))
     private boolean resetLavaImmune(boolean original) {
         Entity self = confluence$self();
@@ -94,10 +100,10 @@ public abstract class EntityMixin implements IEntity, SelfGetter<Entity> {
 
     @Inject(method = "push(Lnet/minecraft/world/entity/Entity;)V", at = @At("TAIL"))
     private void collidingCheck(Entity entity, CallbackInfo ci) {
-        if (confluence$self() instanceof Player player) {
-            TCUtils.applyCthulhuTouch(player, entity);
-        } else if (entity instanceof Player player) {
-            TCUtils.applyCthulhuTouch(player, confluence$self());
+        if (terra_curio$isPlayer) {
+            TCUtils.applyCthulhuTouch((Player) confluence$self(), entity);
+        } else if (IEntity.of(entity).terra_curio$isPlayer()) {
+            TCUtils.applyCthulhuTouch((Player) entity, confluence$self());
         }
     }
 

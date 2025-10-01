@@ -11,6 +11,6 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class ServerGamePacketListenerImplMixin {
     @WrapWithCondition(method = "handleMovePlayer", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerPlayer;resetFallDistance()V"))
     private boolean doNotReset(ServerPlayer instance) {
-        return !((IEntity) instance).terra_curio$isShouldRot();
+        return !IEntity.of(instance).terra_curio$isShouldRot();
     }
 }

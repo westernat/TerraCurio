@@ -46,9 +46,9 @@ public abstract class PlayerClientMixin implements SelfGetter<Player> {
 
     @WrapOperation(method = "maybeBackOffFromEdge", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;maxUpStep()F"))
     private float backOff4(Player instance, Operation<Float> original) {
-        Float maxUpStep = original.call(instance);
+        float maxUpStep = original.call(instance);
         if (GravitationHandler.isShouldRot()) {
-            return terra_curio$fix - maxUpStep - ((IEntity) instance).terra_curio$getDimensionHeight();
+            return terra_curio$fix - maxUpStep - IEntity.of(instance).terra_curio$getDimensionHeight();
         }
         return maxUpStep;
     }
