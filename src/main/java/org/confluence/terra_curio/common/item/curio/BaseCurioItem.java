@@ -61,7 +61,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         if (living.level().isClientSide) {
             ILivingEntity iLiving = (ILivingEntity) living;
             ParticleEmitter emitter = iLiving.terra_curio$getOrCreateParticleEmitters().get(builder.particle);
-            if (emitter == null) {
+            if (emitter == null || emitter.isRemoved()) {
                 Map<ResourceLocation, ParticleEmitter> emitters = iLiving.terra_curio$getOrCreateParticleEmitters();
                 emitter = new ParticleEmitter(living.level(), living.position(), builder.particle);
                 emitter.attachEntity(living);

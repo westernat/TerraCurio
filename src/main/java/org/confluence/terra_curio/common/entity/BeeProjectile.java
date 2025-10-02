@@ -5,6 +5,7 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Enemy;
@@ -105,12 +106,16 @@ public class BeeProjectile extends Projectile {
         Entity entity = entityHitResult.getEntity();
         if (getOwner() != null) {
             float damage = baseDamage + (isGiant() ? random.nextInt(1, 4) : (random.nextBoolean() ? 1 : 0));
-            entity.hurt(damageSources().indirectMagic(this, getOwner()), damage);
+            entity.hurt(getDamageSource(), damage);
             if (isGiant()) {
                 Vec3 motion = entity.position().subtract(position()).normalize().scale(0.5);
                 entity.push(motion.x, motion.y, motion.z);
             }
         }
+    }
+
+    protected DamageSource getDamageSource() {
+        return damageSources().indirectMagic(this, getOwner());
     }
 
     @Override
