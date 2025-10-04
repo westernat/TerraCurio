@@ -156,7 +156,7 @@ public final class TCClientPacketHandler {
         ItemStack itemStack = player.getMainHandItem();
         if (itemStack.onEntitySwing(player, InteractionHand.MAIN_HAND)) return;
         if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
-        if (TCClientPacketHandler.couldAutoAttack() && minecraft.options.keyAttack.isDown()) {
+        if (minecraft.options.keyAttack.isDown() && TCClientPacketHandler.couldAutoAttack() /* confluence mixin here */) {
             if (player.getAttackStrengthScale(0.5F) < 1.0F - Mth.EPSILON) return;
             MinecraftAccessor accessor = (MinecraftAccessor) minecraft;
             if (accessor.getMissTime() > 0) accessor.setMissTime(0);
@@ -178,11 +178,12 @@ public final class TCClientPacketHandler {
             if (NeoForge.EVENT_BUS.post(new PlayerAboutToAutoAttackEvent(player, entityHitResult != null && entityHitResult.getLocation().distanceToSqr(from) < sqr)).couldPerform()) {
                 if (entityHitResult != null) {
                     minecraft.gameMode.attack(player, entityHitResult.getEntity());
+                    player.swing(InteractionHand.MAIN_HAND);
                 }
             } else {
                 CommonHooks.onEmptyLeftClick(player);
+                player.swing(InteractionHand.MAIN_HAND, false);
             }
-            player.swing(InteractionHand.MAIN_HAND, false);
             player.resetAttackStrengthTicker();
         }
     }
