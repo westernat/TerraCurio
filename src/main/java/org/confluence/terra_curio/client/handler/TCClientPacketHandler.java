@@ -22,7 +22,9 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.CommonHooks;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.NeoForgeMod;
+import org.confluence.terra_curio.api.event.PlayerAboutToAutoAttackEvent;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
@@ -153,9 +155,7 @@ public final class TCClientPacketHandler {
         if (!TCClientConfigs.autoAttack || minecraft.gameMode == null || minecraft.gameMode.isDestroying()) return;
         ItemStack itemStack = player.getMainHandItem();
         if (itemStack.onEntitySwing(player, InteractionHand.MAIN_HAND)) return;
-        if (BetterCombatHelper.LOADED) {
-            if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
-        }
+        if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
         if (TCClientPacketHandler.couldAutoAttack() && minecraft.options.keyAttack.isDown()) {
             if (player.getAttackStrengthScale(0.5F) < 1.0F - Mth.EPSILON) return;
             MinecraftAccessor accessor = (MinecraftAccessor) minecraft;
@@ -175,12 +175,15 @@ public final class TCClientPacketHandler {
             EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(
                     player, from, to, aabb, entity -> !entity.isSpectator() && entity.isPickable(), squared
             );
-            if (entityHitResult != null && entityHitResult.getLocation().distanceToSqr(from) < sqr) {
-                minecraft.gameMode.attack(player, entityHitResult.getEntity());
+            if (NeoForge.EVENT_BUS.post(new PlayerAboutToAutoAttackEvent(player, entityHitResult != null && entityHitResult.getLocation().distanceToSqr(from) < sqr)).couldPerform()) {
+                if (entityHitResult != null) {
+                    minecraft.gameMode.attack(player, entityHitResult.getEntity());
+                }
+            } else {
+                CommonHooks.onEmptyLeftClick(player);
             }
-            player.swing(InteractionHand.MAIN_HAND);
+            player.swing(InteractionHand.MAIN_HAND, false);
             player.resetAttackStrengthTicker();
-            CommonHooks.onEmptyLeftClick(player);
         }
     }
 
