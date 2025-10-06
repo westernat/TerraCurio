@@ -21,10 +21,10 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.CommonHooks;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import org.confluence.terra_curio.api.event.PlayerAboutToAutoAttackEvent;
+import org.confluence.terra_curio.api.event.PlayerEmptyAutoAttackEvent;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
@@ -180,11 +180,10 @@ public final class TCClientPacketHandler {
                     minecraft.gameMode.attack(player, entityHitResult.getEntity());
                     player.swing(InteractionHand.MAIN_HAND);
                 }
-            } else {
-                CommonHooks.onEmptyLeftClick(player);
+            } else if (!NeoForge.EVENT_BUS.post(new PlayerEmptyAutoAttackEvent(player, itemStack)).isCanceled()) {
                 player.swing(InteractionHand.MAIN_HAND, false);
+                player.resetAttackStrengthTicker();
             }
-            player.resetAttackStrengthTicker();
         }
     }
 
