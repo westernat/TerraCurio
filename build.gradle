@@ -138,7 +138,7 @@ dependencies {
         implementation project(":Confluence-Magic-Lib")
     } else {
         implementation(jarJar("org.mesdag:ParticleStorm:${particle_storm_version}"))
-        implementation jarJar(project(":Confluence-Magic-Lib"))
+        implementation jarJar(project("org.confluence.lib:Confluence-Magic-Lib:0.0.2d-SNAPSHOT"))
     }
 
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
@@ -178,7 +178,11 @@ tasks.withType(ProcessResources).configureEach {
     }
 }
 
-// Example configuration to allow publishing using the maven-publish plugin
+java.withSourcesJar()
+ext {
+    releasesUrl = "https://maven.confluence.ink/releases"
+    snapshotsUrl = "https://maven.confluence.ink/snapshots"
+}
 publishing {
     publications {
         register('mavenJava', MavenPublication) {
@@ -187,7 +191,12 @@ publishing {
     }
     repositories {
         maven {
-            url "file://${project.projectDir}/repo"
+            name = "Confluence"
+            url = version.toString().endsWith("SNAPSHOT") ? snapshotsUrl : releasesUrl
+            credentials {
+                username = System.getenv("MAGIC_TEAM_USERNAME")
+                password = System.getenv("MAGIC_TEAM_TOKEN")
+            }
         }
     }
 }
@@ -200,10 +209,6 @@ idea {
     }
 }
 
-tasks.register('sourcesJar', Jar) {
-    from sourceSets.main.allJava
-    archiveClassifier.set("sources")
-}
 
 tasks.withType(JavaCompile) {
     options.encoding = 'UTF-8'
