@@ -135,10 +135,10 @@ dependencies {
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
     if (dev) {
         implementation("org.mesdag:ParticleStorm:${particle_storm_version}")
-        implementation project("org.confluence.lib:Confluence-Magic-Lib:{confluence_lib_version}")
+        implementation project("org.confluence.lib:Confluence-Magic-Lib:${confluence_lib_version}")
     } else {
         implementation(jarJar("org.mesdag:ParticleStorm:${particle_storm_version}"))
-        implementation (jarJar("org.confluence.lib:Confluence-Magic-Lib:{confluence_lib_version}"))
+        implementation (jarJar("org.confluence.lib:Confluence-Magic-Lib:${confluence_lib_version}"))
     }
 
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
