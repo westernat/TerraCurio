@@ -138,7 +138,7 @@ dependencies {
         implementation project(":Confluence-Magic-Lib")
     } else {
         implementation(jarJar("org.mesdag:ParticleStorm:${particle_storm_version}"))
-        implementation jarJar(project(":Confluence-Magic-Lib"))
+        implementation jarJar(project("org.confluence.lib:Confluence-Magic-Lib:0.0.2d-SNAPSHOT"))
     }
 
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
