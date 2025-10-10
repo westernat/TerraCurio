@@ -5,14 +5,19 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.*;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.DataSlot;
+import net.minecraft.world.inventory.ResultContainer;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import org.confluence.lib.common.menu.AmountResultSlot;
+import org.confluence.lib.common.recipe.EnvironmentLevelAccess;
+import org.confluence.lib.common.recipe.EnvironmentRecipeInput;
 import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCMenus;
 import org.confluence.terra_curio.common.init.TCRecipes;
 import org.confluence.terra_curio.common.recipe.WorkshopRecipe;
-import org.confluence.terra_curio.util.TCUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,15 +25,16 @@ import java.util.List;
 @javax.annotation.ParametersAreNonnullByDefault
 @net.minecraft.MethodsReturnNonnullByDefault
 public class WorkshopMenu extends AbstractContainerMenu {
-    private final ContainerLevelAccess access;
+    private final EnvironmentLevelAccess access;
     private final Player player;
-    private final RecipeInputContainer input;
-    private final ResultContainer result = new ResultContainer();
+    private final EnvironmentRecipeInput input;
+    private final ResultContainer result;
+    private final AmountResultSlot<WorkshopRecipe> resultSlot;
     private final DataSlot selectedRecipeIndex = DataSlot.standalone();
     private List<RecipeHolder<WorkshopRecipe>> recipes = new ArrayList<>();
 
-    public WorkshopMenu(int pContainerId, Inventory inventory) {
-        this(pContainerId, inventory, ContainerLevelAccess.NULL);
+    public WorkshopMenu(int containerId, Inventory inventory) {
+        this(containerId, inventory, EnvironmentLevelAccess.empty());
     }
 
     /*
@@ -37,12 +43,14 @@ public class WorkshopMenu extends AbstractContainerMenu {
      * 10       05
      * 09 08 07 06
      */
-    public WorkshopMenu(int pContainerId, Inventory pPlayerInventory, ContainerLevelAccess pAccess) {
-        super(TCMenus.WORKSHOP.get(), pContainerId);
-        this.player = pPlayerInventory.player;
-        this.access = TCUtils.forConfluence$ModifyExpression(pAccess);
-        this.input = TCUtils.forConfluence$ModifyExpression(new RecipeInputContainer(this, 12));
-        addSlot(new AmountResultSlot(input, result, 0, 62, 35) {
+    public WorkshopMenu(int containerId, Inventory inventory, EnvironmentLevelAccess access) {
+        super(TCMenus.WORKSHOP.get(), containerId);
+        this.player = inventory.player;
+        access.initializeIfNeeded(player);
+        this.access = access;
+        this.input = new EnvironmentRecipeInput(this, 12, access);
+        this.result = new ResultContainer();
+        addSlot(this.resultSlot = new AmountResultSlot<>(input, result, 0, 62, 35) {
             @Override
             protected void updateMenu() {
                 WorkshopMenu.this.setupResultSlot();
@@ -64,11 +72,11 @@ public class WorkshopMenu extends AbstractContainerMenu {
 
         for (int k = 0; k < 3; k++) {
             for (int l = 0; l < 9; l++) {
-                addSlot(new Slot(pPlayerInventory, l + k * 9 + 9, 8 + l * 18, 84 + k * 18));
+                addSlot(new Slot(inventory, l + k * 9 + 9, 8 + l * 18, 84 + k * 18));
             }
         }
         for (int m = 0; m < 9; m++) {
-            addSlot(new Slot(pPlayerInventory, m, 8 + m * 18, 142));
+            addSlot(new Slot(inventory, m, 8 + m * 18, 142));
         }
 
         addDataSlot(selectedRecipeIndex);
@@ -142,7 +150,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
             ItemStack itemStack = recipe.getResultItem(null).copy();
             if (itemStack.isItemEnabled(player.level().enabledFeatures())) {
                 result.setItem(0, itemStack);
-                setCurrentRecipe(recipe);
+                resultSlot.setCurrentRecipe(recipe);
             } else {
                 result.setItem(0, ItemStack.EMPTY);
             }
@@ -179,19 +187,13 @@ public class WorkshopMenu extends AbstractContainerMenu {
                     if (selectedRecipeIndex.get() == -1) selectedRecipeIndex.set(0);
                     WorkshopRecipe recipe = recipes.get(selectedRecipeIndex.get()).value();
                     itemStack = recipe.getResultItem(null).copy();
-                    setCurrentRecipe(recipe);
+                    resultSlot.setCurrentRecipe(recipe);
                 }
                 result.setItem(0, itemStack);
                 setRemoteSlot(0, itemStack);
                 serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(containerId, incrementStateId(), 0, itemStack));
             }
         });
-    }
-
-    private void setCurrentRecipe(WorkshopRecipe recipe) {
-        if (getSlot(0) instanceof AmountResultSlot amountResultSlot) {
-            amountResultSlot.setCurrentRecipe(recipe);
-        }
     }
 
     @Override

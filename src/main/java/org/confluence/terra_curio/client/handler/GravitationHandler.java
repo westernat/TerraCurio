@@ -6,33 +6,41 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.mixin.client.accessor.LocalPlayerAccessor;
 import org.confluence.terra_curio.network.c2s.GravitationPacketC2S;
 import org.confluence.terra_curio.network.s2c.BroadcastGravitationRotPacketS2C;
 
-@OnlyIn(Dist.CLIENT)
 public final class GravitationHandler {
     public static final Vec3 DOWN = new Vec3(0.0, -0.3000001, 0.0);
     private static boolean keyDown = false;
     private static boolean shouldRot = false;
     static boolean hasGlobe = false;
 
-    public static void handle(LocalPlayer localPlayer, boolean jumping) {
-        if (StepStoolHandler.onStool() || localPlayer.getAbilities().flying) return;
+    public static void handle(LocalPlayer player) {
+        if (StepStoolHandler.onStool()) return;
 
-        if (jumping) {
+        if (TCKeyBindings.FLIP_GRAVITATION.get().isDown()) {
             if (!keyDown) {
                 shouldRot = !shouldRot;
-                localPlayer.resetFallDistance();
+                player.resetFallDistance();
                 PacketDistributor.sendToServer(new GravitationPacketC2S(shouldRot));
             }
             keyDown = true;
         } else {
             keyDown = false;
+        }
+    }
+
+    public static void force(LocalPlayer player) {
+        if (StepStoolHandler.onStool() || player.getAbilities().flying) return;
+
+        if (!shouldRot) {
+            shouldRot = true;
+            player.resetFallDistance();
+            PacketDistributor.sendToServer(new GravitationPacketC2S(true));
         }
     }
 
@@ -47,8 +55,8 @@ public final class GravitationHandler {
         return shouldRot;
     }
 
-    public static void handle(LocalPlayer localPlayer) {
-        if (localPlayer.getY() > localPlayer.level().getMaxBuildHeight()) {
+    public static void tryExpire(LocalPlayer player) {
+        if (player.getY() > player.level().getMaxBuildHeight()) {
             expire();
         }
     }
@@ -58,11 +66,11 @@ public final class GravitationHandler {
         hasGlobe = false;
     }
 
-    public static void unCrouching(Player localPlayer) {
-        if (shouldRot && localPlayer.onGround() && localPlayer.isCrouching() && !localPlayer.isShiftKeyDown()) {
-            localPlayer.move(MoverType.SELF, DOWN);
-            localPlayer.setPose(Pose.STANDING);
-            ((LocalPlayerAccessor) localPlayer).setCrouching(false);
+    public static void unCrouching(Player player) {
+        if (shouldRot && player.onGround() && player.isCrouching() && !player.isShiftKeyDown()) {
+            player.move(MoverType.SELF, DOWN);
+            player.setPose(Pose.STANDING);
+            ((LocalPlayerAccessor) player).setCrouching(false);
         }
     }
 
@@ -73,7 +81,16 @@ public final class GravitationHandler {
     public static void handleRemoteRot(BroadcastGravitationRotPacketS2C packet, Player player) {
         Entity entity = player.level().getEntity(packet.entityId());
         if (entity != null) {
-            ((IEntity) entity).terra_curio$setShouldRot(packet.enabled());
+            IEntity.of(entity).terra_curio$setShouldRot(packet.enabled());
         }
+    }
+
+    public static boolean isShouldRot(Entity entity) {
+        IEntity iEntity = IEntity.of(entity);
+        return iEntity.terra_curio$isPlayer() && (((Player) entity).isLocalPlayer() ? isShouldRot() : iEntity.terra_curio$isShouldRot());
+    }
+
+    public static float getJumpDir() {
+        return isShouldRot() ? -1.0F : 1.0F;
     }
 }

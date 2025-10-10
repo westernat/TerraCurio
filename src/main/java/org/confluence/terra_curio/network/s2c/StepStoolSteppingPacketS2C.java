@@ -18,8 +18,8 @@ public record StepStoolSteppingPacketS2C(int slot, int maxStep) implements Custo
     public static final int RESET_STEP = -2;
     public static final Type<StepStoolSteppingPacketS2C> TYPE = new Type<>(TerraCurio.asResource("step_stool_stepping_s2c"));
     public static final StreamCodec<ByteBuf, StepStoolSteppingPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, p -> p.slot,
-            ByteBufCodecs.INT, p -> p.maxStep,
+            ByteBufCodecs.VAR_INT, StepStoolSteppingPacketS2C::slot,
+            ByteBufCodecs.VAR_INT, StepStoolSteppingPacketS2C::maxStep,
             StepStoolSteppingPacketS2C::new
     );
 

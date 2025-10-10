@@ -1,56 +1,47 @@
 package org.confluence.terra_curio.common.item;
 
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.common.component.ModRarity;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.client.animate.ExpertColorAnimation;
-import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
-import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 
-import java.util.List;
 import java.util.Map;
 
 public class DemonHeart extends Item {
     public static final ResourceLocation ID = TerraCurio.asResource("demon_heart");
 
     public DemonHeart() {
-        super(new Properties().component(TCDataComponentTypes.MOD_RARITY, ModRarity.EXPERT).stacksTo(1).fireResistant());
+        super(new Properties().component(ConfluenceMagicLib.MOD_RARITY, ModRarity.EXPERT).stacksTo(1).fireResistant());
     }
 
     @Override
-    public InteractionResultHolder<ItemStack> use(Level pLevel, Player pPlayer, InteractionHand pUsedHand) {
-        ItemStack itemStack = pPlayer.getItemInHand(pUsedHand);
-        CuriosApi.getCuriosInventory(pPlayer).ifPresent(iCuriosItemHandler -> {
-            ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
-            if (iCurioStacksHandler != null && iCurioStacksHandler.getSlots() < TCCommonConfigs.MAX_ACCESSORIES.get()) {
-                itemStack.shrink(1);
-                Map<ResourceLocation, AttributeModifier> modifiers = iCurioStacksHandler.getModifiers();
-                double before = modifiers.containsKey(ID) ? modifiers.get(ID).amount() : 0.0;
-                iCurioStacksHandler.removeModifier(ID);
-                iCuriosItemHandler.addPermanentSlotModifier(TerraCurio.CURIO_SLOT, ID, before + 1.0, AttributeModifier.Operation.ADD_VALUE);
-            }
-        });
-        return InteractionResultHolder.sidedSuccess(itemStack, pLevel.isClientSide);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.demon_heart.0"));
-    }
-
-    @Override
-    public Component getName(ItemStack stack) {
-        return Component.translatable(getDescriptionId()).withStyle(style -> style.withColor(ExpertColorAnimation.INSTANCE.getColor()));
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack itemStack = player.getItemInHand(hand);
+        if (player instanceof ServerPlayer serverPlayer) {
+            CuriosApi.getCuriosInventory(player).ifPresent(iCuriosItemHandler -> {
+                ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
+                if (iCurioStacksHandler != null && iCurioStacksHandler.getSlots() < TCCommonConfigs.MAX_ACCESSORIES.get()) {
+                    itemStack.shrink(1);
+                    Map<ResourceLocation, AttributeModifier> modifiers = iCurioStacksHandler.getModifiers();
+                    double before = modifiers.containsKey(ID) ? modifiers.get(ID).amount() : 0.0;
+                    iCurioStacksHandler.removeModifier(ID);
+                    iCuriosItemHandler.addPermanentSlotModifier(TerraCurio.CURIO_SLOT, ID, before + 1.0, AttributeModifier.Operation.ADD_VALUE);
+                    LibUtils.forMixin$ModifyExpression(serverPlayer);
+                }
+            });
+        }
+        return InteractionResultHolder.sidedSuccess(itemStack, level.isClientSide);
     }
 }

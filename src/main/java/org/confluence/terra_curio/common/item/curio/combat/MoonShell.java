@@ -21,7 +21,7 @@ public class MoonShell extends NightBonusCurioItem implements ICosmetic {
     );
 
     public MoonShell(Builder builder) {
-        super(0.5F, builder);
+        super(0.1F, builder);
     }
 
     @Override

@@ -53,7 +53,8 @@
                     }
                 }
             },
-            "minecraft:particle_appearance_lighting": {}
+            "minecraft:particle_appearance_lighting": {},
+            "minecraft:particle_motion_collision": {}
         }
     }
 }

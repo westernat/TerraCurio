@@ -10,7 +10,7 @@ import org.confluence.terra_curio.common.init.TCAttributes;
 import java.util.Map;
 
 public class ApothicHelper {
-    public static final String ATTRIBUTES_ID = "attributeslib";
+    public static final String ATTRIBUTES_ID = "apothic_attributes";
     public static final boolean LOADED = ModList.get().isLoaded(ATTRIBUTES_ID);
     public static final ResourceLocation CRIT_CHANCE = ResourceLocation.fromNamespaceAndPath(ATTRIBUTES_ID, "crit_chance");
     public static final ResourceLocation ARROW_VELOCITY = ResourceLocation.fromNamespaceAndPath(ATTRIBUTES_ID, "arrow_velocity");
@@ -20,11 +20,11 @@ public class ApothicHelper {
 
     public static void preset(Map<Holder<Attribute>, Holder<Attribute>> map) {
         if (LOADED) {
-            map.put(TCAttributes.CRIT_CHANCE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.CRIT_CHANCE).get());
-            map.put(TCAttributes.RANGED_VELOCITY, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARROW_VELOCITY).get());
-            map.put(TCAttributes.RANGED_DAMAGE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARROW_DAMAGE).get());
-            map.put(TCAttributes.DODGE_CHANCE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.DODGE_CHANCE).get());
-            map.put(TCAttributes.ARMOR_PASS, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARMOR_PIERCE).get());
+            map.put(TCAttributes.CRIT_CHANCE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.CRIT_CHANCE).orElse(null));
+            map.put(TCAttributes.RANGED_VELOCITY, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARROW_VELOCITY).orElse(null));
+            map.put(TCAttributes.RANGED_DAMAGE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARROW_DAMAGE).orElse(null));
+            map.put(TCAttributes.DODGE_CHANCE, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.DODGE_CHANCE).orElse(null));
+            map.put(TCAttributes.ARMOR_PENETRATION, BuiltInRegistries.ATTRIBUTE.getHolder(ApothicHelper.ARMOR_PIERCE).orElse(null));
         }
     }
 }

@@ -3,10 +3,7 @@ package org.confluence.terra_curio.client.handler;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.util.Mth;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 
-@OnlyIn(Dist.CLIENT)
 public final class PlayerSprintingHandler {
     private static Movement xxa = Movement.NONE;
     private static Movement zza = Movement.NONE;

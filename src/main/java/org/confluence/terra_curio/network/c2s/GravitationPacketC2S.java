@@ -12,16 +12,13 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.effect.beneficial.GravitationEffect;
+import org.confluence.terra_curio.common.effect.GravitationEffect;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.network.s2c.BroadcastGravitationRotPacketS2C;
 
 public record GravitationPacketC2S(boolean enable) implements CustomPacketPayload {
     public static final Type<GravitationPacketC2S> TYPE = new Type<>(TerraCurio.asResource("gravitation"));
-    public static final StreamCodec<ByteBuf, GravitationPacketC2S> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.BOOL, p -> p.enable,
-            GravitationPacketC2S::new
-    );
+    public static final StreamCodec<ByteBuf, GravitationPacketC2S> STREAM_CODEC = ByteBufCodecs.BOOL.map(GravitationPacketC2S::new, GravitationPacketC2S::enable);
 
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
@@ -34,7 +31,7 @@ public record GravitationPacketC2S(boolean enable) implements CustomPacketPayloa
                     AttributeInstance attributeInstance = attributeMap.getInstance(Attributes.GRAVITY);
                     if (attributeInstance != null) attributeInstance.removeModifier(GravitationEffect.ID);
                 }
-                ((IEntity) serverPlayer).terra_curio$setShouldRot(enable);
+                IEntity.of(serverPlayer).terra_curio$setShouldRot(enable);
                 PacketDistributor.sendToAllPlayers(new BroadcastGravitationRotPacketS2C(serverPlayer.getId(), enable));
             }
         }).exceptionally(e -> {

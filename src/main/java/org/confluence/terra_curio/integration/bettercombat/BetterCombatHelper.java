@@ -10,15 +10,18 @@ public class BetterCombatHelper {
     private static Method getAttributes;
 
     public static boolean hasWeaponAttributes(ItemStack itemStack) {
-        try {
-            if (getAttributes == null) {
-                Class<?> WeaponRegistry = BetterCombatHelper.class.getClassLoader().loadClass("net.bettercombat.logic.WeaponRegistry");
-                getAttributes = WeaponRegistry.getDeclaredMethod("getAttributes", ItemStack.class);
-                getAttributes.setAccessible(true);
+        if (LOADED) {
+            try {
+                if (getAttributes == null) {
+                    Class<?> WeaponRegistry = BetterCombatHelper.class.getClassLoader().loadClass("net.bettercombat.logic.WeaponRegistry");
+                    getAttributes = WeaponRegistry.getDeclaredMethod("getAttributes", ItemStack.class);
+                    getAttributes.setAccessible(true);
+                }
+                return getAttributes.invoke(null, itemStack) != null;
+            } catch (Exception e) {
+                return false;
             }
-            return getAttributes.invoke(null, itemStack) != null;
-        } catch (Exception e) {
-            return false;
         }
+        return false;
     }
 }

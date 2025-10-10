@@ -25,6 +25,6 @@ public final class TCDamageTypes {
     }
 
     public static DamageSource of(Level level, ResourceKey<DamageType> key, Entity causing, Entity direct) {
-        return new DamageSource(level.registryAccess().registry(Registries.DAMAGE_TYPE).orElseThrow().getHolderOrThrow(key), causing, direct);
+        return level.damageSources().source(key, direct, causing);
     }
 }

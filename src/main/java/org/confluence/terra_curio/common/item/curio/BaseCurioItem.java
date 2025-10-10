@@ -15,15 +15,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.common.component.ModRarity;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.api.primitive.ComponentsValue;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
-import org.confluence.terra_curio.common.component.ModRarity;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCDataMaps;
 import org.confluence.terra_curio.common.init.TCItems;
@@ -52,7 +51,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
     }
 
     public BaseCurioItem(Properties properties) {
-        super(properties);
+        super(properties.stacksTo(1));
     }
 
     @Override
@@ -62,10 +61,10 @@ public class BaseCurioItem extends Item implements ICurioItem {
         if (living.level().isClientSide) {
             ILivingEntity iLiving = (ILivingEntity) living;
             ParticleEmitter emitter = iLiving.terra_curio$getOrCreateParticleEmitters().get(builder.particle);
-            if (emitter == null) {
+            if (emitter == null || emitter.isRemoved()) {
                 Map<ResourceLocation, ParticleEmitter> emitters = iLiving.terra_curio$getOrCreateParticleEmitters();
                 emitter = new ParticleEmitter(living.level(), living.position(), builder.particle);
-                emitter.attached = living;
+                emitter.attachEntity(living);
                 PSGameClient.LOADER.addEmitter(emitter, false);
                 emitters.put(builder.particle, emitter);
             }
@@ -74,7 +73,6 @@ public class BaseCurioItem extends Item implements ICurioItem {
         }
     }
 
-    @OnlyIn(Dist.CLIENT)
     protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
         if (emitter.isRemoved()) {
             ((ILivingEntity) living).terra_curio$getOrCreateParticleEmitters().remove(particle);
@@ -117,17 +115,12 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public boolean canEquip(SlotContext slotContext, ItemStack stack) {
-        return CuriosUtils.noSameCurio(slotContext.entity(), this);
+        return slotContext.cosmetic() || CuriosUtils.noSameCurio(slotContext.entity(), this);
     }
 
     @Override
     public boolean makesPiglinsNeutral(SlotContext slotContext, ItemStack stack) {
         return builder != null && builder.makePiglinsNeutral;
-    }
-
-    @Override
-    public Component getName(ItemStack stack) {
-        return Component.translatable(getDescriptionId()).withStyle(style -> style.withColor(stack.get(TCDataComponentTypes.MOD_RARITY).getColor()));
     }
 
     public static Builder builder(String name, Properties properties) {
@@ -140,7 +133,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
-        return enchantment.is(EnchantmentTags.CURSE);
+        return enchantment.is(EnchantmentTags.CURSE) || stack.is(enchantment.value().definition().supportedItems());
     }
 
     public static class Builder {
@@ -252,7 +245,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         @ApiStatus.Internal
         public Builder initialize() {
-            properties.stacksTo(1).component(TCDataComponentTypes.MOD_RARITY, rarity);
+            properties.stacksTo(1).component(ConfluenceMagicLib.MOD_RARITY, rarity);
             this.attributes = attributesBuilder.build();
             this.attributesBuilder = null;
             return this;

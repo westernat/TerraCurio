@@ -6,7 +6,6 @@
     "refmap": "terra_curio.refmap.json",
     "mixins": [
         "AbstractArrowMixin",
-        "CommonHooksMixin",
         "CrossbowItemMixin",
         "EntityMixin",
         "LivingEntityMixin",
@@ -17,23 +16,22 @@
         "TargetingConditionsMixin",
         "accessor.ItemEntityAccessor",
         "accessor.LivingEntityAccessor",
-        "accessor.MobAccessor",
-        "accessor.RangedAttributeAccessor",
         "accessor.SmithingTransformRecipeAccessor"
     ],
     "client": [
-        "client.ClientEntityMixin",
-        "client.ClientLivingEntityMixin",
         "client.ClientPacketListenerMixin",
-        "client.ClientPlayerMixin",
+        "client.EntityClientMixin",
         "client.KeyboardInputMixin",
+        "client.LivingEntityClientMixin",
         "client.LivingEntityRendererMixin",
         "client.LocalPlayerMixin",
         "client.MouseHandlerMixin",
+        "client.PlayerClientMixin",
         "client.accessor.LocalPlayerAccessor",
         "client.accessor.MinecraftAccessor",
         "client.accessor.ModelPartAccessor",
-        "sodiumdynamiclights.DynamicLightHandlersMixin"
+        "integration.curios.CuriosClientPacketsMixin",
+        "integration.sodiumdynamiclights.DynamicLightHandlersMixin"
     ],
     "injectors": {
         "defaultRequire": 1

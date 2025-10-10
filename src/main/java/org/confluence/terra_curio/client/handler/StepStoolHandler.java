@@ -2,8 +2,6 @@ package org.confluence.terra_curio.client.handler;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.network.c2s.StepStoolSteppingPacketC2S;
@@ -11,7 +9,6 @@ import org.confluence.terra_curio.network.s2c.StepStoolSteppingPacketS2C;
 
 import static org.confluence.terra_curio.network.c2s.StepStoolSteppingPacketC2S.INCREASE;
 
-@OnlyIn(Dist.CLIENT)
 public final class StepStoolHandler {
     private static boolean upKeyDown = false;
     private static boolean shiftKeyDown = false;

@@ -6,7 +6,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
-import org.confluence.terra_curio.TerraCurio;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -30,6 +29,6 @@ public class DataGenerator {
         generator.addProvider(server, new ModItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
         generator.addProvider(server, new ModLanguageProvider(output, "en_us"));
         generator.addProvider(server, new ModLanguageProvider(output, "zh_cn"));
-        generator.addProvider(server, new WorkshopRecipeProvider(output));
+        generator.addProvider(server, new WorkshopProvider(output, lookup));
     }
 }

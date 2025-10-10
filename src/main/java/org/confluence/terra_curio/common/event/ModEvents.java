@@ -1,19 +1,20 @@
 package org.confluence.terra_curio.common.event;
 
+import net.minecraft.core.registries.Registries;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.neoforged.neoforge.registries.RegisterEvent;
+import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.network.InfoDisablePacket;
-import org.confluence.terra_curio.network.c2s.GravitationPacketC2S;
-import org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S;
-import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
-import org.confluence.terra_curio.network.c2s.StepStoolSteppingPacketC2S;
+import org.confluence.terra_curio.network.c2s.*;
 import org.confluence.terra_curio.network.s2c.*;
 
 @EventBusSubscriber(modid = TerraCurio.MODID, bus = EventBusSubscriber.Bus.MOD)
@@ -22,22 +23,28 @@ public final class ModEvents {
     public static void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
             TCCommonConfigs.onLoad();
-            TCAttributes.modifyAttributesUpperLimit();
+            NeoForgeMod.enableMergedAttributeTooltips();
         });
     }
 
     @SubscribeEvent
+    public static void register(RegisterEvent event) {
+        if (event.getRegistryKey() == Registries.ATTRIBUTE) {
+            TCAttributes.prepareReplacements();
+        }
+    }
+
+    @SubscribeEvent
     public static void entityAttributeModification(EntityAttributeModificationEvent event) {
-        TCAttributes.prepareReplacements();
         TCAttributes.registerAttribute(TCAttributes.CRIT_CHANCE, event::add);
         TCAttributes.registerAttribute(TCAttributes.RANGED_VELOCITY, event::add);
         TCAttributes.registerAttribute(TCAttributes.RANGED_DAMAGE, event::add);
         TCAttributes.registerAttribute(TCAttributes.DODGE_CHANCE, event::add);
         TCAttributes.registerAttribute(TCAttributes.AGGRO, event::add);
-        if (TerraCurio.IS_CONFLUENCE_LOADED) {
+        if (ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get()) {
             TCAttributes.registerAttribute(TCAttributes.MAGIC_DAMAGE, event::add);
         }
-        TCAttributes.registerAttribute(TCAttributes.ARMOR_PASS, event::add);
+        TCAttributes.registerAttribute(TCAttributes.ARMOR_PENETRATION, event::add);
         TCAttributes.registerAttribute(TCAttributes.PICKUP_RANGE, event::add);
     }
 
@@ -48,6 +55,8 @@ public final class ModEvents {
         registrar.playToServer(StepStoolSteppingPacketC2S.TYPE, StepStoolSteppingPacketC2S.STREAM_CODEC, StepStoolSteppingPacketC2S::handle);
         registrar.playToServer(PlayerJumpPacketC2S.TYPE, PlayerJumpPacketC2S.STREAM_CODEC, PlayerJumpPacketC2S::handle);
         registrar.playToServer(SpeedBootsNBTPacketC2S.TYPE, SpeedBootsNBTPacketC2S.STREAM_CODEC, SpeedBootsNBTPacketC2S::handle);
+        registrar.playToServer(PlayerSprintPacketC2S.TYPE, PlayerSprintPacketC2S.STREAM_CODEC, PlayerSprintPacketC2S::handle);
+        registrar.playToServer(ShootXBonePacketC2S.TYPE, ShootXBonePacketC2S.STREAM_CODEC, ShootXBonePacketC2S::handle);
 
         registrar.playToClient(BroadcastGravitationRotPacketS2C.TYPE, BroadcastGravitationRotPacketS2C.STREAM_CODEC, BroadcastGravitationRotPacketS2C::handle);
         registrar.playToClient(CurioExistsPacketS2C.TYPE, CurioExistsPacketS2C.STREAM_CODEC, CurioExistsPacketS2C::handle);
@@ -60,9 +69,9 @@ public final class ModEvents {
         registrar.playToClient(PlayerClimbPacketS2C.TYPE, PlayerClimbPacketS2C.STREAM_CODEC, PlayerClimbPacketS2C::handle);
         registrar.playToClient(RightClickSubtractorPacketS2C.TYPE, RightClickSubtractorPacketS2C.STREAM_CODEC, RightClickSubtractorPacketS2C::handle);
         registrar.playToClient(SetItemEntityPickupDelayPacketS2C.TYPE, SetItemEntityPickupDelayPacketS2C.STREAM_CODEC, SetItemEntityPickupDelayPacketS2C::handle);
-        registrar.playToClient(FluidWalkUpdatePacketS2C.TYPE, FluidWalkUpdatePacketS2C.STREAM_CODEC, FluidWalkUpdatePacketS2C::handle);
         registrar.playToClient(BroadcastRenderPacketS2C.TYPE, BroadcastRenderPacketS2C.STREAM_CODEC, BroadcastRenderPacketS2C::handle);
         registrar.playToClient(InfiniteFlightPacketS2C.TYPE, InfiniteFlightPacketS2C.STREAM_CODEC, InfiniteFlightPacketS2C::handle);
+        registrar.playToClient(FluidWalkUpdatePacketS2C.TYPE, FluidWalkUpdatePacketS2C.STREAM_CODEC, FluidWalkUpdatePacketS2C::handle);
 
         registrar.playBidirectional(InfoDisablePacket.TYPE, InfoDisablePacket.STREAM_CODEC, InfoDisablePacket::handle);
     }

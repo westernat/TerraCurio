@@ -1,6 +1,8 @@
 package org.confluence.terra_curio.api.primitive;
 
 import com.mojang.serialization.Codec;
+import io.netty.buffer.ByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import org.confluence.terra_curio.TerraCurio;
@@ -11,32 +13,34 @@ import java.util.function.Function;
 
 @SuppressWarnings("unchecked")
 public class ValueType<T, V extends PrimitiveValue<T>> {
-    public static final Map<ResourceLocation, Codec<PrimitiveValue<?>>> VALUE_CODECS = new Hashtable<>();
+    public static final Map<ValueType<?, ? extends PrimitiveValue<?>>, Codec<PrimitiveValue<?>>> VALUE_CODECS = new Hashtable<>();
     public static final Map<ResourceLocation, ValueType<?, ? extends PrimitiveValue<?>>> TYPES = new Hashtable<>();
     public static final Codec<ValueType<?, ? extends PrimitiveValue<?>>> CODEC = ResourceLocation.CODEC.xmap(TYPES::get, ValueType::key);
+    public static final StreamCodec<ByteBuf, ValueType<?, ?>> STREAM_CODEC = ResourceLocation.STREAM_CODEC.map(TYPES::get, ValueType::key);
 
     private final ResourceLocation key;
     private final CombineRule<T, V> combineRule;
     private final T defaultValue;
     private final Function<T, V> factory;
 
-    public ValueType(ResourceLocation key, CombineRule<T, V> combineRule, T defaultValue, Function<T, V> factory) {
+    // 不允许从外部创建，这样是不安全的
+    private ValueType(ResourceLocation key, CombineRule<T, V> combineRule, T defaultValue, Function<T, V> factory) {
         this.key = key;
         this.combineRule = combineRule;
         this.defaultValue = defaultValue;
         this.factory = factory;
     }
 
-    private static <T, V extends PrimitiveValue<T>> void registerCodec(ResourceLocation id, Codec<V> codec) {
+    private static <T, V extends PrimitiveValue<T>> void registerCodec(ValueType<?, ? extends PrimitiveValue<?>> type, Codec<V> codec) {
         if (codec instanceof Codec<? extends PrimitiveValue<?>> codec1) {
-            VALUE_CODECS.put(id, (Codec<PrimitiveValue<?>>) codec1);
+            VALUE_CODECS.put(type, (Codec<PrimitiveValue<?>>) codec1);
         }
     }
 
     public static <T, V extends PrimitiveValue<T>> ValueType<T, V> create(String path, CombineRule<T, V> combineRule, Codec<V> codec, T defaultValue, Function<T, V> factory) {
         ResourceLocation id = TerraCurio.asResource(path);
-        registerCodec(id, codec);
         ValueType<T, V> type = new ValueType<>(id, combineRule, defaultValue, factory);
+        registerCodec(type, codec);
         TYPES.put(id, type);
         return type;
     }
@@ -77,5 +81,16 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
                 ", defaultValue=" + defaultValue +
                 ", factory=" + factory +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) return true;
+        return o instanceof ValueType<?, ?> valueType && valueType.key.equals(key);
+    }
+
+    @Override
+    public int hashCode() {
+        return key.hashCode();
     }
 }

@@ -8,7 +8,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.entity.projectile.BeeProjectile;
+import org.confluence.terra_curio.common.entity.BeeProjectile;
 
 public class BeeProjectileModel extends EntityModel<BeeProjectile> {
     public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(TerraCurio.asResource("bee_projectile"), "main");

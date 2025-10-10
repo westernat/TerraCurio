@@ -6,7 +6,6 @@ import java.util.List;
 import java.util.function.BiFunction;
 
 public interface PrimitiveValue<T> {
-
     T get();
 
     Codec<? extends PrimitiveValue<T>> codec();
@@ -26,4 +25,6 @@ public interface PrimitiveValue<T> {
     static <T> BiFunction<T, T, T> identity() {
         return (a, b) -> a;
     }
+
+
 }

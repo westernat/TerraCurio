@@ -7,6 +7,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.damagesource.DamageType;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
@@ -23,4 +24,6 @@ public final class TCTags {
     public static final TagKey<Fluid> WATER_LIKE_WALK = FluidTags.create(TerraCurio.asResource("water_like_walk"));
     public static final TagKey<Fluid> LAVA_LIKE_WALK = FluidTags.create(TerraCurio.asResource("lava_like_walk"));
     public static final TagKey<DamageType> HARMFUL_EFFECT = TagKey.create(Registries.DAMAGE_TYPE, TerraCurio.asResource("harmful_effect"));
+    public static final TagKey<EntityType<?>> NOTHING = TagKey.create(Registries.ENTITY_TYPE, TerraCurio.asResource("nothing"));
+    public static final TagKey<EntityType<?>> SLIME = TagKey.create(Registries.ENTITY_TYPE, TerraCurio.asResource("slime"));
 }

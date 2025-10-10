@@ -3,6 +3,8 @@ package org.confluence.terra_curio.common.item.curio.movement;
 import net.minecraft.network.chat.Component;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import top.theillusivec4.curios.api.SlotContext;
@@ -11,7 +13,7 @@ import java.util.List;
 
 public class DuneriderBoots extends BaseSpeedBoots {
     public DuneriderBoots(String name) {
-        super(1, 40, builder(name));
+        super(1, 40, builder(name).attribute(Attributes.STEP_HEIGHT, 0.5, AttributeModifier.Operation.ADD_VALUE));
     }
 
     @Override

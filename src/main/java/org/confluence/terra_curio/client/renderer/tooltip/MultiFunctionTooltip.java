@@ -13,7 +13,7 @@ import net.minecraft.util.Mth;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.client.handler.InformationHandler;
-import org.confluence.terra_curio.common.item.IFunctionCouldEnable;
+import org.confluence.terra_curio.common.item.IMultiFunctionCouldEnable;
 import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
@@ -22,8 +22,8 @@ import java.util.List;
 
 public class MultiFunctionTooltip implements ClientTooltipComponent {
     private static final Component TOOLTIP = Component.translatable("tooltip.terra_curio.hold_and_scroll");
-    private static final ResourceLocation ENABLED = TerraCurio.asResource("textures/gui/information/enabled.png");
-    public static final float SCALE = 10.0F / 18.0F;
+    public static final ResourceLocation HIGHLIGHT = TerraCurio.asResource("textures/gui/information/highlight.png");
+    public static final float SCALE = 10.0F / 9.0F;
     public static int mouseScrollY = 0;
     public static boolean isShowing = false;
 
@@ -84,10 +84,10 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
                 pose.translate(x - 2.0F, y - 1.0F + i * 10.0F,0.0F);
                 pose.scale(SCALE, SCALE, SCALE);
                 TooltipComponentsValue.Storage storage = storages.get(i);
-                guiGraphics.blit(storage.texture(), 2, 2, 0, 0, 14, 14, 14, 14);
-                int index = IFunctionCouldEnable.Multi.INDEX_MAP.getOrDefault(storage, -1);
+                guiGraphics.blit(storage.texture(), 1, 1, 0, 0, 7, 7, 7, 7);
+                int index = IMultiFunctionCouldEnable.INDEX_MAP.getOrDefault(storage, -1);
                 if (index != -1 && !InformationHandler.DISABLE[index]) {
-                    guiGraphics.blit(ENABLED, 0, 0, 0,0 , 18, 18, 18, 18);
+                    guiGraphics.blit(HIGHLIGHT, 0, 0, 0,0 , 9, 9, 9, 9);
                 }
                 pose.popPose();
             }
@@ -96,7 +96,7 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
             }
         } else {
             if (mouseScrollY > 0) {
-                int index = IFunctionCouldEnable.Multi.INDEX_MAP.getOrDefault(storages.get(mouseScrollY - 1), -1);
+                int index = IMultiFunctionCouldEnable.INDEX_MAP.getOrDefault(storages.get(mouseScrollY - 1), -1);
                 if (index != -1) {
                     InformationHandler.DISABLE[index] = !InformationHandler.DISABLE[index];
                 }

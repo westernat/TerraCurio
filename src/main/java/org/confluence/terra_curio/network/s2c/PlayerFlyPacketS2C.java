@@ -1,11 +1,14 @@
 package org.confluence.terra_curio.network.s2c;
 
-import io.netty.buffer.ByteBuf;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
@@ -14,15 +17,13 @@ import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
 
-public record PlayerFlyPacketS2C(float flySpeed, int flyTicks, boolean couldGlide, boolean horizontalFlight) implements CustomPacketPayload {
+import java.util.IdentityHashMap;
+import java.util.Map;
+import java.util.function.IntFunction;
+
+public record PlayerFlyPacketS2C(Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack> flyStacks) implements CustomPacketPayload {
     public static final Type<PlayerFlyPacketS2C> TYPE = new Type<>(TerraCurio.asResource("player_fly"));
-    public static final StreamCodec<ByteBuf, PlayerFlyPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.FLOAT, p -> p.flySpeed,
-            ByteBufCodecs.INT, p -> p.flyTicks,
-            ByteBufCodecs.BOOL, p -> p.couldGlide,
-            ByteBufCodecs.BOOL, p -> p.horizontalFlight,
-            PlayerFlyPacketS2C::new
-    );
+    public static final StreamCodec<RegistryFriendlyByteBuf, PlayerFlyPacketS2C> STREAM_CODEC = ByteBufCodecs.map((IntFunction<Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack>>) IdentityHashMap::new, ResourceKey.streamCodec(Registries.ITEM), MayFlyAbilityValue.FlyStack.STREAM_CODEC).map(PlayerFlyPacketS2C::new, PlayerFlyPacketS2C::flyStacks);
 
     @Override
     public Type<PlayerFlyPacketS2C> type() {
@@ -32,7 +33,7 @@ public record PlayerFlyPacketS2C(float flySpeed, int flyTicks, boolean couldGlid
     public void handle(IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player().isLocalPlayer()) {
-                PlayerJumpHandler.handleFlyPacket(this);
+                PlayerJumpHandler.handleFlyPacket(flyStacks);
             }
         }).exceptionally(e -> {
             context.disconnect(Component.translatable("neoforge.network.invalid_flow", e.getMessage()));
@@ -41,12 +42,6 @@ public record PlayerFlyPacketS2C(float flySpeed, int flyTicks, boolean couldGlid
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        MayFlyAbilityValue.Storage ability = TCUtils.getAccessoriesValue(serverPlayer, TCItems.MAY$FLY);
-        PacketDistributor.sendToPlayer(serverPlayer, new PlayerFlyPacketS2C(
-                ability.flySpeed(),
-                ability.flyTicks(),
-                ability.couldGlide(),
-                ability.horizontalFlight()
-        ));
+        PacketDistributor.sendToPlayer(serverPlayer, new PlayerFlyPacketS2C(TCUtils.getAccessoriesValue(serverPlayer, TCItems.MAY$FLY)));
     }
 }

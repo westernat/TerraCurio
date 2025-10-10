@@ -2,7 +2,6 @@ package org.confluence.terra_curio.common.item.curio.movement;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
@@ -12,9 +11,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.client.TCClientConfigs;
@@ -28,7 +26,6 @@ import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
 import org.confluence.terra_curio.util.CuriosUtils;
-import org.confluence.terra_curio.util.TCUtils;
 import org.joml.Vector3f;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 import top.theillusivec4.curios.api.SlotContext;
@@ -52,31 +49,33 @@ public class BaseSpeedBoots extends BaseCurioItem {
         speedUp(slotContext, stack, acceleration, maxSpeed);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
-        if (GravitationHandler.isShouldRot() && living.getClass() == LocalPlayer.class) {
-            emitter.active = false;
-        } else {
-            emitter.offsetPos = new Vec3(0.0, 0.0, living.zza * 0.5);
-            if (emitter.parentRotation == null) {
-                emitter.parentRotation = new Vector3f();
+        if (emitter.parentRotation == null) {
+            emitter.parentRotation = new Vector3f();
+        }
+        emitter.active = living.zza > 0.0F && !living.horizontalCollision;
+
+        if (emitter.active) {
+            if (GravitationHandler.isShouldRot(living)) {
+                emitter.offsetPos = new Vec3(0, living.getBbHeight(), 0);
+            } else {
+                emitter.offsetPos = Vec3.ZERO;
             }
-            emitter.active = living.zza > 0.0F && !living.horizontalCollision;
         }
     }
 
     @Override
     public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
         super.onUnequip(slotContext, newStack, stack);
-        TCUtils.getItemStackNbt(stack).putInt(KEY, 0);
+        LibUtils.updateItemStackNbt(stack, tag -> tag.putInt(KEY, 0));
     }
 
     protected void speedUp(SlotContext slotContext, ItemStack stack, int acceleration, int maxSpeed) {
-        TCUtils.forConfluence$Inject();
+        LibUtils.forMixin$Inject();
         if (TCClientConfigs.speedUp && slotContext.entity() instanceof Player player && player.isLocalPlayer()) {
-            int speed = TCUtils.getItemStackNbt(stack).getInt(KEY);
-            if (player.zza > 0 && !player.horizontalCollision) {
+            int speed = LibUtils.getItemStackNbtNoCopy(stack).getInt(KEY);
+            if (player.zza > 0 && !player.horizontalCollision && !player.isCrouching()) {
                 if (player.onGround()) {
                     if (TCClientPacketHandler.isHasMagiluminescence() || PlayerJumpHandler.isInfiniteFlight()) acceleration *= 2;
                     int actually = Math.min(maxSpeed - speed, acceleration);
@@ -107,7 +106,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
         if (component != null && (value = component.get(TCItems.ATTRIBUTES)) != null) {
             builder1.putAll(value.get());
         }
-        double speed = TCUtils.getItemStackNbt(stack).getInt(KEY) * 0.01;
+        double speed = LibUtils.getItemStackNbtNoCopy(stack).getInt(KEY) * 0.01;
         if (speed > 0.0) {
             builder1.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(ID, speed, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
         }

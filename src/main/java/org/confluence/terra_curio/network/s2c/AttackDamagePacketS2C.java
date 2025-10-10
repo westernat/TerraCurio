@@ -15,10 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 public record AttackDamagePacketS2C(float amount) implements CustomPacketPayload {
     public static final Type<AttackDamagePacketS2C> TYPE = new Type<>(TerraCurio.asResource("attack_damage"));
-    public static final StreamCodec<ByteBuf, AttackDamagePacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.FLOAT, p -> p.amount,
-            AttackDamagePacketS2C::new
-    );
+    public static final StreamCodec<ByteBuf, AttackDamagePacketS2C> STREAM_CODEC = ByteBufCodecs.FLOAT.map(AttackDamagePacketS2C::new, AttackDamagePacketS2C::amount);
 
     @Override
     public Type<AttackDamagePacketS2C> type() {

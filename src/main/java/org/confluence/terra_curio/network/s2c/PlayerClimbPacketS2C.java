@@ -15,10 +15,7 @@ import org.confluence.terra_curio.util.TCUtils;
 
 public record PlayerClimbPacketS2C(byte climberAmount) implements CustomPacketPayload {
     public static final Type<PlayerClimbPacketS2C> TYPE = new Type<>(TerraCurio.asResource("player_climb"));
-    public static final StreamCodec<ByteBuf, PlayerClimbPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.BYTE, p -> p.climberAmount,
-            PlayerClimbPacketS2C::new
-    );
+    public static final StreamCodec<ByteBuf, PlayerClimbPacketS2C> STREAM_CODEC = ByteBufCodecs.BYTE.map(PlayerClimbPacketS2C::new, PlayerClimbPacketS2C::climberAmount);
 
     @Override
     public Type<PlayerClimbPacketS2C> type() {

@@ -17,8 +17,8 @@ public record PlayerJumpPacketC2S(byte jumpState, float motionY) implements Cust
 
     public static final Type<PlayerJumpPacketC2S> TYPE = new Type<>(TerraCurio.asResource("player_jump_c2s"));
     public static final StreamCodec<ByteBuf, PlayerJumpPacketC2S> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.BYTE, p -> p.jumpState,
-            ByteBufCodecs.FLOAT, p -> p.motionY,
+            ByteBufCodecs.BYTE, PlayerJumpPacketC2S::jumpState,
+            ByteBufCodecs.FLOAT, PlayerJumpPacketC2S::motionY,
             PlayerJumpPacketC2S::new
     );
 

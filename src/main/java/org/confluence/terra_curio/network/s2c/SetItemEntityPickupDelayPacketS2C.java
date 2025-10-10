@@ -14,8 +14,8 @@ import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 public record SetItemEntityPickupDelayPacketS2C(int id, int delay) implements CustomPacketPayload {
     public static final Type<SetItemEntityPickupDelayPacketS2C> TYPE = new Type<>(TerraCurio.asResource("set_item_entity_pickup_delay"));
     public static final StreamCodec<ByteBuf, SetItemEntityPickupDelayPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, p -> p.id,
-            ByteBufCodecs.INT, p -> p.delay,
+            ByteBufCodecs.VAR_INT, SetItemEntityPickupDelayPacketS2C::id,
+            ByteBufCodecs.VAR_INT, SetItemEntityPickupDelayPacketS2C::delay,
             SetItemEntityPickupDelayPacketS2C::new
     );
 

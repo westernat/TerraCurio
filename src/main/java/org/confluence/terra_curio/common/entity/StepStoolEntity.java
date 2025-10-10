@@ -120,4 +120,7 @@ public class StepStoolEntity extends Entity implements TraceableEntity {
     public EntityDimensions getDimensions(Pose pPose) {
         return super.getDimensions(pPose).scale(1.0F, getStep());
     }
+
+    @Override
+    public void updateFluidHeightAndDoFluidPushing() {}
 }

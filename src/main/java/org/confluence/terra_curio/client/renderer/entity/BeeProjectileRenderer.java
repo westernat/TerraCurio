@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.model.entity.BeeProjectileModel;
-import org.confluence.terra_curio.common.entity.projectile.BeeProjectile;
+import org.confluence.terra_curio.common.entity.BeeProjectile;
 import org.jetbrains.annotations.NotNull;
 
 public class BeeProjectileRenderer extends EntityRenderer<BeeProjectile> {

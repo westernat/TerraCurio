@@ -34,6 +34,8 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     public static final int GRAVITY_GLOBE = register(TCItems.GRAVITY$GLOBE);
     public static final int MAGILUMINESCENCE = register(TCItems.$MAGILUMINESCENCE);
     public static final int FLOAT_ON_LIQUID_SURFACE = register(TCItems.FLOAT$ON$LIQUID$SURFACE);
+    public static final int ICE_SAFE = register(TCItems.ICE$SAFE);
+    public static final int BONE_GLOVE = register(TCItems.BONE$GLOVE);
 
     private static int register(ValueType<Unit, UnitValue> type) {
         int i = 1 << MAP.size();
@@ -42,10 +44,7 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     }
 
     public static final Type<CurioExistsPacketS2C> TYPE = new Type<>(TerraCurio.asResource("curio_exists"));
-    public static final StreamCodec<ByteBuf, CurioExistsPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.INT, p -> p.item,
-            CurioExistsPacketS2C::new
-    );
+    public static final StreamCodec<ByteBuf, CurioExistsPacketS2C> STREAM_CODEC = ByteBufCodecs.VAR_INT.map(CurioExistsPacketS2C::new, CurioExistsPacketS2C::item);
 
     @Override
     public Type<CurioExistsPacketS2C> type() {

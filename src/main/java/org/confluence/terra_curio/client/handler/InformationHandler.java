@@ -11,17 +11,15 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
 import net.neoforged.neoforge.common.Tags;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
-import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -29,7 +27,6 @@ import java.util.Comparator;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.LongFunction;
 
-@OnlyIn(Dist.CLIENT)
 public final class InformationHandler {
     public static final int WATCH = 0;
     public static final int WEATHER_RADIO = 1;
@@ -47,7 +44,7 @@ public final class InformationHandler {
 
     public static final boolean[] DISABLE = new boolean[InfoCurioCheckPacketS2C.ARRAY_LENGTH];
 
-    private static final Int2ObjectMap<Component> INFORMATION = new Int2ObjectArrayMap<>();
+    private static Int2ObjectMap<Component> INFORMATION = new Int2ObjectArrayMap<>();
     private static final byte[] INFO_DATA = new byte[InfoCurioCheckPacketS2C.ARRAY_LENGTH];
     private static final Int2ObjectOpenHashMap<byte[]> REMOTE_DATA = new Int2ObjectOpenHashMap<>();
 
@@ -58,12 +55,9 @@ public final class InformationHandler {
     private static Component lifeFormAnalyzerInfo = Component.translatable("info.terra_curio.life_form_analyzer.none");
     private static Component radarInfo = Component.translatable("info.terra_curio.radar", 0);
     private static Component tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter.unknown");
-    private static long lastAttackTime = 0;
-    private static float cachedDamage = 0.0F;
-    private static Component dpsMeterInfo = Component.translatable("info.terra_curio.dps_meter", 0.00F);
 
     public static void handle(LocalPlayer localPlayer) {
-        INFORMATION.clear();
+        INFORMATION = new Int2ObjectArrayMap<>();
         long gameTime = localPlayer.level().getGameTime();
 
         byte b = INFO_DATA[WATCH];
@@ -118,7 +112,7 @@ public final class InformationHandler {
         }
 
         if (!DISABLE[DPS_METER] && INFO_DATA[DPS_METER] != 0) {
-            INFORMATION.put(DPS_METER, dpsMeterInfo);
+            INFORMATION.put(DPS_METER, Component.translatable("info.terra_curio.dps_meter", "%.2f".formatted(DPSMeter.getDPS(gameTime))));
         }
 
         if (!DISABLE[STOPWATCH] && INFO_DATA[STOPWATCH] != 0) {
@@ -160,7 +154,7 @@ public final class InformationHandler {
 
     public static void reset() {
         if (!INFORMATION.isEmpty()) {
-            INFORMATION.clear();
+            INFORMATION = new Int2ObjectArrayMap<>();
             Arrays.fill(INFO_DATA, (byte) 0);
             REMOTE_DATA.clear();
         }
@@ -185,52 +179,54 @@ public final class InformationHandler {
         } else if (level.isThundering()) {
             weather = "thunder";
         }
-        TCUtils.forConfluence$Inject();
+        LibUtils.forMixin$Inject();
         return Component.translatable("info.terra_curio.weather_radio." + weather);
     }
 
     private static Component getFishingPowerInfo(Player player) {
-        float fishingPower = TCUtils.forConfluence$ModifyExpression(player.getLuck());
+        float fishingPower = LibUtils.forMixin$ModifyExpression(player.getLuck());
         return Component.translatable(
                 "info.terra_curio.fishermans_pocket_guide",
                 "%.2f".formatted(fishingPower)
         );
     }
 
-    private static Component getMetalDetectorInfo(Player localPlayer) {
+    private static Component getMetalDetectorInfo(Player player) {
         AtomicReference<Component> atomic = new AtomicReference<>(Component.translatable("info.terra_curio.metal_detector.none"));
-        localPlayer.level().getBlockStates(new AABB(localPlayer.getOnPos()).inflate(15.5))
-                .filter(TCCommonConfigs.rareBlocks::contains)
-                .min(Comparator.comparingInt(TCCommonConfigs.rareBlocks::indexOf))
-                .ifPresent(blockState -> {
-                    Block block = blockState.getBlock();
-                    atomic.set(Component.translatable("info.terra_curio.metal_detector", block.getName()));
-                });
+        player.level().getBlockStates(new AABB(player.getOnPos()).inflate(15.5)).distinct()
+                .map(state -> mapCloakedBlock(player, state))
+                .filter(TCCommonConfigs.rareBlocks::containsKey)
+                .min(Comparator.comparingInt(TCCommonConfigs.rareBlocks::getInt))
+                .ifPresent(blockState -> atomic.set(Component.translatable("info.terra_curio.metal_detector", blockState.getBlock().getName())));
         return atomic.get();
     }
 
-    private static Component getLifeFormAnalyzerInfo(Player localPlayer) {
+    private static BlockState mapCloakedBlock(Player player, BlockState original) {
+        return original; // confluence mixin here
+    }
+
+    private static Component getLifeFormAnalyzerInfo(Player player) {
         AtomicReference<Component> atomic = new AtomicReference<>(Component.translatable("info.terra_curio.life_form_analyzer.none"));
-        localPlayer.level().getEntities(localPlayer, new AABB(localPlayer.getOnPos()).inflate(47.5), entity -> TCCommonConfigs.rareCreatures.contains(entity.getType()))
-                .stream().min(Comparator.comparingInt(entity -> TCCommonConfigs.rareCreatures.indexOf(entity.getType())))
+        player.level().getEntities(player, new AABB(player.getOnPos()).inflate(47.5), entity -> TCCommonConfigs.rareCreatures.containsKey(entity.getType()))
+                .stream().min(Comparator.comparingInt(entity -> TCCommonConfigs.rareCreatures.getInt(entity.getType())))
                 .ifPresent(entity -> atomic.set(Component.translatable("info.terra_curio.life_form_analyzer", entity.getType().getDescription())));
         return atomic.get();
     }
 
-    private static Component getCompassInfo(Player localPlayer) {
-        double x = localPlayer.getX();
-        double z = localPlayer.getZ();
+    private static Component getCompassInfo(Player player) {
+        double x = player.getX();
+        double z = player.getZ();
         return Component.translatable("info.terra_curio.compass." + (x > 0 ? "east" : "west"), "%.2f".formatted(x))
                 .append(Component.translatable("info.terra_curio.compass." + (z > 0 ? "south" : "north"), "%.2f".formatted(z)));
     }
 
-    private static Component getDepthMeterInfo(Player localPlayer) {
-        double y = localPlayer.getY();
+    private static Component getDepthMeterInfo(Player player) {
+        double y = player.getY();
         return Component.translatable("info.terra_curio.depth_meter." + (y > 63 ? "surface" : "underground"), "%.2f".formatted(y));
     }
 
     public static boolean hasMechanicalView() {
-        return INFO_DATA[MECHANICAL_LENS] != 0;
+        return INFO_DATA[MECHANICAL_LENS] != 0; // confluence mixin here
     }
 
     public static Int2ObjectMap<Component> getInformation() {
@@ -300,23 +296,16 @@ public final class InformationHandler {
         if ((b >= 0 && c >= 0) || (b != -128 && c <= 0)) INFO_DATA[index] = b;
     }
 
+    public static boolean hasInfoData(int index) {
+        return INFO_DATA[index] != 0;
+    }
+
     public static void handleEntityKilled(EntityKilledPacketS2C packet) {
         EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(packet.entityType());
         tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter").append(entityType.getDescription()).append("': " + (packet.amount() + 1));
     }
 
     public static void handleAttackDamage(AttackDamagePacketS2C packet, Player player) {
-        long gameTime = player.level().getGameTime();
-        long delta = gameTime - lastAttackTime;
-        if (delta == gameTime) { // 防止第一次攻击
-            delta = 20L;
-        }
-        if (delta > 100) { // 大于五秒重置
-            cachedDamage = 0.0F;
-            delta = 20L;
-        }
-        lastAttackTime = gameTime;
-        cachedDamage += packet.amount();
-        dpsMeterInfo = Component.translatable("info.terra_curio.dps_meter", "%.2f".formatted(cachedDamage / delta));
+        DPSMeter.addDPS(packet.amount(), player.level().getGameTime());
     }
 }

@@ -4,7 +4,8 @@ import com.mojang.datafixers.util.Either;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
-import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -16,34 +17,18 @@ import net.neoforged.neoforge.registries.datamaps.DataMapValueRemover;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 
 @SuppressWarnings("unchecked")
 public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> types) implements DataComponentType<AccessoriesComponent> {
-    public static final Codec<AccessoriesComponent> CODEC = Codec.dispatchedMap(ResourceLocation.CODEC, ValueType.VALUE_CODECS::get).xmap(map -> {
-        Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> table = new Hashtable<>();
-        map.forEach((key, value) -> table.put(ValueType.TYPES.get(key), value));
-        return new AccessoriesComponent(table);
-    }, component -> {
-        Map<ResourceLocation, PrimitiveValue<?>> table = new Hashtable<>();
-        component.types.forEach((type, value) -> table.put(type.key(), value));
-        return table;
-    });
-    public static final StreamCodec<FriendlyByteBuf, AccessoriesComponent> STREAM_CODEC = new StreamCodec<>() {
-        @Override
-        public void encode(FriendlyByteBuf buffer, AccessoriesComponent value) {
-            buffer.writeJsonWithCodec(CODEC, value);
-        }
+    public static final Codec<AccessoriesComponent> CODEC = Codec
+            .<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>>dispatchedMap(
+                    ResourceLocation.CODEC.xmap(ValueType.TYPES::get, ValueType::key), ValueType.VALUE_CODECS::get)
+            .xmap(AccessoriesComponent::new, AccessoriesComponent::types);
 
-        @Override
-        @NotNull
-        public AccessoriesComponent decode(FriendlyByteBuf buffer) {
-            return buffer.readJsonWithCodec(CODEC);
-        }
-    };
+    public static final StreamCodec<RegistryFriendlyByteBuf, AccessoriesComponent> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
 
     public static <T, V extends PrimitiveValue<T>> AccessoriesComponent entry(ValueType<T, V> type, V value) {
         Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>();
@@ -85,7 +70,7 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
     }
 
     @Override
-    public StreamCodec<FriendlyByteBuf, AccessoriesComponent> streamCodec() {
+    public StreamCodec<RegistryFriendlyByteBuf, AccessoriesComponent> streamCodec() {
         return STREAM_CODEC;
     }
 

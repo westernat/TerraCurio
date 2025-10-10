@@ -2,6 +2,7 @@ package org.confluence.terra_curio.common.event;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -16,6 +17,8 @@ import net.minecraft.world.entity.monster.Drowned;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.common.damagesource.DamageContainer;
@@ -28,6 +31,8 @@ import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.CriticalHitEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
@@ -37,7 +42,6 @@ import org.confluence.terra_curio.common.item.DivingHelmet;
 import org.confluence.terra_curio.common.item.curio.combat.PaladinsShield;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.mixin.accessor.ItemEntityAccessor;
-import org.confluence.terra_curio.mixin.accessor.MobAccessor;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
@@ -55,21 +59,22 @@ public final class GameEvents {
     @SubscribeEvent
     public static void curios(CurioChangeEvent event) {
         LivingEntity living = event.getEntity();
-        if (!living.level().isClientSide) {
+        if (!living.level().isClientSide && !ItemStack.isSameItem(event.getFrom(), event.getTo())) {
             living.getData(TCAttachments.ACCESSORIES).flushAbility(living);
-        }
-        if (living instanceof ServerPlayer serverPlayer) {
-            TCUtils.resetClientPacket(serverPlayer);
-            TCTriggers.CURIOS_EQUIPPED.get().trigger(serverPlayer, event.getTo());
+            if (living instanceof ServerPlayer serverPlayer) {
+                TCUtils.resetClientPacket(serverPlayer);
+                TCTriggers.CURIOS_EQUIPPED.get().trigger(serverPlayer, event.getTo());
+            }
         }
     }
 
     @SubscribeEvent
     public static void entityInvulnerabilityCheck(EntityInvulnerabilityCheckEvent event) {
+        if (event.isInvulnerable()) return;
         DamageSource damageSource = event.getSource();
-        if (damageSource.is(DamageTypes.GENERIC_KILL)) return;
+        if (damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || damageSource.is(DamageTypes.GENERIC_KILL)) return;
 
-        if (!event.isInvulnerable() && TCUtils.isInvulnerableTo(event.getEntity(), damageSource)) {
+        if (TCUtils.isInvulnerableTo(event.getEntity(), damageSource)) {
             event.setInvulnerable(true);
         }
     }
@@ -83,21 +88,21 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void livingDamage$Pre(LivingDamageEvent.Pre event) {
+        float amount = event.getNewDamage();
+        if (amount <= 0.0F) return; // 防止莫名的负数伤害
         LivingEntity living = event.getEntity();
         if (living.level().isClientSide) return;
         DamageSource damageSource = event.getSource();
-        if (damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || damageSource.is(DamageTypes.GENERIC_KILL)) return;
+        if (damageSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
         RandomSource random = living.level().random;
-        float amount = event.getNewDamage();
-        if (amount < 0) return; // 防止莫名的负数伤害
 
         TCUtils.applyHoneyComb(living, random);
         TCUtils.applyStarClock(living, random);
         PanicNecklace.apply(living);
 
         amount = DivingHelmet.apply(living, damageSource, amount);
-        amount = TCAttributes.applyMagicDamage(damageSource, amount);
-        amount = TCAttributes.applyRangedDamage(damageSource, amount);
+        amount = TCAttributes.applyMagicDamage(random, damageSource, amount);
+        amount = TCAttributes.applyRangedDamage(random, damageSource, amount);
         amount = PaladinsShield.apply(living, damageSource, amount);
         amount = TCUtils.applyFrozenTurtleShell(living, amount);
         amount = TCUtils.applyLavaHurtReduce(living, damageSource, amount);
@@ -110,15 +115,21 @@ public final class GameEvents {
                     TCCommonConfigs.RANDOM_ATTACK_DAMAGE_MAX.get().floatValue()
             );
         }
-        AttackDamagePacketS2C.sendToClient(amount, damageSource.getEntity());
         event.setNewDamage(amount);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void livingDamage$Post(LivingDamageEvent.Post event) {
+        if (!event.getEntity().level().isClientSide) {
+            AttackDamagePacketS2C.sendToClient(event.getNewDamage(), event.getSource().getEntity());
+        }
     }
 
     @SubscribeEvent
     public static void livingDeath(LivingDeathEvent event) {
-        LivingEntity living = event.getEntity();
-        if (event.getSource().getEntity() instanceof ServerPlayer serverPlayer) {
-            EntityType<?> entityType = living.getType();
+        DamageSource damageSource = event.getSource();
+        if (damageSource.getEntity() instanceof ServerPlayer serverPlayer) {
+            EntityType<?> entityType = event.getEntity().getType();
             EntityKilledPacketS2C.sendToClient(serverPlayer, entityType);
         }
     }
@@ -184,6 +195,9 @@ public final class GameEvents {
     public static void playerTick$Post(PlayerTickEvent.Post event) {
         Player player = event.getEntity();
         TCAttributes.applyPickupRange(player);
+        if (!player.isPassenger()) {
+            TCUtils.applyFluidWalk(player);
+        }
         if (player instanceof ServerPlayer serverPlayer) {
             if (serverPlayer.level().getGameTime() % 200 == 0) {
                 // 每十秒向周围玩家共享一次信息配饰
@@ -201,12 +215,11 @@ public final class GameEvents {
     }
 
     @SubscribeEvent
-    public static void criticalHit(CriticalHitEvent event) {
-        if (TCAttributes.hasCustomAttribute(TCAttributes.CRIT_CHANCE)) return;
-        Player player = event.getEntity();
+    public static void criticalHit(CriticalHitEvent event) { // 仅近战暴击，于是由汇流来世托管
+        if (TCAttributes.hasCustomAttribute(TCAttributes.CRIT_CHANCE) || ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get()) return;
         if (!event.isVanillaCritical()) {
-            double chance = player.getAttributeValue(TCAttributes.CRIT_CHANCE);
-            if (player.level().random.nextFloat() < chance) {
+            Player player = event.getEntity();
+            if (LibUtils.checkChance(player.getAttributeValue(TCAttributes.CRIT_CHANCE), player.getRandom())) {
                 event.setDamageMultiplier(1.5F);
                 event.setCriticalHit(true);
             }
@@ -242,9 +255,19 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void finalizeSpawn(FinalizeSpawnEvent event) {
+        if (event.isSpawnCancelled()) return;
         if (event.getEntity() instanceof Drowned drowned && drowned.getItemBySlot(EquipmentSlot.HEAD).isEmpty() && drowned.getRandom().nextFloat() < 0.05F) {
             drowned.setItemSlot(EquipmentSlot.HEAD, TCItems.DIVING_HELMET.get().getDefaultInstance());
-            ((MobAccessor) drowned).getArmorDropChances()[EquipmentSlot.HEAD.getIndex()] = 1.0F;
+            drowned.setDropChance(EquipmentSlot.HEAD, 1.0F);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void mobEffect$Applicable(MobEffectEvent.Applicable event) {
+        if (event.getResult() != MobEffectEvent.Applicable.Result.DO_NOT_APPLY) {
+            if (TCUtils.getAccessoriesValue(event.getEntity(), TCItems.EFFECT$IMMUNITIES).contains(event.getEffectInstance().getEffect())) {
+                event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
+            }
         }
     }
 }

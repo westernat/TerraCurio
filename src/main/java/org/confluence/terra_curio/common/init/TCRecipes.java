@@ -8,7 +8,6 @@ import net.neoforged.neoforge.common.crafting.IngredientType;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.recipe.AmountIngredient;
 import org.confluence.terra_curio.common.recipe.ExtraStepStoolRecipe;
 import org.confluence.terra_curio.common.recipe.WorkshopRecipe;
 
@@ -18,8 +17,6 @@ public final class TCRecipes {
     public static final DeferredRegister<IngredientType<?>> INGREDIENT_TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.INGREDIENT_TYPES, TerraCurio.MODID);
     public static final DeferredRegister<RecipeType<?>> RECIPE_TYPES = DeferredRegister.create(BuiltInRegistries.RECIPE_TYPE, TerraCurio.MODID);
     public static final DeferredRegister<RecipeSerializer<?>> RECIPE_SERIALIZERS = DeferredRegister.create(BuiltInRegistries.RECIPE_SERIALIZER, TerraCurio.MODID);
-
-    public static final Supplier<IngredientType<AmountIngredient>> AMOUNT_INGREDIENT_TYPE = INGREDIENT_TYPES.register("amount_ingredient", () -> new IngredientType<>(AmountIngredient.CODEC, AmountIngredient.STREAM_CODEC));
 
     public static final Supplier<RecipeType<WorkshopRecipe>> WORKSHOP_TYPE = RECIPE_TYPES.register("workshop", () -> RecipeType.simple(TerraCurio.asResource("workshop")));
     public static final Supplier<RecipeSerializer<WorkshopRecipe>> WORKSHOP_SERIALIZER = RECIPE_SERIALIZERS.register("workshop", WorkshopRecipe.Serializer::new);

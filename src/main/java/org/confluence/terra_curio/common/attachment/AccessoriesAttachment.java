@@ -1,21 +1,26 @@
 package org.confluence.terra_curio.common.attachment;
 
+import com.mojang.serialization.Codec;
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.util.INBTSerializable;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.api.event.AfterAccessoryAbilitiesFlushedEvent;
 import org.confluence.terra_curio.api.event.RegisterAccessoriesComponentUpdateEvent;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
@@ -23,8 +28,8 @@ import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.AccessoriesComponent;
 import org.confluence.terra_curio.common.init.TCItems;
+import org.confluence.terra_curio.common.init.TCTags;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
-import org.confluence.terra_curio.util.MobEntityTypesTest;
 import org.confluence.terra_curio.util.TCUtils;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
@@ -38,7 +43,8 @@ import static org.confluence.terra_curio.util.TCUtils.tryCast;
 @net.minecraft.MethodsReturnNonnullByDefault
 @SuppressWarnings("unchecked")
 public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
-    public static final List<ValueType<Unit, UnitValue>> UNITS_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
+    public static final Set<ValueType<Unit, UnitValue>> UNITS_REQUIRE_UPDATE = Util.make(new LinkedHashSet<>(), list -> {
+        list.add(TCItems.FLOAT$ON$LIQUID$SURFACE);
         list.add(TCItems.FIRE$ATTACK);
         list.add(TCItems.BRAIN$OF$CONFUSION);
         list.add(TCItems.HIVE$PACK);
@@ -52,9 +58,11 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         list.add(TCItems.ICE$SPEED);
         list.add(TCItems.DIVING);
         list.add(TCItems.INFINITE$FLIGHT);
+        list.add(TCItems.ICE$SAFE);
+        list.add(TCItems.SHIELD$OF$CTHULHU);
         ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.UnitType(list));
     });
-    public static final List<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new ArrayList<>(), list -> {
+    public static final Set<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new LinkedHashSet<>(), list -> {
         list.add(TCItems.NEPTUNES$SHELL);
         list.add(TCItems.STAR$CLOCK);
         list.add(TCItems.INJURY$FREE);
@@ -78,6 +86,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
     private final Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> valueMap = new HashMap<>();
     private boolean panicNecklace;
     private transient int remainLavaImmuneTicks;
+    private transient int totalLavaImmuneTicks;
 
     public AccessoriesAttachment() {
         setToDefaultValue();
@@ -87,6 +96,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
         this.valueMap.clear();
         this.panicNecklace = false;
         this.remainLavaImmuneTicks = 0;
+        this.totalLavaImmuneTicks = 0;
     }
 
     public <T, V extends PrimitiveValue<T>> T getValue(ValueType<T, V> type) {
@@ -108,7 +118,7 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
     }
 
     public void increaseLavaImmuneTicks() {
-        if (remainLavaImmuneTicks < getValue(TCItems.LAVA$IMMUNE$TICKS)) {
+        if (remainLavaImmuneTicks < totalLavaImmuneTicks) {
             this.remainLavaImmuneTicks++;
         }
     }
@@ -139,15 +149,16 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
                     }
 
                     if (!panicNecklace && item instanceof PanicNecklace) this.panicNecklace = true;
-                    TCUtils.forConfluence$Inject();
+                    LibUtils.forMixin$Inject();
                 }
             }
-            Set<EntityType<?>> ignores = getValue(TCItems.MOB$IGNORE);
-            if (!ignores.isEmpty()) {
-                living.level().getEntities(new MobEntityTypesTest(ignores), new AABB(living.getOnPos()).inflate(31.5), mob -> true).forEach(mob -> {
+            TagKey<EntityType<?>> ignores = getValue(TCItems.MOB$IGNORE);
+            if (!TCTags.NOTHING.equals(ignores)) {
+                living.level().getEntitiesOfClass(Mob.class, new AABB(living.getOnPos()).inflate(31.5), mob -> mob.getType().is(ignores)).forEach(mob -> {
                     if (mob.getTarget() == living) mob.setTarget(null);
                 });
             }
+            this.totalLavaImmuneTicks = getValue(TCItems.LAVA$IMMUNE$TICKS);
         });
         NeoForge.EVENT_BUS.post(new AfterAccessoryAbilitiesFlushedEvent(living));
     }
@@ -195,10 +206,12 @@ public class AccessoriesAttachment implements INBTSerializable<CompoundTag> {
             CompoundTag compoundTag = (CompoundTag) tag;
             String key = compoundTag.getAllKeys().stream().findFirst().orElse(null);
             if (key == null) continue;
-            ResourceLocation location = ResourceLocation.parse(key);
-            ValueType.VALUE_CODECS.get(location).parse(NbtOps.INSTANCE, compoundTag.get(key)).result().ifPresent(
-                    value -> valueMap.put(ValueType.TYPES.get(location), value)
-            );
+            ValueType<?, ? extends PrimitiveValue<?>> type = ValueType.TYPES.get(ResourceLocation.tryParse(key));
+            if (type == null) continue;
+            Codec<PrimitiveValue<?>> codec = ValueType.VALUE_CODECS.get(type);
+            if (codec == null) continue;
+            RegistryOps<Tag> ops = provider.createSerializationContext(NbtOps.INSTANCE);
+            codec.parse(ops, compoundTag.get(key)).result().ifPresent(value -> valueMap.put(type, value));
         }
         this.panicNecklace = nbt.getBoolean("panicNecklace");
     }

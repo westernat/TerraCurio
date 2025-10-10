@@ -9,8 +9,6 @@ import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
@@ -19,48 +17,43 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.NeoForgeMod;
+import org.confluence.terra_curio.api.event.PlayerAboutToAutoAttackEvent;
+import org.confluence.terra_curio.api.event.PlayerEmptyAutoAttackEvent;
 import org.confluence.terra_curio.client.TCClientConfigs;
-import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
-import org.confluence.terra_curio.mixed.IClientLivingEntity;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
 import org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C;
 import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
 import org.confluence.terra_curio.network.s2c.RightClickSubtractorPacketS2C;
 import org.confluence.terra_curio.network.s2c.SetItemEntityPickupDelayPacketS2C;
-import org.confluence.terra_curio.util.CuriosUtils;
-
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.LUMINANCE_MASK;
 import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.NEPTUNES_SHELL;
 import static org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C.*;
 
-@OnlyIn(Dist.CLIENT)
 public final class TCClientPacketHandler {
     private static boolean autoAttack = false;
     private static boolean hasCthulhu = false;
     private static boolean hasTabi = false;
     private static boolean hasMagiluminescence = false;
     private static boolean canFloating = false;
+    private static boolean iceSafe = false;
+    private static boolean boneGlove = false;
+
     public static boolean floating = false;
     private static boolean hasNeptunesShell = false;
     private static final Int2BooleanMap remoteNeptuneShell = new Int2BooleanArrayMap();
-    private static int rightClickSubtractor = 0;
+    private static byte rightClickSubtractor = 0;
     private static int luminance = 0;
     private static final Int2IntMap remoteLuminance = new Int2IntArrayMap();
     private static final Int2IntMap pickupDelayStorage = new Int2IntArrayMap();
     private static final Int2IntMap pickupDelayCounter = Util.make(new Int2IntArrayMap(), map -> map.defaultReturnValue(0));
-    private static final Set<FluidState> walkableFluidStates = new HashSet<>();
 
     public static boolean couldAutoAttack() {
         return autoAttack;
@@ -82,6 +75,14 @@ public final class TCClientPacketHandler {
         return canFloating;
     }
 
+    public static boolean isIceSafe() {
+        return iceSafe;
+    }
+
+    public static boolean isBoneGlove() {
+        return boneGlove;
+    }
+
     public static boolean isHasNeptunesShell() {
         return hasNeptunesShell;
     }
@@ -90,16 +91,16 @@ public final class TCClientPacketHandler {
         return ((hasNeptunesShell && living.getClass() == LocalPlayer.class) || (living.getClass() == RemotePlayer.class && remoteNeptuneShell.get(living.getId()))) && living.isInWaterOrBubble();
     }
 
-    public static int getRightClickSubtractor() {
+    public static byte getRightClickSubtractor() {
         return rightClickSubtractor;
     }
 
     public static int getLuminance(Entity entity) {
         int ret = entity == Minecraft.getInstance().player ? luminance : remoteLuminance.getOrDefault(entity.getId(), 0);
         if (ret < 0) { // 只能在水下发光
-            return entity.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value()) ? -ret : 0;
+            return entity.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value()) ? -ret : 0; // confluence mixin here
         }
-        return ret;
+        return ret; // confluence mixin here
     }
 
     public static void handleSubstractor(RightClickSubtractorPacketS2C packet) {
@@ -115,14 +116,12 @@ public final class TCClientPacketHandler {
         GravitationHandler.hasGlobe = (item & GRAVITY_GLOBE) != 0;
         hasMagiluminescence = (item & MAGILUMINESCENCE) != 0;
         canFloating = (item & FLOAT_ON_LIQUID_SURFACE) != 0;
+        iceSafe = (item & ICE_SAFE) != 0;
+        boneGlove = (item & BONE_GLOVE) != 0;
     }
 
     public static void handleItemPickupDelay(SetItemEntityPickupDelayPacketS2C packet) {
         pickupDelayStorage.put(packet.id(), packet.delay());
-    }
-
-    public static boolean isFluidWalkable(LivingEntity living, FluidState fluidState) {
-        return walkableFluidStates.contains(fluidState); // Confluence injected here
     }
 
     public static void handle(Minecraft minecraft, LocalPlayer player) {
@@ -152,40 +151,40 @@ public final class TCClientPacketHandler {
         }
     }
 
-    private static void applyAutoAttack(Minecraft minecraft, LocalPlayer localPlayer) {
+    private static void applyAutoAttack(Minecraft minecraft, LocalPlayer player) {
         if (!TCClientConfigs.autoAttack || minecraft.gameMode == null || minecraft.gameMode.isDestroying()) return;
-        if (BetterCombatHelper.LOADED) {
-            ItemStack itemStack = localPlayer.getItemInHand(InteractionHand.MAIN_HAND);
-            if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
-        }
-        if (TCClientPacketHandler.couldAutoAttack() && minecraft.options.keyAttack.isDown()) {
-            if (localPlayer.getAttackStrengthScale(0.5F) < 1.0F - Mth.EPSILON) return;
+        ItemStack itemStack = player.getMainHandItem();
+        if (itemStack.onEntitySwing(player, InteractionHand.MAIN_HAND)) return;
+        if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
+        if (minecraft.options.keyAttack.isDown() && TCClientPacketHandler.couldAutoAttack() /* confluence mixin here */) {
+            if (player.getAttackStrengthScale(0.5F) < 1.0F - Mth.EPSILON) return;
             MinecraftAccessor accessor = (MinecraftAccessor) minecraft;
             if (accessor.getMissTime() > 0) accessor.setMissTime(0);
-            double reach = Math.max(localPlayer.entityInteractionRange(), localPlayer.blockInteractionRange());
-            Vec3 from = localPlayer.getEyePosition(1.0F);
-            Vec3 viewVector = localPlayer.getViewVector(1.0F);
+            double reach = Math.max(player.entityInteractionRange(), player.blockInteractionRange());
+            double squared = Mth.square(reach);
+            Vec3 from = player.getEyePosition(1.0F);
+            HitResult hitResult = player.pick(reach, 1.0F, false);
+            double sqr = hitResult.getLocation().distanceToSqr(from);
+            if (hitResult.getType() != HitResult.Type.MISS) {
+                squared = sqr;
+                reach = Math.sqrt(sqr);
+            }
+            Vec3 viewVector = player.getViewVector(1.0F);
             Vec3 to = from.add(viewVector.x * reach, viewVector.y * reach, viewVector.z * reach);
-            EntityHitResult entityhitresult = ProjectileUtil.getEntityHitResult(
-                    localPlayer, from, to, new AABB(from, to),
-                    entity -> !entity.isSpectator() && entity.isPickable(), reach);
-            if (entityhitresult != null && minecraft.gameMode != null) {
-                minecraft.gameMode.attack(localPlayer, entityhitresult.getEntity());
+            AABB aabb = player.getBoundingBox().expandTowards(viewVector.scale(reach)).inflate(1.0);
+            EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(
+                    player, from, to, aabb, entity -> !entity.isSpectator() && entity.isPickable(), squared
+            );
+            if (NeoForge.EVENT_BUS.post(new PlayerAboutToAutoAttackEvent(player, entityHitResult != null && entityHitResult.getLocation().distanceToSqr(from) < sqr)).couldPerform()) {
+                if (entityHitResult != null) {
+                    minecraft.gameMode.attack(player, entityHitResult.getEntity());
+                    player.swing(InteractionHand.MAIN_HAND);
+                }
+            } else if (!NeoForge.EVENT_BUS.post(new PlayerEmptyAutoAttackEvent(player, itemStack)).isCanceled()) {
+                player.swing(InteractionHand.MAIN_HAND, false);
+                player.resetAttackStrengthTicker();
             }
-            localPlayer.resetAttackStrengthTicker();
-            localPlayer.swing(InteractionHand.MAIN_HAND);
         }
-    }
-
-    public static void handleFluidWalk(Player player) {
-        walkableFluidStates.clear();
-        ((IClientLivingEntity) player).terra_curio$resetLastWalkedFluidState();
-        Set<TagKey<Fluid>> tagKeys = CuriosUtils.calculateValue(player, TCItems.FLUID$WALK);
-        BuiltInRegistries.FLUID.stream().flatMap(fluid -> fluid.getStateDefinition().getPossibleStates().stream()).forEach(state -> {
-            if (tagKeys.stream().anyMatch(state::is)) {
-                walkableFluidStates.add(state);
-            }
-        });
     }
 
     public static void handleRender(BroadcastRenderPacketS2C packet, Player player) {
@@ -212,7 +211,6 @@ public final class TCClientPacketHandler {
         luminance = 0;
         pickupDelayStorage.clear();
         pickupDelayCounter.clear();
-        walkableFluidStates.clear();
         remoteLuminance.clear();
         remoteNeptuneShell.clear();
     }

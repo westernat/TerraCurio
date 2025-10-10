@@ -2,8 +2,8 @@ package org.confluence.terra_curio.common.item.curio.movement;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.api.distmarker.OnlyIn;
+import net.minecraft.world.phys.Vec3;
+import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
@@ -13,7 +13,6 @@ public class TsunamiInABottle extends BaseCurioItem {
         super(builder);
     }
 
-    @OnlyIn(Dist.CLIENT)
     @Override
     protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
         super.particleTick(living, emitter, particle);
@@ -22,6 +21,14 @@ public class TsunamiInABottle extends BaseCurioItem {
             PlayerJumpHandler.isOnTsunamiJump = false;
         } else {
             emitter.active = false;
+        }
+
+        if (emitter.active) {
+            if (GravitationHandler.isShouldRot(living)) {
+                emitter.offsetPos = new Vec3(0, living.getBbHeight(), 0);
+            } else {
+                emitter.offsetPos = Vec3.ZERO;
+            }
         }
     }
 }

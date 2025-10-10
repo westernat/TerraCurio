@@ -10,6 +10,7 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
+import org.confluence.lib.util.LibDateUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCEffects;
@@ -48,7 +49,7 @@ public class CelestialShell extends BaseCurioItem implements ICosmetic {
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
         LivingEntity living = slotContext.entity();
         Multimap<Holder<Attribute>, AttributeModifier> attributeModifiers = super.getAttributeModifiers(slotContext, id, stack);
-        if (living != null && !living.isInWaterOrBubble() && living.level().getDayTime() % 24000L > 12000L) {
+        if (living != null && !living.isInWaterOrBubble() && LibDateUtils.isNight(living.level())) {
             return ImmutableMultimap.<Holder<Attribute>, AttributeModifier>builder().putAll(attributeModifiers).putAll(NIGHT).build();
         }
         return attributeModifiers;
@@ -56,7 +57,7 @@ public class CelestialShell extends BaseCurioItem implements ICosmetic {
 
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
-        boolean isNight = slotContext.entity().level().getGameTime() % 24000L > 12000L;
-        TCEffects.healPerSecond(slotContext.entity(), isNight ? 1.5F : 1.0F);
+        boolean isNight = LibDateUtils.isNight(slotContext.entity().level());
+        TCEffects.healPerSecond(slotContext.entity(), isNight ? 0.3F : 0.2F);
     }
 }
