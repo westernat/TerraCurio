@@ -49,7 +49,7 @@ import org.confluence.terra_curio.network.s2c.SetItemEntityPickupDelayPacketS2C;
 import org.confluence.terra_curio.util.TCUtils;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
 
-@EventBusSubscriber(bus = EventBusSubscriber.Bus.GAME, modid = TerraCurio.MODID)
+@EventBusSubscriber(modid = TerraCurio.MODID)
 public final class GameEvents {
     @SubscribeEvent
     public static void registerCommand(RegisterCommandsEvent event) {

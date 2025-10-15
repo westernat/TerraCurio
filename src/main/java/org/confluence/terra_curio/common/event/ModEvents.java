@@ -17,7 +17,7 @@ import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.c2s.*;
 import org.confluence.terra_curio.network.s2c.*;
 
-@EventBusSubscriber(modid = TerraCurio.MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = TerraCurio.MODID)
 public final class ModEvents {
     @SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
