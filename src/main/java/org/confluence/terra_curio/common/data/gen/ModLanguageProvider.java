@@ -666,7 +666,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "对火块免疫"
                 }
         );
-        tooltipAndJeiInfo(TCItems.PALADINS_SHIELD, "圣骑士护盾", "Absorbs 25% of damage done to players on your team when above 25% life", "当生命值超过25%时，吸收对团队中玩家造成的25%伤害", "It is dropped by the Ender Dragon.", "它必定从末影龙身上掉落。");
+        tooltipAndJeiInfo(TCItems.PALADINS_SHIELD, "圣骑士护盾", "Absorbs 25% of damage done to players on your team when above 25% life", "当生命值高于25%时，吸收团队中其他玩家所受伤害的25%", "It is dropped by the Ender Dragon.", "它必定从末影龙身上掉落。");
         tooltipAndJeiInfo(TCItems.PANIC_NECKLACE, "恐慌项链", "Increases movement speed after taking damage", "受到伤害后增加移动速度", "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。");
         onlyTooltips(TCItems.PDA, "个人数字助手", ALL_INFO_EN, ALL_INFO_ZH);
         onlyTooltips(TCItems.PINK_HORSESHOE_BALLOON, "粉马掌气球",
