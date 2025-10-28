@@ -22,7 +22,7 @@ import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.api.primitive.ComponentsValue;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
-import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCDataMaps;
 import org.confluence.terra_curio.common.init.TCItems;
@@ -81,7 +81,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
-        AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+        PrimitiveValueComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         AttributeModifiersValue value;
         if (component != null && (value = component.get(TCItems.ATTRIBUTES)) != null) {
             return value.get();
@@ -91,7 +91,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+        PrimitiveValueComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         ComponentsValue value;
         if (component != null && (value = component.get(TCItems.COMPONENTS)) != null) {
             tooltipComponents.addAll(value.components());
@@ -196,15 +196,15 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
-        public Builder accessories(AccessoriesComponent component, AccessoriesComponent... components) {
+        public Builder accessories(PrimitiveValueComponent component, PrimitiveValueComponent... components) {
             if (components.length == 0) {
                 properties.component(TCDataComponentTypes.ACCESSORIES, component);
             } else {
                 Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component.types());
-                for (AccessoriesComponent component1 : components) {
+                for (PrimitiveValueComponent component1 : components) {
                     map.putAll(component1.types());
                 }
-                properties.component(TCDataComponentTypes.ACCESSORIES, new AccessoriesComponent(map));
+                properties.component(TCDataComponentTypes.ACCESSORIES, new PrimitiveValueComponent(map));
             }
             return this;
         }

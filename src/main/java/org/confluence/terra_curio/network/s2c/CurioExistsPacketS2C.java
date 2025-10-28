@@ -17,7 +17,7 @@ import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
-import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.confluence.terra_curio.util.TCUtils;
@@ -65,7 +65,7 @@ public record CurioExistsPacketS2C(int item) implements CustomPacketPayload {
     public static void sendToClient(ServerPlayer player) {
         int item = 0;
         for (ItemStack itemStack : CuriosUtils.getCurios(player)) {
-            AccessoriesComponent component = TCUtils.getAccessoriesComponent(itemStack);
+            PrimitiveValueComponent component = TCUtils.getAccessoriesComponent(itemStack);
             if (component != null) {
                 Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> types = component.types();
                 for (Object2IntMap.Entry<ValueType<Unit, UnitValue>> entry : MAP.object2IntEntrySet()) {

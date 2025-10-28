@@ -37,24 +37,33 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
         }
     }
 
+    private static void registerType(ResourceLocation id, ValueType<?, ? extends PrimitiveValue<?>> type) {
+        if (TYPES.put(id, type) != null) {
+            throw new IllegalArgumentException("Duplicated value type with id '" + id + "'");
+        }
+    }
+
     public static <T, V extends PrimitiveValue<T>> ValueType<T, V> create(String path, CombineRule<T, V> combineRule, Codec<V> codec, T defaultValue, Function<T, V> factory) {
-        ResourceLocation id = TerraCurio.asResource(path);
+        return create(TerraCurio.asResource(path), combineRule, codec, defaultValue, factory);
+    }
+
+    public static <T, V extends PrimitiveValue<T>> ValueType<T, V> create(ResourceLocation id, CombineRule<T, V> combineRule, Codec<V> codec, T defaultValue, Function<T, V> factory) {
         ValueType<T, V> type = new ValueType<>(id, combineRule, defaultValue, factory);
+        registerType(id, type);
         registerCodec(type, codec);
-        TYPES.put(id, type);
         return type;
     }
 
     public static ValueType<Unit, UnitValue> ofUnit(String path) {
-        return create(path, UnitValue.GET_SELF, UnitValue.CODEC, Unit.INSTANCE, UnitValue.UNIT_2_VALUE);
+        return UnitType.of(TerraCurio.asResource(path));
     }
 
     public static ValueType<Integer, IntegerValue> ofInteger(String path, CombineRule<Integer, IntegerValue> combineRule, int defaultValue) {
-        return create(path, combineRule, IntegerValue.CODEC, defaultValue, IntegerValue::new);
+        return IntegerType.of(TerraCurio.asResource(path), combineRule, defaultValue);
     }
 
     public static ValueType<Float, FloatValue> ofFloat(String path, CombineRule<Float, FloatValue> combineRule, float defaultValue) {
-        return create(path, combineRule, FloatValue.CODEC, defaultValue, FloatValue::new);
+        return FloatType.of(TerraCurio.asResource(path), combineRule, defaultValue);
     }
 
     public ResourceLocation key() {
@@ -85,12 +94,50 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
 
     @Override
     public boolean equals(Object o) {
-        if (o == this) return true;
-        return o instanceof ValueType<?, ?> valueType && valueType.key.equals(key);
+        return o == this || (o instanceof ValueType<?, ?> valueType && valueType.key.equals(key));
     }
 
     @Override
     public int hashCode() {
         return key.hashCode();
+    }
+
+    public static class IntegerType extends ValueType<Integer, IntegerValue> {
+        private IntegerType(ResourceLocation key, CombineRule<Integer, IntegerValue> combineRule, Integer defaultValue) {
+            super(key, combineRule, defaultValue, IntegerValue::new);
+        }
+
+        public static IntegerType of(ResourceLocation id, CombineRule<Integer, IntegerValue> combineRule, int defaultValue) {
+            IntegerType type = new IntegerType(id, combineRule, defaultValue);
+            registerType(id, type);
+            registerCodec(type, IntegerValue.CODEC);
+            return type;
+        }
+    }
+
+    public static class FloatType extends ValueType<Float, FloatValue> {
+        private FloatType(ResourceLocation key, CombineRule<Float, FloatValue> combineRule, float defaultValue) {
+            super(key, combineRule, defaultValue, FloatValue::new);
+        }
+
+        public static FloatType of(ResourceLocation id, CombineRule<Float, FloatValue> combineRule, float defaultValue) {
+            FloatType type = new FloatType(id, combineRule, defaultValue);
+            registerType(id, type);
+            registerCodec(type, FloatValue.CODEC);
+            return type;
+        }
+    }
+
+    public static class UnitType extends ValueType<Unit, UnitValue> {
+        private UnitType(ResourceLocation key) {
+            super(key, UnitValue.GET_SELF, Unit.INSTANCE, UnitValue.UNIT_2_VALUE);
+        }
+
+        public static UnitType of(ResourceLocation id) {
+            UnitType type = new UnitType(id);
+            registerType(id, type);
+            registerCodec(type, UnitValue.CODEC);
+            return type;
+        }
     }
 }

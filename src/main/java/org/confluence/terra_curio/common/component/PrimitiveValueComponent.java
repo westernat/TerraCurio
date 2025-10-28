@@ -22,32 +22,31 @@ import org.jetbrains.annotations.Nullable;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
-public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> types) implements DataComponentType<AccessoriesComponent> {
-    public static final Codec<AccessoriesComponent> CODEC = Codec
-            .<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>>dispatchedMap(
-                    ResourceLocation.CODEC.xmap(ValueType.TYPES::get, ValueType::key), ValueType.VALUE_CODECS::get)
-            .xmap(AccessoriesComponent::new, AccessoriesComponent::types);
+public record PrimitiveValueComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> types) implements DataComponentType<PrimitiveValueComponent> {
+    public static final Codec<PrimitiveValueComponent> CODEC = Codec.<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>>dispatchedMap(
+            ResourceLocation.CODEC.xmap(ValueType.TYPES::get, ValueType::key), ValueType.VALUE_CODECS::get
+    ).xmap(PrimitiveValueComponent::new, PrimitiveValueComponent::types);
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, AccessoriesComponent> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, PrimitiveValueComponent> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistries(CODEC);
 
-    public static <T, V extends PrimitiveValue<T>> AccessoriesComponent entry(ValueType<T, V> type, V value) {
+    public static <T, V extends PrimitiveValue<T>> PrimitiveValueComponent entry(ValueType<T, V> type, V value) {
         Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>();
         map.put(type, value);
-        return new AccessoriesComponent(map);
+        return new PrimitiveValueComponent(map);
     }
 
-    public static <T, V extends PrimitiveValue<T>> AccessoriesComponent of(ValueType<T, V> type, T value) {
+    public static <T, V extends PrimitiveValue<T>> PrimitiveValueComponent of(ValueType<T, V> type, T value) {
         Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>();
         map.put(type, type.newInstance(value));
-        return new AccessoriesComponent(map);
+        return new PrimitiveValueComponent(map);
     }
 
-    public static AccessoriesComponent units(ValueType<Unit, ? extends UnitValue> type, ValueType<Unit, ? extends UnitValue>... types) {
+    public static PrimitiveValueComponent units(ValueType<Unit, ? extends UnitValue> type, ValueType<Unit, ? extends UnitValue>... types) {
         Hashtable<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> table = new Hashtable<>(Map.of(type, UnitValue.INSTANCE));
         for (ValueType<Unit, ? extends UnitValue> type1 : types) {
             table.put(type1, UnitValue.INSTANCE);
         }
-        return new AccessoriesComponent(table);
+        return new PrimitiveValueComponent(table);
     }
 
     public <T, V extends PrimitiveValue<T>> boolean contains(ValueType<T, V> type) {
@@ -65,34 +64,34 @@ public record AccessoriesComponent(Map<ValueType<?, ? extends PrimitiveValue<?>>
     }
 
     @Override
-    public @Nullable Codec<AccessoriesComponent> codec() {
+    public @Nullable Codec<PrimitiveValueComponent> codec() {
         return CODEC;
     }
 
     @Override
-    public StreamCodec<RegistryFriendlyByteBuf, AccessoriesComponent> streamCodec() {
+    public StreamCodec<RegistryFriendlyByteBuf, PrimitiveValueComponent> streamCodec() {
         return STREAM_CODEC;
     }
 
-    public record Remover(List<ValueType<?, ? extends PrimitiveValue<?>>> types) implements DataMapValueRemover<Item, AccessoriesComponent> {
+    public record Remover(List<ValueType<?, ? extends PrimitiveValue<?>>> types) implements DataMapValueRemover<Item, PrimitiveValueComponent> {
         public static final Codec<Remover> CODEC = ValueType.CODEC.listOf().xmap(Remover::new, Remover::types);
 
         @Override
-        public Optional<AccessoriesComponent> remove(AccessoriesComponent component, Registry<Item> registry, Either<TagKey<Item>, ResourceKey<Item>> source, Item item) {
+        public Optional<PrimitiveValueComponent> remove(PrimitiveValueComponent component, Registry<Item> registry, Either<TagKey<Item>, ResourceKey<Item>> source, Item item) {
             HashMap<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new HashMap<>(component.types());
             for (ValueType<?, ? extends PrimitiveValue<?>> type : types) {
                 map.remove(type);
             }
-            return Optional.of(new AccessoriesComponent(map));
+            return Optional.of(new PrimitiveValueComponent(map));
         }
     }
 
-    public static class Merger implements DataMapValueMerger<Item, AccessoriesComponent> {
+    public static class Merger implements DataMapValueMerger<Item, PrimitiveValueComponent> {
         @Override
-        public AccessoriesComponent merge(Registry<Item> registry, Either<TagKey<Item>, ResourceKey<Item>> either, AccessoriesComponent component, Either<TagKey<Item>, ResourceKey<Item>> either1, AccessoriesComponent component1) {
+        public PrimitiveValueComponent merge(Registry<Item> registry, Either<TagKey<Item>, ResourceKey<Item>> either, PrimitiveValueComponent component, Either<TagKey<Item>, ResourceKey<Item>> either1, PrimitiveValueComponent component1) {
             Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component1.types());
             map.putAll(component.types());
-            return new AccessoriesComponent(map);
+            return new PrimitiveValueComponent(map);
         }
     }
 }

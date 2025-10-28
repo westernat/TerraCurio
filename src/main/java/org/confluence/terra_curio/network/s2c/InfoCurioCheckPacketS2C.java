@@ -14,7 +14,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.client.handler.InformationHandler;
-import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.item.IMultiFunctionCouldEnable;
 import org.confluence.terra_curio.util.CuriosUtils;
@@ -73,7 +73,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         byte depthMeter = 0;
         byte lens = 0;
         for (ItemStack stack : itemStacks) {
-            AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
+            PrimitiveValueComponent component = TCUtils.getAccessoriesComponent(stack);
             if (component == null) continue;
             TooltipComponentsValue value = component.get(TCItems.INFORMATION);
             if (value == null) continue;
@@ -133,7 +133,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         byte depthMeter = -128;
         byte lens = -128;
         for (ItemStack stack : itemStacks) {
-            AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
+            PrimitiveValueComponent component = TCUtils.getAccessoriesComponent(stack);
             if (component == null) continue;
             TooltipComponentsValue value = component.get(TCItems.INFORMATION);
             if (value == null) continue;

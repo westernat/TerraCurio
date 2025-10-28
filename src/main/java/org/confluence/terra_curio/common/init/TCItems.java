@@ -51,8 +51,8 @@ import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operati
 import static org.confluence.lib.common.component.ModRarity.*;
 import static org.confluence.terra_curio.api.primitive.ValueType.create;
 import static org.confluence.terra_curio.api.primitive.ValueType.ofUnit;
-import static org.confluence.terra_curio.common.component.AccessoriesComponent.of;
-import static org.confluence.terra_curio.common.component.AccessoriesComponent.units;
+import static org.confluence.terra_curio.common.component.PrimitiveValueComponent.of;
+import static org.confluence.terra_curio.common.component.PrimitiveValueComponent.units;
 
 @SuppressWarnings("all")
 public final class TCItems {

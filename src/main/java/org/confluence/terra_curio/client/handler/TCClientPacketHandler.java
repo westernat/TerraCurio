@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.util.Mth;
@@ -187,15 +188,17 @@ public final class TCClientPacketHandler {
         }
     }
 
-    public static void handleRender(BroadcastRenderPacketS2C packet, Player player) {
-        short render = packet.render();
-        if (player == Minecraft.getInstance().player) {
-            luminance = render & LUMINANCE_MASK;
-            hasNeptunesShell = (render & NEPTUNES_SHELL) == NEPTUNES_SHELL;
-        } else {
-            int playerId = packet.playerId();
-            remoteLuminance.put(playerId, render & LUMINANCE_MASK);
-            remoteNeptuneShell.put(playerId, (render & NEPTUNES_SHELL) == NEPTUNES_SHELL);
+    public static void handleRender(BroadcastRenderPacketS2C packet, Player localPlayer) {
+        int playerId = packet.playerId();
+        if (localPlayer.level().getEntity(playerId) instanceof AbstractClientPlayer clientPlayer) {
+            short render = packet.render();
+            if (localPlayer == clientPlayer) {
+                luminance = render & LUMINANCE_MASK;
+                hasNeptunesShell = (render & NEPTUNES_SHELL) == NEPTUNES_SHELL;
+            } else {
+                remoteLuminance.put(playerId, render & LUMINANCE_MASK);
+                remoteNeptuneShell.put(playerId, (render & NEPTUNES_SHELL) == NEPTUNES_SHELL);
+            }
         }
     }
 

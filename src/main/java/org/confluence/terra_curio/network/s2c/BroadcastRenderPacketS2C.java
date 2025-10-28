@@ -41,11 +41,11 @@ public record BroadcastRenderPacketS2C(int playerId, short render) implements Cu
         });
     }
 
-    public static void sendToAll(ServerPlayer serverPlayer) {
+    public static void sendToPlayersTrackingTarget(ServerPlayer target) {
         if (ServerLifecycleHooks.getCurrentServer() != null) {
-            short luminance = (short) (TCUtils.getAccessoriesValue(serverPlayer, TCItems.LUMINANCE) & LUMINANCE_MASK);
-            short neptunesShell = TCUtils.hasAccessoriesType(serverPlayer, TCItems.NEPTUNES$SHELL) ? NEPTUNES_SHELL : 0;
-            PacketDistributor.sendToAllPlayers(new BroadcastRenderPacketS2C(serverPlayer.getId(), (short) (luminance | neptunesShell)));
+            short luminance = (short) (TCUtils.getAccessoriesValue(target, TCItems.LUMINANCE) & LUMINANCE_MASK);
+            short neptunesShell = TCUtils.hasAccessoriesType(target, TCItems.NEPTUNES$SHELL) ? NEPTUNES_SHELL : 0;
+            PacketDistributor.sendToPlayersTrackingEntityAndSelf(target, new BroadcastRenderPacketS2C(target.getId(), (short) (luminance | neptunesShell)));
         }
     }
 }

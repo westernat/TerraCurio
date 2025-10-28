@@ -40,7 +40,7 @@ import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
-import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
 import org.confluence.terra_curio.common.entity.BeeProjectile;
 import org.confluence.terra_curio.common.entity.StarCloakEntity;
 import org.confluence.terra_curio.common.init.*;
@@ -49,7 +49,6 @@ import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.c2s.PlayerSprintPacketC2S;
 import org.confluence.terra_curio.network.s2c.*;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -58,12 +57,6 @@ import java.util.Set;
 
 public final class TCUtils {
     public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(TerraCurio.asResource("ice_speed"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
-
-    @ApiStatus.Internal
-    @SuppressWarnings("unchecked")
-    public static <T, V extends PrimitiveValue<T>> V tryCast(PrimitiveValue<?> primitiveValue) {
-        return (V) primitiveValue;
-    }
 
     public static void applyFireAttack(Player player, Entity entity) {
         if (hasAccessoriesType(player, TCItems.FIRE$ATTACK)) {
@@ -198,7 +191,7 @@ public final class TCUtils {
         PlayerFlyPacketS2C.sendToClient(serverPlayer);
         RightClickSubtractorPacketS2C.sendToClient(serverPlayer);
         InfiniteFlightPacketS2C.sendToClient(serverPlayer);
-        BroadcastRenderPacketS2C.sendToAll(serverPlayer);
+        BroadcastRenderPacketS2C.sendToPlayersTrackingTarget(serverPlayer);
         FluidWalkUpdatePacketS2C.sendToClient(serverPlayer);
     }
 
@@ -356,8 +349,8 @@ public final class TCUtils {
         return living.getData(TCAttachments.ACCESSORIES).getValue(type);
     }
 
-    public static @Nullable AccessoriesComponent getAccessoriesComponent(ItemStack itemStack) {
-        AccessoriesComponent component = itemStack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+    public static @Nullable PrimitiveValueComponent getAccessoriesComponent(ItemStack itemStack) {
+        PrimitiveValueComponent component = itemStack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         if (component != null || (component = itemStack.get(TCDataComponentTypes.ACCESSORIES)) != null) {
             return component;
         }
