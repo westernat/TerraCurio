@@ -363,4 +363,11 @@ public final class TCUtils {
         }
         return TCUtils.hasAccessoriesType(self, TCItems.ICE$SAFE);
     }
+
+    public static boolean applyFrozenImmune(LivingEntity living, boolean original) {
+        if (original && TCUtils.hasAccessoriesType(living, TCItems.FROZEN$IMMUNE)) {
+            return false;
+        }
+        return original;
+    }
 }

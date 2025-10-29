@@ -8,7 +8,6 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Unit;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
@@ -20,18 +19,17 @@ import org.jetbrains.annotations.ApiStatus;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @SuppressWarnings("unchecked")
 public abstract class PrimitiveValueHolder implements INBTSerializable<CompoundTag> {
-    private final Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> valueMap = new HashMap<>();
+    protected final Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> valueMap = new HashMap<>();
 
     public PrimitiveValueHolder() {
         setToDefaultValue();
     }
 
     public void setToDefaultValue() {
-        this.valueMap.clear();
+        valueMap.clear();
     }
 
     public <T, V extends PrimitiveValue<T>> boolean contains(ValueType<T, V> type) {
@@ -54,30 +52,26 @@ public abstract class PrimitiveValueHolder implements INBTSerializable<CompoundT
 
     protected void compute(PrimitiveValueComponent component) {
         for (Map.Entry<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> entry : component.types().entrySet()) {
-            putUnitIfPresent(entry.getKey());
-            combineValue(entry.getKey(), tryCast(entry.getValue()));
+            ValueType<?, ? extends PrimitiveValue<?>> type = entry.getKey();
+            if (type.defaultValue() == UnitValue.INSTANCE) {
+                putUnitIfPresent(type);
+            } else {
+                combineValue(type, tryCast(entry.getValue()));
+            }
         }
     }
 
-    protected abstract Set<ValueType<Unit, UnitValue>> getUnitsRequireUpdate();
-
-    protected abstract Set<ValueType<?, ? extends PrimitiveValue<?>>> getOtherRequireUpdate();
-
     protected <T, V extends PrimitiveValue<T>> void putUnitIfPresent(ValueType<T, V> type) {
-        if (getUnitsRequireUpdate().contains(type)) {
-            valueMap.put(type, UnitValue.INSTANCE);
-        }
+        valueMap.put(type, UnitValue.INSTANCE);
     }
 
     protected <T, V extends PrimitiveValue<T>> void combineValue(ValueType<T, V> type, V value) {
-        if (getOtherRequireUpdate().contains(type)) {
-            V other = (V) valueMap.get(type);
-            if (other == null) {
-                valueMap.put(type, value);
-            } else {
-                T t = value.combine(other, type.combineRule());
-                valueMap.put(type, type.newInstance(t));
-            }
+        V other = (V) valueMap.get(type);
+        if (other == null) {
+            valueMap.put(type, value);
+        } else {
+            T t = value.combine(other, type.combineRule());
+            valueMap.put(type, type.newInstance(t));
         }
     }
 

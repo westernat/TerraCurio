@@ -135,13 +135,17 @@ public class AccessoriesAttachment extends PrimitiveValueHolder {
     }
 
     @Override
-    protected Set<ValueType<Unit, UnitValue>> getUnitsRequireUpdate() {
-        return UNITS_REQUIRE_UPDATE;
+    protected <T, V extends PrimitiveValue<T>> void putUnitIfPresent(ValueType<T, V> type) {
+        if (UNITS_REQUIRE_UPDATE.contains(type)) {
+            super.putUnitIfPresent(type);
+        }
     }
 
     @Override
-    protected Set<ValueType<?, ? extends PrimitiveValue<?>>> getOtherRequireUpdate() {
-        return OTHER_REQUIRE_UPDATE;
+    protected <T, V extends PrimitiveValue<T>> void combineValue(ValueType<T, V> type, V value) {
+        if (OTHER_REQUIRE_UPDATE.contains(type)) {
+            super.combineValue(type, value);
+        }
     }
 
     @Override

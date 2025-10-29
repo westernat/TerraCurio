@@ -87,6 +87,10 @@ public record PrimitiveValueComponent(Map<ValueType<?, ? extends PrimitiveValue<
     }
 
     public static class Merger implements DataMapValueMerger<Item, PrimitiveValueComponent> {
+        public static final Merger INSTANCE = new Merger();
+
+        private Merger() {}
+
         @Override
         public PrimitiveValueComponent merge(Registry<Item> registry, Either<TagKey<Item>, ResourceKey<Item>> either, PrimitiveValueComponent component, Either<TagKey<Item>, ResourceKey<Item>> either1, PrimitiveValueComponent component1) {
             Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component1.types());

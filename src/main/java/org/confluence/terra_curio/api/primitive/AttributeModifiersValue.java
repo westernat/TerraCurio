@@ -86,6 +86,10 @@ public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, A
         return new Builder();
     }
 
+    public static AttributeModifiersValue simple(Holder<Attribute> attribute, ResourceLocation id, double amount, AttributeModifier.Operation operation) {
+        return new AttributeModifiersValue(ImmutableListMultimap.of(attribute, new AttributeModifier(id, amount, operation)));
+    }
+
     public static class Builder {
         private final ImmutableListMultimap.Builder<Holder<Attribute>, AttributeModifier> builder = ImmutableListMultimap.builder();
 

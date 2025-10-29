@@ -11,7 +11,7 @@ public final class TCDataMaps {
     public static final AdvancedDataMapType<Item, PrimitiveValueComponent, PrimitiveValueComponent.Remover> ACCESSORIES = AdvancedDataMapType.builder(TerraCurio.asResource("accessories"), Registries.ITEM, PrimitiveValueComponent.CODEC)
             .synced(PrimitiveValueComponent.CODEC, false)
             .remover(PrimitiveValueComponent.Remover.CODEC)
-            .merger(new PrimitiveValueComponent.Merger()).build();
+            .merger(PrimitiveValueComponent.Merger.INSTANCE).build();
 
     public static void registerDataMapTypes(RegisterDataMapTypesEvent event) {
         event.register(ACCESSORIES);
