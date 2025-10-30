@@ -15,11 +15,11 @@ public record MobEffectsValue(Set<Holder<MobEffect>> effects) implements Primiti
             holders -> new MobEffectsValue(new HashSet<>(holders)),
             value -> new ArrayList<>(value.effects)
     );
-    public static final CombineRule<Set<Holder<MobEffect>>, MobEffectsValue> EXPANSION = CombineRule.register((a, b) -> {
+    public static final CombineRule<Set<Holder<MobEffect>>, MobEffectsValue> MERGE = CombineRule.register((a, b) -> {
         Set<Holder<MobEffect>> combined = new HashSet<>(a);
         combined.addAll(b);
         return combined;
-    }, "mob_effects_expansion");
+    }, "mob_effects_merge");
 
     @Override
     public Set<Holder<MobEffect>> get() {

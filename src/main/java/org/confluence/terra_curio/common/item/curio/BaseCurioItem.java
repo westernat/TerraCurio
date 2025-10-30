@@ -81,6 +81,10 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
+        return getAttributeModifiers(stack);
+    }
+
+    public ImmutableMultimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(ItemStack stack) {
         PrimitiveValueComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         AttributeModifiersValue value;
         if (component != null && (value = component.get(TCItems.ATTRIBUTES)) != null) {

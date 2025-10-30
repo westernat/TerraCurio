@@ -44,7 +44,9 @@ public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, A
             }
         }
     };
-    public static final CombineRule<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> GET_SELF = CombineRule.register(PrimitiveValue.identity(), "attributes_modifiers_get_self");
+    public static final CombineRule<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> MERGE = CombineRule.register(
+            (a, b) -> ImmutableListMultimap.<Holder<Attribute>, AttributeModifier>builder().putAll(a).putAll(b).build(),
+            "attributes_modifiers_merge");
 
     @Override
     public ImmutableListMultimap<Holder<Attribute>, AttributeModifier> get() {

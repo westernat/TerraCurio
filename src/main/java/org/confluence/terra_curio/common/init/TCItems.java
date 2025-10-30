@@ -122,7 +122,7 @@ public final class TCItems {
     public static final ValueType<Unit, UnitValue> HIVE$PACK = ofUnit("hive_pack");
     public static final ValueType<Unit, UnitValue> INFINITE$FLIGHT = ofUnit("infinite_flight");
 
-    public static final ValueType<Set<Holder<MobEffect>>, MobEffectsValue> EFFECT$IMMUNITIES = ValueType.create("effect_immunities", MobEffectsValue.EXPANSION, MobEffectsValue.CODEC, Set.of(), MobEffectsValue::new);
+    public static final ValueType<Set<Holder<MobEffect>>, MobEffectsValue> EFFECT$IMMUNITIES = ValueType.create("effect_immunities", MobEffectsValue.MERGE, MobEffectsValue.CODEC, Set.of(), MobEffectsValue::new);
     public static final ValueType<Boolean, BooleanValue> STAR$CLOCK = ValueType.create("star_clock", BooleanValue.OR, BooleanValue.CODEC, false, BooleanValue::new);
     public static final ValueType<Float, FloatValue> INVULNERABLE$TICKS$MULTIPLIER = ValueType.ofFloat("invulnerable_ticks_multiplier", FloatValue.GET_MAX_WITHIN_0_TO_100, 1.0F);
     public static final ValueType<Float, FloatValue> LAVA$HURT$REDUCE = ValueType.ofFloat("lava_hurt_reduce", FloatValue.GET_MAX_WITHIN_0_TO_1, 0.0F);
@@ -142,7 +142,7 @@ public final class TCItems {
     public static final ValueType<Integer, IntegerValue> TOTEM$WITH$COOLDOWN = ValueType.ofInteger("totem_with_cooldown", IntegerValue.GET_MIN_GREAT_EQUAL_THAN_0, -1);
 
     // no updates
-    public static final ValueType<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> ATTRIBUTES = ValueType.create("attributes", AttributeModifiersValue.GET_SELF, AttributeModifiersValue.CODEC, ImmutableListMultimap.of(), AttributeModifiersValue::new);
+    public static final ValueType<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> ATTRIBUTES = ValueType.create("attributes", AttributeModifiersValue.MERGE, AttributeModifiersValue.CODEC, ImmutableListMultimap.of(), AttributeModifiersValue::new);
     public static final ValueType<List<Component>, ComponentsValue> COMPONENTS = ValueType.create("components", ComponentsValue.COMBINE_RULE, ComponentsValue.CODEC, List.of(), ComponentsValue::new);
 
 

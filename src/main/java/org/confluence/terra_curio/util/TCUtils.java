@@ -365,6 +365,7 @@ public final class TCUtils {
     }
 
     public static boolean applyFrozenImmune(LivingEntity living, boolean original) {
+        // confluence mixin here
         if (original && TCUtils.hasAccessoriesType(living, TCItems.FROZEN$IMMUNE)) {
             return false;
         }

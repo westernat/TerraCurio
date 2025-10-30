@@ -14,14 +14,10 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
-import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
-import org.confluence.terra_curio.common.init.TCDataMaps;
-import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
@@ -100,12 +96,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
         ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> builder1 = ImmutableMultimap.builder();
-        builder1.putAll(builder.getAttributes());
-        PrimitiveValueComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
-        AttributeModifiersValue value;
-        if (component != null && (value = component.get(TCItems.ATTRIBUTES)) != null) {
-            builder1.putAll(value.get());
-        }
+        builder1.putAll(super.getAttributeModifiers(slotContext, id, stack));
         double speed = LibUtils.getItemStackNbtNoCopy(stack).getInt(KEY) * 0.01;
         if (speed > 0.0) {
             builder1.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(ID, speed, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
