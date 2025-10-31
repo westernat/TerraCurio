@@ -139,7 +139,7 @@ public final class TCAttributes {
     }
 
     public static float applyRangedDamage(RandomSource random, DamageSource damageSource, float amount) {
-        if (hasCustomAttribute(RANGED_DAMAGE)) return amount;
+        if (ApothicHelper.ARROW_DAMAGE.equals(BuiltInRegistries.ATTRIBUTE.getKey(getCustomAttribute(RANGED_DAMAGE).value()))) return amount;
         if (damageSource.is(DamageTypeTags.IS_PROJECTILE) && damageSource.getEntity() instanceof LivingEntity living) {
             AttributeInstance instance = living.getAttribute(RANGED_DAMAGE);
             if (instance != null) {
