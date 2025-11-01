@@ -83,8 +83,10 @@ public final class TCUtils {
         if (IEntity.of(living).terra_curio$getCthulhuSprintingTime() > 10 && attachment.contains(TCItems.SHIELD$OF$CTHULHU)) {
             return true;
         }
-        if (attachment.contains(TCItems.FIRE$IMMUNE) && isFire(damageSource)
-        ) return true;
+        if (attachment.contains(TCItems.FIRE$IMMUNE) && isFire(damageSource)) {
+            living.clearFire();
+            return true;
+        }
         return TCAttributes.applyDodge(living, living.getRandom());
     }
 
@@ -365,10 +367,9 @@ public final class TCUtils {
     }
 
     public static boolean applyFrozenImmune(LivingEntity living, boolean original) {
-        // confluence mixin here
         if (original && TCUtils.hasAccessoriesType(living, TCItems.FROZEN$IMMUNE)) {
             return false;
         }
-        return original;
+        return original; // confluence mixin here
     }
 }

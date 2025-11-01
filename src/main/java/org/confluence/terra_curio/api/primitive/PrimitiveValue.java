@@ -14,10 +14,6 @@ public interface PrimitiveValue<T> {
         return combineRule.combine(get(), other.get());
     }
 
-    default <V extends PrimitiveValue<T>> T combine(T other, CombineRule<T, V> combineRule) {
-        return combineRule.combine(get(), other);
-    }
-
     default List<String> getDescription() {
         return List.of(get().toString());
     }
