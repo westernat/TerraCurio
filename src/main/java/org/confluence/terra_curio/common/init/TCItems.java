@@ -445,104 +445,99 @@ public final class TCItems {
             TSUNAMI_IN_A_BOTTLE = registerDirectly("tsunami_in_a_bottle", (name, builder) -> new TsunamiInABottle(builder.particle(TerraCurio.asResource("tsunami"))
                     .accessories(of(TSUNAMI, 1.5F))
                     .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE))), // 海啸瓶
-            SHINY_RED_BALLOON = registerCurio("shiny_red_balloon", builder -> builder.attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)), // 闪亮红气球
-            BALLOON_PUFFERFISH = registerCurio("balloon_pufferfish", builder -> builder.jeiInfos(0).attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)), // 气球河豚鱼
-            CLOUD_IN_A_BALLOON = registerCurio("cloud_in_a_balloon", builder -> builder.rarity(LIGHT_RED)
-                    .tooltips(1)
+            SHINY_RED_BALLOON = registerCurio("shiny_red_balloon", builder -> builder
+                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 1, ADD_VALUE)), // 闪亮红气球
+            BALLOON_PUFFERFISH = registerCurio("balloon_pufferfish", builder -> builder
                     .jeiInfos(0)
+                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 1, ADD_VALUE)), // 气球河豚鱼
+            CLOUD_IN_A_BALLOON = registerCurio("cloud_in_a_balloon", builder -> builder
+                    .rarity(LIGHT_RED).tooltips(1).jeiInfos(0)
                     .accessories(of(CLOUD, 1.3F))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE)), // 云朵气球
-            BLIZZARD_IN_A_BALLOON = registerCurio("blizzard_in_a_balloon", builder -> builder.jeiInfos(0).rarity(LIGHT_RED)
-                    .tooltips(1)
-                    .jeiInfos(0)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 4, ADD_VALUE)), // 云朵气球
+            BLIZZARD_IN_A_BALLOON = registerCurio("blizzard_in_a_balloon", builder -> builder
+                    .jeiInfos(0).rarity(LIGHT_RED).tooltips(1).jeiInfos(0)
                     .accessories(of(BLIZZARD, new Tuple<>(0.4F, 14)))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE)), // 暴雪气球
-            SANDSTORM_IN_A_BALLOON = registerCurio("sandstorm_in_a_balloon", builder -> builder.rarity(LIGHT_RED)
-                    .tooltips(1)
-                    .jeiInfos(0)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 4, ADD_VALUE)), // 暴雪气球
+            SANDSTORM_IN_A_BALLOON = registerCurio("sandstorm_in_a_balloon", builder -> builder
+                    .rarity(LIGHT_RED).tooltips(1).jeiInfos(0)
                     .accessories(of(SAND$STORM, new Tuple<>(0.45F, 17)))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE)), // 沙暴气球
-            FART_IN_A_BALLOON = registerCurio("fart_in_a_balloon", builder -> builder.rarity(LIGHT_RED)
-                    .tooltips(1)
-                    .jeiInfos(0)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 4, ADD_VALUE)), // 沙暴气球
+            FART_IN_A_BALLOON = registerCurio("fart_in_a_balloon", builder -> builder
+                    .rarity(LIGHT_RED).tooltips(1).jeiInfos(0)
                     .accessories(of(FART, 1.1F))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE)), // 臭屁气球
-            SHARKRON_BALLOON = registerCurio("sharkron_balloon", builder -> builder.jeiInfos(0)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 4, ADD_VALUE)), // 臭屁气球
+            SHARKRON_BALLOON = registerCurio("sharkron_balloon", builder -> builder
+                    .jeiInfos(0)
                     .accessories(of(TSUNAMI, 1.3F))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE)), // 鲨鱼龙气球
-            HONEY_BALLOON = registerCurio("honey_balloon", builder -> builder.rarity(GREEN)
-                    .tooltips(1)
-                    .jeiInfos(0)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 4, ADD_VALUE)), // 鲨鱼龙气球
+            HONEY_BALLOON = registerCurio("honey_balloon", builder -> builder
+                    .rarity(GREEN).tooltips(1).jeiInfos(0)
                     .accessories(units(HONEY$COMB))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)), // 蜂蜜气球
-            BUNDLE_OF_BALLOONS = registerCurio("bundle_of_balloons", builder -> builder.rarity(YELLOW)
-                    .tooltips(1)
-                    .jeiInfos(0)
+                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 1, ADD_VALUE)), // 蜂蜜气球
+            BUNDLE_OF_BALLOONS = registerCurio("bundle_of_balloons", builder -> builder
+                    .rarity(YELLOW).tooltips(1).jeiInfos(0)
                     .accessories(
                             of(SAND$STORM, new Tuple<>(0.45F, 17)),
                             of(BLIZZARD, new Tuple<>(0.4F, 14)),
                             of(CLOUD, 1.3F)
                     )
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 6, ADD_VALUE)), // 气球束
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 7, ADD_VALUE)), // 气球束
             LUCKY_HORSESHOE = registerCurio("lucky_horseshoe", builder -> builder
                     .tooltips(1)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 幸运马掌
-            OBSIDIAN_HORSESHOE = registerCurio("obsidian_horseshoe", builder -> builder.jeiInfos(0).rarity(LIGHT_RED)
-                    .tooltips(1)
-                    .jeiInfos(0)
+            OBSIDIAN_HORSESHOE = registerCurio("obsidian_horseshoe", builder -> builder
+                    .jeiInfos(0).rarity(LIGHT_RED).tooltips(1)
                     .accessories(units(FIRE$IMMUNE))
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 黑曜石马掌
-            BLUE_HORSESHOE_BALLOON = registerCurio("blue_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED)
-                    .tooltips(2)
-                    .jeiInfos(0)
+            BLUE_HORSESHOE_BALLOON = registerCurio("blue_horseshoe_balloon", builder -> builder
+                    .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(CLOUD, 1.3F))
                     .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 蓝马掌气球
-            WHITE_HORSESHOE_BALLOON = registerCurio("white_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED)
-                    .tooltips(2)
-                    .jeiInfos(0)
+            WHITE_HORSESHOE_BALLOON = registerCurio("white_horseshoe_balloon", builder -> builder
+                    .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(BLIZZARD, new Tuple<>(0.4F, 14)))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 白马掌气球
-            YELLOW_HORSESHOE_BALLOON = registerCurio("yellow_horseshoe_balloon", builder -> builder.tooltips(2).jeiInfos(0).rarity(LIGHT_RED)
-                    .jeiInfos(0).accessories(of(SAND$STORM, new Tuple<>(0.45F, 17)))
+            YELLOW_HORSESHOE_BALLOON = registerCurio("yellow_horseshoe_balloon", builder -> builder
+                    .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
+                    .accessories(of(SAND$STORM, new Tuple<>(0.45F, 17)))
                     .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 黄马掌气球
-            GREEN_HORSESHOE_BALLOON = registerCurio("green_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED)
-                    .tooltips(2)
-                    .jeiInfos(0)
+            GREEN_HORSESHOE_BALLOON = registerCurio("green_horseshoe_balloon", builder -> builder
+                    .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(FART, 1.1F))
                     .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 绿马掌气球
-            PINK_HORSESHOE_BALLOON = registerCurio("pink_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED)
-                    .tooltips(2)
-                    .jeiInfos(0)
+            PINK_HORSESHOE_BALLOON = registerCurio("pink_horseshoe_balloon", builder -> builder
+                    .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(TSUNAMI, 1.3F))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 粉马掌气球
-            AMBER_HORSESHOE_BALLOON = registerCurio("amber_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED)
-                    .tooltips(2)
-                    .jeiInfos(0)
+            AMBER_HORSESHOE_BALLOON = registerCurio("amber_horseshoe_balloon", builder -> builder
+                    .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(units(HONEY$COMB))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 琥珀马掌气球
-            BUNDLE_OF_HORSESHOE_BALLOONS = registerCurio("bundle_of_horseshoe_balloons", builder -> builder.rarity(YELLOW)
-                    .tooltips(2)
-                    .jeiInfos(0)
+            BUNDLE_OF_HORSESHOE_BALLOONS = registerCurio("bundle_of_horseshoe_balloons", builder -> builder
+                    .rarity(YELLOW).tooltips(2).jeiInfos(0)
                     .accessories(
                             of(SAND$STORM, new Tuple<>(0.45F, 17)),
                             of(BLIZZARD, new Tuple<>(0.4F, 14)),
