@@ -194,14 +194,14 @@ public final class InformationHandler {
     private static Component getMetalDetectorInfo(Player player) {
         AtomicReference<Component> atomic = new AtomicReference<>(Component.translatable("info.terra_curio.metal_detector.none"));
         player.level().getBlockStates(new AABB(player.getOnPos()).inflate(15.5)).distinct()
-                .map(state -> mapCloakedBlock(player, state))
+                .map(InformationHandler::mapCloakedBlock)
                 .filter(TCCommonConfigs.rareBlocks::containsKey)
                 .min(Comparator.comparingInt(TCCommonConfigs.rareBlocks::getInt))
                 .ifPresent(blockState -> atomic.set(Component.translatable("info.terra_curio.metal_detector", blockState.getBlock().getName())));
         return atomic.get();
     }
 
-    private static BlockState mapCloakedBlock(Player player, BlockState original) {
+    private static BlockState mapCloakedBlock(BlockState original) {
         return original; // confluence mixin here
     }
 

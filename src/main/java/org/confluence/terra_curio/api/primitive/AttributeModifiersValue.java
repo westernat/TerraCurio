@@ -15,7 +15,7 @@ import java.util.*;
 
 public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, AttributeModifier> value) implements PrimitiveValue<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>> {
     public static final AttributeModifiersValue EMPTY = new AttributeModifiersValue(ImmutableListMultimap.of());
-    public static final Codec<AttributeModifiersValue> CODEC = LibCodecUtils.multimapCodec(Attribute.CODEC, AttributeModifier.CODEC)
+    public static final Codec<AttributeModifiersValue> CODEC = LibCodecUtils.multimap(Attribute.CODEC, AttributeModifier.CODEC)
             .xmap(AttributeModifiersValue::new, AttributeModifiersValue::get);
     public static final StreamCodec<RegistryFriendlyByteBuf, AttributeModifiersValue> STREAM_CODEC = new StreamCodec<>() {
         @Override
