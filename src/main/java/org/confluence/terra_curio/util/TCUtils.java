@@ -197,42 +197,40 @@ public final class TCUtils {
         FluidWalkUpdatePacketS2C.sendToClient(serverPlayer);
     }
 
+    // confluence mixin here
     public static float applyLavaHurtReduce(LivingEntity living, DamageSource damageSource, float amount) {
         if (damageSource.is(DamageTypes.LAVA)) {
-            float value = getAccessoriesValue(living, TCItems.LAVA$HURT$REDUCE);
-            living.igniteForTicks(140);
-            return amount * (1.0F - value);
+            return amount * (1.0F - getAccessoriesValue(living, TCItems.LAVA$HURT$REDUCE));
         }
         return amount;
     }
 
     public static void onChangedBlock(LivingEntity living, ServerLevel level) {
-        if (living.onGround()) {
-            AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
-            BlockPos onPos = living.getOnPos();
-            if (attachment.contains(TCItems.FLOWER$BOOTS) && level.getBlockState(onPos).is(TCTags.FLOWER_BOOTS_AVAILABLE)) {
-                BlockPos abovePos = onPos.above();
-                RandomSource random = level.random;
-                for (BlockPos aroundPos : BlockPos.betweenClosed(abovePos.offset(-1, 0, -1), abovePos.offset(1, 0, 1))) {
-                    if (!level.getBlockState(aroundPos.below()).is(TCTags.FLOWER_BOOTS_AVAILABLE)) continue;
-                    if (level.getBlockState(aroundPos).isCollisionShapeFullBlock(level, aroundPos)) continue;
-                    if (random.nextFloat() < 0.3F && level.getBlockState(aroundPos).isAir()) {
-                        List<ConfiguredFeature<?, ?>> list = level.getBiome(aroundPos).value().getGenerationSettings().getFlowerFeatures();
-                        if (list.isEmpty()) continue;
-                        ((RandomPatchConfiguration) list.getFirst().config()).feature().value().place(level, level.getChunkSource().getGenerator(), random, aroundPos);
-                    }
+        if (!living.onGround()) return;
+        AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
+        BlockPos onPos = living.getOnPos();
+        if (attachment.contains(TCItems.FLOWER$BOOTS) && level.getBlockState(onPos).is(TCTags.FLOWER_BOOTS_AVAILABLE)) {
+            BlockPos abovePos = onPos.above();
+            RandomSource random = level.random;
+            for (BlockPos aroundPos : BlockPos.betweenClosed(abovePos.offset(-1, 0, -1), abovePos.offset(1, 0, 1))) {
+                if (!level.getBlockState(aroundPos.below()).is(TCTags.FLOWER_BOOTS_AVAILABLE)) continue;
+                if (level.getBlockState(aroundPos).isCollisionShapeFullBlock(level, aroundPos)) continue;
+                if (random.nextFloat() < 0.3F && level.getBlockState(aroundPos).isAir()) {
+                    List<ConfiguredFeature<?, ?>> list = level.getBiome(aroundPos).value().getGenerationSettings().getFlowerFeatures();
+                    if (list.isEmpty()) continue;
+                    ((RandomPatchConfiguration) list.getFirst().config()).feature().value().place(level, level.getChunkSource().getGenerator(), random, aroundPos);
                 }
             }
-            if (attachment.contains(TCItems.ICE$SPEED)) {
-                AttributeInstance instance = living.getAttribute(Attributes.MOVEMENT_SPEED);
-                assert instance != null;
-                if (level.getBlockState(onPos).is(BlockTags.ICE)) {
-                    if (!instance.hasModifier(ICE_SPEED_MODIFIER.id())) {
-                        instance.addTransientModifier(ICE_SPEED_MODIFIER);
-                    }
-                } else {
-                    instance.removeModifier(ICE_SPEED_MODIFIER);
+        }
+        if (attachment.contains(TCItems.ICE$SPEED)) {
+            AttributeInstance instance = living.getAttribute(Attributes.MOVEMENT_SPEED);
+            assert instance != null;
+            if (level.getBlockState(onPos).is(BlockTags.ICE)) {
+                if (!instance.hasModifier(ICE_SPEED_MODIFIER.id())) {
+                    instance.addTransientModifier(ICE_SPEED_MODIFIER);
                 }
+            } else {
+                instance.removeModifier(ICE_SPEED_MODIFIER);
             }
         }
     }
@@ -343,10 +341,12 @@ public final class TCUtils {
         return original;
     }
 
+    // confluence mixin here
     public static boolean hasAccessoriesType(LivingEntity living, ValueType<Unit, UnitValue> type) {
         return living.getData(TCAttachments.ACCESSORIES).contains(type);
     }
 
+    // confluence mixin here
     public static <T, V extends PrimitiveValue<T>> T getAccessoriesValue(LivingEntity living, ValueType<T, V> type) {
         return living.getData(TCAttachments.ACCESSORIES).getValue(type);
     }
@@ -366,10 +366,11 @@ public final class TCUtils {
         return TCUtils.hasAccessoriesType(self, TCItems.ICE$SAFE);
     }
 
+    // confluence mixin here
     public static boolean applyFrozenImmune(LivingEntity living, boolean original) {
         if (original && TCUtils.hasAccessoriesType(living, TCItems.FROZEN$IMMUNE)) {
             return false;
         }
-        return original; // confluence mixin here
+        return original;
     }
 }
