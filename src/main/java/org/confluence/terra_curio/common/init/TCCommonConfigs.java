@@ -118,6 +118,7 @@ public final class TCCommonConfigs {
                 "You need to fill the list with string like 'modid:entity'",
                 "The higher the creature in the list, the higher the value"
         ).defineListAllowEmpty("rareCreatures", List.of(
+                "terra_entity:voodoo_demon",
                 "terra_entity:dungeon_slime",
                 "terra_entity:nymph",
                 "terra_entity:wandering_eye_fish",
