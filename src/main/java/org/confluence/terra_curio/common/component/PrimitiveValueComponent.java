@@ -92,9 +92,9 @@ public record PrimitiveValueComponent(Map<ValueType<?, ? extends PrimitiveValue<
         private Merger() {}
 
         @Override
-        public PrimitiveValueComponent merge(Registry<Item> registry, Either<TagKey<Item>, ResourceKey<Item>> either, PrimitiveValueComponent component, Either<TagKey<Item>, ResourceKey<Item>> either1, PrimitiveValueComponent component1) {
-            Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component1.types());
-            map.putAll(component.types());
+        public PrimitiveValueComponent merge(Registry<Item> registry, Either<TagKey<Item>, ResourceKey<Item>> neoSource, PrimitiveValueComponent neoValue, Either<TagKey<Item>, ResourceKey<Item>> oldSource, PrimitiveValueComponent oldValue) {
+            Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(oldValue.types());
+            map.putAll(neoValue.types());
             return new PrimitiveValueComponent(map);
         }
     }

@@ -8,6 +8,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
 import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Unit;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.common.util.INBTSerializable;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
@@ -53,7 +54,7 @@ public abstract class PrimitiveValueHolder implements INBTSerializable<CompoundT
     protected void compute(PrimitiveValueComponent component) {
         for (Map.Entry<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> entry : component.types().entrySet()) {
             ValueType<?, ? extends PrimitiveValue<?>> type = entry.getKey();
-            if (type.defaultValue() == UnitValue.INSTANCE) {
+            if (type.defaultValue() == Unit.INSTANCE) {
                 putUnitIfPresent(type);
             } else {
                 combineValue(type, tryCast(entry.getValue()));

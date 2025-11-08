@@ -141,7 +141,8 @@ public final class PlayerJumpHandler {
                 for (Map.Entry<ResourceKey<Item>, MayFlyAbilityValue.FlyStack> entry : flyStacks.entrySet()) {
                     int i = remainFlyTicks.getInt(entry.getKey());
                     if (infiniteFlight || i > 0) {
-                        fly(horizontalFlight, localPlayer, infiniteFlight ? infiniteFlightSpeed : entry.getValue().flySpeed());
+                        float flySpeed = horizontalFlight || infiniteFlight ? infiniteFlightSpeed : entry.getValue().flySpeed();
+                        fly(horizontalFlight, localPlayer, flySpeed);
                         if (!infiniteFlight) currentFlight = entry.getKey();
                         remainFlyTicks.put(entry.getKey(), --i);
                         if (infiniteFlight || i > 0) return;
