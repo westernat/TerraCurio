@@ -64,7 +64,7 @@ public class AccessoriesValueCommand {
     public static class ValueTypeArgument implements ArgumentType<String> {
         private static final DynamicCommandExceptionType UNKNOWN_TYPE = new DynamicCommandExceptionType(type -> Component.translatable("argument.terra_curio.unknown_type", type));
         private static final List<String> EXAMPLES = Lists.newArrayList("auto_attack");
-        private static final Function<ValueType<?, ? extends PrimitiveValue<?>>, String> MAPPER = type -> type.key().getPath();
+        private static final Function<ValueType<?, ? extends PrimitiveValue<?>>, String> MAPPER = type -> type.key().toString();
         private static Set<String> AVAILABLE;
 
         @Override
