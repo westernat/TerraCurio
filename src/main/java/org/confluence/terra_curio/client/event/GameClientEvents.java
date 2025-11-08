@@ -10,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.BlockItem;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -101,12 +102,14 @@ public final class GameClientEvents {
 
     @SubscribeEvent
     public static void interactionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
-        if (TCClientConfigs.rightClickDelay && event.isUseItem()) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return;
+        if (TCClientConfigs.rightClickDelay && event.isUseItem() && player.getItemInHand(event.getHand()).getItem() instanceof BlockItem) {
             MinecraftAccessor instance = (MinecraftAccessor) Minecraft.getInstance();
             int delay = instance.getRightClickDelay() - TCClientPacketHandler.getRightClickSubtractor();
             instance.setRightClickDelay(Math.max(0, delay));
         }
-        if (TCClientPacketHandler.isBoneGlove() && Minecraft.getInstance().player.getMainHandItem().is(Tags.Items.TOOLS)) {
+        if (TCClientPacketHandler.isBoneGlove() && player.getMainHandItem().is(Tags.Items.TOOLS)) {
             PacketDistributor.sendToServer(ShootXBonePacketC2S.INSTANCE);
         }
     }
