@@ -33,6 +33,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.EffectCures;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.lib.util.VectorUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
@@ -293,7 +294,8 @@ public final class TCUtils {
     }
 
     public static void applyCthulhuTouch(Player player, Entity touched) {
-        if (player != touched && IEntity.of(player).terra_curio$getCthulhuSprintingTime() > 20 && touched instanceof LivingEntity) {
+        if (player == touched || IEntity.of(player).terra_curio$getCthulhuSprintingTime() <= 20) return;
+        if (LibUtils.getOwner(touched) instanceof LivingEntity target && player != target) {
             Vec3 vector = player.getDeltaMovement();
             VectorUtils.knockBack(player, touched, new Vec3(vector.x * 1.2, 0.2, vector.z * 1.2));
             touched.hurt(player.damageSources().playerAttack(player), 7.8F);
