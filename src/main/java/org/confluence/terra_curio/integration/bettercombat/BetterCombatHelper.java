@@ -8,9 +8,10 @@ import java.lang.reflect.Method;
 public class BetterCombatHelper {
     public static final boolean LOADED = ModList.get().isLoaded("bettercombat");
     private static Method getAttributes;
+    private static boolean error = false;
 
     public static boolean hasWeaponAttributes(ItemStack itemStack) {
-        if (LOADED) {
+        if (LOADED && !error) {
             try {
                 if (getAttributes == null) {
                     Class<?> WeaponRegistry = BetterCombatHelper.class.getClassLoader().loadClass("net.bettercombat.logic.WeaponRegistry");
@@ -19,7 +20,7 @@ public class BetterCombatHelper {
                 }
                 return getAttributes.invoke(null, itemStack) != null;
             } catch (Exception e) {
-                return false;
+                error = true;
             }
         }
         return false;
