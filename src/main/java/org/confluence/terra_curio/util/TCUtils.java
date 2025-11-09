@@ -50,6 +50,7 @@ import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.c2s.PlayerSprintPacketC2S;
 import org.confluence.terra_curio.network.s2c.*;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -60,7 +61,7 @@ public final class TCUtils {
     public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(TerraCurio.asResource("ice_speed"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
     public static void applyFireAttack(Player player, Entity entity) {
-        if (hasAccessoriesType(player, TCItems.FIRE$ATTACK)) {
+        if (hasType(player, TCItems.FIRE$ATTACK)) {
             float f = player.getRandom().nextFloat();
             int time;
             if (f < 0.25F) {
@@ -103,8 +104,7 @@ public final class TCUtils {
     }
 
     public static float applyInjuryFree(LivingEntity living, float amount) {
-        float injuryFree = getAccessoriesValue(living, TCItems.INJURY$FREE);
-        return amount * (1.0F - injuryFree);
+        return amount * (1.0F - getValue(living, TCItems.INJURY$FREE));
     }
 
     public static void applyStarClock(LivingEntity living, RandomSource random) {
@@ -141,13 +141,13 @@ public final class TCUtils {
     }
 
     public static void applyIgniteArrow(LivingEntity living, AbstractArrow arrow) {
-        if (hasAccessoriesType(living, TCItems.IGNITE$ARROW)) {
+        if (hasType(living, TCItems.IGNITE$ARROW)) {
             arrow.igniteForTicks(2000);
         }
     }
 
     public static float applyFrozenTurtleShell(LivingEntity living, float amount) {
-        if (living.getHealth() / living.getMaxHealth() < 0.5F && hasAccessoriesType(living, TCItems.FROZEN$TURTLE$SHELL)) {
+        if (living.getHealth() / living.getMaxHealth() < 0.5F && hasType(living, TCItems.FROZEN$TURTLE$SHELL)) {
             return amount * 0.75F;
         }
         return amount;
@@ -155,7 +155,9 @@ public final class TCUtils {
 
     public static float applyBrainOfConfusion(LivingEntity living, RandomSource randomSource, DamageSource damageSource, float amount) {
         if (damageSource.is(TCTags.HARMFUL_EFFECT)) return amount;
-        if (!living.getData(TCAttachments.ACCESSORIES).contains(TCItems.BRAIN$OF$CONFUSION)) return amount;
+        if (!living.getData(TCAttachments.ACCESSORIES).contains(TCItems.BRAIN$OF$CONFUSION)) {
+            return amount;
+        }
         if (randomSource.nextFloat() < 0.6F + amount * 0.02F) {
             float rangeMin, rangeMax;
             if (amount <= 120) rangeMin = amount * 0.5F + 200;
@@ -201,7 +203,7 @@ public final class TCUtils {
     // confluence mixin here
     public static float applyLavaHurtReduce(LivingEntity living, DamageSource damageSource, float amount) {
         if (damageSource.is(DamageTypes.LAVA)) {
-            return amount * (1.0F - getAccessoriesValue(living, TCItems.LAVA$HURT$REDUCE));
+            return amount * (1.0F - getValue(living, TCItems.LAVA$HURT$REDUCE));
         }
         return amount;
     }
@@ -214,8 +216,10 @@ public final class TCUtils {
             BlockPos abovePos = onPos.above();
             RandomSource random = level.random;
             for (BlockPos aroundPos : BlockPos.betweenClosed(abovePos.offset(-1, 0, -1), abovePos.offset(1, 0, 1))) {
-                if (!level.getBlockState(aroundPos.below()).is(TCTags.FLOWER_BOOTS_AVAILABLE)) continue;
-                if (level.getBlockState(aroundPos).isCollisionShapeFullBlock(level, aroundPos)) continue;
+                if (!level.getBlockState(aroundPos.below()).is(TCTags.FLOWER_BOOTS_AVAILABLE))
+                    continue;
+                if (level.getBlockState(aroundPos).isCollisionShapeFullBlock(level, aroundPos))
+                    continue;
                 if (random.nextFloat() < 0.3F && level.getBlockState(aroundPos).isAir()) {
                     List<ConfiguredFeature<?, ?>> list = level.getBiome(aroundPos).value().getGenerationSettings().getFlowerFeatures();
                     if (list.isEmpty()) continue;
@@ -262,7 +266,9 @@ public final class TCUtils {
     }
 
     public static boolean isFluidWalkable(LivingEntity living, FluidState fluidState) {
-        if (fluidState.isEmpty() || living.isCrouching() || !IEntity.of(living).terra_curio$isPlayer()) return false;
+        if (fluidState.isEmpty() || living.isCrouching() || !IEntity.of(living).terra_curio$isPlayer()) {
+            return false;
+        }
         ILivingEntity iLiving = (ILivingEntity) living;
         if (iLiving.terra_curio$getLastWalkedFluidState() == fluidState) {
             return true;
@@ -276,7 +282,7 @@ public final class TCUtils {
     public static boolean applyTotemAbility(LivingEntity living) {
         ILivingEntity iLiving = (ILivingEntity) living;
         if (iLiving.terra_curio$getTotemCooldown() == 0) {
-            int cooldown = getAccessoriesValue(living, TCItems.TOTEM$WITH$COOLDOWN);
+            int cooldown = getValue(living, TCItems.TOTEM$WITH$COOLDOWN);
             if (cooldown > 0) {
                 living.setHealth(1.0F);
                 living.removeEffectsCuredBy(EffectCures.PROTECTED_BY_TOTEM);
@@ -294,7 +300,8 @@ public final class TCUtils {
     }
 
     public static void applyCthulhuTouch(Player player, Entity touched) {
-        if (player == touched || IEntity.of(player).terra_curio$getCthulhuSprintingTime() <= 20) return;
+        if (player == touched || IEntity.of(player).terra_curio$getCthulhuSprintingTime() <= 20)
+            return;
         if (LibUtils.getOwner(touched) instanceof LivingEntity target && player != target) {
             Vec3 vector = player.getDeltaMovement();
             VectorUtils.knockBack(player, touched, new Vec3(vector.x * 1.2, 0.2, vector.z * 1.2));
@@ -307,7 +314,9 @@ public final class TCUtils {
     private static boolean sprintKeyDown = false;
 
     public static void applyCthulhuSprinting(boolean down, Player player) {
-        if (IEntity.of(player).terra_curio$getCthulhuSprintingTime() > 0 || player.isFallFlying()) return;
+        if (IEntity.of(player).terra_curio$getCthulhuSprintingTime() > 0 || player.isFallFlying()) {
+            return;
+        }
         boolean sprint = false;
         if (player.isLocalPlayer()) {
             if (down) {
@@ -319,7 +328,7 @@ public final class TCUtils {
             } else {
                 sprintKeyDown = false;
             }
-        } else if (hasAccessoriesType(player, TCItems.SHIELD$OF$CTHULHU)) {
+        } else if (hasType(player, TCItems.SHIELD$OF$CTHULHU)) {
             sprint = true;
         }
         if (sprint) {
@@ -344,13 +353,30 @@ public final class TCUtils {
     }
 
     // confluence mixin here
-    public static boolean hasAccessoriesType(LivingEntity living, ValueType<Unit, UnitValue> type) {
+    public static boolean hasType(LivingEntity living, ValueType<Unit, UnitValue> type) {
         return living.getData(TCAttachments.ACCESSORIES).contains(type);
     }
 
+    @Deprecated(forRemoval = true, since = "1.2.0")
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.3.0")
+    public static boolean hasAccessoriesType(LivingEntity living, ValueType<Unit, UnitValue> type) {
+        return hasType(living, type);
+    }
+
     // confluence mixin here
-    public static <T, V extends PrimitiveValue<T>> T getAccessoriesValue(LivingEntity living, ValueType<T, V> type) {
+    public static <T, V extends PrimitiveValue<T>> T getValue(LivingEntity living, ValueType<T, V> type) {
         return living.getData(TCAttachments.ACCESSORIES).getValue(type);
+    }
+
+    @Deprecated(forRemoval = true, since = "1.2.0")
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.3.0")
+    public static <T, V extends PrimitiveValue<T>> T getAccessoriesValue(LivingEntity living, ValueType<T, V> type) {
+        return getValue(living, type);
+    }
+
+    // confluence mixin here
+    public static <T, V extends PrimitiveValue<T>> @Nullable V getPrimitiveValue(LivingEntity living, ValueType<T, V> type) {
+        return living.getData(TCAttachments.ACCESSORIES).getPrimitiveValue(type);
     }
 
     public static @Nullable PrimitiveValueComponent getAccessoriesComponent(ItemStack itemStack) {
@@ -365,12 +391,12 @@ public final class TCUtils {
         if (IEntity.of(self).terra_curio$isPlayer() && ((Player) self).isLocalPlayer()) {
             return TCClientPacketHandler.isIceSafe();
         }
-        return TCUtils.hasAccessoriesType(self, TCItems.ICE$SAFE);
+        return TCUtils.hasType(self, TCItems.ICE$SAFE);
     }
 
     // confluence mixin here
     public static boolean applyFrozenImmune(LivingEntity living, boolean original) {
-        if (original && TCUtils.hasAccessoriesType(living, TCItems.FROZEN$IMMUNE)) {
+        if (original && TCUtils.hasType(living, TCItems.FROZEN$IMMUNE)) {
             return false;
         }
         return original;

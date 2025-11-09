@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.common.attachment;
 
-import com.google.common.collect.Lists;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -17,61 +16,63 @@ import net.minecraft.commands.synchronization.ArgumentTypeInfos;
 import net.minecraft.commands.synchronization.SingletonArgumentInfo;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
+import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
-import org.confluence.terra_curio.common.init.TCAttachments;
+import org.confluence.terra_curio.util.TCUtils;
 
 import java.util.Collection;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
-import java.util.function.Supplier;
 
 public class AccessoriesValueCommand {
     public static final DeferredRegister<ArgumentTypeInfo<?, ?>> INFOS = DeferredRegister.create(Registries.COMMAND_ARGUMENT_TYPE, TerraCurio.MODID);
 
-    public static final Supplier<ArgumentTypeInfo<?, ?>> VALUE_TYPE = INFOS.register("value_type", () -> ArgumentTypeInfos.registerByClass(ValueTypeArgument.class, SingletonArgumentInfo.contextFree(ValueTypeArgument::type)));
+    static {
+        INFOS.register("value_type", () -> ArgumentTypeInfos.registerByClass(ValueTypeArgument.class, SingletonArgumentInfo.contextFree(ValueTypeArgument::type)));
+    }
 
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
         dispatcher.register(Commands.literal("terra_curio").requires(sourceStack -> sourceStack.hasPermission(2))
                 .then(Commands.argument("type", ValueTypeArgument.type()).executes(context -> {
-                    String type = context.getArgument("type", String.class);
-                    ValueType<?, ? extends PrimitiveValue<?>> valueType = ValueType.TYPES.get(TerraCurio.asResource(type));
+                    ResourceLocation id = ValueTypeArgument.getId(context, "type");
+                    ValueType<?, ? extends PrimitiveValue<?>> type = ValueType.TYPES.get(id);
                     CommandSourceStack source = context.getSource();
-                    if (valueType == null) {
-                        source.sendFailure(Component.translatable("argument.terra_curio.unknown_type", type));
+                    if (type == null) {
+                        source.sendFailure(Component.translatable("argument.terra_curio.unknown_type", id));
                         return 0;
-                    } else {
-                        AccessoriesAttachment attachment = source.getEntityOrException().getData(TCAttachments.ACCESSORIES);
-                        if (valueType.defaultValue() == Unit.INSTANCE) {
-                            source.sendSystemMessage(Component.literal("Contains: " + attachment.contains(valueType)));
+                    } else if (source.getEntity() instanceof LivingEntity living) {
+                        PrimitiveValue<?> value = TCUtils.getPrimitiveValue(living, type);
+                        if (type.defaultValue() == Unit.INSTANCE) {
+                            source.sendSystemMessage(Component.literal("Contains: " + (value != null)));
+                        } else if (value == null) {
+                            source.sendSystemMessage(Component.literal("NONE"));
                         } else {
-                            for (String description : attachment.getDescription(valueType)) {
+                            for (String description : value.getDescription()) {
                                 source.sendSystemMessage(Component.literal(description));
                             }
                         }
                         return 1;
                     }
+                    return 0;
                 }))
         );
     }
 
-    public static class ValueTypeArgument implements ArgumentType<String> {
+    public static class ValueTypeArgument implements ArgumentType<ResourceLocation> {
         private static final DynamicCommandExceptionType UNKNOWN_TYPE = new DynamicCommandExceptionType(type -> Component.translatable("argument.terra_curio.unknown_type", type));
-        private static final List<String> EXAMPLES = Lists.newArrayList("auto_attack");
-        private static final Function<ValueType<?, ? extends PrimitiveValue<?>>, String> MAPPER = type -> type.key().toString();
-        private static Set<String> AVAILABLE;
+        private static final List<String> EXAMPLES = List.of("terra_curio:auto_attack");
+        private static List<String> AVAILABLE;
 
         @Override
-        public String parse(StringReader reader) throws CommandSyntaxException {
+        public ResourceLocation parse(StringReader reader) throws CommandSyntaxException {
             try {
-                String id = reader.readUnquotedString();
-                if (ValueType.TYPES.containsKey(TerraCurio.asResource(id))) {
+                ResourceLocation id = ResourceLocation.read(reader);
+                if (ValueType.TYPES.containsKey(id)) {
                     return id;
                 } else {
                     throw UNKNOWN_TYPE.create(id);
@@ -84,8 +85,7 @@ public class AccessoriesValueCommand {
         @Override
         public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
             if (AVAILABLE == null) {
-                AVAILABLE = new LinkedHashSet<>(AccessoriesAttachment.UNITS_REQUIRE_UPDATE.stream().map(MAPPER).toList());
-                AVAILABLE.addAll(AccessoriesAttachment.OTHER_REQUIRE_UPDATE.stream().map(MAPPER).toList());
+                AVAILABLE = ValueType.TYPES.keySet().stream().map(ResourceLocation::toString).sorted().toList();
             }
             return SharedSuggestionProvider.suggest(AVAILABLE, builder);
         }
@@ -97,6 +97,10 @@ public class AccessoriesValueCommand {
 
         public static ValueTypeArgument type() {
             return new ValueTypeArgument();
+        }
+
+        public static ResourceLocation getId(CommandContext<CommandSourceStack> context, String name) {
+            return context.getArgument(name, ResourceLocation.class);
         }
     }
 }

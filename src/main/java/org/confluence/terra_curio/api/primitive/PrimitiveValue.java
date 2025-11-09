@@ -21,6 +21,4 @@ public interface PrimitiveValue<T> {
     static <T> BiFunction<T, T, T> identity() {
         return (a, b) -> a;
     }
-
-
 }

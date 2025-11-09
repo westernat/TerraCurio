@@ -34,7 +34,7 @@ public record InfiniteFlightPacketS2C(boolean enable) implements CustomPacketPay
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        boolean enable = TCUtils.hasAccessoriesType(serverPlayer, TCItems.INFINITE$FLIGHT);
+        boolean enable = TCUtils.hasType(serverPlayer, TCItems.INFINITE$FLIGHT);
         PacketDistributor.sendToPlayer(serverPlayer, new InfiniteFlightPacketS2C(enable));
     }
 }

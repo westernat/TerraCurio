@@ -34,6 +34,6 @@ public record PlayerClimbPacketS2C(byte climberAmount) implements CustomPacketPa
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        PacketDistributor.sendToPlayer(serverPlayer, new PlayerClimbPacketS2C(TCUtils.getAccessoriesValue(serverPlayer, TCItems.WALL$CLIMB)));
+        PacketDistributor.sendToPlayer(serverPlayer, new PlayerClimbPacketS2C(TCUtils.getValue(serverPlayer, TCItems.WALL$CLIMB)));
     }
 }

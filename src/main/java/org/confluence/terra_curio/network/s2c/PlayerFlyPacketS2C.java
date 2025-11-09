@@ -42,6 +42,6 @@ public record PlayerFlyPacketS2C(Map<ResourceKey<Item>, MayFlyAbilityValue.FlySt
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        PacketDistributor.sendToPlayer(serverPlayer, new PlayerFlyPacketS2C(TCUtils.getAccessoriesValue(serverPlayer, TCItems.MAY$FLY)));
+        PacketDistributor.sendToPlayer(serverPlayer, new PlayerFlyPacketS2C(TCUtils.getValue(serverPlayer, TCItems.MAY$FLY)));
     }
 }

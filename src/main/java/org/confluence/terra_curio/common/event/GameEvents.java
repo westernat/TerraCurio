@@ -82,7 +82,7 @@ public final class GameEvents {
     @SubscribeEvent
     public static void livingIncomingDamage(LivingIncomingDamageEvent event) {
         DamageContainer container = event.getContainer();
-        float invulnerableTicksMultiplier = TCUtils.getAccessoriesValue(event.getEntity(), TCItems.INVULNERABLE$TICKS$MULTIPLIER);
+        float invulnerableTicksMultiplier = TCUtils.getValue(event.getEntity(), TCItems.INVULNERABLE$TICKS$MULTIPLIER);
         container.setPostAttackInvulnerabilityTicks((int) (container.getPostAttackInvulnerabilityTicks() * invulnerableTicksMultiplier));
     }
 
@@ -242,11 +242,11 @@ public final class GameEvents {
                 event.setRefillAirAmount(4);
             }
         } else {
-            if (TCUtils.hasAccessoriesType(living, TCItems.NEPTUNES$SHELL)) {
+            if (TCUtils.hasType(living, TCItems.NEPTUNES$SHELL)) {
                 event.setCanBreathe(true);
                 event.setRefillAirAmount(4);
             } else if (living.getAirSupply() > 0 && living.level().getGameTime() % 8 != 0) { // 延长至120秒
-                if (living.getItemBySlot(EquipmentSlot.HEAD).is(TCTags.DIVING) || TCUtils.hasAccessoriesType(living, TCItems.DIVING)) {
+                if (living.getItemBySlot(EquipmentSlot.HEAD).is(TCTags.DIVING) || TCUtils.hasType(living, TCItems.DIVING)) {
                     event.setConsumeAirAmount(0);
                 }
             }
@@ -265,7 +265,7 @@ public final class GameEvents {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void mobEffect$Applicable(MobEffectEvent.Applicable event) {
         if (event.getResult() != MobEffectEvent.Applicable.Result.DO_NOT_APPLY) {
-            if (TCUtils.getAccessoriesValue(event.getEntity(), TCItems.EFFECT$IMMUNITIES).contains(event.getEffectInstance().getEffect())) {
+            if (TCUtils.getValue(event.getEntity(), TCItems.EFFECT$IMMUNITIES).contains(event.getEffectInstance().getEffect())) {
                 event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
             }
         }

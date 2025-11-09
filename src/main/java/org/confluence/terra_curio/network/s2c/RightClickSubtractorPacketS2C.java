@@ -34,6 +34,6 @@ public record RightClickSubtractorPacketS2C(byte amount) implements CustomPacket
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        PacketDistributor.sendToPlayer(serverPlayer, new RightClickSubtractorPacketS2C(TCUtils.getAccessoriesValue(serverPlayer, TCItems.RIGHT$CLICK$DELAY$SUBSTRACTOR)));
+        PacketDistributor.sendToPlayer(serverPlayer, new RightClickSubtractorPacketS2C(TCUtils.getValue(serverPlayer, TCItems.RIGHT$CLICK$DELAY$SUBSTRACTOR)));
     }
 }
