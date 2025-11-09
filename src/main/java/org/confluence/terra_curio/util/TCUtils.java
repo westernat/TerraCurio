@@ -255,9 +255,16 @@ public final class TCUtils {
         if (player.getEyeInFluidType() == NeoForgeMod.EMPTY_TYPE.value()) {
             BlockPos pos = player.blockPosition();
             Level level = player.level();
-            if (level.getFluidState(pos.above()).isEmpty() && player.canStandOnFluid(level.getFluidState(pos))) {
+            FluidState fluidState;
+            if (level.getFluidState(pos.above()).isEmpty() && player.canStandOnFluid((fluidState = level.getFluidState(pos)))) {
                 Vec3 motion = player.getDeltaMovement();
-                player.setDeltaMovement(motion.x, Math.max(0.0, motion.y), motion.z);
+                double deltaY = player.getY() - Mth.floor(player.getY());
+                double maxY = Math.max(0.0, motion.y);
+                double fluidHeight = fluidState.getHeight(level, pos);
+                if (deltaY < fluidHeight) {
+                    maxY += fluidHeight - deltaY;
+                }
+                player.setDeltaMovement(motion.x, maxY, motion.z);
                 player.setOnGround(true);
                 float f = Math.min(0.1F, (float) motion.horizontalDistance());
                 player.bob = player.bob + (f - player.bob) * 0.8F;
