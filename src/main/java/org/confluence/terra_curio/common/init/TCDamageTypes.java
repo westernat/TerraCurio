@@ -7,8 +7,10 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import org.confluence.lib.util.ScheduledForMove;
 import org.confluence.terra_curio.TerraCurio;
 
+@ScheduledForMove(since = "1.2.0", inVersion = "2.0.0")
 public final class TCDamageTypes {
     public static final ResourceKey<DamageType> STAR_CLOAK = register("star_cloak");
 

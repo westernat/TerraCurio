@@ -26,6 +26,7 @@ import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.util.LibUtils;
+import org.confluence.lib.util.ScheduledForMove;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.integration.apothic.ApothicHelper;
 
@@ -35,6 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+@ScheduledForMove(since = "1.2.0", inVersion = "2.0.0")
 public final class TCAttributes {
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(BuiltInRegistries.ATTRIBUTE, TerraCurio.MODID);
 
