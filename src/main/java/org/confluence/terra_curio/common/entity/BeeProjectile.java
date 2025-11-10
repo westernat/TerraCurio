@@ -13,10 +13,7 @@ import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.HitResult;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.*;
 import org.confluence.terra_curio.common.init.TCEntities;
 import org.jetbrains.annotations.Nullable;
 
@@ -99,6 +96,13 @@ public class BeeProjectile extends Projectile {
         }
         if (getInBlockState().liquid()) discard();
         else if (blockHitCount > (isGiant() ? 2 : 1) || tickCount > (isGiant() ? 220 : 200)) discard();
+
+        HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
+        checkInsideBlocks();
+        HitResult.Type hitresult$type = hitresult.getType();
+        if (hitresult$type == HitResult.Type.BLOCK) {
+            onHitBlock((BlockHitResult) hitresult);
+        }
     }
 
     @Override
