@@ -72,7 +72,8 @@ public final class GameEvents {
     public static void entityInvulnerabilityCheck(EntityInvulnerabilityCheckEvent event) {
         if (event.isInvulnerable()) return;
         DamageSource damageSource = event.getSource();
-        if (damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || damageSource.is(DamageTypes.GENERIC_KILL)) return;
+        if (damageSource.is(DamageTypes.FELL_OUT_OF_WORLD) || damageSource.is(DamageTypes.GENERIC_KILL))
+            return;
 
         if (TCUtils.isInvulnerableTo(event.getEntity(), damageSource)) {
             event.setInvulnerable(true);
@@ -137,28 +138,28 @@ public final class GameEvents {
     @SubscribeEvent
     public static void livingChangeTarget(LivingChangeTargetEvent event) {
         LivingEntity self = event.getEntity();
-        if (!(self instanceof Enemy)) return;
-        if (event.getNewAboutToBeSetTarget() instanceof Player playerO) { // 当新目标为玩家时
-            double range = self.getAttributeValue(Attributes.FOLLOW_RANGE);
-            double rangeSqr = range * range;
-            self.level().players().stream()
-                    .filter(player -> player.distanceToSqr(self) < rangeSqr && self.canAttack(player))
-                    .max((playerA, playerB) -> {
-                        AttributeInstance instanceA = playerA.getAttribute(TCAttributes.AGGRO);
-                        AttributeInstance instanceB = playerB.getAttribute(TCAttributes.AGGRO);
-                        if (instanceA != null && instanceB != null) {
-                            return (int) (instanceA.getValue() - instanceB.getValue());
-                        }
-                        return 0;
-                    }).ifPresent(player -> {
-                        if (player == playerO) return;
-                        AttributeInstance instanceO = playerO.getAttribute(TCAttributes.AGGRO);
-                        AttributeInstance instance = player.getAttribute(TCAttributes.AGGRO);
-                        if (instanceO != null && instance != null && instanceO.getValue() < instance.getValue()) {
-                            event.setNewAboutToBeSetTarget(player); // 只有当新目标的仇恨值大于旧目标时，才设置新目标
-                        }
-                    });
+        if (!(self instanceof Enemy) || !(event.getNewAboutToBeSetTarget() instanceof Player playerO)) {
+            return;
         }
+        // 当自身为敌人且当新目标为玩家时
+        double rangeSqr = Mth.square(self.getAttributeValue(Attributes.FOLLOW_RANGE));
+        self.level().players().stream()
+                .filter(player -> player.distanceToSqr(self) < rangeSqr && self.canAttack(player))
+                .max((playerA, playerB) -> {
+                    AttributeInstance instanceA = playerA.getAttribute(TCAttributes.AGGRO);
+                    AttributeInstance instanceB = playerB.getAttribute(TCAttributes.AGGRO);
+                    if (instanceA != null && instanceB != null) {
+                        return Double.compare(instanceA.getValue(), instanceB.getValue());
+                    }
+                    return 0;
+                }).ifPresent(player -> {
+                    if (player == playerO) return;
+                    AttributeInstance instanceO = playerO.getAttribute(TCAttributes.AGGRO);
+                    AttributeInstance instance = player.getAttribute(TCAttributes.AGGRO);
+                    if (instanceO != null && instance != null && instanceO.getValue() < instance.getValue()) {
+                        event.setNewAboutToBeSetTarget(player); // 只有当新目标的仇恨值大于旧目标时，才设置新目标
+                    }
+                });
     }
 
     @SubscribeEvent
@@ -216,7 +217,8 @@ public final class GameEvents {
 
     @SubscribeEvent
     public static void criticalHit(CriticalHitEvent event) { // 仅近战暴击，于是由汇流来世托管
-        if (TCAttributes.hasCustomAttribute(TCAttributes.CRIT_CHANCE) || ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get()) return;
+        if (TCAttributes.hasCustomAttribute(TCAttributes.CRIT_CHANCE) || ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get())
+            return;
         if (!event.isVanillaCritical()) {
             Player player = event.getEntity();
             if (LibUtils.checkChance(player.getAttributeValue(TCAttributes.CRIT_CHANCE), player.getRandom())) {
