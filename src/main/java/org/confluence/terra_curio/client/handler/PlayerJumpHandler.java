@@ -19,8 +19,6 @@ import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.integration.airhop.AirHopHelper;
 import org.confluence.terra_curio.mixin.accessor.LivingEntityAccessor;
 import org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S;
-import org.confluence.terra_curio.network.s2c.InfiniteFlightPacketS2C;
-import org.confluence.terra_curio.network.s2c.PlayerJumpPacketS2C;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -80,7 +78,7 @@ public final class PlayerJumpHandler {
         }
 
         if (localPlayer.onGround()) {
-             reset(true);
+            reset(true);
         } else if (jumping) {
             if (AirHopHelper.LOADED && AirHopHelper.notFinishJump(localPlayer)) {
                 jumpKeyDown = true;
@@ -93,7 +91,8 @@ public final class PlayerJumpHandler {
                     if (infiniteFlight || i > 0) {
                         fly(horizontalFlight && localPlayer.isShiftKeyDown(), localPlayer, infiniteFlight ? infiniteFlightSpeed : entry.getValue().flySpeed());
                         if (!infiniteFlight) currentFlight = entry.getKey();
-                        if (!horizontalFlight || localPlayer.level().getGameTime() % 2 == 0) remainFlyTicks.put(currentFlight, --i);
+                        if (!horizontalFlight || localPlayer.level().getGameTime() % 2 == 0)
+                            remainFlyTicks.put(currentFlight, --i);
                         if (infiniteFlight || i > 0) return;
                     } else if (!localPlayer.getAbilities().flying && localPlayer.getDeltaMovement().y < -0.15) {
                         onFlight = false;
@@ -248,14 +247,26 @@ public final class PlayerJumpHandler {
         PacketDistributor.sendToServer(new PlayerJumpPacketC2S(RESET_FALL_DISTANCE, y));
     }
 
-    public static void handleJumpPacket(PlayerJumpPacketS2C packet) {
-        if (packet.fartSpeed() > -1.5) fartSpeed = packet.fartSpeed();
-        sandstormSpeed = packet.sandstormSpeed();
-        maxSandstormTicks = packet.sandstormTicks();
-        blizzardSpeed = packet.blizzardSpeed();
-        maxBlizzardTicks = packet.blizzardTicks();
-        if (packet.tsunamiSpeed() > -1.5) tsunamiSpeed = packet.tsunamiSpeed();
-        cloudSpeed = packet.cloudSpeed();
+    public static void handleJumpPacket(
+            float fartSpeed,
+            float sandstormSpeed,
+            int sandstormTicks,
+            float blizzardSpeed,
+            int blizzardTicks,
+            float tsunamiSpeed,
+            float cloudSpeed
+    ) {
+        if (fartSpeed > -1.5) {
+            PlayerJumpHandler.fartSpeed = fartSpeed;
+        }
+        PlayerJumpHandler.sandstormSpeed = sandstormSpeed;
+        PlayerJumpHandler.maxSandstormTicks = sandstormTicks;
+        PlayerJumpHandler.blizzardSpeed = blizzardSpeed;
+        PlayerJumpHandler.maxBlizzardTicks = blizzardTicks;
+        if (tsunamiSpeed > -1.5) {
+            PlayerJumpHandler.tsunamiSpeed = tsunamiSpeed;
+        }
+        PlayerJumpHandler.cloudSpeed = cloudSpeed;
     }
 
     public static void handleFlyPacket(Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack> map) {
@@ -285,8 +296,8 @@ public final class PlayerJumpHandler {
         remainFlyTicks = neo;
     }
 
-    public static void handleInfiniteFlight(InfiniteFlightPacketS2C packet) {
-        infiniteFlight = packet.enable();
+    public static void handleInfiniteFlight(boolean enable) {
+        infiniteFlight = enable;
     }
 
     public static boolean isOnFlight() {

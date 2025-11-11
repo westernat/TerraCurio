@@ -77,13 +77,13 @@ public final class StepStoolHandler {
         return actualStep > 0;
     }
 
-    public static void handlePacket(StepStoolSteppingPacketS2C packet) {
-        if (packet.slot() == StepStoolSteppingPacketS2C.RESET_STEP) {
-            actualStep = 0;
-            maxStep = 0;
+    public static void handlePacket(int slot, int maxStep) {
+        if (slot == StepStoolSteppingPacketS2C.RESET_STEP) {
+            StepStoolHandler.actualStep = 0;
+            StepStoolHandler.maxStep = 0;
         } else {
-            maxStep = packet.maxStep();
-            slot = maxStep == 0 ? StepStoolSteppingPacketS2C.NO_CURIO : packet.slot();
+            StepStoolHandler.maxStep = maxStep;
+            StepStoolHandler.slot = maxStep == 0 ? StepStoolSteppingPacketS2C.NO_CURIO : slot;
         }
     }
 }

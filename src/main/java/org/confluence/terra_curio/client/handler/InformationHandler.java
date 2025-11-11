@@ -6,6 +6,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Enemy;
@@ -17,7 +18,6 @@ import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
-import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
 import org.jetbrains.annotations.Nullable;
 
@@ -227,11 +227,10 @@ public final class InformationHandler {
         return INFORMATION;
     }
 
-    public static void handlePacket(InfoCurioCheckPacketS2C packet, Player player) {
-        byte[] enabled = packet.enabled();
-        if (player != null && packet.playerId() != player.getId()) {
+    public static void handlePacket(int playerId, byte[] enabled, Player player) {
+        if (player != null && playerId != player.getId()) {
             // 存入远程玩家信息
-            REMOTE_DATA.put(packet.playerId(), packet.enabled());
+            REMOTE_DATA.put(playerId, enabled);
         }
         byte b = enabled[WATCH];
         byte c = INFO_DATA[WATCH];
@@ -294,9 +293,9 @@ public final class InformationHandler {
         return INFO_DATA[index] != 0;
     }
 
-    public static void handleEntityKilled(EntityKilledPacketS2C packet) {
-        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(packet.entityType());
-        tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter").append(entityType.getDescription()).append("': " + (packet.amount() + 1));
+    public static void handleEntityKilled(int amount, ResourceLocation entityType) {
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(entityType);
+        tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter").append(type.getDescription()).append("': " + (amount + 1));
     }
 
     public static void handleAttackDamage(AttackDamagePacketS2C packet, Player player) {
