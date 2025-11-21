@@ -447,11 +447,11 @@ public final class TCItems {
                     .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE))), // 海啸瓶
             SHINY_RED_BALLOON = registerCurio("shiny_red_balloon", builder -> builder
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 1, ADD_VALUE)), // 闪亮红气球
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 2, ADD_VALUE)), // 闪亮红气球
             BALLOON_PUFFERFISH = registerCurio("balloon_pufferfish", builder -> builder
                     .jeiInfos(0)
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 1, ADD_VALUE)), // 气球河豚鱼
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 2, ADD_VALUE)), // 气球河豚鱼
             CLOUD_IN_A_BALLOON = registerCurio("cloud_in_a_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(1).jeiInfos(0)
                     .accessories(of(CLOUD, 1.3F))
@@ -481,7 +481,7 @@ public final class TCItems {
                     .rarity(GREEN).tooltips(1).jeiInfos(0)
                     .accessories(units(HONEY$COMB))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 1, ADD_VALUE)), // 蜂蜜气球
+                    .attribute(Attributes.SAFE_FALL_DISTANCE, 2, ADD_VALUE)), // 蜂蜜气球
             BUNDLE_OF_BALLOONS = registerCurio("bundle_of_balloons", builder -> builder
                     .rarity(YELLOW).tooltips(1).jeiInfos(0)
                     .accessories(
