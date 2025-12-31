@@ -408,7 +408,7 @@ public final class TCItems {
                     .attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.STEP_HEIGHT, 0.5, ADD_VALUE))), // 闪电靴
             FROSTSPARK_BOOTS = registerDirectly("frostspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).jeiInfos(0).rarity(LIME)
-                    .accessories(units(ICE$SPEED), of(MAY$FLY, MayFlyAbilityValue.of("frostspark_boots", 0.3F, 40, false, false)))
+                    .accessories(units(ICE$SPEED, ICE$SAFE), of(MAY$FLY, MayFlyAbilityValue.of("frostspark_boots", 0.3F, 40, false, false)))
                     .attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.STEP_HEIGHT, 0.5, ADD_VALUE))), // 霜花靴
             WATER_WALKING_BOOTS = registerCurio("water_walking_boots", builder -> builder.rarity(LIGHT_RED).accessories(of(FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK)))), // 水上漂靴
@@ -422,7 +422,7 @@ public final class TCItems {
                     of(LAVA$HURT$REDUCE, 0.5F))), // 熔岩靴
             TERRASPARK_BOOTS = registerDirectly("terraspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIME).tooltips(3).jeiInfos(0).particle(TerraCurio.asResource("terraspark"))
                     .accessories(
-                            units(ICE$SPEED, FIRE$IMMUNE),
+                            units(ICE$SPEED, ICE$SAFE, FIRE$IMMUNE),
                             of(MAY$FLY, MayFlyAbilityValue.of("terraspark_boots", 0.3F, 40, false, false)),
                             of(FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK, TCTags.LAVA_LIKE_WALK)),
                             of(LAVA$IMMUNE$TICKS, 140),
