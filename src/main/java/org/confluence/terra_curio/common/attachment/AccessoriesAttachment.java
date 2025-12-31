@@ -5,6 +5,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Unit;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
@@ -20,6 +21,7 @@ import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
+import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.init.TCTags;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
@@ -135,14 +137,14 @@ public class AccessoriesAttachment extends PrimitiveValueHolder {
     }
 
     @Override
-    protected <T, V extends PrimitiveValue<T>> void putUnitIfPresent(ValueType<T, V> type) {
+    public <T, V extends PrimitiveValue<T>> void putUnitIfPresent(ValueType<T, V> type) {
         if (UNITS_REQUIRE_UPDATE.contains(type)) {
             super.putUnitIfPresent(type);
         }
     }
 
     @Override
-    protected <T, V extends PrimitiveValue<T>> void combineValue(ValueType<T, V> type, V value) {
+    public <T, V extends PrimitiveValue<T>> void combineValue(ValueType<T, V> type, V value) {
         if (OTHER_REQUIRE_UPDATE.contains(type)) {
             super.combineValue(type, value);
         }
@@ -161,5 +163,9 @@ public class AccessoriesAttachment extends PrimitiveValueHolder {
     public void deserializeNBT(HolderLookup.Provider provider, CompoundTag nbt) {
         super.deserializeNBT(provider, nbt);
         this.panicNecklace = nbt.getBoolean("panicNecklace");
+    }
+
+    public static AccessoriesAttachment of(Entity entity) {
+        return entity.getData(TCAttachments.ACCESSORIES);
     }
 }

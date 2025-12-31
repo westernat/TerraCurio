@@ -77,7 +77,7 @@ public final class TCUtils {
 
     public static boolean isInvulnerableTo(Entity self, DamageSource damageSource) {
         if (!(self instanceof LivingEntity living)) return false;
-        AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
+        AccessoriesAttachment attachment = AccessoriesAttachment.of(living);
         Entity attacker = damageSource.getEntity();
         if (attacker != null && attacker.getType().is(attachment.getValue(TCItems.MOB$IGNORE))) {
             return true;
@@ -108,7 +108,7 @@ public final class TCUtils {
     }
 
     public static void applyStarClock(LivingEntity living, RandomSource random) {
-        AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
+        AccessoriesAttachment attachment = AccessoriesAttachment.of(living);
         boolean starClock = attachment.contains(TCItems.STAR$CLOCK);
         if (starClock) {
             Level level = living.level();
@@ -127,7 +127,7 @@ public final class TCUtils {
     }
 
     public static void applyHoneyComb(LivingEntity living, RandomSource random) {
-        AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
+        AccessoriesAttachment attachment = AccessoriesAttachment.of(living);
         if (attachment.contains(TCItems.HONEY$COMB)) {
             boolean hasHivePack = attachment.contains(TCItems.HIVE$PACK);
             int summon = random.nextInt(1, hasHivePack ? 5 : 4);
@@ -155,7 +155,7 @@ public final class TCUtils {
 
     public static float applyBrainOfConfusion(LivingEntity living, RandomSource randomSource, DamageSource damageSource, float amount) {
         if (damageSource.is(TCTags.HARMFUL_EFFECT)) return amount;
-        if (!living.getData(TCAttachments.ACCESSORIES).contains(TCItems.BRAIN$OF$CONFUSION)) {
+        if (!AccessoriesAttachment.of(living).contains(TCItems.BRAIN$OF$CONFUSION)) {
             return amount;
         }
         if (randomSource.nextFloat() < 0.6F + amount * 0.02F) {
@@ -184,7 +184,7 @@ public final class TCUtils {
     }
 
     public static boolean magicQuiver$shouldConsume(LivingEntity living) {
-        return !living.getData(TCAttachments.ACCESSORIES).contains(TCItems.MAGIC$QUIVER) || living.getRandom().nextFloat() >= 0.2F;
+        return !AccessoriesAttachment.of(living).contains(TCItems.MAGIC$QUIVER) || living.getRandom().nextFloat() >= 0.2F;
     }
 
     public static void resetClientPacket(ServerPlayer serverPlayer) {
@@ -210,7 +210,7 @@ public final class TCUtils {
 
     public static void onChangedBlock(LivingEntity living, ServerLevel level) {
         if (!living.onGround()) return;
-        AccessoriesAttachment attachment = living.getData(TCAttachments.ACCESSORIES);
+        AccessoriesAttachment attachment = AccessoriesAttachment.of(living);
         BlockPos onPos = living.getOnPos();
         if (attachment.contains(TCItems.FLOWER$BOOTS) && level.getBlockState(onPos).is(TCTags.FLOWER_BOOTS_AVAILABLE)) {
             BlockPos abovePos = onPos.above();
@@ -349,19 +349,18 @@ public final class TCUtils {
     public static boolean applyLavaImmune(boolean original, Entity self) {
         if (!self.level().isClientSide) {
             if (original) {
-                if (self.getData(TCAttachments.ACCESSORIES).decreaseLavaImmuneTicks()) {
+                if (AccessoriesAttachment.of(self).decreaseLavaImmuneTicks()) {
                     return false;
                 }
             } else {
-                self.getData(TCAttachments.ACCESSORIES).increaseLavaImmuneTicks();
+                AccessoriesAttachment.of(self).increaseLavaImmuneTicks();
             }
         }
         return original;
     }
 
-    // confluence mixin here
     public static boolean hasType(LivingEntity living, ValueType<Unit, UnitValue> type) {
-        return living.getData(TCAttachments.ACCESSORIES).contains(type);
+        return AccessoriesAttachment.of(living).contains(type);
     }
 
     @Deprecated(forRemoval = true, since = "1.2.0")
@@ -370,9 +369,8 @@ public final class TCUtils {
         return hasType(living, type);
     }
 
-    // confluence mixin here
     public static <T, V extends PrimitiveValue<T>> T getValue(LivingEntity living, ValueType<T, V> type) {
-        return living.getData(TCAttachments.ACCESSORIES).getValue(type);
+        return AccessoriesAttachment.of(living).getValue(type);
     }
 
     @Deprecated(forRemoval = true, since = "1.2.0")
@@ -381,9 +379,8 @@ public final class TCUtils {
         return getValue(living, type);
     }
 
-    // confluence mixin here
     public static <T, V extends PrimitiveValue<T>> @Nullable V getPrimitiveValue(LivingEntity living, ValueType<T, V> type) {
-        return living.getData(TCAttachments.ACCESSORIES).getPrimitiveValue(type);
+        return AccessoriesAttachment.of(living).getPrimitiveValue(type);
     }
 
     public static @Nullable PrimitiveValueComponent getAccessoriesComponent(ItemStack itemStack) {

@@ -13,7 +13,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.init.TCAttachments;
+import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.util.CuriosUtils;
 import top.theillusivec4.curios.api.SlotContext;
@@ -48,7 +48,7 @@ public class PanicNecklace extends BaseCurioItem {
     }
 
     public static void apply(LivingEntity living) {
-        if (living instanceof Player player && player.getData(TCAttachments.ACCESSORIES).hasPanicNecklace()) {
+        if (living instanceof Player player && AccessoriesAttachment.of(player).hasPanicNecklace()) {
             LibUtils.getOrCreatePersistedData(player).putLong(KEY, player.level().getGameTime());
         }
     }

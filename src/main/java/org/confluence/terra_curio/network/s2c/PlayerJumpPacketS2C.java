@@ -12,7 +12,6 @@ import org.confluence.lib.util.LibStreamCodecUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
-import org.confluence.terra_curio.common.init.TCAttachments;
 import org.confluence.terra_curio.common.init.TCItems;
 
 public record PlayerJumpPacketS2C(float fartSpeed,
@@ -54,7 +53,7 @@ public record PlayerJumpPacketS2C(float fartSpeed,
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        AccessoriesAttachment attachment = serverPlayer.getData(TCAttachments.ACCESSORIES);
+        AccessoriesAttachment attachment = AccessoriesAttachment.of(serverPlayer);
         Tuple<Float, Integer> sandStorm = attachment.getValue(TCItems.SAND$STORM);
         Tuple<Float, Integer> blizzard = attachment.getValue(TCItems.BLIZZARD);
         PacketDistributor.sendToPlayer(serverPlayer, new PlayerJumpPacketS2C(

@@ -58,7 +58,7 @@ public abstract class PrimitiveValueHolder implements INBTSerializable<CompoundT
         setToDefaultValue();
     }
 
-    protected void compute(PrimitiveValueComponent component) {
+    public void compute(PrimitiveValueComponent component) {
         for (Map.Entry<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> entry : component.types().entrySet()) {
             ValueType<?, ? extends PrimitiveValue<?>> type = entry.getKey();
             if (type.defaultValue() == Unit.INSTANCE) {

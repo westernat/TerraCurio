@@ -36,6 +36,7 @@ import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
+import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
 import org.confluence.terra_curio.common.init.*;
 import org.confluence.terra_curio.common.item.DivingHelmet;
@@ -60,7 +61,7 @@ public final class GameEvents {
     public static void curios(CurioChangeEvent event) {
         LivingEntity living = event.getEntity();
         if (!living.level().isClientSide && !ItemStack.isSameItem(event.getFrom(), event.getTo())) {
-            living.getData(TCAttachments.ACCESSORIES).flushAbility(living);
+            AccessoriesAttachment.of(living).flushAbility(living);
             if (living instanceof ServerPlayer serverPlayer) {
                 TCUtils.resetClientPacket(serverPlayer);
                 TCTriggers.CURIOS_EQUIPPED.get().trigger(serverPlayer, event.getTo());
@@ -167,7 +168,7 @@ public final class GameEvents {
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
         if (event.loadedFromDisk() || event.getLevel().isClientSide) {
             if (event.getEntity() instanceof LivingEntity living) {
-                living.getData(TCAttachments.ACCESSORIES).flushAbility(living);
+                AccessoriesAttachment.of(living).flushAbility(living);
             }
             return;
         }
@@ -180,7 +181,7 @@ public final class GameEvents {
     @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
-        player.getData(TCAttachments.ACCESSORIES).flushAbility(player);
+        AccessoriesAttachment.of(player).flushAbility(player);
         ServerPlayer serverPlayer = (ServerPlayer) player;
         TCUtils.resetClientPacket(serverPlayer);
         InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
