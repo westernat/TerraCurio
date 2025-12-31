@@ -15,7 +15,7 @@ public final class TCDamageTypes {
     public static final ResourceKey<DamageType> STAR_CLOAK = register("star_cloak");
 
     private static ResourceKey<DamageType> register(String id) {
-        return ResourceKey.create(Registries.DAMAGE_TYPE,ResourceLocation.fromNamespaceAndPath(TerraCurio.MODID, id));
+        return ResourceKey.create(Registries.DAMAGE_TYPE, ResourceLocation.fromNamespaceAndPath(TerraCurio.MODID, id));
     }
 
     public static DamageSource of(Level level, ResourceKey<DamageType> key) {

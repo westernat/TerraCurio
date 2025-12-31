@@ -33,6 +33,7 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.common.EffectCures;
 import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.confluence.lib.common.LibTags;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.lib.util.VectorUtils;
 import org.confluence.terra_curio.TerraCurio;
@@ -60,9 +61,12 @@ import java.util.Set;
 public final class TCUtils {
     public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(TerraCurio.asResource("ice_speed"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
-    public static void applyFireAttack(Player player, Entity entity) {
-        if (hasType(player, TCItems.FIRE$ATTACK)) {
-            float f = player.getRandom().nextFloat();
+    public static void applyFireAttack(DamageSource damageSource, Entity victim) {
+        if (damageSource.is(LibTags.DamageTypes.AS_MELEE_ATTACK) &&
+                damageSource.getEntity() instanceof LivingEntity living &&
+                hasType(living, TCItems.FIRE$ATTACK)
+        ) {
+            float f = living.getRandom().nextFloat();
             int time;
             if (f < 0.25F) {
                 time = 120;
@@ -71,7 +75,7 @@ public final class TCUtils {
             } else {
                 time = 40;
             }
-            entity.igniteForTicks(time);
+            victim.igniteForTicks(time);
         }
     }
 

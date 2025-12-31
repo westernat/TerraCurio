@@ -27,7 +27,6 @@ import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.*;
-import net.neoforged.neoforge.event.entity.player.AttackEntityEvent;
 import net.neoforged.neoforge.event.entity.player.CriticalHitEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
@@ -99,6 +98,7 @@ public final class GameEvents {
         if (damageSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
         RandomSource random = living.level().random;
 
+        TCUtils.applyFireAttack(damageSource, living);
         TCUtils.applyHoneyComb(living, random);
         TCUtils.applyStarClock(living, random);
         PanicNecklace.apply(living);
@@ -206,14 +206,6 @@ public final class GameEvents {
                 // 每十秒向周围玩家共享一次信息配饰
                 InfoCurioCheckPacketS2C.sendToOthers(serverPlayer);
             }
-        }
-    }
-
-    @SubscribeEvent
-    public static void attackEntity(AttackEntityEvent event) {
-        Player player = event.getEntity();
-        if (player instanceof ServerPlayer) {
-            TCUtils.applyFireAttack(player, event.getTarget());
         }
     }
 
