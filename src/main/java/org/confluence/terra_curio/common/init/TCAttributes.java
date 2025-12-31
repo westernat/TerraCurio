@@ -27,6 +27,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.lib.util.ScheduledForMove;
+import org.confluence.terra_curio.TCStartupConfigs;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.integration.apothic.ApothicHelper;
 
@@ -125,14 +126,18 @@ public final class TCAttributes {
     }
 
     public static boolean applyDodge(LivingEntity living, RandomSource random) {
-        if (hasCustomAttribute(DODGE_CHANCE) || !living.getAttributes().hasAttribute(DODGE_CHANCE)) return false;
+        if (hasCustomAttribute(DODGE_CHANCE) || !living.getAttributes().hasAttribute(DODGE_CHANCE)) {
+            return false;
+        }
         AttributeInstance instance = living.getAttribute(DODGE_CHANCE);
         if (instance == null) return false;
         return LibUtils.checkChance(instance.getValue(), random);
     }
 
     public static float applyCritDamage(RandomSource random, LivingEntity living, float amount) {
-        if (ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get() || hasCustomAttribute(CRIT_CHANCE)) return amount;
+        if (ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get() || hasCustomAttribute(CRIT_CHANCE)) {
+            return amount;
+        }
         AttributeInstance instance = living.getAttribute(CRIT_CHANCE);
         if (instance != null && LibUtils.checkChance(instance.getValue(), random)) {
             amount *= 1.5F;
@@ -141,7 +146,9 @@ public final class TCAttributes {
     }
 
     public static float applyRangedDamage(RandomSource random, DamageSource damageSource, float amount) {
-        if (ApothicHelper.ARROW_DAMAGE.equals(BuiltInRegistries.ATTRIBUTE.getKey(getCustomAttribute(RANGED_DAMAGE).value()))) return amount;
+        if (ApothicHelper.ARROW_DAMAGE.equals(BuiltInRegistries.ATTRIBUTE.getKey(getCustomAttribute(RANGED_DAMAGE).value()))) {
+            return amount;
+        }
         if (damageSource.is(DamageTypeTags.IS_PROJECTILE) && damageSource.getEntity() instanceof LivingEntity living) {
             AttributeInstance instance = living.getAttribute(RANGED_DAMAGE);
             if (instance != null) {

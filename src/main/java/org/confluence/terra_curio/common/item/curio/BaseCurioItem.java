@@ -11,12 +11,14 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.common.component.ModRarity;
+import org.confluence.terra_curio.TCStartupConfigs;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.api.primitive.ComponentsValue;
@@ -192,6 +194,13 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
+        public Builder stepHeight() {
+            if (TCStartupConfigs.shoesExtraStepHeight()) {
+                return attribute(Attributes.STEP_HEIGHT, 0.5, AttributeModifier.Operation.ADD_VALUE);
+            }
+            return this;
+        }
+
         public Builder rarity(ModRarity rarity) {
             this.rarity = rarity;
             if (rarity != ModRarity.GRAY && rarity != ModRarity.WHITE) {
@@ -217,7 +226,8 @@ public class BaseCurioItem extends Item implements ICurioItem {
          * 额外的工具提示
          */
         public Builder tooltip(String str) {
-            if (!hasToolTip) throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
+            if (!hasToolTip)
+                throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
             additionTip.add(Component.translatable(str));
             return this;
         }
@@ -228,7 +238,8 @@ public class BaseCurioItem extends Item implements ICurioItem {
          * @param extra 额外的数量
          */
         public Builder tooltips(int extra) {
-            if (!hasToolTip) throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
+            if (!hasToolTip)
+                throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
             extra += 1;
             for (int i = 1; i < extra; i++) {
                 additionTip.add(Component.translatable("tooltip.item.terra_curio." + name + "." + i));

@@ -392,25 +392,25 @@ public final class TCItems {
                     .accessories(units(SPRINTING), of(WALL$CLIMB, (byte) 2))
                     .attribute(TCAttributes.getDodgeChance(), 0.1, ADD_VALUE)), // 忍者大师装备
             ICE_SKATES = registerCurio("ice_skates", BLUE), // 溜冰鞋
-            HERMES_BOOTS = registerDirectly("hermes_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).attribute(Attributes.STEP_HEIGHT, 0.5, ADD_VALUE))), // 赫尔墨斯靴
-            FLURRY_BOOTS = registerDirectly("flurry_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).jeiInfos(1).attribute(Attributes.STEP_HEIGHT, 0.5, ADD_VALUE))), // 疾风雪靴
-            SAILFISH_BOOTS = registerDirectly("sailfish_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).attribute(Attributes.STEP_HEIGHT, 0.5, ADD_VALUE))), // 旗鱼靴
+            HERMES_BOOTS = registerDirectly("hermes_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).stepHeight())), // 赫尔墨斯靴
+            FLURRY_BOOTS = registerDirectly("flurry_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).jeiInfos(1).stepHeight())), // 疾风雪靴
+            SAILFISH_BOOTS = registerDirectly("sailfish_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).stepHeight())), // 旗鱼靴
             DUNERIDER_BOOTS = registerDirectly("dunerider_boots", DuneriderBoots::new), // 沙丘行者靴
             ROCKET_BOOTS = registerCurio("rocket_boots", builder -> builder.jeiInfos(0).accessories(of(MAY$FLY, MayFlyAbilityValue.of("rocket_boots", 0.3F, 36, false, false)))), // 火箭靴
             SPECTRE_BOOTS = registerDirectly("spectre_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIGHT_RED).jeiInfos(0)
                     .accessories(of(MAY$FLY, MayFlyAbilityValue.of("spectre_boots", 0.3F, 36, false, false)))
-                    .attribute(Attributes.STEP_HEIGHT, 0.5, ADD_VALUE))), // 幽灵靴
+                    .stepHeight())), // 幽灵靴
             FAIRY_BOOTS = registerDirectly("fairy_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).jeiInfos(0).tooltips(1).rarity(PINK)
                     .accessories(units(FLOWER$BOOTS), of(MAY$FLY, MayFlyAbilityValue.of("fairy_boots", 0.3F, 36, false, false)))
-                    .attribute(Attributes.STEP_HEIGHT, 0.5, ADD_VALUE))), // 仙灵靴
+                    .stepHeight())), // 仙灵靴
             LIGHTNING_BOOTS = registerDirectly("lightning_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).jeiInfos(0).rarity(PINK)
                     .accessories(of(MAY$FLY, MayFlyAbilityValue.of("lightning_boots", 0.3F, 36, false, false)))
                     .attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.STEP_HEIGHT, 0.5, ADD_VALUE))), // 闪电靴
+                    .stepHeight())), // 闪电靴
             FROSTSPARK_BOOTS = registerDirectly("frostspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).jeiInfos(0).rarity(LIME)
                     .accessories(units(ICE$SPEED, ICE$SAFE), of(MAY$FLY, MayFlyAbilityValue.of("frostspark_boots", 0.3F, 40, false, false)))
                     .attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.STEP_HEIGHT, 0.5, ADD_VALUE))), // 霜花靴
+                    .stepHeight())), // 霜花靴
             WATER_WALKING_BOOTS = registerCurio("water_walking_boots", builder -> builder.rarity(LIGHT_RED).accessories(of(FLUID$WALK, Set.of(TCTags.WATER_LIKE_WALK)))), // 水上漂靴
             OBSIDIAN_WATER_WALKING_BOOTS = registerCurio("obsidian_water_walking_boots", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).tooltips(1).accessories(
                     units(FIRE$IMMUNE),
@@ -429,7 +429,7 @@ public final class TCItems {
                             of(LAVA$HURT$REDUCE, 0.5F)
                     )
                     .attribute(Attributes.MOVEMENT_SPEED, 0.08, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.STEP_HEIGHT, 0.5, ADD_VALUE))), // 泰拉闪耀靴
+                    .stepHeight())), // 泰拉闪耀靴
             CLOUD_IN_A_BOTTLE = registerDirectly("cloud_in_a_bottle", (name, builder) -> new CloudInABottle(builder.particle(TerraCurio.asResource("cloud"))
                     .accessories(of(CLOUD, 1.3F))
                     .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE))), // 云朵瓶
@@ -582,7 +582,7 @@ public final class TCItems {
                     .jeiInfos(0)
                     .attribute(Attributes.SAFE_FALL_DISTANCE, 7.0, ADD_VALUE)
                     .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.STEP_HEIGHT, 0.5, ADD_VALUE))); // 水陆两用靴
+                    .stepHeight())); // 水陆两用靴
 
     public static final DeferredItem<BaseCurioItem> TREASURE_MAGNET = registerCurio("treasure_magnet", builder -> builder.attribute(TCAttributes.PICKUP_RANGE, 6.25, ADD_VALUE)), // 宝藏磁石
             FLOWER_BOOTS = registerCurio("flower_boots", builder -> builder.rarity(LIME).accessories(units(FLOWER$BOOTS))); // 花靴

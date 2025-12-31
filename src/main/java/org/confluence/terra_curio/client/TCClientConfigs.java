@@ -41,17 +41,17 @@ public final class TCClientConfigs {
     }
 
     public static void register(ModContainer container) {
-        ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
-        PLAY_SHOES_SOUND = BUILDER.push("Speed Shoes").define("playSound", true);
-        SHOES_SOUND_VOLUME = BUILDER.defineInRange("shoesSoundVolume", 1.0, 0.0, 1.0);
-        SHOW_SHOES_PARTICLE = BUILDER.define("showParticle", true);
-        SPEED_UP = BUILDER.define("speedUp", true);
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
+        PLAY_SHOES_SOUND = builder.push("Speed Shoes").define("playSound", true);
+        SHOES_SOUND_VOLUME = builder.defineInRange("shoesSoundVolume", 1.0, 0.0, 1.0);
+        SHOW_SHOES_PARTICLE = builder.define("showParticle", true);
+        SPEED_UP = builder.define("speedUp", true);
 
-        AUTO_ATTACK = BUILDER.pop().push("Functional").define("autoAttack", true);
-        RIGHT_CLICK_DELAY = BUILDER.define("rightClickDelay", true);
+        AUTO_ATTACK = builder.pop().push("Functional").define("autoAttack", true);
+        RIGHT_CLICK_DELAY = builder.define("rightClickDelay", true);
 
-        INFORMATION_HUD_TOP = BUILDER.pop().push("Information HUD").comment("finalTop = screenHeight * top").defineInRange("top", 0.5, 0.0, 1.0);
-        INFORMATION_HUD_LEFT = BUILDER.comment("left or right").define("isLeft", false);
-        container.registerConfig(ModConfig.Type.CLIENT, BUILDER.build());
+        INFORMATION_HUD_TOP = builder.pop().push("Information HUD").comment("finalTop = screenHeight * top").defineInRange("top", 0.5, 0.0, 1.0);
+        INFORMATION_HUD_LEFT = builder.comment("left or right").define("isLeft", false);
+        container.registerConfig(ModConfig.Type.CLIENT, builder.build());
     }
 }

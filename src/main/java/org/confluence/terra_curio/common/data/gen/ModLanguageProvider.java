@@ -967,6 +967,8 @@ public class ModLanguageProvider extends LanguageProvider {
         add("terra_curio.configuration.Speed Shoes.tooltip", "Configurations for Speed Shoes", "加速类靴子的配置");
         add("terra_curio.configuration.Functional.tooltip", "Configurations for functional accessories", "功能类配饰的配置");
         add("terra_curio.configuration.attributeReplacements.button", "Allows you to replace some attributes", "允许部分属性的替换");
+        add("terra_curio.configuration.shoesExtraStepHeight", "Shoes Extra Step Height", "靴类额外最大行走高度");
+        add("terra_curio.configuration.shoesExtraStepHeight.button", "When enabled, players will be able to walk over blocks half a meter higher.", "开启时玩家将能多走上半米高度");
         //add("terra_curio.configuration.enable.tooltip", "When enabled, it will random get value through followed Min and Max multiplier", "启用后，将以以下最大、最小乘算进行随机取值");
         //add("terra_curio.configuration.max.tooltip", "", "");
         //add("terra_curio.configuration.rareCreatures.button", "", "");
