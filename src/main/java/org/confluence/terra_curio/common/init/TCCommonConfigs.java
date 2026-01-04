@@ -40,13 +40,19 @@ public final class TCCommonConfigs {
             try {
                 blockStates.put(BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), s, false).blockState(), blockStates.size());
             } catch (Exception e) {
-                TerraCurio.LOGGER.error(e.getMessage());
+                TerraCurio.LOGGER.warn("BlockState {} not found", s);
             }
         });
         rareBlocks = blockStates;
 
         Object2IntSortedMap<EntityType<?>> entityTypes = new Object2IntLinkedOpenHashMap<>();
-        RARE_CREATURES.get().forEach(s -> entityTypes.put(BuiltInRegistries.ENTITY_TYPE.get(ResourceLocation.parse(s)), entityTypes.size()));
+        RARE_CREATURES.get().forEach(s -> {
+            ResourceLocation id = ResourceLocation.parse(s);
+            BuiltInRegistries.ENTITY_TYPE.getOptional(id).ifPresentOrElse(
+                    entityType -> entityTypes.put(entityType, entityTypes.size()),
+                    () -> TerraCurio.LOGGER.warn("EntityType {} not found", id)
+            );
+        });
         rareCreatures = entityTypes;
     }
 
