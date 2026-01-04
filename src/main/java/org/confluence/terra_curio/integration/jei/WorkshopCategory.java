@@ -12,6 +12,7 @@ import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.MethodsReturnNonnullByDefault;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -21,6 +22,7 @@ import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.recipe.WorkshopRecipe;
+import org.jetbrains.annotations.Nullable;
 
 import javax.annotation.ParametersAreNonnullByDefault;
 
@@ -103,5 +105,10 @@ public class WorkshopCategory implements IRecipeCategory<RecipeHolder<WorkshopRe
     @Override
     public void getTooltip(ITooltipBuilder tooltip, RecipeHolder<WorkshopRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
         tooltip.addAll(recipe.value().getEnvironment().toDescriptions());
+    }
+
+    @Override
+    public @Nullable ResourceLocation getRegistryName(RecipeHolder<WorkshopRecipe> recipe) {
+        return ResourceLocation.fromNamespaceAndPath(TerraCurio.MODID, recipe.value().getGroup() + "/" + BuiltInRegistries.ITEM.getKey(recipe.value().getResultItem(null).getItem()).getPath());
     }
 }
