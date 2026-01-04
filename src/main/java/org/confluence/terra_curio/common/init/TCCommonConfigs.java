@@ -118,6 +118,14 @@ public final class TCCommonConfigs {
                 "You need to fill the list with string like 'modid:entity'",
                 "The higher the creature in the list, the higher the value"
         ).defineListAllowEmpty("rareCreatures", List.of(
+                "terra_entity:jungle_mimic",
+                "terra_entity:corrupt_mimic",
+                "terra_entity:crimson_mimic",
+                "terra_entity:hallowed_mimic",
+                "terra_entity:golden_mimic",
+                "terra_entity:ice_mimic",
+                "terra_entity:shadow_mimic",
+                "terra_entity:wooden_mimic",
                 "terra_entity:voodoo_demon",
                 "terra_entity:dungeon_slime",
                 "terra_entity:nymph",
