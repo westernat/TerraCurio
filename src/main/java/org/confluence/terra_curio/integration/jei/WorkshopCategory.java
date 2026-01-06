@@ -109,6 +109,6 @@ public class WorkshopCategory implements IRecipeCategory<RecipeHolder<WorkshopRe
 
     @Override
     public @Nullable ResourceLocation getRegistryName(RecipeHolder<WorkshopRecipe> recipe) {
-        return ResourceLocation.fromNamespaceAndPath(TerraCurio.MODID, recipe.value().getGroup() + "/" + BuiltInRegistries.ITEM.getKey(recipe.value().getResultItem(null).getItem()).getPath());
+        return TerraCurio.asResource(recipe.value().getGroup() + "/" + BuiltInRegistries.ITEM.getKey(recipe.value().getResultItem(null).getItem()).getPath());
     }
 }
