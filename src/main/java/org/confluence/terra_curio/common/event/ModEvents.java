@@ -1,6 +1,7 @@
 package org.confluence.terra_curio.common.event;
 
 import net.minecraft.core.registries.Registries;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -27,7 +28,7 @@ public final class ModEvents {
         });
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void register(RegisterEvent event) {
         if (event.getRegistryKey() == Registries.ATTRIBUTE) {
             TCAttributes.prepareReplacements();
