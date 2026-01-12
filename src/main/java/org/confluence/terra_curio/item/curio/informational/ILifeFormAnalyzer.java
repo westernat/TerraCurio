@@ -1,0 +1,22 @@
+package org.confluence.terra_curio.item.curio.informational;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.phys.AABB;
+import org.confluence.terra_curio.misc.ModConfigs;
+
+import java.util.Comparator;
+import java.util.concurrent.atomic.AtomicReference;
+
+public interface ILifeFormAnalyzer {
+    static Component getInfo(Player localPlayer) {
+        AtomicReference<Component> atomic = new AtomicReference<>(Component.translatable("info.terra_curio.life_form_analyzer.none"));
+        localPlayer.level().getEntities(localPlayer, new AABB(localPlayer.getOnPos()).inflate(47.5), entity -> ModConfigs.rareCreatures.contains(entity.getType()))
+            .stream().min(Comparator.comparingInt(entity -> ModConfigs.rareCreatures.indexOf(entity.getType())))
+            .ifPresent(entity -> atomic.set(Component.translatable("info.terra_curio.life_form_analyzer", entity.getType().getDescription())));
+        return atomic.get();
+    }
+
+    Component TOOLTIP = Component.translatable("curios.tooltip.life_form_analyzer");
+    byte INDEX = 5;
+}

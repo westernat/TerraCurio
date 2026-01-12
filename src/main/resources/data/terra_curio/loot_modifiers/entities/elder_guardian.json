@@ -1,0 +1,10 @@
+{
+    "type": "terra_curio:simple_modifier",
+    "conditions": [
+        {
+            "condition": "forge:loot_table_id",
+            "loot_table_id": "minecraft:entities/elder_guardian"
+        }
+    ],
+    "with": "terra_curio:with/entities/elder_guardian"
+}

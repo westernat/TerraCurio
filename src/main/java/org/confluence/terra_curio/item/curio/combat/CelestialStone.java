@@ -1,0 +1,52 @@
+package org.confluence.terra_curio.item.curio.combat;
+
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import org.confluence.terra_curio.effect.ModEffects;
+import org.confluence.terra_curio.item.curio.BaseCurioItem;
+import org.confluence.terra_curio.misc.ModAttributes;
+import org.confluence.terra_curio.misc.ModConfigs;
+import org.confluence.terra_curio.misc.ModRarity;
+import top.theillusivec4.curios.api.SlotContext;
+
+import java.util.UUID;
+
+public class CelestialStone extends BaseCurioItem {
+    public static final UUID ATTACK_SPEED_UUID = UUID.fromString("A1F8AB0C-8285-3BE9-575A-E05787707241");
+    public static final UUID DAMAGE_UUID = UUID.fromString("2B80C158-EBB2-39C0-E246-E401C544D9D8");
+    public static final UUID CRIT_UUID = UUID.fromString("6057460F-D258-0529-6891-2BD9336D36C2");
+    public static final UUID ARMOR_UUID = UUID.fromString("814ABB7D-ADB4-F0C6-B7BD-A2E3FB23EE8D");
+    public static final UUID MINING_UUID = UUID.fromString("11644D19-DAE5-3871-3C77-FC6DF7972AA4");
+    public static final UUID RANGED_UUID = UUID.fromString("9AA47009-7031-6A8F-7168-330DDF72E53C");
+    public static final UUID MAGIC_UUID = UUID.fromString("0922FF1E-D970-D952-6A17-1363678FB9D0");
+    private static ImmutableMultimap<Attribute, AttributeModifier> ATTRIBUTES;
+
+    public CelestialStone() {
+        super(ModRarity.LIME);
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID uuid, ItemStack stack) {
+        if (ATTRIBUTES == null) {
+            ATTRIBUTES = ImmutableMultimap.<Attribute, AttributeModifier>builder()
+                    .put(Attributes.ATTACK_SPEED, new AttributeModifier(ATTACK_SPEED_UUID, "Celestial Stone", ModConfigs.CELESTIAL_STONE_SPEED.get(), AttributeModifier.Operation.MULTIPLY_TOTAL))
+                    .put(Attributes.ATTACK_DAMAGE, new AttributeModifier(DAMAGE_UUID, "Celestial Stone", ModConfigs.CELESTIAL_STONE_DAMAGE.get(), AttributeModifier.Operation.MULTIPLY_TOTAL))
+                    .put(ModAttributes.getCriticalChance(), new AttributeModifier(CRIT_UUID, "Celestial Stone", ModConfigs.CELESTIAL_STONE_CRITICAL_CHANCE.get(), AttributeModifier.Operation.ADDITION))
+                    .put(Attributes.ARMOR, new AttributeModifier(ARMOR_UUID, "Celestial Stone", ModConfigs.CELESTIAL_STONE_ARMOR.get(), AttributeModifier.Operation.ADDITION))
+                    .put(ModAttributes.getMiningSpeed(), new AttributeModifier(MINING_UUID, "Celestial Stone", ModConfigs.CELESTIAL_STONE_MINING.get(), AttributeModifier.Operation.MULTIPLY_TOTAL))
+                    .put(ModAttributes.getRangedDamage(), new AttributeModifier(RANGED_UUID, "Celestial Stone", ModConfigs.CELESTIAL_STONE_RANGED.get(), AttributeModifier.Operation.MULTIPLY_TOTAL))
+                    .put(ModAttributes.getMagicDamage(), new AttributeModifier(MAGIC_UUID, "Celestial Stone", ModConfigs.CELESTIAL_STONE_MAGIC.get(), AttributeModifier.Operation.MULTIPLY_TOTAL))
+                    .build();
+        }
+        return ATTRIBUTES;
+    }
+
+    @Override
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
+        ModEffects.healPerSecond(slotContext.entity(), 2.0F);
+    }
+}

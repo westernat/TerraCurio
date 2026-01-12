@@ -1,0 +1,32 @@
+package org.confluence.terra_curio.datagen;
+
+import net.minecraft.core.HolderLookup;
+import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.ItemTagsProvider;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
+import net.minecraftforge.common.Tags;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.item.curio.CurioItems;
+import org.confluence.terra_curio.misc.ModTags;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.concurrent.CompletableFuture;
+
+public class ModItemTagsProvider extends ItemTagsProvider {
+    public ModItemTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> provider, CompletableFuture<TagLookup<Block>> b, @Nullable ExistingFileHelper helper) {
+        super(output, provider, b, TerraCurio.MODID, helper);
+    }
+
+    @Override
+    protected void addTags(HolderLookup.@NotNull Provider provider) {
+        IntrinsicTagAppender<Item> appender = tag(ModTags.CURIO);
+        for (CurioItems curioItems : CurioItems.values()) appender.add(curioItems.get());
+        IntrinsicTagAppender<Item> rangedWeapon = tag(ModTags.RANGED_WEAPON);
+        rangedWeapon.addTag(Tags.Items.TOOLS_BOWS);
+        rangedWeapon.addTag(Tags.Items.TOOLS_CROSSBOWS);
+        rangedWeapon.addTag(Tags.Items.TOOLS_TRIDENTS);
+    }
+}

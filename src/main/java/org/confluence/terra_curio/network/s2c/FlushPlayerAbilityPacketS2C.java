@@ -1,0 +1,24 @@
+package org.confluence.terra_curio.network.s2c;
+
+import net.minecraft.network.FriendlyByteBuf;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.network.NetworkEvent;
+import org.confluence.terra_curio.client.handler.ClientPacketHandler;
+
+import java.util.function.Supplier;
+
+public record FlushPlayerAbilityPacketS2C(boolean flush) {
+    public static void encode(FlushPlayerAbilityPacketS2C packet, FriendlyByteBuf friendlyByteBuf) {
+        friendlyByteBuf.writeBoolean(packet.flush);
+    }
+
+    public static FlushPlayerAbilityPacketS2C decode(FriendlyByteBuf friendlyByteBuf) {
+        return new FlushPlayerAbilityPacketS2C(friendlyByteBuf.readBoolean());
+    }
+
+    public static void handle(FlushPlayerAbilityPacketS2C packet, Supplier<NetworkEvent.Context> ctx) {
+        ctx.get().enqueueWork(() -> DistExecutor.unsafeRunWhenOn(Dist.CLIENT, () -> () -> ClientPacketHandler.handleFlush(packet, ctx)));
+        ctx.get().setPacketHandled(true);
+    }
+}

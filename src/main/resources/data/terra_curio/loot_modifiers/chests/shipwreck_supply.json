@@ -1,0 +1,10 @@
+{
+    "type": "terra_curio:simple_modifier",
+    "conditions": [
+        {
+            "condition": "forge:loot_table_id",
+            "loot_table_id": "minecraft:chests/shipwreck_supply"
+        }
+    ],
+    "with": "terra_curio:with/chests/shipwreck_supply"
+}

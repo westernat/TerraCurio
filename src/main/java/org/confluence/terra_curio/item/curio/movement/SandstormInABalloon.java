@@ -1,0 +1,44 @@
+package org.confluence.terra_curio.item.curio.movement;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import org.confluence.terra_curio.misc.ModConfigs;
+import org.confluence.terra_curio.misc.ModRarity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+
+public class SandstormInABalloon extends SandstormInABottle implements IJumpBoost {
+    public SandstormInABalloon() {
+        super(ModRarity.LIGHT_RED);
+    }
+
+    @Override
+    public double getBoost() {
+        return ModConfigs.SANDSTORM_IN_A_BALLOON_JUMP_BOOST.get();
+    }
+
+    @Override
+    public int getJumpTicks() {
+        return ModConfigs.SANDSTORM_IN_A_BALLOON_JUMP_TICKS.get();
+    }
+
+    @Override
+    public double getJumpSpeed() {
+        return ModConfigs.SANDSTORM_IN_A_BALLOON_JUMP_SPEED.get();
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, List<Component> list, @NotNull TooltipFlag tooltipFlag) {
+        list.add(IOneTimeJump.TOOLTIP);
+        list.add(IJumpBoost.TOOLTIP);
+    }
+
+    @Override
+    public Component[] getInformation() {
+        return new Component[]{};
+    }
+}

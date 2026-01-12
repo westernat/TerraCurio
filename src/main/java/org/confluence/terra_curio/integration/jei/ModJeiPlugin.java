@@ -1,0 +1,74 @@
+package org.confluence.terra_curio.integration.jei;
+
+import mezz.jei.api.IModPlugin;
+import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
+import mezz.jei.api.helpers.IJeiHelpers;
+import mezz.jei.api.recipe.RecipeIngredientRole;
+import mezz.jei.api.registration.IRecipeCatalystRegistration;
+import mezz.jei.api.registration.IRecipeCategoryRegistration;
+import mezz.jei.api.registration.IRecipeRegistration;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeManager;
+import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.block.ModBlocks;
+import org.confluence.terra_curio.item.ModItems;
+import org.confluence.terra_curio.item.curio.BaseCurioItem;
+import org.confluence.terra_curio.item.curio.CurioItems;
+import org.confluence.terra_curio.recipe.AmountIngredient;
+import org.confluence.terra_curio.recipe.ModRecipes;
+import org.jetbrains.annotations.NotNull;
+
+@JeiPlugin
+public class ModJeiPlugin implements IModPlugin {
+    public static final ResourceLocation UID = TerraCurio.asResource("jei_plugin");
+    public static final ResourceLocation ARROW_RIGHT = TerraCurio.asResource("textures/gui/arrow_right.png");
+    public static final JeiBackGround HALF_BACKGROUND = new JeiBackGround(128, 64);
+
+    @Override
+    public @NotNull ResourceLocation getPluginUid() {
+        return UID;
+    }
+
+    @Override
+    public void registerCategories(IRecipeCategoryRegistration registration) {
+        IJeiHelpers jeiHelpers = registration.getJeiHelpers();
+        registration.addRecipeCategories(new WorkshopCategory(jeiHelpers));
+    }
+
+    @Override
+    public void registerRecipes(@NotNull IRecipeRegistration registration) {
+        registration.addItemStackInfo(new ItemStack(ModItems.DEMON_HEART.get()), Component.translatable("item.terra_curio.demon_heart.info"));
+        for (CurioItems curio : CurioItems.values()) {
+            BaseCurioItem item = curio.get();
+            Component[] information = item.getInformation();
+            if (information.length == 0) continue;
+            registration.addItemStackInfo(new ItemStack(item), information);
+        }
+        ClientLevel level = Minecraft.getInstance().level;
+        if (level == null) return;
+        RecipeManager recipeManager = level.getRecipeManager();
+        registration.addRecipes(WorkshopCategory.TYPE, recipeManager.getAllRecipesFor(ModRecipes.WORKSHOP_TYPE.get()));
+    }
+
+    @Override
+    public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
+        registration.addRecipeCatalyst(new ItemStack(ModBlocks.WORKSHOP.get()), WorkshopCategory.TYPE);
+    }
+
+    public static void drawArrowRight(GuiGraphics guiGraphics, int x, int y, boolean usable) {
+        guiGraphics.blit(ARROW_RIGHT, x, y, 0, usable ? 0 : 21, 28, 21, 42, 42);
+    }
+
+    public static void addInput(IRecipeLayoutBuilder builder, int x, int y, Ingredient ingredient) {
+        if (!ingredient.isEmpty() && ingredient instanceof AmountIngredient amountIngredient) {
+            builder.addSlot(RecipeIngredientRole.INPUT, x, y).addItemStack(amountIngredient.getItemStack());
+        }
+    }
+}

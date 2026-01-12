@@ -1,0 +1,17 @@
+{
+    "parent": "terra_curio:boots_of_the_hero",
+    "criteria": {
+        "requirement": {
+            "trigger": "minecraft:inventory_changed",
+            "conditions": {
+                "items": [
+                    {
+                        "items": [
+                            "terra_curio:cell_phone"
+                        ]
+                    }
+                ]
+            }
+        }
+    }
+}

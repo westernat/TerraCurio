@@ -1,0 +1,19 @@
+package org.confluence.terra_curio.mixin;
+
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
+import com.llamalad7.mixinextras.sugar.Local;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BowItem;
+import net.minecraft.world.item.ItemStack;
+import org.confluence.terra_curio.item.curio.combat.MagicQuiver;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+
+@Mixin(BowItem.class)
+public abstract class BowItemMixin {
+    @WrapWithCondition(method = "releaseUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ItemStack;shrink(I)V"))
+    private boolean canShrink(ItemStack instance, int pDecrement, @Local Player player) {
+        if (player.level().isClientSide) return true;
+        return MagicQuiver.shouldConsume(player);
+    }
+}

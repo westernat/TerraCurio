@@ -1,0 +1,10 @@
+{
+    "type": "terra_curio:simple_modifier",
+    "conditions": [
+        {
+            "condition": "forge:loot_table_id",
+            "loot_table_id": "minecraft:chests/spawn_bonus_chest"
+        }
+    ],
+    "with": "terra_curio:with/chests/spawn_bonus_chest"
+}

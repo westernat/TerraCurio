@@ -1,0 +1,126 @@
+package org.confluence.terra_curio.item.curio.movement;
+
+import com.google.common.collect.ImmutableMultimap;
+import com.google.common.collect.Multimap;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attribute;
+import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import org.confluence.terra_curio.client.ClientConfigs;
+import org.confluence.terra_curio.client.color.FloatRGB;
+import org.confluence.terra_curio.client.handler.ClientPacketHandler;
+import org.confluence.terra_curio.client.particle.options.CurrentDustOptions;
+import org.confluence.terra_curio.item.curio.BaseCurioItem;
+import org.confluence.terra_curio.misc.ModSoundEvents;
+import org.confluence.terra_curio.network.NetworkHandler;
+import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
+import org.confluence.terra_curio.util.CuriosUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.joml.Vector3f;
+import top.theillusivec4.curios.api.SlotContext;
+
+import java.util.List;
+import java.util.UUID;
+
+public class BaseSpeedBoots extends BaseCurioItem {
+    public static final UUID SPEED_UUID = UUID.fromString("EE6FAFF5-A69D-6101-F82A-93E55A01F65E");
+    public static final Component TOOLTIP = Component.translatable("curios.tooltip.speed_boots");
+    private static final Vector3f COLOR = FloatRGB.fromInteger(0xFFFFFF).toVector();
+
+    public BaseSpeedBoots(Rarity rarity) {
+        super(rarity);
+    }
+
+    public BaseSpeedBoots() {
+        super();
+    }
+
+    @Override
+    public List<Component> getAttributesTooltip(List<Component> tooltips, ItemStack stack) {
+        return EMPTY_TOOLTIP;
+    }
+
+    @Override
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
+        speedUp(slotContext, stack.getOrCreateTag(), 1, 40);
+    }
+
+    @Override
+    public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
+        super.onUnequip(slotContext, newStack, stack);
+        stack.getOrCreateTag().putInt("speed", 0);
+    }
+
+    protected void speedUp(SlotContext slotContext, CompoundTag nbt, int addition, int max) {
+        LivingEntity living = slotContext.entity();
+        if (living instanceof Player player && player.isLocalPlayer()) {
+            int speed = nbt.getInt("speed");
+            if (player.zza > 0) {
+                if (player.onGround()) {
+                    if (ClientPacketHandler.isHasMagiluminescence()) addition *= 2;
+                    int actually = Math.min(max - speed, addition);
+                    int value = speed + actually;
+                    if (actually > 0) {
+                        NetworkHandler.CHANNEL.sendToServer(new SpeedBootsNBTPacketC2S(slotContext.index(), value));
+                    }
+                    float ratio = (float) value / max;
+                    if (ClientConfigs.playShoesSound && player.level().getGameTime() % (ratio < 0.5F ? 6L : 4L) == 0) {
+                        player.playSound(ModSoundEvents.SHOES_WALK.get());
+                    }
+                }
+                if (ClientConfigs.showShoesParticle) {
+                    spawnParticles(player.level(), player.position());
+                }
+            } else if (speed != 0) {
+                NetworkHandler.CHANNEL.sendToServer(new SpeedBootsNBTPacketC2S(slotContext.index(), 0));
+            }
+        }
+    }
+
+    public void spawnParticles(Level level, Vec3 vec3) {
+        int rand = level.getRandom().nextInt(3, 5);
+        double particleRandX = (double) (level.getRandom().nextInt(100, 300) - 200) / 1000;
+        double particleRandY = (double) (level.getRandom().nextInt(100, 300) - 200) / 1000;
+        double particleRandZ = (double) (level.getRandom().nextInt(100, 300) - 200) / 1000;
+        CurrentDustOptions options = new CurrentDustOptions(getParticleColorStart(), getParticleColorEnd(), 1.2F);
+        for (int i = 0; i < rand; ++i) {
+            level.addParticle(options, vec3.x + particleRandX, vec3.y + particleRandY, vec3.z + particleRandZ, 0, 0, 0);
+        }
+    }
+
+    public Vector3f getParticleColorStart() {
+        return COLOR;
+    }
+
+    public Vector3f getParticleColorEnd() {
+        return COLOR;
+    }
+
+    protected static AttributeModifier getSpeedModifier(ItemStack stack) {
+        return new AttributeModifier(SPEED_UUID, "Speed Boots", stack.getOrCreateTag().getInt("speed") * 0.01, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    }
+
+    @Override
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID uuid, ItemStack stack) {
+        return ImmutableMultimap.of(Attributes.MOVEMENT_SPEED, getSpeedModifier(stack));
+    }
+
+    @Override
+    public boolean canEquip(SlotContext slotContext, ItemStack stack) {
+        return CuriosUtils.noSameCurio(slotContext.entity(), BaseSpeedBoots.class);
+    }
+
+    @Override
+    public void appendHoverText(@NotNull ItemStack itemStack, @Nullable Level level, List<Component> list, @NotNull TooltipFlag tooltipFlag) {
+        list.add(TOOLTIP);
+    }
+}

@@ -1,0 +1,201 @@
+package org.confluence.terra_curio.client.handler;
+
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.NetworkEvent;
+import net.minecraftforge.registries.ForgeRegistries;
+import org.confluence.terra_curio.client.KeyBindings;
+import org.confluence.terra_curio.item.curio.informational.*;
+import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
+import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
+import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.function.Function;
+import java.util.function.Supplier;
+
+@OnlyIn(Dist.CLIENT)
+public final class InformationHandler {
+    private static final ArrayList<Component> information = new ArrayList<>();
+
+    private static final byte[] infoData = new byte[12];
+    private static final Int2ObjectOpenHashMap<byte[]> REMOTE_DATA = new Int2ObjectOpenHashMap<>();
+
+    private static @Nullable Function<Long, Component> timeInfo = null;
+    private static Component weatherRadioInfo = Component.translatable("info.terra_curio.weather_radio.clear");
+    private static boolean detectorPressed = false;
+    private static Component metalDetectorInfo = Component.translatable("info.terra_curio.metal_detector.none");
+    private static Component lifeFormAnalyzerInfo = Component.translatable("info.terra_curio.life_form_analyzer.none");
+    private static Component radarInfo = Component.translatable("info.terra_curio.radar", 0);
+    private static Component tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter.unknown");
+    private static long lastAttackTime = 0;
+    private static float cachedDamage = 0.0F;
+    private static Component dpsMeterInfo = Component.translatable("info.terra_curio.dps_meter", 0.00F);
+
+    public static void handle(LocalPlayer localPlayer) {
+        information.clear();
+        long gameTime = localPlayer.level().getGameTime();
+
+        byte b = infoData[IWatch.INDEX];
+        if (b != 0 && timeInfo != null) {
+            information.add(timeInfo.apply(localPlayer.level().dayTime()));
+        }
+
+        if (infoData[IWeatherRadio.INDEX] != 0) {
+            if (gameTime % 200 == IWeatherRadio.INDEX) weatherRadioInfo = IWeatherRadio.getInfo(localPlayer);
+            information.add(weatherRadioInfo);
+        }
+
+        if (infoData[ISextant.INDEX] != 0) {
+            information.add(ISextant.getInfo(localPlayer));
+        }
+
+        if (infoData[IFishermansPocketGuide.INDEX] != 0) {
+            information.add(IFishermansPocketGuide.getInfo(localPlayer));
+        }
+
+        b = infoData[IMetalDetector.INDEX];
+        if (KeyBindings.METAL_DETECTOR.get().isDown()) {
+            if (!detectorPressed && b != 0) {
+                detectorPressed = true;
+                metalDetectorInfo = IMetalDetector.getInfo(localPlayer);
+            }
+        } else detectorPressed = false;
+        if (b != 0) {
+            information.add(metalDetectorInfo);
+        }
+
+        if (infoData[ILifeFormAnalyzer.INDEX] != 0) {
+            if (gameTime % 200 == ILifeFormAnalyzer.INDEX) lifeFormAnalyzerInfo = ILifeFormAnalyzer.getInfo(localPlayer);
+            information.add(lifeFormAnalyzerInfo);
+        }
+
+        if (infoData[IRadar.INDEX] != 0) {
+            if (gameTime % 200 == IRadar.INDEX) radarInfo = IRadar.getInfo(localPlayer);
+            information.add(radarInfo);
+        }
+
+        if (infoData[ITallyCounter.INDEX] != 0) {
+            information.add(tallyCounterInfo);
+        }
+
+        if (infoData[IDPSMeter.INDEX] != 0) {
+            information.add(dpsMeterInfo);
+        }
+
+        if (infoData[IStopwatch.INDEX] != 0) {
+            information.add(IStopwatch.getInfo(localPlayer));
+        }
+
+        if (infoData[ICompass.INDEX] != 0) {
+            information.add(ICompass.getInfo(localPlayer));
+        }
+
+        if (infoData[IDepthMeter.INDEX] != 0) {
+            information.add(IDepthMeter.getInfo(localPlayer));
+        }
+
+        if (gameTime % 200 == 0) {
+            for (int i = 0; i < infoData.length; i++) {
+                if (infoData[i] >= 0) continue;
+                boolean match = false;
+                for (Player player : localPlayer.level().players()) {
+                    if (player == localPlayer || player.distanceToSqr(localPlayer) > 1024.0) continue;
+                    byte[] data = REMOTE_DATA.get(player.getId());
+                    if (data == null) continue;
+                    if (data[i] > -125) {
+                        match = true;
+                        break;
+                    }
+                }
+                if (!match) infoData[i] = 0;
+            }
+        }
+    }
+
+    public static ArrayList<Component> getInformation() {
+        return information;
+    }
+
+    public static void handlePacket(InfoCurioCheckPacketS2C packet, Supplier<NetworkEvent.Context> ctx) {
+        NetworkEvent.Context context = ctx.get();
+        context.enqueueWork(() -> {
+            byte[] enabled = packet.enabled();
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (player != null && packet.playerId() != player.getId()) {
+                // 存入远程玩家信息
+                REMOTE_DATA.put(packet.playerId(), packet.enabled());
+            }
+
+            byte b = enabled[IWatch.INDEX];
+            byte c = infoData[IWatch.INDEX];
+            // 玩家发给自己的信息 || 收到别人共享的信息
+            if ((b >= 0 && c >= 0) || (b != -125 && c <= 0)) infoData[IWatch.INDEX] = b;
+            timeInfo = switch (infoData[IWatch.INDEX]) {
+                case HourWatch.OWNER, HourWatch.OTHER -> HourWatch::wrapTime;
+                case HalfHourWatch.OWNER, HalfHourWatch.OTHER -> HalfHourWatch::wrapTime;
+                case MinuteWatch.OWNER, MinuteWatch.OTHER -> MinuteWatch::wrapTime;
+                default -> null;
+            };
+            setInfoData(enabled, IWeatherRadio.INDEX);
+            setInfoData(enabled, ISextant.INDEX);
+            setInfoData(enabled, IFishermansPocketGuide.INDEX);
+            setInfoData(enabled, IMetalDetector.INDEX);
+            setInfoData(enabled, ILifeFormAnalyzer.INDEX);
+            setInfoData(enabled, IRadar.INDEX);
+            setInfoData(enabled, ITallyCounter.INDEX);
+            setInfoData(enabled, IDPSMeter.INDEX);
+            setInfoData(enabled, IStopwatch.INDEX);
+            setInfoData(enabled, ICompass.INDEX);
+            setInfoData(enabled, IDepthMeter.INDEX);
+        });
+        context.setPacketHandled(true);
+    }
+
+    private static void setInfoData(byte[] enabled, byte index) {
+        byte b = enabled[index];
+        byte c = infoData[index];
+        // 玩家发给自己的信息 || 收到别人共享的信息
+        if ((b >= 0 && c >= 0) || (b != -128 && c <= 0)) infoData[index] = b;
+    }
+
+    public static void handleEntityKilled(EntityKilledPacketS2C packet, Supplier<NetworkEvent.Context> ctx) {
+        NetworkEvent.Context context = ctx.get();
+        context.enqueueWork(() -> {
+            EntityType<?> entityType = ForgeRegistries.ENTITY_TYPES.getValue(packet.type());
+            if (entityType != null) {
+                tallyCounterInfo = ITallyCounter.getInfo(packet.amount() + 1, entityType.getDescription());
+            }
+        });
+        context.setPacketHandled(true);
+    }
+
+    public static void handleAttackDamage(AttackDamagePacketS2C packet, Supplier<NetworkEvent.Context> ctx) {
+        NetworkEvent.Context context = ctx.get();
+        context.enqueueWork(() -> {
+            ClientLevel level = Minecraft.getInstance().level;
+            if (level == null) return;
+            long gameTime = level.getGameTime();
+            long delta = gameTime - lastAttackTime;
+            if (delta == gameTime) { // 防止第一次攻击
+                delta = 20L;
+            }
+            if (delta > 100) { // 大于五秒重置
+                cachedDamage = 0.0F;
+                delta = 20L;
+            }
+            lastAttackTime = gameTime;
+            cachedDamage += packet.amount();
+            dpsMeterInfo = Component.translatable("info.terra_curio.dps_meter", "%.2f".formatted(cachedDamage / delta));
+        });
+        context.setPacketHandled(true);
+    }
+}

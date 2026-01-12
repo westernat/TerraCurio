@@ -1,0 +1,21 @@
+package org.confluence.terra_curio.item.curio.health;
+
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
+import org.confluence.terra_curio.effect.ModEffects;
+import org.confluence.terra_curio.item.curio.BaseCurioItem;
+import top.theillusivec4.curios.api.SlotContext;
+
+public class BandOfRegeneration extends BaseCurioItem {
+    @Override
+    public void curioTick(SlotContext slotContext, ItemStack stack) {
+        ModEffects.healPerSecond(slotContext.entity(), 0.2F);
+    }
+
+    @Override
+    public Component[] getInformation() {
+        return new Component[]{
+            Component.translatable("item.terra_curio.band_of_regeneration.info")
+        };
+    }
+}

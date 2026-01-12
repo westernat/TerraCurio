@@ -1,0 +1,80 @@
+package org.confluence.terra_curio.client;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.Input;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Player;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ComputeFovModifierEvent;
+import net.minecraftforge.client.event.InputEvent;
+import net.minecraftforge.client.event.MovementInputUpdateEvent;
+import net.minecraftforge.client.event.ViewportEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.client.color.AnimateColor;
+import org.confluence.terra_curio.client.handler.*;
+import org.confluence.terra_curio.effect.ModEffects;
+import org.confluence.terra_curio.item.curio.combat.IAutoAttack;
+import org.confluence.terra_curio.misc.ModTags;
+import org.confluence.terra_curio.mixin.client.MinecraftAccessor;
+
+@Mod.EventBusSubscriber(modid = TerraCurio.MODID, bus = Mod.EventBusSubscriber.Bus.FORGE, value = Dist.CLIENT)
+public final class ForgeClient {
+    @SubscribeEvent
+    public static void clientTick(TickEvent.ClientTickEvent event) {
+        if (event.phase == TickEvent.Phase.START) return;
+        Minecraft minecraft = Minecraft.getInstance();
+        LocalPlayer localPlayer = minecraft.player;
+        GravitationHandler.tick(localPlayer);
+        StepStoolHandler.handle(localPlayer);
+        if (localPlayer == null) return;
+        IAutoAttack.apply(minecraft, localPlayer);
+        InformationHandler.handle(localPlayer);
+
+        AnimateColor.doUpdateExpertColor();
+        AnimateColor.doUpdateMasterColor();
+    }
+
+    @SubscribeEvent
+    public static void movementInputUpdate(MovementInputUpdateEvent event) {
+        LocalPlayer localPlayer = (LocalPlayer) event.getEntity();
+        Input input = event.getInput();
+        boolean jumping = input.jumping;
+        if (GravitationHandler.isHasGlobe() || localPlayer.hasEffect(ModEffects.GRAVITATION.get())) {
+            GravitationHandler.handle(localPlayer, jumping);
+        } else {
+            GravitationHandler.expire();
+            PlayerJumpHandler.handle(localPlayer, jumping);
+            PlayerClimbHandler.handle(localPlayer, input.getMoveVector(), jumping);
+        }
+        if (ClientPacketHandler.isHasTabi()) PlayerSprintingHandler.handle(localPlayer, input);
+    }
+
+    @SubscribeEvent
+    public static void cameraSetup(ViewportEvent.ComputeCameraAngles event) {
+        if (GravitationHandler.isShouldRot()) {
+            event.setRoll(180.0F);
+        }
+    }
+
+    @SubscribeEvent
+    public static void fov(ComputeFovModifierEvent event) {
+        Player player = event.getPlayer();
+        if (ClientPacketHandler.isHasScope() && player.isCrouching() &&
+            Minecraft.getInstance().options.getCameraType().isFirstPerson() &&
+            player.getItemInHand(InteractionHand.MAIN_HAND).is(ModTags.RANGED_WEAPON)
+        ) event.setNewFovModifier(0.1F);
+    }
+
+    @SubscribeEvent
+    public static void interactionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
+        if (event.isUseItem()) {
+            MinecraftAccessor instance = (MinecraftAccessor) Minecraft.getInstance();
+            int delay = instance.getRightClickDelay() - ClientPacketHandler.getRightClickSubtractor();
+            instance.setRightClickDelay(Math.max(0, delay));
+        }
+    }
+}
