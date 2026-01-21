@@ -42,7 +42,6 @@ import org.confluence.terra_curio.common.item.DivingHelmet;
 import org.confluence.terra_curio.common.item.curio.combat.PaladinsShield;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.mixin.accessor.ItemEntityAccessor;
-import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
 import org.confluence.terra_curio.network.s2c.SetItemEntityPickupDelayPacketS2C;
@@ -119,13 +118,6 @@ public final class GameEvents {
             );
         }
         event.setNewDamage(amount);
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void livingDamage$Post(LivingDamageEvent.Post event) {
-        if (!event.getEntity().level().isClientSide) {
-            AttackDamagePacketS2C.sendToClient(event.getNewDamage(), event.getSource().getEntity());
-        }
     }
 
     @SubscribeEvent

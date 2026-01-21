@@ -38,8 +38,8 @@ public final class GameClientEvents {
     @SubscribeEvent
     public static void clientTick$Post(ClientTickEvent.Pre event) {
         Minecraft minecraft = Minecraft.getInstance();
-        LocalPlayer localPlayer = minecraft.player;
-        if (localPlayer == null) {
+        LocalPlayer player = minecraft.player;
+        if (player == null) {
             GravitationHandler.reset();
             StepStoolHandler.reset();
             TCClientPacketHandler.reset();
@@ -49,13 +49,12 @@ public final class GameClientEvents {
             PlayerSprintingHandler.reset();
             ScopeFovHandler.reset();
         } else {
-            DPSMeter.checkDPSTime(localPlayer.level().getGameTime());
-            GravitationHandler.tryExpire(localPlayer);
-            StepStoolHandler.handle(localPlayer);
-            TCClientPacketHandler.handle(minecraft, localPlayer);
-            InformationHandler.handle(localPlayer);
-            ScopeFovHandler.handle(localPlayer);
-            TCUtils.applyCthulhuSprinting(TCKeyBindings.CTHULHU_SPRINTING.get().isDown(), localPlayer);
+            GravitationHandler.tryExpire(player);
+            StepStoolHandler.handle(player);
+            TCClientPacketHandler.handle(minecraft, player);
+            InformationHandler.handle(player);
+            ScopeFovHandler.handle(player);
+            TCUtils.applyCthulhuSprinting(TCKeyBindings.CTHULHU_SPRINTING.get().isDown(), player);
         }
     }
 

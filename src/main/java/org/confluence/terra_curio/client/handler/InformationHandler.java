@@ -14,10 +14,10 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.Tags;
+import org.confluence.lib.client.DPSMeter;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
-import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
 import org.jetbrains.annotations.Nullable;
 
@@ -296,9 +296,5 @@ public final class InformationHandler {
     public static void handleEntityKilled(int amount, ResourceLocation entityType) {
         EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(entityType);
         tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter").append(type.getDescription()).append("': " + (amount + 1));
-    }
-
-    public static void handleAttackDamage(AttackDamagePacketS2C packet, Player player) {
-        DPSMeter.addDPS(packet.amount(), player.level().getGameTime());
     }
 }
