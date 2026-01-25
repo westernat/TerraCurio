@@ -116,7 +116,7 @@ public final class TCUtils {
         boolean starClock = attachment.contains(TCItems.STAR$CLOCK);
         if (starClock) {
             Level level = living.level();
-            List<Entity> list = level.getEntities(living, new AABB(living.getOnPos()).inflate(4.0, 3.0, 4.0), entity -> entity instanceof Enemy);
+            List<Entity> list = level.getEntities(living, new AABB(living.blockPosition()).inflate(4.0, 3.0, 4.0), entity -> entity instanceof Enemy);
             for (int i = 0; i < 3; i++) {
                 Entity target;
                 if (list.isEmpty()) {
@@ -174,7 +174,7 @@ public final class TCUtils {
             else rangeMax = amount * 0.1875F + 806.25F;
             float range = Mth.nextFloat(randomSource, rangeMin, rangeMax) / 24;
             int duration = randomSource.nextInt((int) (90 + amount / 3), (int) (300 + amount / 2));
-            living.level().getEntities(living, new AABB(living.getOnPos()).inflate(range), entity -> entity instanceof Enemy).forEach(enemy -> {
+            living.level().getEntities(living, new AABB(living.blockPosition()).inflate(range), entity -> entity instanceof Enemy).forEach(enemy -> {
                 if (enemy instanceof LivingEntity living1) {
                     living1.addEffect(new MobEffectInstance(TCEffects.CONFUSED, duration));
                 }

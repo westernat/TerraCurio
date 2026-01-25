@@ -127,7 +127,7 @@ public class AccessoriesAttachment extends PrimitiveValueHolder {
             }
             TagKey<EntityType<?>> ignores = getValue(TCItems.MOB$IGNORE);
             if (!TCTags.NOTHING.equals(ignores)) {
-                living.level().getEntitiesOfClass(Mob.class, new AABB(living.getOnPos()).inflate(31.5), mob -> mob.getType().is(ignores)).forEach(mob -> {
+                living.level().getEntitiesOfClass(Mob.class, new AABB(living.blockPosition()).inflate(31.5), mob -> mob.getType().is(ignores)).forEach(mob -> {
                     if (mob.getTarget() == living) mob.setTarget(null);
                 });
             }

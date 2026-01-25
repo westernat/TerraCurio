@@ -10,19 +10,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
-import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.terra_curio.TerraCurio;
 
 import java.util.List;
-import java.util.function.Predicate;
 
 public final class TCCommonConfigs {
-    public static final Predicate<Object> FILTER_CONFLUENCE = o -> {
-        if (o instanceof String s && s.startsWith("confluence:")) {
-            return ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get();
-        }
-        return true;
-    };
     private static ModConfigSpec.ConfigValue<List<? extends String>> RARE_BLOCKS;
     private static ModConfigSpec.ConfigValue<List<? extends String>> RARE_CREATURES;
     public static Object2IntSortedMap<BlockState> rareBlocks = new Object2IntLinkedOpenHashMap<>();
@@ -118,7 +110,7 @@ public final class TCCommonConfigs {
                 "confluence:deepslate_tin_ore",
                 "minecraft:copper_ore",
                 "minecraft:deepslate_copper_ore"
-        ), () -> "minecraft:stone", FILTER_CONFLUENCE);
+        ), () -> "minecraft:stone", o -> true);
         RARE_CREATURES = BUILDER.comment(
                 "In order for the creature to be found by the Life Form Analyzer",
                 "You need to fill the list with string like 'modid:entity'",
@@ -144,7 +136,7 @@ public final class TCCommonConfigs {
                 "minecraft:warden",
                 "minecraft:mooshroom",
                 "minecraft:panda"
-        ), () -> "minecraft:pig", FILTER_CONFLUENCE);
+        ), () -> "minecraft:pig", o -> true);
         RANDOM_ATTACK_DAMAGE = BUILDER.push("Random Attack Damage").define("enable", false);
         RANDOM_ATTACK_DAMAGE_MIN = BUILDER.defineInRange("min", 0.8, 0.0, 1.0);
         RANDOM_ATTACK_DAMAGE_MAX = BUILDER.defineInRange("max", 1.2, 1.0, 2.0);

@@ -101,7 +101,7 @@ public final class InformationHandler {
         if (!DISABLE[RADAR] && INFO_DATA[RADAR] != 0) {
             if (tenSec == RADAR) radarInfo = Component.translatable(
                     "info.terra_curio.radar",
-                    localPlayer.level().getEntities(localPlayer, new AABB(localPlayer.getOnPos()).inflate(63.5), entity -> entity instanceof Enemy).size()
+                    localPlayer.level().getEntities(localPlayer, new AABB(localPlayer.blockPosition()).inflate(63.5), entity -> entity instanceof Enemy).size()
             );
             INFORMATION.put(RADAR, radarInfo);
         }
@@ -192,7 +192,7 @@ public final class InformationHandler {
 
     private static Component getMetalDetectorInfo(Player player) {
         AtomicReference<Component> atomic = new AtomicReference<>(Component.translatable("info.terra_curio.metal_detector.none"));
-        player.level().getBlockStates(new AABB(player.getOnPos()).inflate(15.5)).distinct()
+        player.level().getBlockStates(new AABB(player.blockPosition()).inflate(15.5)).distinct()
                 .filter(TCCommonConfigs.rareBlocks::containsKey)
                 .min(Comparator.comparingInt(TCCommonConfigs.rareBlocks::getInt))
                 .ifPresent(blockState -> atomic.set(Component.translatable("info.terra_curio.metal_detector", blockState.getBlock().getName())));
@@ -201,7 +201,7 @@ public final class InformationHandler {
 
     private static Component getLifeFormAnalyzerInfo(Player player) {
         AtomicReference<Component> atomic = new AtomicReference<>(Component.translatable("info.terra_curio.life_form_analyzer.none"));
-        player.level().getEntities(player, new AABB(player.getOnPos()).inflate(47.5), entity -> TCCommonConfigs.rareCreatures.containsKey(entity.getType()))
+        player.level().getEntities(player, new AABB(player.blockPosition()).inflate(47.5), entity -> TCCommonConfigs.rareCreatures.containsKey(entity.getType()))
                 .stream().min(Comparator.comparingInt(entity -> TCCommonConfigs.rareCreatures.getInt(entity.getType())))
                 .ifPresent(entity -> atomic.set(Component.translatable("info.terra_curio.life_form_analyzer", entity.getType().getDescription())));
         return atomic.get();
