@@ -775,7 +775,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 }
         );
         tooltipAndJeiInfo(TCItems.SHIELD_OF_CTHULHU, "克苏鲁护盾", "Allows the player to dash into the enemy, tap [%s] once to dash", "允许冲刺，按一次[%s]以冲刺", "It has a Chance to be dropped from Ravager.", "它有几率从劫掠兽身上掉落。");
-        tooltipAndJeiInfo(TCItems.SHINY_RED_BALLOON, "闪亮红气球", "Allows the holder to double jump", "增加跳跃高度", "When the player has the Hero of the Village effect, the librarian has a chance to give the player this item.It can be found in chests in plains villages.", "它可以在平原村庄中的宝箱中找到。当玩家拥有村庄英雄效果时，图书管理员有几率将此物品交给玩家。");
+        tooltipAndJeiInfo(TCItems.SHINY_RED_BALLOON, "闪亮红气球", "Increases jump height", "增加跳跃高度", "When the player has the Hero of the Village effect, the librarian has a chance to give the player this item.It can be found in chests in plains villages.", "它可以在平原村庄中的宝箱中找到。当玩家拥有村庄英雄效果时，图书管理员有几率将此物品交给玩家。");
         tooltipsAndJeiInfo(TCItems.SHOE_SPIKES, "鞋钉",
                 new String[]{
                         "Allows the ability to slide down walls, hold Crouch key to slide down quickly",
