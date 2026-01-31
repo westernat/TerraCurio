@@ -9,6 +9,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.scores.Team;
 import net.neoforged.neoforge.network.PacketDistributor;
+import org.confluence.lib.common.item.IFunctionCouldEnable;
 import org.confluence.lib.network.IPacketS2C;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
@@ -43,10 +44,14 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements I
     }
 
     private static byte checkEnabled(byte original, byte target, ItemStack itemStack, TooltipComponentsValue.Storage storage) {
-        if (itemStack.getItem() instanceof IMultiFunctionCouldEnable function) {
-            return function.isEnabled(itemStack, storage) ? target : original;
+        if (itemStack.getItem() instanceof IFunctionCouldEnable f) {
+            if (f instanceof IMultiFunctionCouldEnable mf) {
+                return mf.isEnabled(itemStack, storage) ? target : original;
+            } else {
+                return f.isEnabled(itemStack) ? target : original;
+            }
         }
-        return target;
+        return original;
     }
 
     public static void sendToClient(ServerPlayer serverPlayer, Inventory inventory) {
