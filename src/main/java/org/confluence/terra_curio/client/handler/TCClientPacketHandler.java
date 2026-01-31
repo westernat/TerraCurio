@@ -152,7 +152,7 @@ public final class TCClientPacketHandler {
         ItemStack itemStack = player.getMainHandItem();
         if (itemStack.onEntitySwing(player, InteractionHand.MAIN_HAND)) return;
         if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
-        if (minecraft.options.keyAttack.isDown() && TCClientPacketHandler.couldAutoAttack() /* confluence mixin here */) {
+        if (minecraft.options.keyAttack.isDown() && couldAutoAttack() /* confluence mixin here */) {
             if (player.getAttackStrengthScale(0.5F) < 1.0F - Mth.EPSILON) return;
             MinecraftAccessor accessor = (MinecraftAccessor) minecraft;
             if (accessor.getMissTime() > 0) accessor.setMissTime(0);
