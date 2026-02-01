@@ -19,7 +19,6 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings("unchecked")
@@ -45,13 +44,6 @@ public abstract class PrimitiveValueHolder implements INBTSerializable<CompoundT
 
     public <T, V extends PrimitiveValue<T>> @Nullable V getPrimitiveValue(ValueType<T, V> type) {
         return (V) valueMap.get(type);
-    }
-
-    @Deprecated(forRemoval = true, since = "1.2.0")
-    @ApiStatus.ScheduledForRemoval(inVersion = "1.3.0")
-    public <T, V extends PrimitiveValue<T>> List<String> getDescription(ValueType<T, V> type) {
-        PrimitiveValue<?> value = valueMap.get(type);
-        return value == null ? List.of("NONE") : value.getDescription();
     }
 
     protected void flushAbility(LivingEntity living) {

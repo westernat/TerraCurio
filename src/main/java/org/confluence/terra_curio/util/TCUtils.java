@@ -51,7 +51,6 @@ import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.c2s.PlayerSprintPacketC2S;
 import org.confluence.terra_curio.network.s2c.*;
-import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashSet;
@@ -367,20 +366,8 @@ public final class TCUtils {
         return AccessoriesAttachment.of(living).contains(type);
     }
 
-    @Deprecated(forRemoval = true, since = "1.2.0")
-    @ApiStatus.ScheduledForRemoval(inVersion = "1.3.0")
-    public static boolean hasAccessoriesType(LivingEntity living, ValueType<Unit, UnitValue> type) {
-        return hasType(living, type);
-    }
-
     public static <T, V extends PrimitiveValue<T>> T getValue(LivingEntity living, ValueType<T, V> type) {
         return AccessoriesAttachment.of(living).getValue(type);
-    }
-
-    @Deprecated(forRemoval = true, since = "1.2.0")
-    @ApiStatus.ScheduledForRemoval(inVersion = "1.3.0")
-    public static <T, V extends PrimitiveValue<T>> T getAccessoriesValue(LivingEntity living, ValueType<T, V> type) {
-        return getValue(living, type);
     }
 
     public static <T, V extends PrimitiveValue<T>> @Nullable V getPrimitiveValue(LivingEntity living, ValueType<T, V> type) {
