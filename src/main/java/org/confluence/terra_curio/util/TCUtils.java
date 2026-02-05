@@ -396,4 +396,9 @@ public final class TCUtils {
         }
         return original;
     }
+
+    // confluence mixin here
+    public static @Nullable Object getTeam(Player player) {
+        return player.getTeam();
+    }
 }

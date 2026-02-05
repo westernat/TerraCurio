@@ -7,7 +7,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.scores.Team;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.lib.common.item.IFunctionCouldEnable;
 import org.confluence.lib.network.IPacketS2C;
@@ -175,9 +174,9 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements I
                 watch, weatherRadio, sextant, guide, detector, analyzer,
                 radar, counter, dpsMeter, stopwatch, compass, depthMeter, lens
         });
-        Team team = serverPlayer.getTeam();
+        Object team = TCUtils.getTeam(serverPlayer);
         serverPlayer.serverLevel().players().forEach(player -> {
-            if (player != serverPlayer && player.getTeam() == team && player.distanceToSqr(serverPlayer) < MAX_SHARE_DISTANCE_SQR) {
+            if (player != serverPlayer && TCUtils.getTeam(player) == team && player.distanceToSqr(serverPlayer) < MAX_SHARE_DISTANCE_SQR) {
                 PacketDistributor.sendToPlayer(player, packet);
             }
         });
