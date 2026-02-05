@@ -7,13 +7,12 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
-import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.*;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.common.init.TCEntities;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,7 +67,8 @@ public class BeeProjectile extends Projectile {
             this.target = enemy;
         }
         if (target != null) {
-            if (target.isSpectator() || (target instanceof LivingEntity living && living.isDeadOrDying())) this.target = null;
+            if (target.isSpectator() || (target instanceof LivingEntity living && living.isDeadOrDying()))
+                this.target = null;
             if (target != null) {
                 Vec3 vec3 = target.getEyePosition().subtract(position()).normalize();
                 addDeltaMovement(vec3.scale(0.95).scale(isGiant() ? 0.15 : 0.05));
@@ -95,7 +95,8 @@ public class BeeProjectile extends Projectile {
             blockHitCount++;
         }
         if (getInBlockState().liquid()) discard();
-        else if (blockHitCount > (isGiant() ? 2 : 1) || tickCount > (isGiant() ? 220 : 200)) discard();
+        else if (blockHitCount > (isGiant() ? 2 : 1) || tickCount > (isGiant() ? 220 : 200))
+            discard();
 
         HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
         checkInsideBlocks();
@@ -138,9 +139,7 @@ public class BeeProjectile extends Projectile {
 
     @Override
     protected boolean canHitEntity(Entity target) {
-        Entity owner = getOwner();
-        if (!target.canBeHitByProjectile() || target instanceof ArmorStand || target instanceof Npc) return false;
-        return owner == null || (owner != target && !owner.isPassengerOfSameVehicle(target));
+        return LibUtils.canHitEntity(target, getOwner());
     }
 
     @Override
@@ -172,5 +171,10 @@ public class BeeProjectile extends Projectile {
         compound.putInt("Age", tickCount);
         compound.putInt("BlockHitCount", blockHitCount);
         compound.putFloat("BaseDamage", baseDamage);
+    }
+
+    @Override
+    public boolean canChangeDimensions(Level oldLevel, Level newLevel) {
+        return false;
     }
 }
