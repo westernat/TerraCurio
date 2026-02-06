@@ -181,7 +181,7 @@ public final class TCItems {
             ANKH_SHIELD = registerCurio("ankh_shield", builder -> builder.jeiInfos(0).tooltips(1).rarity(LIME)
                     .accessories(units(FROZEN$IMMUNE), of(EFFECT$IMMUNITIES, Set.of(MobEffects.POISON, MobEffects.WITHER, MobEffects.WEAKNESS, MobEffects.HUNGER, MobEffects.BLINDNESS, MobEffects.DARKNESS, MobEffects.MOVEMENT_SLOWDOWN, MobEffects.CONFUSION, MobEffects.DIG_SLOWDOWN, MobEffects.LEVITATION)))
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)
-                    .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)), // 十字章护盾
+                    .attribute(Attributes.ARMOR, 2.0, ADD_VALUE)), // 十字章护盾
             STAR_CLOAK = registerCurio("star_cloak", builder -> builder.jeiInfos(1).rarity(LIGHT_RED).accessories(of(STAR$CLOCK, false))), // 星星斗篷
             STAR_VEIL = registerCurio("star_veil", builder -> builder.rarity(LIGHT_PURPLE).jeiInfos(0).accessories(of(STAR$CLOCK, false), of(INVULNERABLE$TICKS$MULTIPLIER, 2.0F)).tooltips(1)), // 星星面纱
             BEE_CLOAK = registerCurio("bee_cloak", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).accessories(units(HONEY$COMB), of(STAR$CLOCK, false), of(INVULNERABLE$TICKS$MULTIPLIER, 2.0F)).tooltips(1)), // 蜜蜂斗篷
@@ -198,7 +198,7 @@ public final class TCItems {
             CELESTIAL_STONE = registerDirectly("celestial_stone", (name, builder) -> new CelestialStone(builder.rarity(LIME).jeiInfos(0)
                     .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_DAMAGE, 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
+                    .attribute(Attributes.ARMOR, 2.0, ADD_VALUE)
                     .attribute(Attributes.BLOCK_BREAK_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
                     .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
@@ -226,7 +226,7 @@ public final class TCItems {
                     .attribute(Attributes.SUBMERGED_MINING_SPEED, 0.8, ADD_VALUE)
                     .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_DAMAGE, 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
+                    .attribute(Attributes.ARMOR, 2.0, ADD_VALUE)
                     .attribute(Attributes.BLOCK_BREAK_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
                     .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
@@ -270,25 +270,25 @@ public final class TCItems {
                     .attribute(Attributes.ATTACK_KNOCKBACK, 1.0, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)), // 烈火手套
             FLESH_KNUCKLES = registerCurio("flesh_knuckles", builder -> builder.rarity(PINK)
-                    .attribute(Attributes.ARMOR, 8.0, ADD_VALUE)
+                    .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
                     .attribute(TCAttributes.AGGRO, 400, ADD_VALUE)), // 血肉指虎
             BERSERKERS_GLOVE = registerCurio("berserkers_glove", builder -> builder.jeiInfos(0).noTooltip().rarity(PINK)
                     .accessories(units(AUTO$ATTACK))
-                    .attribute(Attributes.ARMOR, 8.0, ADD_VALUE)
+                    .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
                     .attribute(Attributes.ATTACK_SPEED, 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, 1.0, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.AGGRO, 400, ADD_VALUE)), // 狂战士手套
             PALADINS_SHIELD = registerDirectly("paladins_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).rarity(YELLOW)
-                    .attribute(Attributes.ARMOR, 6.0, ADD_VALUE)
+                    .attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE))), // 圣骑士护盾
             HERO_SHIELD = registerDirectly("hero_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).jeiInfos(0).rarity(PINK)
-                    .attribute(Attributes.ARMOR, 10.0, ADD_VALUE)
+                    .attribute(Attributes.ARMOR, 5.0, ADD_VALUE)
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)
                     .attribute(TCAttributes.AGGRO, 400, ADD_VALUE))), // 英雄护盾
             FROZEN_TURTLE_SHELL = registerDirectly("frozen_turtle_shell", name -> new FrozenTurtleShell(BaseCurioItem.builder(name).rarity(PINK).particle(TerraCurio.asResource("frozen_turtle_shell")).accessories(units(FROZEN$TURTLE$SHELL)))), // 冰冻海龟壳
             FROZEN_SHIELD = registerDirectly("frozen_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).jeiInfos(0).rarity(PINK).tooltips(1)
-                    .accessories(units(FROZEN$TURTLE$SHELL)).attribute(Attributes.ARMOR, 6.0, ADD_VALUE)
+                    .accessories(units(FROZEN$TURTLE$SHELL)).attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE))), // 冰冻护盾
             HONEY_COMB = registerCurio("honey_comb", builder -> builder.rarity(GREEN).accessories(units(HONEY$COMB))), // 蜂窝
             SHARK_TOOTH_NECKLACE = registerCurio("shark_tooth_necklace", builder -> builder.noTooltip().attribute(TCAttributes.getArmorPenetration(), 5.0, ADD_VALUE)), // 鲨牙项链
@@ -318,7 +318,7 @@ public final class TCItems {
             OBSIDIAN_ROSE = registerCurio("obsidian_rose", builder -> builder.rarity(ORANGE).accessories(of(LAVA$HURT$REDUCE, 0.5F))), // 黑曜石玫瑰
             OBSIDIAN_SHIELD = registerCurio("obsidian_shield", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).accessories(units(FIRE$IMMUNE))
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)
-                    .attribute(Attributes.ARMOR, 2.0, ADD_VALUE)), // 黑曜石护盾
+                    .attribute(Attributes.ARMOR, 1.0, ADD_VALUE)), // 黑曜石护盾
             OBSIDIAN_SKULL = registerCurio("obsidian_skull", builder -> builder.jeiInfos(0).rarity(GREEN).accessories(units(FIRE$IMMUNE)).attribute(Attributes.ARMOR, 1, ADD_VALUE)), // 黑曜石骷髅头
             MOLTEN_SKULL_ROSE = registerCurio("molten_skull_rose", builder -> builder.rarity(LIGHT_PURPLE).jeiInfos(0).tooltips(2)
                     .accessories(units(FIRE$IMMUNE), of(LAVA$IMMUNE$TICKS, 140), of(LAVA$HURT$REDUCE, 0.5F))), // 熔火骷髅头玫瑰
