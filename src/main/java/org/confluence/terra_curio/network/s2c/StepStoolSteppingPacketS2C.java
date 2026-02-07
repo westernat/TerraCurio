@@ -38,9 +38,9 @@ public record StepStoolSteppingPacketS2C(int slot, int maxStep) implements IPack
         }
     }
 
-    public static void resetStep(Entity entity) {
+    public static void resetStep(Entity entity, int maxStep) {
         if (entity instanceof ServerPlayer serverPlayer) {
-            PacketDistributor.sendToPlayer(serverPlayer, new StepStoolSteppingPacketS2C(RESET_STEP, 0));
+            PacketDistributor.sendToPlayer(serverPlayer, new StepStoolSteppingPacketS2C(RESET_STEP, maxStep));
         }
     }
 }

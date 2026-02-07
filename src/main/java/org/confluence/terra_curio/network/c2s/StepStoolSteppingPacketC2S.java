@@ -4,8 +4,8 @@ import io.netty.buffer.ByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.ItemStack;
+import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.lib.network.IPacketC2S;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
@@ -41,14 +41,13 @@ public record StepStoolSteppingPacketC2S(int slot, byte step) implements IPacket
         boolean increase = (step & INCREASE) == INCREASE;
 
         if (actualStep == 1 && increase) {
-            StepStoolEntity entity = new StepStoolEntity(player);
+            StepStoolEntity entity = new StepStoolEntity(player, StepStool.getMaxStep(itemStack));
             player.level().addFreshEntity(entity);
             player.teleportRelative(0.0, 1.001, 0.0);
             LibUtils.updateItemStackNbt(itemStack, nbt -> nbt.putInt("id", entity.getId()));
         } else {
             int id = LibUtils.getItemStackNbtNoCopy(itemStack).getInt("id");
-            Entity entity = player.level().getEntity(id);
-            if (entity instanceof StepStoolEntity stepStool) {
+            if (player.level().getEntity(id) instanceof StepStoolEntity stepStool) {
                 if (actualStep == 0) {
                     stepStool.setOwner(null);
                 } else {
@@ -59,5 +58,9 @@ public record StepStoolSteppingPacketC2S(int slot, byte step) implements IPacket
                 }
             }
         }
+    }
+
+    public static void sendToServer(int slot, byte step) {
+        PacketDistributor.sendToServer(new StepStoolSteppingPacketC2S(slot, step));
     }
 }
