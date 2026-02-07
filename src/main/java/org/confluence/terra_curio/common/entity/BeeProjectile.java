@@ -17,24 +17,28 @@ import org.confluence.terra_curio.common.init.TCEntities;
 import org.jetbrains.annotations.Nullable;
 
 public class BeeProjectile extends Projectile {
-    private static final EntityDataAccessor<Boolean> DATA_IS_GIANT = SynchedEntityData.defineId(BeeProjectile.class, EntityDataSerializers.BOOLEAN);
-    private static final EntityDimensions SMALL = TCEntities.BEE_PROJECTILE.get().getDimensions().scale(0.5f);
-    private static final EntityDimensions GIANT = TCEntities.BEE_PROJECTILE.get().getDimensions();
+    protected static final EntityDataAccessor<Boolean> DATA_IS_GIANT = SynchedEntityData.defineId(BeeProjectile.class, EntityDataSerializers.BOOLEAN);
+    protected static final EntityDimensions SMALL = TCEntities.BEE_PROJECTILE.get().getDimensions().scale(0.5f);
+    protected static final EntityDimensions GIANT = TCEntities.BEE_PROJECTILE.get().getDimensions();
 
-    private int blockHitCount;
-    private float baseDamage = 5.0F;
-    private transient Entity target;
+    protected int blockHitCount;
+    protected float baseDamage = 5.0F;
+    protected transient Entity target;
 
-    public BeeProjectile(EntityType<BeeProjectile> entityType, Level level) {
+    public BeeProjectile(EntityType<? extends BeeProjectile> entityType, Level level) {
         super(entityType, level);
         this.blockHitCount = 0;
     }
 
-    public BeeProjectile(Level level, @Nullable LivingEntity owner, boolean isGiant) {
-        this(TCEntities.BEE_PROJECTILE.get(), level);
+    public BeeProjectile(EntityType<? extends BeeProjectile> entityType, Level level, @Nullable LivingEntity owner, boolean isGiant) {
+        this(entityType, level);
         setOwner(owner);
         this.blockHitCount = 0;
         entityData.set(DATA_IS_GIANT, isGiant);
+    }
+
+    public BeeProjectile(Level level, @Nullable LivingEntity owner, boolean isGiant) {
+        this(TCEntities.BEE_PROJECTILE.get(), level, owner, isGiant);
     }
 
     public void setBaseDamage(float baseDamage) {
@@ -52,28 +56,7 @@ public class BeeProjectile extends Projectile {
 
     @Override
     public void tick() {
-        if (target == null) {
-            double d0 = -1.0;
-            Entity enemy = null;
-            for (Entity entity : level().getEntities(this, new AABB(blockPosition()).inflate(8))) {
-                if (entity instanceof Enemy) {
-                    double d1 = entity.distanceToSqr(getX(), getY(), getZ());
-                    if (d0 == -1.0 || d1 < d0) {
-                        d0 = d1;
-                        enemy = entity;
-                    }
-                }
-            }
-            this.target = enemy;
-        }
-        if (target != null) {
-            if (target.isSpectator() || (target instanceof LivingEntity living && living.isDeadOrDying()))
-                this.target = null;
-            if (target != null) {
-                Vec3 vec3 = target.getEyePosition().subtract(position()).normalize();
-                addDeltaMovement(vec3.scale(0.95).scale(isGiant() ? 0.15 : 0.05));
-            }
-        }
+        trackTarget();
         if (tickCount % 4 == 0) {
             AABB boundingBox = getBoundingBox().inflate(1.0);
             HitResult hitresult = ProjectileUtil.getEntityHitResult(level(), this, boundingBox.getMinPosition(), boundingBox.getMaxPosition(), boundingBox, this::canHitEntity);
@@ -103,6 +86,31 @@ public class BeeProjectile extends Projectile {
         HitResult.Type hitresult$type = hitresult.getType();
         if (hitresult$type == HitResult.Type.BLOCK) {
             onHitBlock((BlockHitResult) hitresult);
+        }
+    }
+
+    protected void trackTarget() {
+        if (target == null) {
+            double d0 = -1.0;
+            Entity enemy = null;
+            for (Entity entity : level().getEntities(this, new AABB(blockPosition()).inflate(8))) {
+                if (entity instanceof Enemy) {
+                    double d1 = entity.distanceToSqr(getX(), getY(), getZ());
+                    if (d0 == -1.0 || d1 < d0) {
+                        d0 = d1;
+                        enemy = entity;
+                    }
+                }
+            }
+            this.target = enemy;
+        }
+        if (target != null) {
+            if (target.isSpectator() || (target instanceof LivingEntity living && living.isDeadOrDying()))
+                this.target = null;
+            if (target != null) {
+                Vec3 vec3 = target.getEyePosition().subtract(position()).normalize();
+                addDeltaMovement(vec3.scale(0.95).scale(isGiant() ? 0.15 : 0.05));
+            }
         }
     }
 
