@@ -94,7 +94,9 @@ public final class InformationHandler {
         }
 
         if (!DISABLE[LIFE_FORM_ANALYZER] && INFO_DATA[LIFE_FORM_ANALYZER] != 0) {
-            if (tenSec == LIFE_FORM_ANALYZER) lifeFormAnalyzerInfo = getLifeFormAnalyzerInfo(localPlayer);
+            if (tenSec == LIFE_FORM_ANALYZER) {
+                lifeFormAnalyzerInfo = getLifeFormAnalyzerInfo(localPlayer);
+            }
             INFORMATION.put(LIFE_FORM_ANALYZER, lifeFormAnalyzerInfo);
         }
 
@@ -138,7 +140,9 @@ public final class InformationHandler {
                 if (INFO_DATA[i] >= 0) continue;
                 boolean match = false;
                 for (Player player : localPlayer.level().players()) {
-                    if (player == localPlayer || player.distanceToSqr(localPlayer) > InfoCurioCheckPacketS2C.MAX_SHARE_DISTANCE_SQR) continue;
+                    if (player == localPlayer || player.distanceToSqr(localPlayer) > InfoCurioCheckPacketS2C.MAX_SHARE_DISTANCE_SQR) {
+                        continue;
+                    }
                     byte[] data = REMOTE_DATA.get(player.getId());
                     if (data == null) continue;
                     if (data[i] > -125) {

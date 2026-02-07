@@ -34,6 +34,7 @@ import org.confluence.terra_curio.common.item.curio.expert.GravityGlobe;
 import org.confluence.terra_curio.common.item.curio.expert.ShieldOfCthulhu;
 import org.confluence.terra_curio.common.item.curio.expert.ShinnyStone;
 import org.confluence.terra_curio.common.item.curio.health.BandOfRegeneration;
+import org.confluence.terra_curio.common.item.curio.information.MetalDetector;
 import org.confluence.terra_curio.common.item.curio.information.MultiInfoCurioItem;
 import org.confluence.terra_curio.common.item.curio.master.BasePoint;
 import org.confluence.terra_curio.common.item.curio.movement.*;
@@ -358,7 +359,7 @@ public final class TCItems {
             RADAR = registerDirectly("radar", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of($RADAR))))), // 雷达
             LIFE_FORM_ANALYZER = registerDirectly("life_form_analyzer", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of(LIFE$FORM$ANALYZER))))), // 生命体分析机
             TALLY_COUNTER = registerDirectly("tally_counter", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of(TALLY$COUNTER))))), // 杀怪计数器
-            METAL_DETECTOR = registerDirectly("metal_detector", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of(METAL$DETECTOR))))), // 金属探测器
+            METAL_DETECTOR = registerDirectly("metal_detector", (name, builder) -> new MetalDetector(builder.accessories(of(INFORMATION, List.of(METAL$DETECTOR))))), // 金属探测器
             STOPWATCH = registerDirectly("stopwatch", (name, builder) -> new MultiInfoCurioItem(builder.jeiInfos(0).accessories(of(INFORMATION, List.of($STOPWATCH))))), // 秒表
             DPS_METER = registerDirectly("dps_meter", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of(DPS$METER))))), // 每秒伤害计数器
             FISHERMANS_POCKET_GUIDE = registerDirectly("fishermans_pocket_guide", (name, builder) -> new MultiInfoCurioItem(builder.accessories(of(INFORMATION, List.of(FISHERMANS$POCKET$GUIDE))))), // 渔民袖珍宝典

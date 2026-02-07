@@ -601,6 +601,7 @@ public class ModLanguageProvider extends LanguageProvider {
         );
         onlyTooltip(TCItems.MECHANICAL_GLOVE, "机械手套", "Enables auto swing for melee weapons", "启用近战武器自动挥动");
         tooltipAndJeiInfo(TCItems.METAL_DETECTOR, "金属探测器", "Displays the most valuable ore around you", "显示你周围最贵重的矿石", "The Metal Detector has a Chance to be dropped from Warden.", "它必定从监守者身上掉落。");
+        add("tooltip.item.terra_curio.metal_detector.keybinding", "Press [%s] to detect", "按[%s]以探测");
         onlyTooltips(TCItems.MOLTEN_CHARM, "熔火护身符",
                 new String[]{
                         "Grants immunity to fire blocks",
@@ -823,11 +824,11 @@ public class ModLanguageProvider extends LanguageProvider {
         );
         tooltipsAndJeiInfo(TCItems.STEP_STOOL, "梯凳",
                 new String[]{
-                        "Press ↑ key to stand higher, and press Crouch key to down",
+                        "Press [%s] to stand higher, and press Crouch key to down",
                         "Extra Step: %s"
                 },
                 new String[]{
-                        "按↑键站得更高，按潜行键下来",
+                        "按[%s]站得更高，按潜行键下来",
                         "额外高度：%s"
                 },
                 "You can use Step Stool to upgrade its Extra Step from Smithing Table.",
