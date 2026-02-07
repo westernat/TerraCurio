@@ -39,16 +39,7 @@ public final class GameClientEvents {
     public static void clientTick$Post(ClientTickEvent.Pre event) {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
-        if (player == null) {
-            GravitationHandler.reset();
-            StepStoolHandler.reset();
-            TCClientPacketHandler.reset();
-            InformationHandler.reset();
-            PlayerJumpHandler.reset(true);
-            PlayerClimbHandler.reset();
-            PlayerSprintingHandler.reset();
-            ScopeFovHandler.reset();
-        } else {
+        if (player != null) {
             GravitationHandler.tryExpire(player);
             StepStoolHandler.handle(player);
             TCClientPacketHandler.handle(minecraft, player);
@@ -56,6 +47,18 @@ public final class GameClientEvents {
             ScopeFovHandler.handle(player);
             TCUtils.applyCthulhuSprinting(TCKeyBindings.CTHULHU_SPRINTING.get().isDown(), player);
         }
+    }
+
+    @SubscribeEvent
+    public static void clientPlayerNetwork$LoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
+        GravitationHandler.reset();
+        StepStoolHandler.reset();
+        TCClientPacketHandler.reset();
+        InformationHandler.reset();
+        PlayerJumpHandler.reset(true);
+        PlayerClimbHandler.reset();
+        PlayerSprintingHandler.reset();
+        ScopeFovHandler.reset();
     }
 
     @SubscribeEvent

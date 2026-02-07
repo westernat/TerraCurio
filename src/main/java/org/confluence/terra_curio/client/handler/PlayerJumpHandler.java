@@ -1,7 +1,7 @@
 package org.confluence.terra_curio.client.handler;
 
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIntMutablePair;
+import it.unimi.dsi.fastutil.objects.ObjectIntPair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceKey;
@@ -54,9 +54,9 @@ public final class PlayerJumpHandler {
     private static boolean cloudFinished = false;
     public static boolean isOnCloudJump = false;
 
-    private static Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack> flyStacks = Map.of();
-    private static Object2IntMap<ResourceKey<Item>> remainFlyTicks = new Object2IntOpenHashMap<>();
-    private static boolean couldGlide = false;
+    private static Map<ResourceKey<Item>, ObjectIntPair<MayFlyAbilityValue.FlyStack>> wingsFlyStacks = Map.of();
+    private static Map<ResourceKey<Item>, ObjectIntPair<MayFlyAbilityValue.FlyStack>> otherFlyStacks = Map.of();
+    private static boolean onWings = false;
     private static boolean horizontalFlight = false;
     private static boolean infiniteFlight = false;
     private static float infiniteFlightSpeed = 0.0F;
@@ -85,22 +85,26 @@ public final class PlayerJumpHandler {
                 return;
             }
 
-            if (couldGlide) {
-                for (Map.Entry<ResourceKey<Item>, MayFlyAbilityValue.FlyStack> entry : flyStacks.entrySet()) {
-                    int i = remainFlyTicks.getInt(entry.getKey());
-                    if (infiniteFlight || i > 0) {
-                        fly(horizontalFlight && localPlayer.isShiftKeyDown(), localPlayer, infiniteFlight ? infiniteFlightSpeed : entry.getValue().flySpeed());
-                        if (!infiniteFlight) currentFlight = entry.getKey();
-                        if (!horizontalFlight || localPlayer.level().getGameTime() % 2 == 0)
-                            remainFlyTicks.put(currentFlight, --i);
-                        if (infiniteFlight || i > 0) return;
-                    } else if (!localPlayer.getAbilities().flying && localPlayer.getDeltaMovement().y < -0.15) {
-                        onFlight = false;
-                        glide(localPlayer);
+            for (Map.Entry<ResourceKey<Item>, ObjectIntPair<MayFlyAbilityValue.FlyStack>> entry : wingsFlyStacks.entrySet()) {
+                ObjectIntPair<MayFlyAbilityValue.FlyStack> pair = entry.getValue();
+                int i = pair.rightInt();
+                if (infiniteFlight || i > 0) {
+                    onWings = true;
+                    float flySpeed = infiniteFlight ? infiniteFlightSpeed : pair.key().flySpeed();
+                    boolean horizontal = pair.left().horizontalFlight();
+                    fly(horizontal && localPlayer.isShiftKeyDown(), localPlayer, flySpeed);
+                    if (!infiniteFlight) currentFlight = entry.getKey();
+                    if (!horizontal || localPlayer.level().getGameTime() % 2 == 0) {
+                        pair.right(--i);
                     }
+                    if (infiniteFlight || i > 0) return;
+                } else if (!localPlayer.getAbilities().flying && localPlayer.getDeltaMovement().y < -0.15) {
+                    onWings = false;
+                    onFlight = false;
+                    glide(localPlayer);
                 }
-                currentFlight = null;
             }
+            currentFlight = null;
             if (jumpKeyDown) return;
 
             if (!fartFinished && fartSpeed > 0.0) {
@@ -136,14 +140,15 @@ public final class PlayerJumpHandler {
                 jumpKeyDown = true;
                 multiJump(localPlayer, cloudSpeed);
                 localPlayer.playSound(TCSoundEvents.DOUBLE_JUMP.get());
-            } else {
-                for (Map.Entry<ResourceKey<Item>, MayFlyAbilityValue.FlyStack> entry : flyStacks.entrySet()) {
-                    int i = remainFlyTicks.getInt(entry.getKey());
+            } else if (!onWings) {
+                for (Map.Entry<ResourceKey<Item>, ObjectIntPair<MayFlyAbilityValue.FlyStack>> entry : otherFlyStacks.entrySet()) {
+                    ObjectIntPair<MayFlyAbilityValue.FlyStack> pair = entry.getValue();
+                    int i = pair.rightInt();
                     if (infiniteFlight || i > 0) {
-                        float flySpeed = horizontalFlight || infiniteFlight ? infiniteFlightSpeed : entry.getValue().flySpeed();
-                        fly(horizontalFlight, localPlayer, flySpeed);
+                        float flySpeed = infiniteFlight ? infiniteFlightSpeed : pair.key().flySpeed();
+                        fly(pair.left().horizontalFlight(), localPlayer, flySpeed);
                         if (!infiniteFlight) currentFlight = entry.getKey();
-                        remainFlyTicks.put(entry.getKey(), --i);
+                        pair.right(--i);
                         if (infiniteFlight || i > 0) return;
                     }
                 }
@@ -183,9 +188,10 @@ public final class PlayerJumpHandler {
         blizzardFinished = false;
         tsunamiFinished = false;
         cloudFinished = false;
-        setupRemainFlyTicks(flyStacks);
+        setupRemainFlyTicks();
         currentFlight = null;
         lastFlight = null;
+        onWings = false;
     }
 
     public static void multiJump(LocalPlayer localPlayer, float speed) {
@@ -270,30 +276,32 @@ public final class PlayerJumpHandler {
     }
 
     public static void handleFlyPacket(Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack> map) {
-        Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack> neo = new LinkedHashMap<>();
-        MutableBoolean b1 = new MutableBoolean();
+        Map<ResourceKey<Item>, ObjectIntPair<MayFlyAbilityValue.FlyStack>> wings = new LinkedHashMap<>();
+        Map<ResourceKey<Item>, ObjectIntPair<MayFlyAbilityValue.FlyStack>> other = new LinkedHashMap<>();
         MutableBoolean b2 = new MutableBoolean();
         MutableFloat f1 = new MutableFloat();
         map.entrySet().stream()
                 .sorted(Comparator.comparingInt(entry -> entry.getValue().older()))
                 .forEachOrdered(entry -> {
                     MayFlyAbilityValue.FlyStack value = entry.getValue();
-                    neo.put(entry.getKey(), value);
-                    if (b1.isFalse() && value.couldGlide()) b1.setTrue();
+                    ObjectIntMutablePair<MayFlyAbilityValue.FlyStack> pair = new ObjectIntMutablePair<>(value, value.flyTicks());
+                    if (value.couldGlide()) {
+                        wings.put(entry.getKey(), pair);
+                    } else {
+                        other.put(entry.getKey(), pair);
+                    }
                     if (b2.isFalse() && value.horizontalFlight()) b2.setTrue();
                     f1.setValue(Math.max(value.flySpeed(), f1.floatValue()));
                 });
-        flyStacks = neo;
-        setupRemainFlyTicks(map);
-        couldGlide = b1.isTrue();
+        wingsFlyStacks = wings;
+        otherFlyStacks = other;
         horizontalFlight = b2.isTrue();
         infiniteFlightSpeed = f1.floatValue();
     }
 
-    private static void setupRemainFlyTicks(Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack> map) {
-        Object2IntMap<ResourceKey<Item>> neo = new Object2IntOpenHashMap<>();
-        map.forEach((key, stack) -> neo.put(key, stack.flyTicks()));
-        remainFlyTicks = neo;
+    private static void setupRemainFlyTicks() {
+        wingsFlyStacks.values().forEach(pair -> pair.right(pair.left().flyTicks()));
+        otherFlyStacks.values().forEach(pair -> pair.right(pair.left().flyTicks()));
     }
 
     public static void handleInfiniteFlight(boolean enable) {
@@ -302,6 +310,10 @@ public final class PlayerJumpHandler {
 
     public static boolean isOnFlight() {
         return onFlight;
+    }
+
+    public static boolean isOnWings() {
+        return onWings;
     }
 
     public static boolean isOnHorizontalFlight() {
