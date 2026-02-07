@@ -20,6 +20,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.PercentageAttribute;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -29,6 +30,7 @@ import org.confluence.lib.util.LibUtils;
 import org.confluence.lib.util.ScheduledForMove;
 import org.confluence.terra_curio.TCStartupConfigs;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.api.event.ArmorPenetrationEvent;
 import org.confluence.terra_curio.integration.apothic.ApothicHelper;
 
 import java.util.HashMap;
@@ -197,11 +199,14 @@ public final class TCAttributes {
     }
 
     public static float applyArmorPenetration(DamageSource damageSource, float armorValue) {
-        if (!hasCustomAttribute(ARMOR_PENETRATION) && damageSource.getEntity() instanceof LivingEntity attacker) {
-            AttributeInstance attributeInstance = attacker.getAttribute(ARMOR_PENETRATION);
-            if (attributeInstance != null) armorValue -= (float) attributeInstance.getValue();
+        if (damageSource.getEntity() instanceof LivingEntity attacker) {
+            if (!hasCustomAttribute(ARMOR_PENETRATION)) {
+                AttributeInstance instance = attacker.getAttribute(ARMOR_PENETRATION);
+                if (instance != null) armorValue -= (float) instance.getValue();
+            }
             if (damageSource.is(TCDamageTypes.STAR_CLOAK)) armorValue -= 3.0F;
-            return Math.max(armorValue, 0.0F);
+            float penetration = NeoForge.EVENT_BUS.post(new ArmorPenetrationEvent(damageSource, armorValue)).getPenetration();
+            return Math.max(armorValue - penetration, 0.0F);
         }
         return armorValue;
     }
