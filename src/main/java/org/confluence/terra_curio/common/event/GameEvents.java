@@ -41,6 +41,7 @@ import org.confluence.terra_curio.common.init.*;
 import org.confluence.terra_curio.common.item.DivingHelmet;
 import org.confluence.terra_curio.common.item.curio.combat.PaladinsShield;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
+import org.confluence.terra_curio.common.item.curio.combat.RamRune;
 import org.confluence.terra_curio.mixin.accessor.ItemEntityAccessor;
 import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
@@ -94,6 +95,10 @@ public final class GameEvents {
         LivingEntity living = event.getEntity();
         if (living.level().isClientSide) return;
         DamageSource damageSource = event.getSource();
+        // 非药水伤害取消下砸
+        if (!damageSource.is(DamageTypes.MAGIC)) {
+            RamRune.cancel(living);
+        }
         if (damageSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
         RandomSource random = living.level().random;
 
@@ -118,6 +123,17 @@ public final class GameEvents {
             );
         }
         event.setNewDamage(amount);
+    }
+
+    @SubscribeEvent
+    public static void livingFall(LivingFallEvent event) {
+        LivingEntity living = event.getEntity();
+        if (living instanceof ServerPlayer serverPlayer) {
+            if (RamRune.isFalling(serverPlayer)) {
+                event.setDamageMultiplier(0.0F);
+                RamRune.onLanding(serverPlayer);
+            }
+        }
     }
 
     @SubscribeEvent
@@ -177,6 +193,11 @@ public final class GameEvents {
         ServerPlayer serverPlayer = (ServerPlayer) player;
         TCUtils.resetClientPacket(serverPlayer);
         InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
+    }
+
+    @SubscribeEvent
+    public static void playerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
+        RamRune.cancel(event.getEntity());
     }
 
     @SubscribeEvent

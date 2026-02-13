@@ -16,9 +16,12 @@ import org.confluence.terra_curio.client.sound.RocketBootsBoostSoundInstance;
 import org.confluence.terra_curio.client.sound.RocketBootsStopSoundInstance;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.init.TCSoundEvents;
+import org.confluence.terra_curio.common.item.curio.combat.RamRune;
 import org.confluence.terra_curio.integration.airhop.AirHopHelper;
 import org.confluence.terra_curio.mixin.accessor.LivingEntityAccessor;
 import org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S;
+import org.confluence.terra_curio.network.c2s.RamRuneFallPacketC2S;
+import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
@@ -80,6 +83,14 @@ public final class PlayerJumpHandler {
         if (localPlayer.onGround()) {
             reset(true);
         } else if (jumping) {
+            if (!jumpKeyDown && !localPlayer.getAbilities().flying && localPlayer.isShiftKeyDown() && CuriosUtils.hasCurio(localPlayer, RamRune.class)) {
+                Vec3 vec3 = localPlayer.getDeltaMovement();
+                localPlayer.setDeltaMovement(vec3.x, RamRune.FALL_VELOCITY, vec3.z);
+                localPlayer.hasImpulse = true;
+                PacketDistributor.sendToServer(RamRuneFallPacketC2S.INSTANCE);
+                jumpKeyDown = true;
+                return;
+            }
             if (AirHopHelper.LOADED && AirHopHelper.notFinishJump(localPlayer)) {
                 jumpKeyDown = true;
                 return;

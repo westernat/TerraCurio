@@ -8,6 +8,7 @@ import net.minecraft.stats.Stats;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.network.IPacketC2S;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.common.item.curio.combat.RamRune;
 
 public record PlayerJumpPacketC2S(byte jumpState, float motionY) implements IPacketC2S {
     public static final byte JUMP_BY_SELF = 1;
@@ -37,5 +38,6 @@ public record PlayerJumpPacketC2S(byte jumpState, float motionY) implements IPac
         }
         Vec3 motion = player.getDeltaMovement();
         player.setDeltaMovement(motion.x, motionY, motion.z);
+        RamRune.cancelOnJump(player, motionY);
     }
 }
