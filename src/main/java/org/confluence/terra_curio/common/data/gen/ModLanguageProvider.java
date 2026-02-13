@@ -764,6 +764,10 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyTooltip(TCItems.SEARCHLIGHT, "探照灯", "Immunity to Blindness and Darkness", "对失明和黑暗免疫");
         tooltipAndJeiInfo(TCItems.SEXTANT, "六分仪", "Displays the phase of the moon", "显示月相", "This item can be located in the chests found within Fisherman Villagers' houses.", "这件物品可以在渔夫村民家中的箱子中找到。");
         onlyJeiInfo(TCItems.SHACKLE, "镣铐", "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。");
+        tooltipsAndJeiInfo(TCItems.RAM_RUNE, "牧羊符文",
+            new String[]{"Jump while holding crouch to slam downward","Slamming into the ground will deal damage to nearby enemies"},
+            new String[]{"按住潜行键跳跃即可向下猛击","猛击地面会对附近的敌人造成伤害"},
+            "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。(TODO)");
         onlyJeiInfo(TCItems.SHARK_TOOTH_NECKLACE, "鲨牙项链", "It has a chance to drop from Drowned.", "它有几率从溺尸身上掉落。");
         onlyTooltips(TCItems.SHARKRON_BALLOON, "鲨鱼龙气球",
                 new String[]{

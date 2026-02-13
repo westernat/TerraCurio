@@ -329,7 +329,8 @@ public final class TCItems {
                     .attribute(Attributes.ATTACK_DAMAGE, 0.05, ADD_MULTIPLIED_TOTAL)
                     .attribute(TCAttributes.getCriticalChance(), 0.05, ADD_VALUE)
                     .attribute(TCAttributes.AGGRO, -400, ADD_VALUE)), // 腐香囊
-            SHACKLE = registerCurio("shackle", builder -> builder.rarity(BLUE).noTooltip()); // 镣铐
+            SHACKLE = registerCurio("shackle", builder -> builder.rarity(BLUE).noTooltip()), // 镣铐
+            RAM_RUNE = registerDirectly("ram_rune", name -> new RamRune(BaseCurioItem.builder(name).rarity(GREEN))); // 牧羊符文
 
     public static final DeferredItem<BaseCurioItem> TOOLBELT = registerCurio("toolbelt", builder -> builder.noTooltip().rarity(ORANGE).attribute(Attributes.BLOCK_INTERACTION_RANGE, 1.0, ADD_VALUE)), // 工具腰带
             TOOLBOX = registerCurio("toolbox", builder -> builder.noTooltip().rarity(GREEN).attribute(Attributes.BLOCK_INTERACTION_RANGE, 1.0, ADD_VALUE)), // 工具箱
