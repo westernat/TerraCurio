@@ -135,7 +135,7 @@ dependencies {
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
     if (dev) {
         implementation("org.mesdag:ParticleStorm:${particle_storm_version}")
-        implementation("org.confluence.lib:Confluence-Magic-Lib:${confluence_lib_version}")
+        implementation project(":Confluence-Magic-Lib")
     } else {
         implementation(jarJar("org.mesdag:ParticleStorm:${particle_storm_version}"))
         implementation(jarJar("org.confluence.lib:Confluence-Magic-Lib:${confluence_lib_version}"))

@@ -1,15 +1,11 @@
 package org.confluence.terra_curio.client.event;
 
 
-import com.mojang.datafixers.util.Either;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.inventory.tooltip.TooltipComponent;
+import net.minecraft.world.item.BlockItem;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -21,41 +17,37 @@ import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.client.handler.*;
 import org.confluence.terra_curio.client.renderer.tooltip.MultiFunctionTooltip;
-import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.common.init.TCEffects;
-import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
 import org.confluence.terra_curio.network.c2s.ShootXBonePacketC2S;
 import org.confluence.terra_curio.util.TCUtils;
-import top.theillusivec4.curios.api.CuriosApi;
-import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
-
-import java.util.List;
 
 @EventBusSubscriber(modid = TerraCurio.MODID, value = Dist.CLIENT)
 public final class GameClientEvents {
     @SubscribeEvent
     public static void clientTick$Post(ClientTickEvent.Pre event) {
         Minecraft minecraft = Minecraft.getInstance();
-        LocalPlayer localPlayer = minecraft.player;
-        if (localPlayer == null) {
-            GravitationHandler.reset();
-            StepStoolHandler.reset();
-            TCClientPacketHandler.reset();
-            InformationHandler.reset();
-            PlayerJumpHandler.reset(true);
-            PlayerClimbHandler.reset();
-            PlayerSprintingHandler.reset();
-            ScopeFovHandler.reset();
-        } else {
-            DPSMeter.checkDPSTime(localPlayer.level().getGameTime());
-            GravitationHandler.tryExpire(localPlayer);
-            StepStoolHandler.handle(localPlayer);
-            TCClientPacketHandler.handle(minecraft, localPlayer);
-            InformationHandler.handle(localPlayer);
-            ScopeFovHandler.handle(localPlayer);
-            TCUtils.applyCthulhuSprinting(TCKeyBindings.CTHULHU_SPRINTING.get().isDown(), localPlayer);
+        LocalPlayer player = minecraft.player;
+        if (player != null) {
+            GravitationHandler.tryExpire(player);
+            StepStoolHandler.handle(player);
+            TCClientPacketHandler.handle(minecraft, player);
+            InformationHandler.handle(player);
+            ScopeFovHandler.handle(player);
+            TCUtils.applyCthulhuSprinting(TCKeyBindings.CTHULHU_SPRINTING.get().isDown(), player);
         }
+    }
+
+    @SubscribeEvent
+    public static void clientPlayerNetwork$LoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
+        GravitationHandler.reset();
+        StepStoolHandler.reset();
+        TCClientPacketHandler.reset();
+        InformationHandler.reset();
+        PlayerJumpHandler.reset(true);
+        PlayerClimbHandler.reset();
+        PlayerSprintingHandler.reset();
+        ScopeFovHandler.reset();
     }
 
     @SubscribeEvent
@@ -101,12 +93,14 @@ public final class GameClientEvents {
 
     @SubscribeEvent
     public static void interactionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
-        if (TCClientConfigs.rightClickDelay && event.isUseItem()) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player == null) return;
+        if (TCClientConfigs.rightClickDelay && event.isUseItem() && player.getItemInHand(event.getHand()).getItem() instanceof BlockItem) {
             MinecraftAccessor instance = (MinecraftAccessor) Minecraft.getInstance();
             int delay = instance.getRightClickDelay() - TCClientPacketHandler.getRightClickSubtractor();
             instance.setRightClickDelay(Math.max(0, delay));
         }
-        if (TCClientPacketHandler.isBoneGlove() && Minecraft.getInstance().player.getMainHandItem().is(Tags.Items.TOOLS)) {
+        if (TCClientPacketHandler.isBoneGlove() && player.getMainHandItem().is(Tags.Items.TOOLS)) {
             PacketDistributor.sendToServer(ShootXBonePacketC2S.INSTANCE);
         }
     }
@@ -126,21 +120,6 @@ public final class GameClientEvents {
             MultiFunctionTooltip.mouseScrollY -= (int) event.getScrollDeltaY();
         } else {
             MultiFunctionTooltip.mouseScrollY = 0;
-        }
-    }
-
-    @SubscribeEvent
-    public static void renderTooltip$GatherComponents(RenderTooltipEvent.GatherComponents event) {
-        if (event.getItemStack().is(TCItems.DEMON_HEART)) {
-            List<Either<FormattedText, TooltipComponent>> list = event.getTooltipElements();
-            list.add(1, Either.left(Component.translatable("tooltip.item.terra_curio.demon_heart.0").withStyle(ChatFormatting.GREEN)));
-            CuriosApi.getCuriosInventory(Minecraft.getInstance().player).ifPresent(iCuriosItemHandler -> {
-                ICurioStacksHandler iCurioStacksHandler = iCuriosItemHandler.getCurios().get(TerraCurio.CURIO_SLOT);
-                list.add(2, Either.left(Component.translatable(
-                        "tooltip.item.terra_curio.demon_heart.1",
-                        TCCommonConfigs.MAX_ACCESSORIES.get() - iCurioStacksHandler.getSlots()
-                ).withStyle(ChatFormatting.GRAY)));
-            });
         }
     }
 }

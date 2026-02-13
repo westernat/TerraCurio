@@ -11,18 +11,20 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.common.component.ModRarity;
+import org.confluence.terra_curio.TCStartupConfigs;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.api.primitive.ComponentsValue;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
-import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCDataMaps;
 import org.confluence.terra_curio.common.init.TCItems;
@@ -81,7 +83,11 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
-        AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+        return getAttributeModifiers(stack);
+    }
+
+    public ImmutableMultimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(ItemStack stack) {
+        PrimitiveValueComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         AttributeModifiersValue value;
         if (component != null && (value = component.get(TCItems.ATTRIBUTES)) != null) {
             return value.get();
@@ -91,7 +97,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        AccessoriesComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+        PrimitiveValueComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         ComponentsValue value;
         if (component != null && (value = component.get(TCItems.COMPONENTS)) != null) {
             tooltipComponents.addAll(value.components());
@@ -188,6 +194,13 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
+        public Builder stepHeight() {
+            if (TCStartupConfigs.shoesExtraStepHeight()) {
+                return attribute(Attributes.STEP_HEIGHT, 0.5, AttributeModifier.Operation.ADD_VALUE);
+            }
+            return this;
+        }
+
         public Builder rarity(ModRarity rarity) {
             this.rarity = rarity;
             if (rarity != ModRarity.GRAY && rarity != ModRarity.WHITE) {
@@ -196,15 +209,15 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
-        public Builder accessories(AccessoriesComponent component, AccessoriesComponent... components) {
+        public Builder accessories(PrimitiveValueComponent component, PrimitiveValueComponent... components) {
             if (components.length == 0) {
                 properties.component(TCDataComponentTypes.ACCESSORIES, component);
             } else {
                 Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component.types());
-                for (AccessoriesComponent component1 : components) {
+                for (PrimitiveValueComponent component1 : components) {
                     map.putAll(component1.types());
                 }
-                properties.component(TCDataComponentTypes.ACCESSORIES, new AccessoriesComponent(map));
+                properties.component(TCDataComponentTypes.ACCESSORIES, new PrimitiveValueComponent(map));
             }
             return this;
         }
@@ -213,7 +226,8 @@ public class BaseCurioItem extends Item implements ICurioItem {
          * 额外的工具提示
          */
         public Builder tooltip(String str) {
-            if (!hasToolTip) throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
+            if (!hasToolTip)
+                throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
             additionTip.add(Component.translatable(str));
             return this;
         }
@@ -224,7 +238,8 @@ public class BaseCurioItem extends Item implements ICurioItem {
          * @param extra 额外的数量
          */
         public Builder tooltips(int extra) {
-            if (!hasToolTip) throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
+            if (!hasToolTip)
+                throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
             extra += 1;
             for (int i = 1; i < extra; i++) {
                 additionTip.add(Component.translatable("tooltip.item.terra_curio." + name + "." + i));

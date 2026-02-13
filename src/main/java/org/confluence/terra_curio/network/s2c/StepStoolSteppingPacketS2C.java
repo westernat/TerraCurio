@@ -1,19 +1,18 @@
 package org.confluence.terra_curio.network.s2c;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.confluence.lib.network.IPacketS2C;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.StepStoolHandler;
 import top.theillusivec4.curios.api.SlotContext;
 
-public record StepStoolSteppingPacketS2C(int slot, int maxStep) implements CustomPacketPayload {
+public record StepStoolSteppingPacketS2C(int slot, int maxStep) implements IPacketS2C {
     public static final int NO_CURIO = -1;
     public static final int RESET_STEP = -2;
     public static final Type<StepStoolSteppingPacketS2C> TYPE = new Type<>(TerraCurio.asResource("step_stool_stepping_s2c"));
@@ -28,15 +27,9 @@ public record StepStoolSteppingPacketS2C(int slot, int maxStep) implements Custo
         return TYPE;
     }
 
-    public void handle(IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (context.player().isLocalPlayer()) {
-                StepStoolHandler.handlePacket(this);
-            }
-        }).exceptionally(e -> {
-            context.disconnect(Component.translatable("neoforge.network.invalid_flow", e.getMessage()));
-            return null;
-        });
+    @Override
+    public void work(Player player) {
+        StepStoolHandler.handlePacket(slot, maxStep);
     }
 
     public static void sendToClient(SlotContext slotContext, int maxStep) {
@@ -45,9 +38,9 @@ public record StepStoolSteppingPacketS2C(int slot, int maxStep) implements Custo
         }
     }
 
-    public static void resetStep(Entity entity) {
+    public static void resetStep(Entity entity, int maxStep) {
         if (entity instanceof ServerPlayer serverPlayer) {
-            PacketDistributor.sendToPlayer(serverPlayer, new StepStoolSteppingPacketS2C(RESET_STEP, 0));
+            PacketDistributor.sendToPlayer(serverPlayer, new StepStoolSteppingPacketS2C(RESET_STEP, maxStep));
         }
     }
 }

@@ -7,11 +7,11 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.scores.Team;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.util.CuriosUtils;
+import org.confluence.terra_curio.util.TCUtils;
 import top.theillusivec4.curios.api.SlotContext;
 
 public class PaladinsShield extends BaseCurioItem {
@@ -22,9 +22,9 @@ public class PaladinsShield extends BaseCurioItem {
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
         if (slotContext.entity() instanceof ServerPlayer serverPlayer && serverPlayer.level().getGameTime() % 200 == 0) {
-            Team team = serverPlayer.getTeam();
+            Object team = TCUtils.getTeam(serverPlayer);
             for (Player player : serverPlayer.level().players()) {
-                if (player.getTeam() != team) continue;
+                if (TCUtils.getTeam(player) != team) continue;
                 player.addEffect(new MobEffectInstance(TCEffects.PALADINS_SHIELD, 600, player == serverPlayer ? 1 : 0));
             }
         }
@@ -38,10 +38,10 @@ public class PaladinsShield extends BaseCurioItem {
     public static float apply(LivingEntity living, DamageSource damageSource, float amount) {
         if (living instanceof ServerPlayer serverPlayer && !isOwner(serverPlayer)) {
             MutableFloat atomic = new MutableFloat(amount);
-            Team team = serverPlayer.getTeam();
+            Object team = TCUtils.getTeam(serverPlayer);
             serverPlayer.level().players().stream().filter(player -> player != serverPlayer && // player不是自己
                     player != damageSource.getEntity() && // player不是给自己造成过伤害的
-                    player.getTeam() == team && // player的队伍与自己的相同
+                    TCUtils.getTeam(player) == team && // player的队伍与自己的相同
                     player.getHealth() / player.getMaxHealth() > 0.25F && // player血量大于最大血量的25%
                     isOwner(player) && // player拥有圣骑士盾
                     player.distanceToSqr(serverPlayer) < 1024.0 // player与自己的距离在32米内

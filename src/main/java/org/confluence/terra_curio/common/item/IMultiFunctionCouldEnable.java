@@ -8,7 +8,7 @@ import net.minecraft.world.item.ItemStack;
 import org.confluence.lib.common.item.IFunctionCouldEnable;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
-import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.Nullable;
@@ -46,7 +46,7 @@ public interface IMultiFunctionCouldEnable extends IFunctionCouldEnable {
 
     @Override
     default @Nullable TooltipComponent getTooltipComponent(ItemStack itemStack) {
-        AccessoriesComponent component = TCUtils.getAccessoriesComponent(itemStack);
+        PrimitiveValueComponent component = TCUtils.getAccessoriesComponent(itemStack);
         if (component == null) return null;
         TooltipComponentsValue value = component.get(TCItems.INFORMATION);
         if (value == null) return null;

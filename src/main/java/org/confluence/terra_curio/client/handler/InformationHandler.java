@@ -6,19 +6,18 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.common.Tags;
+import org.confluence.lib.client.DPSMeter;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
-import org.confluence.terra_curio.network.s2c.AttackDamagePacketS2C;
-import org.confluence.terra_curio.network.s2c.EntityKilledPacketS2C;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
 import org.jetbrains.annotations.Nullable;
 
@@ -95,14 +94,16 @@ public final class InformationHandler {
         }
 
         if (!DISABLE[LIFE_FORM_ANALYZER] && INFO_DATA[LIFE_FORM_ANALYZER] != 0) {
-            if (tenSec == LIFE_FORM_ANALYZER) lifeFormAnalyzerInfo = getLifeFormAnalyzerInfo(localPlayer);
+            if (tenSec == LIFE_FORM_ANALYZER) {
+                lifeFormAnalyzerInfo = getLifeFormAnalyzerInfo(localPlayer);
+            }
             INFORMATION.put(LIFE_FORM_ANALYZER, lifeFormAnalyzerInfo);
         }
 
         if (!DISABLE[RADAR] && INFO_DATA[RADAR] != 0) {
             if (tenSec == RADAR) radarInfo = Component.translatable(
                     "info.terra_curio.radar",
-                    localPlayer.level().getEntities(localPlayer, new AABB(localPlayer.getOnPos()).inflate(63.5), entity -> entity instanceof Enemy).size()
+                    localPlayer.level().getEntities(localPlayer, new AABB(localPlayer.blockPosition()).inflate(63.5), entity -> entity instanceof Enemy).size()
             );
             INFORMATION.put(RADAR, radarInfo);
         }
@@ -139,7 +140,9 @@ public final class InformationHandler {
                 if (INFO_DATA[i] >= 0) continue;
                 boolean match = false;
                 for (Player player : localPlayer.level().players()) {
-                    if (player == localPlayer || player.distanceToSqr(localPlayer) > InfoCurioCheckPacketS2C.MAX_SHARE_DISTANCE_SQR) continue;
+                    if (player == localPlayer || player.distanceToSqr(localPlayer) > InfoCurioCheckPacketS2C.MAX_SHARE_DISTANCE_SQR) {
+                        continue;
+                    }
                     byte[] data = REMOTE_DATA.get(player.getId());
                     if (data == null) continue;
                     if (data[i] > -125) {
@@ -193,21 +196,16 @@ public final class InformationHandler {
 
     private static Component getMetalDetectorInfo(Player player) {
         AtomicReference<Component> atomic = new AtomicReference<>(Component.translatable("info.terra_curio.metal_detector.none"));
-        player.level().getBlockStates(new AABB(player.getOnPos()).inflate(15.5)).distinct()
-                .map(state -> mapCloakedBlock(player, state))
+        player.level().getBlockStates(new AABB(player.blockPosition()).inflate(15.5)).distinct()
                 .filter(TCCommonConfigs.rareBlocks::containsKey)
                 .min(Comparator.comparingInt(TCCommonConfigs.rareBlocks::getInt))
                 .ifPresent(blockState -> atomic.set(Component.translatable("info.terra_curio.metal_detector", blockState.getBlock().getName())));
         return atomic.get();
     }
 
-    private static BlockState mapCloakedBlock(Player player, BlockState original) {
-        return original; // confluence mixin here
-    }
-
     private static Component getLifeFormAnalyzerInfo(Player player) {
         AtomicReference<Component> atomic = new AtomicReference<>(Component.translatable("info.terra_curio.life_form_analyzer.none"));
-        player.level().getEntities(player, new AABB(player.getOnPos()).inflate(47.5), entity -> TCCommonConfigs.rareCreatures.containsKey(entity.getType()))
+        player.level().getEntities(player, new AABB(player.blockPosition()).inflate(47.5), entity -> TCCommonConfigs.rareCreatures.containsKey(entity.getType()))
                 .stream().min(Comparator.comparingInt(entity -> TCCommonConfigs.rareCreatures.getInt(entity.getType())))
                 .ifPresent(entity -> atomic.set(Component.translatable("info.terra_curio.life_form_analyzer", entity.getType().getDescription())));
         return atomic.get();
@@ -233,11 +231,10 @@ public final class InformationHandler {
         return INFORMATION;
     }
 
-    public static void handlePacket(InfoCurioCheckPacketS2C packet, Player player) {
-        byte[] enabled = packet.enabled();
-        if (player != null && packet.playerId() != player.getId()) {
+    public static void handlePacket(int playerId, byte[] enabled, Player player) {
+        if (player != null && playerId != player.getId()) {
             // 存入远程玩家信息
-            REMOTE_DATA.put(packet.playerId(), packet.enabled());
+            REMOTE_DATA.put(playerId, enabled);
         }
         byte b = enabled[WATCH];
         byte c = INFO_DATA[WATCH];
@@ -300,12 +297,8 @@ public final class InformationHandler {
         return INFO_DATA[index] != 0;
     }
 
-    public static void handleEntityKilled(EntityKilledPacketS2C packet) {
-        EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.get(packet.entityType());
-        tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter").append(entityType.getDescription()).append("': " + (packet.amount() + 1));
-    }
-
-    public static void handleAttackDamage(AttackDamagePacketS2C packet, Player player) {
-        DPSMeter.addDPS(packet.amount(), player.level().getGameTime());
+    public static void handleEntityKilled(int amount, ResourceLocation entityType) {
+        EntityType<?> type = BuiltInRegistries.ENTITY_TYPE.get(entityType);
+        tallyCounterInfo = Component.translatable("info.terra_curio.tally_counter").append(type.getDescription()).append("': " + (amount + 1));
     }
 }

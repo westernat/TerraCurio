@@ -8,7 +8,6 @@ import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.mixin.accessor.LivingEntityAccessor;
 import org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S;
-import org.confluence.terra_curio.network.s2c.PlayerClimbPacketS2C;
 
 import static org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S.JUMP_BY_SELF;
 import static org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S.RESET_FALL_DISTANCE;
@@ -86,7 +85,7 @@ public final class PlayerClimbHandler {
         PacketDistributor.sendToServer(new PlayerJumpPacketC2S(JUMP_BY_SELF, (float) motionY));
     }
 
-    public static void handlePacket(PlayerClimbPacketS2C packet) {
-        climberAmount = packet.climberAmount();
+    public static void handlePacket(byte climberAmount) {
+        PlayerClimbHandler.climberAmount = climberAmount;
     }
 }

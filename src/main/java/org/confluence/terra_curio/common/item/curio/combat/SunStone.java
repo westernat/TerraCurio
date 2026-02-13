@@ -20,7 +20,7 @@ public class SunStone extends BaseCurioItem {
         super(builder("sun_stone").rarity(ModRarity.LIME)
                 .attribute(Attributes.ATTACK_SPEED, 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 .attribute(Attributes.ATTACK_DAMAGE, 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-                .attribute(Attributes.ARMOR, 4.0, AttributeModifier.Operation.ADD_VALUE)
+                .attribute(Attributes.ARMOR, 2.0, AttributeModifier.Operation.ADD_VALUE)
                 .attribute(Attributes.BLOCK_BREAK_SPEED, 0.15, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 .attribute(TCAttributes.getCriticalChance(), 0.02, AttributeModifier.Operation.ADD_VALUE)
                 .attribute(TCAttributes.getRangedDamage(), 0.1, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)

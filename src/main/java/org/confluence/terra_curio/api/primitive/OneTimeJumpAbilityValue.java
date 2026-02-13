@@ -12,7 +12,7 @@ public record OneTimeJumpAbilityValue(Tuple<Float, Integer> value) implements Pr
             ExtraCodecs.POSITIVE_FLOAT.fieldOf("jump_speed").forGetter(v -> v.value.getA()),
             ExtraCodecs.POSITIVE_INT.fieldOf("jump_ticks").forGetter(v -> v.value.getB())
     ).apply(instance, (speed, ticks) -> new OneTimeJumpAbilityValue(new Tuple<>(speed, ticks))));
-    public static final CombineRule<Tuple<Float, Integer>, OneTimeJumpAbilityValue> COMBINE_RULE = CombineRule.register((a, b) -> new Tuple<>(Math.max(a.getA(), a.getA()), Math.max(b.getB(), b.getB())), "one_time_jump_ability");
+    public static final CombineRule<Tuple<Float, Integer>, OneTimeJumpAbilityValue> COMBINE_RULE = CombineRule.register((a, b) -> new Tuple<>(Math.max(a.getA(), b.getA()), Math.max(a.getB(), b.getB())), "one_time_jump_ability");
 
     @Override
     public Tuple<Float, Integer> get() {

@@ -18,6 +18,7 @@ import org.confluence.terra_curio.common.init.TCRecipes;
 import org.confluence.terra_curio.common.item.curio.movement.StepStool;
 
 public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
+    public static final int MAX_STEP = 8;
     private static ExtraStepStoolRecipe INSTANCE;
 
     private ExtraStepStoolRecipe() {
@@ -35,14 +36,14 @@ public class ExtraStepStoolRecipe extends SmithingTransformRecipe {
         ItemStack addition = input.getItem(2);
         if (isBaseIngredient(base) && isAdditionIngredient(addition)) {
             CompoundTag tag = LibUtils.getItemStackNbtNoCopy(base);
-            return tag.getInt("extraStep") + tag.getInt("extraStep") < 15;
+            return tag.getInt("extraStep") + tag.getInt("extraStep") < MAX_STEP;
         }
         return false;
     }
 
     @Override
     public boolean isBaseIngredient(ItemStack stack) {
-        return stack.getItem() instanceof StepStool && LibUtils.getItemStackNbtNoCopy(stack).getInt("extraStep") < 15;
+        return stack.getItem() instanceof StepStool && LibUtils.getItemStackNbtNoCopy(stack).getInt("extraStep") < MAX_STEP;
     }
 
     @Override

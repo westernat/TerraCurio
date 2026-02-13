@@ -49,8 +49,8 @@ public abstract class LocalPlayerMixin implements SelfGetter<Player> {
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void floating(CallbackInfo ci) {
-        Player self = confluence$self();
-        if (TCClientPacketHandler.isCanFloating() && !self.isCrouching()) {
+        Player self;
+        if (TCClientPacketHandler.isCanFloating() && !(self = confluence$self()).isCrouching()) {
             FluidType water = NeoForgeMod.WATER_TYPE.value();
             if (self.isEyeInFluidType(water)) {
                 self.jumpInFluid(water);

@@ -5,7 +5,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.confluence.lib.util.LibClientUtils;
 import org.confluence.lib.util.LibUtils;
+import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.common.entity.StepStoolEntity;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.network.s2c.StepStoolSteppingPacketS2C;
@@ -24,8 +26,12 @@ public class StepStool extends BaseCurioItem {
         if (prevStack.getItem() == stack.getItem()) return;
         super.onEquip(slotContext, prevStack, stack);
         if (!slotContext.entity().level().isClientSide) {
-            StepStoolSteppingPacketS2C.sendToClient(slotContext, LibUtils.getItemStackNbtNoCopy(stack).getInt("extraStep") + 1);
+            StepStoolSteppingPacketS2C.sendToClient(slotContext, getMaxStep(stack));
         }
+    }
+
+    public static int getMaxStep(ItemStack stack) {
+        return LibUtils.getItemStackNbtNoCopy(stack).getInt("extraStep") + 1;
     }
 
     @Override
@@ -34,7 +40,7 @@ public class StepStool extends BaseCurioItem {
         super.onUnequip(slotContext, newStack, stack);
         Level level = slotContext.entity().level();
         if (!level.isClientSide) {
-            StepStoolSteppingPacketS2C.resetStep(slotContext.entity());
+            StepStoolSteppingPacketS2C.resetStep(slotContext.entity(), 0);
             if (level.getEntity(LibUtils.getItemStackNbtNoCopy(stack).getInt("id")) instanceof StepStoolEntity stepStool) {
                 stepStool.setOwner(null);
             }
@@ -48,9 +54,14 @@ public class StepStool extends BaseCurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        if (LibUtils.isPhysicalClient()) {
+            tooltipComponents.add(Component.translatable(
+                    "tooltip.item.terra_curio.step_stool.0",
+                    LibClientUtils.keyMappingComponent(TCKeyBindings.STEP_STOOL.get())
+            ));
+        }
         tooltipComponents.add(Component.translatable(
                 "tooltip.item.terra_curio.step_stool.1", LibUtils.getItemStackNbtNoCopy(stack).getInt("extraStep")
-        ).withStyle(style -> style.withColor(ChatFormatting.BLUE)));
+        ).withStyle(ChatFormatting.BLUE));
     }
 }

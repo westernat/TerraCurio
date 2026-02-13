@@ -20,13 +20,17 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.phys.AABB;
+import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.PercentageAttribute;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.util.LibUtils;
+import org.confluence.lib.util.ScheduledForMove;
+import org.confluence.terra_curio.TCStartupConfigs;
 import org.confluence.terra_curio.TerraCurio;
+import org.confluence.terra_curio.api.event.ArmorPenetrationEvent;
 import org.confluence.terra_curio.integration.apothic.ApothicHelper;
 
 import java.util.HashMap;
@@ -35,6 +39,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 
+@ScheduledForMove(since = "1.2.0", inVersion = "2.0.0")
 public final class TCAttributes {
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(BuiltInRegistries.ATTRIBUTE, TerraCurio.MODID);
 
@@ -89,7 +94,7 @@ public final class TCAttributes {
 
     public static boolean hasCustomAttribute(Holder<Attribute> attribute) {
         Holder<Attribute> holder = MAP.get(attribute);
-        return holder != null && holder.value() != attribute.value();
+        return holder != null && holder.equals(attribute);
     }
 
     public static void registerAttribute(Holder<Attribute> attribute, BiConsumer<EntityType<? extends LivingEntity>, Holder<Attribute>> consumer) {
@@ -123,14 +128,18 @@ public final class TCAttributes {
     }
 
     public static boolean applyDodge(LivingEntity living, RandomSource random) {
-        if (hasCustomAttribute(DODGE_CHANCE) || !living.getAttributes().hasAttribute(DODGE_CHANCE)) return false;
+        if (hasCustomAttribute(DODGE_CHANCE) || !living.getAttributes().hasAttribute(DODGE_CHANCE)) {
+            return false;
+        }
         AttributeInstance instance = living.getAttribute(DODGE_CHANCE);
         if (instance == null) return false;
         return LibUtils.checkChance(instance.getValue(), random);
     }
 
     public static float applyCritDamage(RandomSource random, LivingEntity living, float amount) {
-        if (ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get() || hasCustomAttribute(CRIT_CHANCE)) return amount;
+        if (ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get() || hasCustomAttribute(CRIT_CHANCE)) {
+            return amount;
+        }
         AttributeInstance instance = living.getAttribute(CRIT_CHANCE);
         if (instance != null && LibUtils.checkChance(instance.getValue(), random)) {
             amount *= 1.5F;
@@ -139,7 +148,9 @@ public final class TCAttributes {
     }
 
     public static float applyRangedDamage(RandomSource random, DamageSource damageSource, float amount) {
-        if (hasCustomAttribute(RANGED_DAMAGE)) return amount;
+        if (ApothicHelper.ARROW_DAMAGE.equals(BuiltInRegistries.ATTRIBUTE.getKey(getCustomAttribute(RANGED_DAMAGE).value()))) {
+            return amount;
+        }
         if (damageSource.is(DamageTypeTags.IS_PROJECTILE) && damageSource.getEntity() instanceof LivingEntity living) {
             AttributeInstance instance = living.getAttribute(RANGED_DAMAGE);
             if (instance != null) {
@@ -188,11 +199,14 @@ public final class TCAttributes {
     }
 
     public static float applyArmorPenetration(DamageSource damageSource, float armorValue) {
-        if (!hasCustomAttribute(ARMOR_PENETRATION) && damageSource.getEntity() instanceof LivingEntity attacker) {
-            AttributeInstance attributeInstance = attacker.getAttribute(ARMOR_PENETRATION);
-            if (attributeInstance != null) armorValue -= (float) attributeInstance.getValue();
+        if (damageSource.getEntity() instanceof LivingEntity attacker) {
+            if (!hasCustomAttribute(ARMOR_PENETRATION)) {
+                AttributeInstance instance = attacker.getAttribute(ARMOR_PENETRATION);
+                if (instance != null) armorValue -= (float) instance.getValue();
+            }
             if (damageSource.is(TCDamageTypes.STAR_CLOAK)) armorValue -= 3.0F;
-            return Math.max(armorValue, 0.0F);
+            float penetration = NeoForge.EVENT_BUS.post(new ArmorPenetrationEvent(damageSource, armorValue)).getPenetration();
+            return Math.max(armorValue - penetration, 0.0F);
         }
         return armorValue;
     }

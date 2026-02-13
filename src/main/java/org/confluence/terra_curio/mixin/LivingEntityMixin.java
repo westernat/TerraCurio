@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -19,7 +20,6 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.mixed.SelfGetter;
 import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCEffects;
-import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.util.TCUtils;
@@ -107,11 +107,9 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
         return pPosY;
     }
 
-    @Inject(method = "canFreeze", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
-    private void checkFreeze(CallbackInfoReturnable<Boolean> cir) {
-        if (cir.getReturnValue() && TCUtils.hasAccessoriesType(confluence$self(), TCItems.FROZEN$IMMUNE)) {
-            cir.setReturnValue(false);
-        }
+    @ModifyReturnValue(method = "canFreeze", at = @At(value = "RETURN", ordinal = 1))
+    private boolean checkFreeze(boolean original) {
+        return TCUtils.applyFrozenImmune(confluence$self(), original);
     }
 
     @WrapOperation(method = "getDamageAfterArmorAbsorb", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(Lnet/minecraft/world/entity/LivingEntity;FLnet/minecraft/world/damagesource/DamageSource;FF)F"))

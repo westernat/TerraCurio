@@ -7,6 +7,7 @@ import it.unimi.dsi.fastutil.ints.Int2IntMap;
 import it.unimi.dsi.fastutil.objects.ObjectIterator;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.player.RemotePlayer;
 import net.minecraft.util.Mth;
@@ -28,10 +29,6 @@ import org.confluence.terra_curio.api.event.PlayerEmptyAutoAttackEvent;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
-import org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C;
-import org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C;
-import org.confluence.terra_curio.network.s2c.RightClickSubtractorPacketS2C;
-import org.confluence.terra_curio.network.s2c.SetItemEntityPickupDelayPacketS2C;
 
 import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.LUMINANCE_MASK;
 import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.NEPTUNES_SHELL;
@@ -103,12 +100,11 @@ public final class TCClientPacketHandler {
         return ret; // confluence mixin here
     }
 
-    public static void handleSubstractor(RightClickSubtractorPacketS2C packet) {
-        rightClickSubtractor = packet.amount();
+    public static void handleSubstractor(byte amount) {
+        rightClickSubtractor = amount;
     }
 
-    public static void handleCurioExists(CurioExistsPacketS2C packet) {
-        int item = packet.item();
+    public static void handleCurioExists(int item) {
         autoAttack = (item & AUTO_ATTACK) != 0;
         hasCthulhu = (item & SHIELD_OF_CTHULHU) != 0;
         hasTabi = (item & TABI) != 0;
@@ -120,8 +116,8 @@ public final class TCClientPacketHandler {
         boneGlove = (item & BONE_GLOVE) != 0;
     }
 
-    public static void handleItemPickupDelay(SetItemEntityPickupDelayPacketS2C packet) {
-        pickupDelayStorage.put(packet.id(), packet.delay());
+    public static void handleItemPickupDelay(int id, int delay) {
+        pickupDelayStorage.put(id, delay);
     }
 
     public static void handle(Minecraft minecraft, LocalPlayer player) {
@@ -156,7 +152,7 @@ public final class TCClientPacketHandler {
         ItemStack itemStack = player.getMainHandItem();
         if (itemStack.onEntitySwing(player, InteractionHand.MAIN_HAND)) return;
         if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
-        if (minecraft.options.keyAttack.isDown() && TCClientPacketHandler.couldAutoAttack() /* confluence mixin here */) {
+        if (minecraft.options.keyAttack.isDown() && couldAutoAttack() /* confluence mixin here */) {
             if (player.getAttackStrengthScale(0.5F) < 1.0F - Mth.EPSILON) return;
             MinecraftAccessor accessor = (MinecraftAccessor) minecraft;
             if (accessor.getMissTime() > 0) accessor.setMissTime(0);
@@ -187,15 +183,15 @@ public final class TCClientPacketHandler {
         }
     }
 
-    public static void handleRender(BroadcastRenderPacketS2C packet, Player player) {
-        short render = packet.render();
-        if (player == Minecraft.getInstance().player) {
-            luminance = render & LUMINANCE_MASK;
-            hasNeptunesShell = (render & NEPTUNES_SHELL) == NEPTUNES_SHELL;
-        } else {
-            int playerId = packet.playerId();
-            remoteLuminance.put(playerId, render & LUMINANCE_MASK);
-            remoteNeptuneShell.put(playerId, (render & NEPTUNES_SHELL) == NEPTUNES_SHELL);
+    public static void handleRender(int playerId, short render, Player localPlayer) {
+        if (localPlayer.level().getEntity(playerId) instanceof AbstractClientPlayer clientPlayer) {
+            if (localPlayer == clientPlayer) {
+                luminance = render & LUMINANCE_MASK;
+                hasNeptunesShell = (render & NEPTUNES_SHELL) == NEPTUNES_SHELL;
+            } else {
+                remoteLuminance.put(playerId, render & LUMINANCE_MASK);
+                remoteNeptuneShell.put(playerId, (render & NEPTUNES_SHELL) == NEPTUNES_SHELL);
+            }
         }
     }
 

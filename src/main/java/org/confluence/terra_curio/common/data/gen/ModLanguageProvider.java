@@ -155,6 +155,7 @@ public class ModLanguageProvider extends LanguageProvider {
 
 
         onlyTooltip(TCItems.BASE_POINT, "基点", "'Can you hear the sound in this silence?'", "“你可听闻这寂静之声？”");
+        add(TCItems.BASE_POINT.get().getDescriptionId(), "Base Point", "基点");
         add(TCItems.EVERLASTING.get().getDescriptionId(), "Everlasting", "亘古");
         add(TCItems.CELL_PHONE.get().getDescriptionId(), "Cell Phone", "手机");
         add(TCItems.MAGIC_MIRROR.get().getDescriptionId(), "Magic Mirror", "魔镜");
@@ -325,7 +326,7 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyTooltip(TCItems.TUNGSTEN_WATCH, "钨表", "Tell the time", "报时");
         tooltipAndJeiInfo(TCItems.CROSS_NECKLACE, "十字项链", "Increases length of invincibility after taking damage", "增加受到伤害后的无敌时间", "It has a Chance to be dropped from Evoker.", "它有几率从唤魔者身上掉落。");
         tooltipAndJeiInfo(TCItems.DEMON_HEART, "恶魔之心", "Permanently increases the number of accessory slots", "永久增加配饰栏数量", "It is dropped by the Wither.", "它必定从凋灵身上掉落。");
-        tooltipAndJeiInfo(TCItems.DEPTH_METER, "深度计", "Displays depth", "显示深度", "The Compass has a Chance to be dropped from Bats.", "它有几率从蝙蝠身上掉落。");
+        tooltipAndJeiInfo(TCItems.DEPTH_METER, "深度计", "Displays depth", "显示深度", "The DepthMeter has a Chance to be dropped from Bats.", "它有几率从蝙蝠身上掉落。");
         onlyZhName(TCItems.DESTROYER_EMBLEM, "毁灭者徽章");
         onlyTooltip(TCItems.DETOXIFICATION_CAPSULE, "解毒囊", "Immunity to Poison and Wither", "对中毒和凋零免疫");
         tooltipAndJeiInfo(TCItems.DPS_METER, "每秒伤害计数器", "Displays your damage per second", "显示你的每秒伤害", "The DPS Meter has a Chance to be dropped from Creeper.", "它有几率从苦力怕身上掉落。");
@@ -600,6 +601,7 @@ public class ModLanguageProvider extends LanguageProvider {
         );
         onlyTooltip(TCItems.MECHANICAL_GLOVE, "机械手套", "Enables auto swing for melee weapons", "启用近战武器自动挥动");
         tooltipAndJeiInfo(TCItems.METAL_DETECTOR, "金属探测器", "Displays the most valuable ore around you", "显示你周围最贵重的矿石", "The Metal Detector has a Chance to be dropped from Warden.", "它必定从监守者身上掉落。");
+        add("tooltip.item.terra_curio.metal_detector.keybinding", "Press [%s] to detect", "按[%s]以探测");
         onlyTooltips(TCItems.MOLTEN_CHARM, "熔火护身符",
                 new String[]{
                         "Grants immunity to fire blocks",
@@ -666,7 +668,7 @@ public class ModLanguageProvider extends LanguageProvider {
                         "对火块免疫"
                 }
         );
-        tooltipAndJeiInfo(TCItems.PALADINS_SHIELD, "圣骑士护盾", "Absorbs 25% of damage done to players on your team when above 25% life", "当生命值超过25%时，吸收对团队中玩家造成的25%伤害", "It is dropped by the Ender Dragon.", "它必定从末影龙身上掉落。");
+        tooltipAndJeiInfo(TCItems.PALADINS_SHIELD, "圣骑士护盾", "Absorbs 25% of damage done to players on your team when above 25% life", "当生命值高于25%时，吸收团队中其他玩家所受伤害的25%", "It is dropped by the Ender Dragon.", "它必定从末影龙身上掉落。");
         tooltipAndJeiInfo(TCItems.PANIC_NECKLACE, "恐慌项链", "Increases movement speed after taking damage", "受到伤害后增加移动速度", "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。");
         onlyTooltips(TCItems.PDA, "个人数字助手", ALL_INFO_EN, ALL_INFO_ZH);
         onlyTooltips(TCItems.PINK_HORSESHOE_BALLOON, "粉马掌气球",
@@ -761,7 +763,11 @@ public class ModLanguageProvider extends LanguageProvider {
         tooltipAndJeiInfo(TCItems.SANDSTORM_IN_A_BOTTLE, "沙暴瓶", "Allows the holder to double jump", "可让持有者二段跳", "It can be found in Chests in the Desert Pyramid.", "它可以在沙漠神殿的宝箱中找到。");
         onlyTooltip(TCItems.SEARCHLIGHT, "探照灯", "Immunity to Blindness and Darkness", "对失明和黑暗免疫");
         tooltipAndJeiInfo(TCItems.SEXTANT, "六分仪", "Displays the phase of the moon", "显示月相", "This item can be located in the chests found within Fisherman Villagers' houses.", "这件物品可以在渔夫村民家中的箱子中找到。");
-        onlyJeiInfo(TCItems.SHACKLE, "脚镣", "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。");
+        onlyJeiInfo(TCItems.SHACKLE, "镣铐", "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。");
+        tooltipsAndJeiInfo(TCItems.RAM_RUNE, "牧羊符文",
+            new String[]{"Jump while holding crouch to slam downward","Slamming into the ground will deal damage to nearby enemies"},
+            new String[]{"按住潜行键跳跃即可向下猛击","猛击地面会对附近的敌人造成伤害"},
+            "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。(TODO)");
         onlyJeiInfo(TCItems.SHARK_TOOTH_NECKLACE, "鲨牙项链", "It has a chance to drop from Drowned.", "它有几率从溺尸身上掉落。");
         onlyTooltips(TCItems.SHARKRON_BALLOON, "鲨鱼龙气球",
                 new String[]{
@@ -774,7 +780,7 @@ public class ModLanguageProvider extends LanguageProvider {
                 }
         );
         tooltipAndJeiInfo(TCItems.SHIELD_OF_CTHULHU, "克苏鲁护盾", "Allows the player to dash into the enemy, tap [%s] once to dash", "允许冲刺，按一次[%s]以冲刺", "It has a Chance to be dropped from Ravager.", "它有几率从劫掠兽身上掉落。");
-        tooltipAndJeiInfo(TCItems.SHINY_RED_BALLOON, "闪亮红气球", "Allows the holder to double jump", "增加跳跃高度", "When the player has the Hero of the Village effect, the librarian has a chance to give the player this item.It can be found in chests in plains villages.", "它可以在平原村庄中的宝箱中找到。当玩家拥有村庄英雄效果时，图书管理员有几率将此物品交给玩家。");
+        tooltipAndJeiInfo(TCItems.SHINY_RED_BALLOON, "闪亮红气球", "Increases jump height", "增加跳跃高度", "When the player has the Hero of the Village effect, the librarian has a chance to give the player this item.It can be found in chests in plains villages.", "它可以在平原村庄中的宝箱中找到。当玩家拥有村庄英雄效果时，图书管理员有几率将此物品交给玩家。");
         tooltipsAndJeiInfo(TCItems.SHOE_SPIKES, "鞋钉",
                 new String[]{
                         "Allows the ability to slide down walls, hold Crouch key to slide down quickly",
@@ -822,11 +828,11 @@ public class ModLanguageProvider extends LanguageProvider {
         );
         tooltipsAndJeiInfo(TCItems.STEP_STOOL, "梯凳",
                 new String[]{
-                        "Press ↑ key to stand higher, and press Crouch key to down",
+                        "Press [%s] to stand higher, and press Crouch key to down",
                         "Extra Step: %s"
                 },
                 new String[]{
-                        "按↑键站得更高，按潜行键下来",
+                        "按[%s]站得更高，按潜行键下来",
                         "额外高度：%s"
                 },
                 "You can use Step Stool to upgrade its Extra Step from Smithing Table.",
@@ -967,6 +973,8 @@ public class ModLanguageProvider extends LanguageProvider {
         add("terra_curio.configuration.Speed Shoes.tooltip", "Configurations for Speed Shoes", "加速类靴子的配置");
         add("terra_curio.configuration.Functional.tooltip", "Configurations for functional accessories", "功能类配饰的配置");
         add("terra_curio.configuration.attributeReplacements.button", "Allows you to replace some attributes", "允许部分属性的替换");
+        add("terra_curio.configuration.shoesExtraStepHeight", "Shoes Extra Step Height", "靴类额外最大行走高度");
+        add("terra_curio.configuration.shoesExtraStepHeight.button", "When enabled, players will be able to walk over blocks half a meter higher.", "开启时玩家将能多走上半米高度");
         //add("terra_curio.configuration.enable.tooltip", "When enabled, it will random get value through followed Min and Max multiplier", "启用后，将以以下最大、最小乘算进行随机取值");
         //add("terra_curio.configuration.max.tooltip", "", "");
         //add("terra_curio.configuration.rareCreatures.button", "", "");

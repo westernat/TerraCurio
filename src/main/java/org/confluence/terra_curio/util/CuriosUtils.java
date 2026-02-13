@@ -6,7 +6,7 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.IItemHandlerModifiable;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
-import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
@@ -28,7 +28,7 @@ public class CuriosUtils {
 
     public static boolean noSameCurio(LivingEntity living, ValueType<?, ? extends PrimitiveValue<?>> type) {
         return noSameCurio(living, (Predicate<ItemStack>) itemStack -> {
-            AccessoriesComponent component = itemStack.get(TCDataComponentTypes.ACCESSORIES);
+            PrimitiveValueComponent component = itemStack.get(TCDataComponentTypes.ACCESSORIES);
             return component == null || !component.types().containsKey(type);
         });
     }
@@ -77,7 +77,7 @@ public class CuriosUtils {
             for (int i = 0; i < stackHandler.getSlots(); i++) {
                 ItemStack stack = stackHandler.getStackInSlot(i);
                 if (stack.isEmpty()) continue;
-                AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
+                PrimitiveValueComponent component = TCUtils.getAccessoriesComponent(stack);
                 if (component == null) continue;
                 V other = component.get(type);
                 if (other == null) continue;

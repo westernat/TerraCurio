@@ -11,7 +11,7 @@ import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import java.util.List;
 import java.util.Optional;
 
-import static org.confluence.terra_curio.common.component.AccessoriesComponent.of;
+import static org.confluence.terra_curio.common.component.PrimitiveValueComponent.of;
 import static org.confluence.terra_curio.common.init.TCItems.FULL_INFO;
 import static org.confluence.terra_curio.common.init.TCItems.INFORMATION;
 

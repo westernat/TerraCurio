@@ -1,20 +1,19 @@
 package org.confluence.terra_curio.network.s2c;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.scores.Team;
 import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.network.handling.IPayloadContext;
+import org.confluence.lib.common.item.IFunctionCouldEnable;
+import org.confluence.lib.network.IPacketS2C;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.client.handler.InformationHandler;
-import org.confluence.terra_curio.common.component.AccessoriesComponent;
+import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.item.IMultiFunctionCouldEnable;
 import org.confluence.terra_curio.util.CuriosUtils;
@@ -23,7 +22,7 @@ import org.confluence.terra_curio.util.TCUtils;
 import java.util.ArrayList;
 import java.util.Set;
 
-public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements CustomPacketPayload {
+public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements IPacketS2C {
     public static final Type<InfoCurioCheckPacketS2C> TYPE = new Type<>(TerraCurio.asResource("info_curio_check"));
     public static final StreamCodec<ByteBuf, InfoCurioCheckPacketS2C> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.VAR_INT, InfoCurioCheckPacketS2C::playerId,
@@ -38,22 +37,20 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         return TYPE;
     }
 
-    public void handle(IPayloadContext context) {
-        context.enqueueWork(() -> {
-            if (context.player().isLocalPlayer()) {
-                InformationHandler.handlePacket(this, context.player());
-            }
-        }).exceptionally(e -> {
-            context.disconnect(Component.translatable("neoforge.network.invalid_flow", e.getMessage()));
-            return null;
-        });
+    @Override
+    public void work(Player player) {
+        InformationHandler.handlePacket(playerId, enabled, player);
     }
 
     private static byte checkEnabled(byte original, byte target, ItemStack itemStack, TooltipComponentsValue.Storage storage) {
-        if (itemStack.getItem() instanceof IMultiFunctionCouldEnable function) {
-            return function.isEnabled(itemStack, storage) ? target : original;
+        if (itemStack.getItem() instanceof IFunctionCouldEnable f) {
+            if (f instanceof IMultiFunctionCouldEnable mf) {
+                return mf.isEnabled(itemStack, storage) ? target : original;
+            } else {
+                return f.isEnabled(itemStack) ? target : original;
+            }
         }
-        return target;
+        return original;
     }
 
     public static void sendToClient(ServerPlayer serverPlayer, Inventory inventory) {
@@ -73,7 +70,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         byte depthMeter = 0;
         byte lens = 0;
         for (ItemStack stack : itemStacks) {
-            AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
+            PrimitiveValueComponent component = TCUtils.getAccessoriesComponent(stack);
             if (component == null) continue;
             TooltipComponentsValue value = component.get(TCItems.INFORMATION);
             if (value == null) continue;
@@ -133,7 +130,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
         byte depthMeter = -128;
         byte lens = -128;
         for (ItemStack stack : itemStacks) {
-            AccessoriesComponent component = TCUtils.getAccessoriesComponent(stack);
+            PrimitiveValueComponent component = TCUtils.getAccessoriesComponent(stack);
             if (component == null) continue;
             TooltipComponentsValue value = component.get(TCItems.INFORMATION);
             if (value == null) continue;
@@ -177,9 +174,9 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements C
                 watch, weatherRadio, sextant, guide, detector, analyzer,
                 radar, counter, dpsMeter, stopwatch, compass, depthMeter, lens
         });
-        Team team = serverPlayer.getTeam();
+        Object team = TCUtils.getTeam(serverPlayer);
         serverPlayer.serverLevel().players().forEach(player -> {
-            if (player != serverPlayer && player.getTeam() == team && player.distanceToSqr(serverPlayer) < MAX_SHARE_DISTANCE_SQR) {
+            if (player != serverPlayer && TCUtils.getTeam(player) == team && player.distanceToSqr(serverPlayer) < MAX_SHARE_DISTANCE_SQR) {
                 PacketDistributor.sendToPlayer(player, packet);
             }
         });

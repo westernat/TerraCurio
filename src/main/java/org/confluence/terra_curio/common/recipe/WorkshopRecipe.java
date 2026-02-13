@@ -10,6 +10,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import org.confluence.lib.common.recipe.EnvironmentAmountRecipe;
 import org.confluence.lib.common.recipe.EnvironmentLevelAccess;
+import org.confluence.lib.common.recipe.SimpleRecipeSerializer;
 import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCRecipes;
 
@@ -43,18 +44,15 @@ public class WorkshopRecipe extends EnvironmentAmountRecipe {
         return TCRecipes.WORKSHOP_TYPE.get();
     }
 
-    public static class Serializer implements RecipeSerializer<WorkshopRecipe> {
-        public static final MapCodec<WorkshopRecipe> CODEC = environmentShapelessSerializerMapCodec(WorkshopRecipe::new);
-        public static final StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> STREAM_CODEC = environmentShapelessSerializerSteamCodec(WorkshopRecipe::new);
-
+    public static class Serializer extends SimpleRecipeSerializer<WorkshopRecipe> {
         @Override
-        public MapCodec<WorkshopRecipe> codec() {
-            return CODEC;
+        protected MapCodec<WorkshopRecipe> getCodec() {
+            return environmentShapelessSerializerMapCodec(WorkshopRecipe::new);
         }
 
         @Override
-        public StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> streamCodec() {
-            return STREAM_CODEC;
+        protected StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> getStreamCodec() {
+            return environmentShapelessSerializerSteamCodec(WorkshopRecipe::new);
         }
     }
 }

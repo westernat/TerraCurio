@@ -15,7 +15,6 @@ import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.common.init.TCDamageTypes;
 import org.confluence.terra_curio.common.init.TCEntities;
-import org.jetbrains.annotations.NotNull;
 
 public class StarCloakEntity extends Projectile {
     private static final EntityDataAccessor<Boolean> DATA_MANA = SynchedEntityData.defineId(StarCloakEntity.class, EntityDataSerializers.BOOLEAN);
@@ -88,20 +87,23 @@ public class StarCloakEntity extends Projectile {
         }
     }
 
-    @NotNull
     private Boolean isManaState() {
         return entityData.get(DATA_MANA);
     }
 
     @Override
-    protected boolean canHitEntity(Entity pTarget) {
-        if (!pTarget.canBeHitByProjectile()) {
+    protected boolean canHitEntity(Entity target) {
+        if (!target.canBeHitByProjectile()) {
             return false;
         } else if (isManaState()) {
-            return pTarget == getOwner();
+            return target == getOwner();
         } else {
-            Entity owner = getOwner();
-            return pTarget != owner || !owner.isPassengerOfSameVehicle(pTarget);
+            return LibUtils.canHitEntity(target, getOwner());
         }
+    }
+
+    @Override
+    public boolean canChangeDimensions(Level oldLevel, Level newLevel) {
+        return false;
     }
 }

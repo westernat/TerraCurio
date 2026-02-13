@@ -15,7 +15,7 @@ import java.util.*;
 
 public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, AttributeModifier> value) implements PrimitiveValue<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>> {
     public static final AttributeModifiersValue EMPTY = new AttributeModifiersValue(ImmutableListMultimap.of());
-    public static final Codec<AttributeModifiersValue> CODEC = LibCodecUtils.multimapCodec(Attribute.CODEC, AttributeModifier.CODEC)
+    public static final Codec<AttributeModifiersValue> CODEC = LibCodecUtils.multimap(Attribute.CODEC, AttributeModifier.CODEC)
             .xmap(AttributeModifiersValue::new, AttributeModifiersValue::get);
     public static final StreamCodec<RegistryFriendlyByteBuf, AttributeModifiersValue> STREAM_CODEC = new StreamCodec<>() {
         @Override
@@ -44,7 +44,9 @@ public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, A
             }
         }
     };
-    public static final CombineRule<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> GET_SELF = CombineRule.register(PrimitiveValue.identity(), "attributes_modifiers_get_self");
+    public static final CombineRule<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> MERGE = CombineRule.register(
+            (a, b) -> ImmutableListMultimap.<Holder<Attribute>, AttributeModifier>builder().putAll(a).putAll(b).build(),
+            "attributes_modifiers_merge");
 
     @Override
     public ImmutableListMultimap<Holder<Attribute>, AttributeModifier> get() {
@@ -84,6 +86,10 @@ public record AttributeModifiersValue(ImmutableListMultimap<Holder<Attribute>, A
 
     public static Builder builder() {
         return new Builder();
+    }
+
+    public static AttributeModifiersValue simple(Holder<Attribute> attribute, ResourceLocation id, double amount, AttributeModifier.Operation operation) {
+        return new AttributeModifiersValue(ImmutableListMultimap.of(attribute, new AttributeModifier(id, amount, operation)));
     }
 
     public static class Builder {

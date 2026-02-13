@@ -6,8 +6,6 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraft.world.entity.npc.Npc;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.level.Level;
@@ -15,6 +13,7 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.common.entitiy.IAxisZRotate;
+import org.confluence.lib.util.LibUtils;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -38,6 +37,7 @@ public class XBoneProjectile extends Projectile implements IAxisZRotate {
             return;
         }
         super.tick();
+        updateRotation();
 
         Vec3 vec3 = getDeltaMovement();
         move(MoverType.SELF, vec3.add(0.0, -getDefaultGravity(), 0.0));
@@ -54,7 +54,7 @@ public class XBoneProjectile extends Projectile implements IAxisZRotate {
         setDeltaMovement(motion.scale(0.96).add(0.0, -getDefaultGravity(), 0.0));
 
         if (level().isClientSide) {
-            rotateZ(rotate, this::getDeltaMovement, (float) getDefaultGravity(), 0.125F);
+            rotateZ(rotate, this, 0.125F);
         } else {
             AABB boundingBox = getBoundingBox().inflate(1.0);
             if (ProjectileUtil.getEntityHitResult(level(), this, boundingBox.getMinPosition(), boundingBox.getMaxPosition(), boundingBox, this::canHitEntity, 0.5F) instanceof EntityHitResult entityHitResult) {
@@ -76,9 +76,7 @@ public class XBoneProjectile extends Projectile implements IAxisZRotate {
 
     @Override
     protected boolean canHitEntity(Entity target) {
-        Entity owner = getOwner();
-        if (!target.canBeHitByProjectile() || target instanceof ArmorStand || target instanceof Npc) return false;
-        return owner == null || (owner != target && !owner.isPassengerOfSameVehicle(target));
+        return LibUtils.canHitEntity(target, getOwner());
     }
 
     @Override
@@ -96,5 +94,10 @@ public class XBoneProjectile extends Projectile implements IAxisZRotate {
     protected void addAdditionalSaveData(CompoundTag compound) {
         super.addAdditionalSaveData(compound);
         compound.putInt("CollideCount", collideCount);
+    }
+
+    @Override
+    public boolean canChangeDimensions(Level oldLevel, Level newLevel) {
+        return false;
     }
 }

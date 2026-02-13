@@ -23,16 +23,18 @@ public class StepStoolEntity extends Entity implements TraceableEntity {
     private UUID ownerUUID;
     @Nullable
     private Entity cachedOwner;
+    private int maxStep;
 
-    public StepStoolEntity(EntityType<StepStoolEntity> pEntityType, Level pLevel) {
-        super(pEntityType, pLevel);
+    public StepStoolEntity(EntityType<StepStoolEntity> entityType, Level level) {
+        super(entityType, level);
         this.blocksBuilding = true;
     }
 
-    public StepStoolEntity(Player player) {
+    public StepStoolEntity(Player player, int maxStep) {
         this(TCEntities.STEP_STOOL.get(), player.level());
         setPos(player.getX(), player.getY(), player.getZ());
         setOwner(player);
+        this.maxStep = maxStep;
     }
 
     @Override
@@ -42,19 +44,23 @@ public class StepStoolEntity extends Entity implements TraceableEntity {
             Entity owner = getOwner();
             if (owner == null || owner.getVehicle() != null) {
                 discard();
+            } else {
+                Vec3 vec3 = owner.position().subtract(position());
+                float height = getDimensions(Pose.STANDING).height();
+                if (vec3.horizontalDistanceSqr() > 1 || Math.abs(vec3.y) > height + 1) {
+                    discard();
+                }
             }
         }
         addDeltaMovement(GRAVITY);
         move(MoverType.SELF, getDeltaMovement());
     }
 
-
-
     @Override
-    public void remove(RemovalReason pReason) {
-        super.remove(pReason);
+    public void remove(RemovalReason reason) {
+        super.remove(reason);
         if (getOwner() instanceof ServerPlayer serverPlayer) {
-            StepStoolSteppingPacketS2C.resetStep(serverPlayer);
+            StepStoolSteppingPacketS2C.resetStep(serverPlayer, maxStep);
         }
     }
 
@@ -76,16 +82,17 @@ public class StepStoolEntity extends Entity implements TraceableEntity {
         return entityData.get(DATA_STEP_ID);
     }
 
-    public void onSyncedDataUpdated(EntityDataAccessor<?> pKey) {
-        if (DATA_STEP_ID.equals(pKey)) {
+    @Override
+    public void onSyncedDataUpdated(EntityDataAccessor<?> key) {
+        if (DATA_STEP_ID.equals(key)) {
             refreshDimensions();
         }
-        super.onSyncedDataUpdated(pKey);
+        super.onSyncedDataUpdated(key);
     }
 
-    public void setOwner(@Nullable Entity pOwner) {
-        this.ownerUUID = pOwner == null ? null : pOwner.getUUID();
-        this.cachedOwner = pOwner;
+    public void setOwner(@Nullable Entity owner) {
+        this.ownerUUID = owner == null ? null : owner.getUUID();
+        this.cachedOwner = owner;
     }
 
     @Override
@@ -102,23 +109,23 @@ public class StepStoolEntity extends Entity implements TraceableEntity {
     }
 
     @Override
-    protected void readAdditionalSaveData(CompoundTag pCompound) {
-        if (pCompound.hasUUID("Owner")) {
-            this.ownerUUID = pCompound.getUUID("Owner");
+    protected void readAdditionalSaveData(CompoundTag compound) {
+        if (compound.hasUUID("Owner")) {
+            this.ownerUUID = compound.getUUID("Owner");
             this.cachedOwner = null;
         }
     }
 
     @Override
-    protected void addAdditionalSaveData(CompoundTag pCompound) {
+    protected void addAdditionalSaveData(CompoundTag compound) {
         if (ownerUUID != null) {
-            pCompound.putUUID("Owner", ownerUUID);
+            compound.putUUID("Owner", ownerUUID);
         }
     }
 
     @Override
-    public EntityDimensions getDimensions(Pose pPose) {
-        return super.getDimensions(pPose).scale(1.0F, getStep());
+    public EntityDimensions getDimensions(Pose pose) {
+        return super.getDimensions(pose).scale(1.0F, getStep());
     }
 
     @Override

@@ -11,7 +11,7 @@ import net.neoforged.neoforge.common.util.Lazy;
 import org.confluence.terra_curio.TerraCurio;
 import org.lwjgl.glfw.GLFW;
 
-@EventBusSubscriber(modid = TerraCurio.MODID, bus = EventBusSubscriber.Bus.MOD, value = Dist.CLIENT)
+@EventBusSubscriber(modid = TerraCurio.MODID, value = Dist.CLIENT)
 public final class TCKeyBindings {
     @SubscribeEvent
     public static void keyBinding(RegisterKeyMappingsEvent event) {

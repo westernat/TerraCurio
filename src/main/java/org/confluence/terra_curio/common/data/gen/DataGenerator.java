@@ -11,7 +11,7 @@ import java.util.concurrent.CompletableFuture;
 
 import static org.confluence.terra_curio.TerraCurio.MODID;
 
-@EventBusSubscriber(modid = MODID, bus = EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = MODID)
 public class DataGenerator {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
