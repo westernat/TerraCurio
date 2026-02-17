@@ -55,6 +55,7 @@ public final class TCCommonConfigs {
                 "You need to fill the list with string like 'modid:block[state1=true]' or 'modid:block'",
                 "The higher the block in the list, the higher the value"
         ).defineListAllowEmpty("rareBlocks", List.of(
+                "confluence:life_fruit",
                 "confluence:chlorophyte_ore",
                 "confluence:deepslate_titanium_ore",
                 "confluence:deepslate_adamantite_ore",
