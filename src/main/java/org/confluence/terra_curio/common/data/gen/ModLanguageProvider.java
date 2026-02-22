@@ -847,7 +847,7 @@ public class ModLanguageProvider extends LanguageProvider {
         onlyTooltips(TCItems.TERRASPARK_BOOTS, "泰拉闪耀靴",
                 new String[]{
                         "Allows flight, super fast running, and extra mobility on ice",
-                        "Provides the ability t walk on water, honey & lava",
+                        "Provides the ability to walk on water, honey & lava",
                         "Grants immunity to fire blocks and 7 seconds of immunity to lava",
                         "Reduces damage from touching lava"
                 },
