@@ -1,12 +1,12 @@
 package org.confluence.terra_curio.integration.bettercombat;
 
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.ModList;
+import org.confluence.lib.util.LibUtils;
 
 import java.lang.reflect.Method;
 
 public class BetterCombatHelper {
-    public static final boolean LOADED = ModList.get().isLoaded("bettercombat");
+    public static final boolean LOADED = LibUtils.isModLoaded("bettercombat");
     private static Method getAttributes;
     private static boolean error = false;
 

@@ -4,13 +4,13 @@ import fuzs.airhop.init.ModRegistry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.fml.ModList;
+import org.confluence.lib.util.LibUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 public class AirHopHelper {
-    public static final boolean LOADED = ModList.get().isLoaded("airhop");
+    public static final boolean LOADED = LibUtils.isModLoaded("airhop");
     private static Method canJump;
     private static Method isSaturated;
     private static Method getHighestLevel;
