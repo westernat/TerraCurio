@@ -94,7 +94,7 @@ public final class TCAttributes {
 
     public static boolean hasCustomAttribute(Holder<Attribute> attribute) {
         Holder<Attribute> holder = MAP.get(attribute);
-        return holder != null && holder.equals(attribute);
+        return holder != null && !holder.equals(attribute);
     }
 
     public static void registerAttribute(Holder<Attribute> attribute, BiConsumer<EntityType<? extends LivingEntity>, Holder<Attribute>> consumer) {
