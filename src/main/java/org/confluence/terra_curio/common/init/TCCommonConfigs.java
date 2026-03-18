@@ -63,6 +63,8 @@ public final class TCCommonConfigs {
                 "confluence:deepslate_mythril_ore",
                 "confluence:deepslate_palladium_ore",
                 "confluence:deepslate_cobalt_ore",
+                "confluence:dragonsal_ore",
+                "confluence:lunartear_ore",
                 "confluence:life_crystal_block",
                 "confluence:sword_in_stone",
                 "confluence:dungeon_chest",
