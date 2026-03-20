@@ -3,10 +3,9 @@ package org.confluence.terra_curio.mixin.client;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import net.minecraft.core.BlockPos;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.mixed.SelfGetter;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
@@ -37,7 +36,7 @@ public abstract class LivingEntityClientMixin implements IClientLivingEntity, Se
     }
 
     @Inject(method = "checkFallDamage", at = @At("HEAD"))
-    private void fall(double motionY, boolean onGround, BlockState blockState, BlockPos blockPos, CallbackInfo ci) {
+    private void fall(CallbackInfo ci, @Local(argsOnly = true) double motionY) {
         if (motionY > 0.0 && GravitationHandler.isShouldRot(confluence$self())) {
             confluence$self().fallDistance += (float) motionY;
         }

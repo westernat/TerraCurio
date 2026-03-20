@@ -3,13 +3,13 @@ package org.confluence.terra_curio.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
@@ -128,9 +128,13 @@ public abstract class EntityMixin implements IEntity {
     }
 
     @Inject(method = "checkFallDamage", at = @At("TAIL"))
-    private void updateFallDIstance(double y, boolean onGround, BlockState state, BlockPos pos, CallbackInfo ci) {
-        if (terra_curio$isShouldRot && !level.isClientSide && y > 0.0) {
-            this.fallDistance += (float) y;
+    private void updateFallDistance(CallbackInfo ci, @Local(argsOnly = true) double y, @Local(argsOnly = true) boolean onGround) {
+        if (terra_curio$isShouldRot && !onGround) {
+            if (y > 0.0) {
+                this.fallDistance += (float) y;
+            } else {
+                this.fallDistance = 0.0F;
+            }
         }
     }
 

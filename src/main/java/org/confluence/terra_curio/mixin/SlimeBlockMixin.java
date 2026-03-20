@@ -13,10 +13,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(SlimeBlock.class)
 public abstract class SlimeBlockMixin {
     @Inject(method = "bounceUp", at = @At("TAIL"))
-    private void bounceDown(Entity pEntity, CallbackInfo ci, @Local Vec3 vec3) {
+    private void bounceDown(Entity entity, CallbackInfo ci, @Local Vec3 vec3) {
         if (vec3.y > 0.0) {
-            double d0 = pEntity instanceof LivingEntity ? 1.0D : 0.8D;
-            pEntity.setDeltaMovement(vec3.x, -vec3.y * d0, vec3.z);
+            double d0 = entity instanceof LivingEntity ? 1.0D : 0.8D;
+            entity.setDeltaMovement(vec3.x, -vec3.y * d0, vec3.z);
         }
     }
 }

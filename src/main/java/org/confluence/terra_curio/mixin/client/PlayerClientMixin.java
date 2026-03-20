@@ -4,7 +4,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import net.minecraft.util.Mth;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.mixed.SelfGetter;
@@ -29,7 +28,7 @@ public abstract class PlayerClientMixin implements SelfGetter<Player> {
     }
 
     @Inject(method = "maybeBackOffFromEdge", at = @At(value = "RETURN", ordinal = 0), cancellable = true)
-    private void backOff2(Vec3 vec, MoverType mover, CallbackInfoReturnable<Vec3> cir, @Local(ordinal = 0) double d0, @Local(ordinal = 1) double d1) {
+    private void backOff2(CallbackInfoReturnable<Vec3> cir, @Local(ordinal = 0) double d0, @Local(ordinal = 1) double d1) {
         if (GravitationHandler.isShouldRot(confluence$self())) {
             Vec3 vec3 = cir.getReturnValue();
             cir.setReturnValue(new Vec3(d0, -vec3.y, d1));
@@ -37,7 +36,7 @@ public abstract class PlayerClientMixin implements SelfGetter<Player> {
     }
 
     @Inject(method = "maybeBackOffFromEdge", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
-    private void backOff3(Vec3 vec, MoverType mover, CallbackInfoReturnable<Vec3> cir) {
+    private void backOff3(CallbackInfoReturnable<Vec3> cir) {
         if (GravitationHandler.isShouldRot(confluence$self())) {
             Vec3 vec3 = cir.getReturnValue();
             cir.setReturnValue(new Vec3(vec3.x, -vec3.y, vec3.z));

@@ -6,7 +6,6 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
@@ -99,12 +98,12 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
     public abstract boolean hasEffect(Holder<MobEffect> effect);
 
     @ModifyArg(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"), index = 2)
-    private double modifyParticlePosY(double pPosY) {
+    private double modifyParticlePosY(double posY) {
         IEntity self = IEntity.of(confluence$self());
         if (self.terra_curio$isShouldRot()) {
-            return pPosY + self.terra_curio$getDimensionHeight();
+            return posY + self.terra_curio$getDimensionHeight() - 0.15;
         }
-        return pPosY;
+        return posY;
     }
 
     @ModifyReturnValue(method = "canFreeze", at = @At(value = "RETURN", ordinal = 1))
@@ -123,7 +122,7 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
     }
 
     @Inject(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z", ordinal = 0))
-    private void cacheFluidWalkable(Vec3 travelVector, CallbackInfo ci, @Local FluidState fluidState, @Share("isFluidWalkable") LocalBooleanRef isFluidWalkable) {
+    private void cacheFluidWalkable(CallbackInfo ci, @Local FluidState fluidState, @Share("isFluidWalkable") LocalBooleanRef isFluidWalkable) {
         isFluidWalkable.set(TCUtils.isFluidWalkable(confluence$self(), fluidState));
     }
 
@@ -157,18 +156,22 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
     }
 
     @Inject(method = "onChangedBlock", at = @At("TAIL"))
-    private void onMoved(ServerLevel level, BlockPos pos, CallbackInfo ci) {
+    private void onMoved(CallbackInfo ci, @Local(argsOnly = true) ServerLevel level) {
         TCUtils.onChangedBlock(confluence$self(), level);
     }
 
     @Inject(method = "checkTotemDeathProtection", at = @At(value = "CONSTANT", args = "nullValue=true"), cancellable = true)
-    private void useTotemAbility(DamageSource damageSource, CallbackInfoReturnable<Boolean> cir) {
-        if (TCUtils.applyTotemAbility(confluence$self())) cir.setReturnValue(true);
+    private void useTotemAbility(CallbackInfoReturnable<Boolean> cir) {
+        if (TCUtils.applyTotemAbility(confluence$self())) {
+            cir.setReturnValue(true);
+        }
     }
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void tick(CallbackInfo ci) {
-        if (terra_curio$totem_cooldown > 0) this.terra_curio$totem_cooldown--;
+        if (terra_curio$totem_cooldown > 0) {
+            --this.terra_curio$totem_cooldown;
+        }
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
