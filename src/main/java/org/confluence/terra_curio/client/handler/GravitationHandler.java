@@ -87,7 +87,7 @@ public final class GravitationHandler {
 
     public static boolean isShouldRot(Entity entity) {
         IEntity iEntity = IEntity.of(entity);
-        return iEntity.terra_curio$isPlayer() && (((Player) entity).isLocalPlayer() ? isShouldRot() : iEntity.terra_curio$isShouldRot());
+        return (iEntity.terra_curio$isPlayer() && (((Player) entity).isLocalPlayer()) ? isShouldRot() : iEntity.terra_curio$isShouldRot());
     }
 
     public static float getJumpDir() {

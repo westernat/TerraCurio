@@ -43,14 +43,10 @@ public abstract class LivingEntityClientMixin implements IClientLivingEntity, Se
     }
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
-    private Vec3 confused(Vec3 vec3) {
+    private Vec3 onStool(Vec3 vec3) {
         LivingEntity living = confluence$self();
-        if (IEntity.of(living).terra_curio$isPlayer()) {
-            if (GravitationHandler.isShouldRot(living)) {
-                return new Vec3(-vec3.x, vec3.y, vec3.z);
-            } else if (StepStoolHandler.onStool()) {
-                return ((Player) living).isLocalPlayer() ? Vec3.ZERO : vec3;
-            }
+        if (StepStoolHandler.onStool() && IEntity.of(living).terra_curio$isPlayer()) {
+            return ((Player) living).isLocalPlayer() ? Vec3.ZERO : vec3;
         }
         return vec3;
     }
@@ -58,7 +54,9 @@ public abstract class LivingEntityClientMixin implements IClientLivingEntity, Se
     @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
     private Vec3 notSlowdown(Vec3 instance, double factorX, double factorY, double factorZ, Operation<Vec3> original) {
         if (TCClientPacketHandler.floating && TCClientPacketHandler.isCanFloating()) {
-            if (IEntity.of(confluence$self()).terra_curio$isPlayer()) return original.call(instance, factorX, 1.0, factorZ);
+            if (IEntity.of(confluence$self()).terra_curio$isPlayer()) {
+                return original.call(instance, factorX, 1.0, factorZ);
+            }
         }
         return original.call(instance, factorX, factorY, factorZ);
     }

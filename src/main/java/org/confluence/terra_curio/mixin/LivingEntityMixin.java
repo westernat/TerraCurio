@@ -118,7 +118,13 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3 confused(Vec3 vec3) {
-        return hasEffect(TCEffects.CONFUSED) ? vec3.reverse() : vec3;
+        if (hasEffect(TCEffects.CONFUSED)) {
+            vec3 = vec3.reverse();
+        }
+        if (IEntity.of(confluence$self()).terra_curio$isShouldRot()) {
+            vec3 = new Vec3(-vec3.x, vec3.y, vec3.z);
+        }
+        return vec3;
     }
 
     @Inject(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z", ordinal = 0))
