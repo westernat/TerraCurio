@@ -46,8 +46,4 @@ public class TerraCurio {
     public static ResourceLocation asResource(String path) {
         return ResourceLocation.fromNamespaceAndPath(MODID, path);
     }
-
-    public static float hotswap(float targetAngle) {
-        return targetAngle;
-    }
 }
