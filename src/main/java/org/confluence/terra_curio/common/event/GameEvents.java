@@ -31,7 +31,7 @@ import net.neoforged.neoforge.event.entity.player.CriticalHitEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.confluence.lib.ConfluenceMagicLib;
-import org.confluence.lib.util.LibUtils;
+import org.confluence.lib.util.LibMathUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
@@ -229,7 +229,7 @@ public final class GameEvents {
         }
         if (!event.isVanillaCritical()) {
             Player player = event.getEntity();
-            if (LibUtils.checkChance(player.getAttributeValue(TCAttributes.CRIT_CHANCE), player.getRandom())) {
+            if (LibMathUtils.checkChance(player.getAttributeValue(TCAttributes.CRIT_CHANCE), player.getRandom())) {
                 event.setDamageMultiplier(1.5F);
                 event.setCriticalHit(true);
             }

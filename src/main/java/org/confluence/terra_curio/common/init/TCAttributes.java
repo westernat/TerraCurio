@@ -26,7 +26,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.lib.ConfluenceMagicLib;
-import org.confluence.lib.util.LibUtils;
+import org.confluence.lib.util.LibMathUtils;
 import org.confluence.lib.util.ScheduledForMove;
 import org.confluence.terra_curio.TCStartupConfigs;
 import org.confluence.terra_curio.TerraCurio;
@@ -112,7 +112,7 @@ public final class TCAttributes {
         if (!abstractArrow.isCritArrow() && !hasCustomAttribute(CRIT_CHANCE)) {
             instance = living.getAttribute(CRIT_CHANCE);
             if (instance != null) {
-                abstractArrow.setCritArrow(LibUtils.checkChance(instance.getValue(), living.getRandom()));
+                abstractArrow.setCritArrow(LibMathUtils.checkChance(instance.getValue(), living.getRandom()));
             }
         }
     }
@@ -133,7 +133,7 @@ public final class TCAttributes {
         }
         AttributeInstance instance = living.getAttribute(DODGE_CHANCE);
         if (instance == null) return false;
-        return LibUtils.checkChance(instance.getValue(), random);
+        return LibMathUtils.checkChance(instance.getValue(), random);
     }
 
     public static float applyCritDamage(RandomSource random, LivingEntity living, float amount) {
@@ -141,7 +141,7 @@ public final class TCAttributes {
             return amount;
         }
         AttributeInstance instance = living.getAttribute(CRIT_CHANCE);
-        if (instance != null && LibUtils.checkChance(instance.getValue(), random)) {
+        if (instance != null && LibMathUtils.checkChance(instance.getValue(), random)) {
             amount *= 1.5F;
         }
         return amount;
