@@ -92,7 +92,7 @@ public final class TCUtils {
             living.clearFire();
             return true;
         }
-        return TCAttributes.applyDodge(living, living.getRandom());
+        return false;
     }
 
     /**

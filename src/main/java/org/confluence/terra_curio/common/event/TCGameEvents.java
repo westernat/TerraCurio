@@ -10,11 +10,8 @@ import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Drowned;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
@@ -27,11 +24,9 @@ import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.*;
-import net.neoforged.neoforge.event.entity.player.CriticalHitEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import org.confluence.lib.ConfluenceMagicLib;
-import org.confluence.lib.util.LibMathUtils;
+import org.confluence.lib.event.ArmorPenetrationEvent;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
@@ -50,7 +45,7 @@ import org.confluence.terra_curio.util.TCUtils;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
 
 @EventBusSubscriber(modid = TerraCurio.MODID)
-public final class GameEvents {
+public final class TCGameEvents {
     @SubscribeEvent
     public static void registerCommand(RegisterCommandsEvent event) {
         AccessoriesValueCommand.register(event.getDispatcher());
@@ -108,8 +103,6 @@ public final class GameEvents {
         PanicNecklace.apply(living);
 
         amount = DivingHelmet.apply(living, damageSource, amount);
-        amount = TCAttributes.applyMagicDamage(random, damageSource, amount);
-        amount = TCAttributes.applyRangedDamage(random, damageSource, amount);
         amount = PaladinsShield.apply(living, damageSource, amount);
         amount = TCUtils.applyFrozenTurtleShell(living, amount);
         amount = TCUtils.applyLavaHurtReduce(living, damageSource, amount);
@@ -146,33 +139,6 @@ public final class GameEvents {
     }
 
     @SubscribeEvent
-    public static void livingChangeTarget(LivingChangeTargetEvent event) {
-        LivingEntity self = event.getEntity();
-        if (!(self instanceof Enemy) || !(event.getNewAboutToBeSetTarget() instanceof Player playerO)) {
-            return;
-        }
-        // 当自身为敌人且当新目标为玩家时
-        double rangeSqr = Mth.square(self.getAttributeValue(Attributes.FOLLOW_RANGE));
-        self.level().players().stream()
-                .filter(player -> player.distanceToSqr(self) < rangeSqr && self.canAttack(player))
-                .max((playerA, playerB) -> {
-                    AttributeInstance instanceA = playerA.getAttribute(TCAttributes.AGGRO);
-                    AttributeInstance instanceB = playerB.getAttribute(TCAttributes.AGGRO);
-                    if (instanceA != null && instanceB != null) {
-                        return Double.compare(instanceA.getValue(), instanceB.getValue());
-                    }
-                    return 0;
-                }).ifPresent(player -> {
-                    if (player == playerO) return;
-                    AttributeInstance instanceO = playerO.getAttribute(TCAttributes.AGGRO);
-                    AttributeInstance instance = player.getAttribute(TCAttributes.AGGRO);
-                    if (instanceO != null && instance != null && instanceO.getValue() < instance.getValue()) {
-                        event.setNewAboutToBeSetTarget(player); // 只有当新目标的仇恨值大于旧目标时，才设置新目标
-                    }
-                });
-    }
-
-    @SubscribeEvent
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
         if (event.loadedFromDisk() || event.getLevel().isClientSide) {
             if (event.getEntity() instanceof LivingEntity living) {
@@ -181,7 +147,6 @@ public final class GameEvents {
             return;
         }
         if (event.getEntity() instanceof AbstractArrow arrow && arrow.getOwner() instanceof LivingEntity living) {
-            TCAttributes.applyToArrow(living, arrow);
             TCUtils.applyIgniteArrow(living, arrow);
         }
     }
@@ -210,7 +175,6 @@ public final class GameEvents {
     @SubscribeEvent
     public static void playerTick$Post(PlayerTickEvent.Post event) {
         Player player = event.getEntity();
-        TCAttributes.applyPickupRange(player);
         if (!player.isPassenger()) {
             TCUtils.applyFluidWalk(player);
         }
@@ -218,20 +182,6 @@ public final class GameEvents {
             if (serverPlayer.level().getGameTime() % 200 == 0) {
                 // 每十秒向周围玩家共享一次信息配饰
                 InfoCurioCheckPacketS2C.sendToOthers(serverPlayer);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public static void criticalHit(CriticalHitEvent event) { // 仅近战暴击，于是由汇流来世托管
-        if (TCAttributes.hasCustomAttribute(TCAttributes.CRIT_CHANCE) || ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get()) {
-            return;
-        }
-        if (!event.isVanillaCritical()) {
-            Player player = event.getEntity();
-            if (LibMathUtils.checkChance(player.getAttributeValue(TCAttributes.CRIT_CHANCE), player.getRandom())) {
-                event.setDamageMultiplier(1.5F);
-                event.setCriticalHit(true);
             }
         }
     }
@@ -278,6 +228,13 @@ public final class GameEvents {
             if (TCUtils.getValue(event.getEntity(), TCItems.EFFECT$IMMUNITIES).contains(event.getEffectInstance().getEffect())) {
                 event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
             }
+        }
+    }
+
+    @SubscribeEvent
+    public static void armorPenetration(ArmorPenetrationEvent event) {
+        if (event.getDamageSource().is(TCDamageTypes.STAR_CLOAK)) {
+            event.setPenetration(event.getPenetration() - 3);
         }
     }
 }

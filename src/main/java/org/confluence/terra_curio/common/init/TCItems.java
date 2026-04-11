@@ -22,6 +22,7 @@ import net.neoforged.neoforge.common.NeoForgeMod;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.common.LibAttributes;
 import org.confluence.lib.common.component.ModRarity;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.*;
@@ -186,27 +187,27 @@ public final class TCItems {
             STAR_CLOAK = registerCurio("star_cloak", builder -> builder.jeiInfos(1).rarity(LIGHT_RED).accessories(of(STAR$CLOCK, false))), // 星星斗篷
             STAR_VEIL = registerCurio("star_veil", builder -> builder.rarity(LIGHT_PURPLE).jeiInfos(0).accessories(of(STAR$CLOCK, false), of(INVULNERABLE$TICKS$MULTIPLIER, 2.0F)).tooltips(1)), // 星星面纱
             BEE_CLOAK = registerCurio("bee_cloak", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).accessories(units(HONEY$COMB), of(STAR$CLOCK, false), of(INVULNERABLE$TICKS$MULTIPLIER, 2.0F)).tooltips(1)), // 蜜蜂斗篷
-            BLACK_BELT = registerCurio("black_belt", builder -> builder.rarity(LIME).attribute(TCAttributes.getDodgeChance(), 0.1, ADD_VALUE)), // 黑腰带
+            BLACK_BELT = registerCurio("black_belt", builder -> builder.rarity(LIME).attribute(LibAttributes.getDodgeChance(), 0.1, ADD_VALUE)), // 黑腰带
             SUN_STONE = registerCurio("sun_stone", SunStone::new), // 太阳石
             MOON_STONE = registerDirectly("moon_stone", (name, builder) -> new NightBonusCurioItem(0.2F, builder.rarity(PINK)
                     .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.ATTACK_DAMAGE, 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getAttackDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
                     .attribute(Attributes.BLOCK_BREAK_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
-                    .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 月亮石
+                    .attribute(LibAttributes.getCriticalChance(), 0.02, ADD_VALUE)
+                    .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 月亮石
             CELESTIAL_STONE = registerDirectly("celestial_stone", (name, builder) -> new CelestialStone(builder.rarity(LIME).jeiInfos(0)
                     .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.ATTACK_DAMAGE, 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getAttackDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 2.0, ADD_VALUE)
                     .attribute(Attributes.BLOCK_BREAK_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
-                    .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 天界石
+                    .attribute(LibAttributes.getCriticalChance(), 0.02, ADD_VALUE)
+                    .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 天界石
             MOON_CHARM = registerDirectly("moon_charm", (name, builder) -> new MoonCharm(builder.rarity(LIGHT_RED)
-                    .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
-                    .attribute(Attributes.ATTACK_DAMAGE, 0.051, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getCriticalChance(), 0.02, ADD_VALUE)
+                    .attribute(LibAttributes.getAttackDamage(), 0.051, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_SPEED, 0.051, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.MOVEMENT_SPEED, 0.05, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
@@ -216,8 +217,8 @@ public final class TCItems {
                     .attribute(Attributes.SUBMERGED_MINING_SPEED, 0.8, ADD_VALUE))), // 海神贝壳
             MOON_SHELL = registerDirectly("moon_shell", (name, builder) -> new MoonShell(builder.rarity(LIGHT_PURPLE).jeiInfos(0)
                     .accessories(units(NEPTUNES$SHELL))
-                    .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
-                    .attribute(Attributes.ATTACK_DAMAGE, 0.051, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getCriticalChance(), 0.02, ADD_VALUE)
+                    .attribute(LibAttributes.getAttackDamage(), 0.051, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_SPEED, 0.051, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.MOVEMENT_SPEED, 0.05, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
@@ -226,27 +227,27 @@ public final class TCItems {
                     .accessories(units(NEPTUNES$SHELL))
                     .attribute(Attributes.SUBMERGED_MINING_SPEED, 0.8, ADD_VALUE)
                     .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.ATTACK_DAMAGE, 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getAttackDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 2.0, ADD_VALUE)
                     .attribute(Attributes.BLOCK_BREAK_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getCriticalChance(), 0.02, ADD_VALUE)
-                    .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 天界贝壳
+                    .attribute(LibAttributes.getCriticalChance(), 0.02, ADD_VALUE)
+                    .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 天界贝壳
             COBALT_SHIELD = registerCurio("cobalt_shield", builder -> builder.rarity(GREEN).attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)), // 钴护盾
             CROSS_NECKLACE = registerCurio("cross_necklace", builder -> builder.rarity(LIGHT_RED).accessories(of(INVULNERABLE$TICKS$MULTIPLIER, 2.0F))), // 十字项链
-            RANGER_EMBLEM = registerCurio("ranger_emblem", builder -> builder.rarity(LIGHT_RED).noTooltip().attribute(TCAttributes.getRangedDamage(), 0.15, ADD_MULTIPLIED_TOTAL)), // 游侠徽章
-            WARRIOR_EMBLEM = registerCurio("warrior_emblem", builder -> builder.rarity(LIGHT_RED).noTooltip().attribute(Attributes.ATTACK_DAMAGE, 0.15, ADD_MULTIPLIED_TOTAL)), // 战士徽章
-            SORCERER_EMBLEM = registerCurio("sorcerer_emblem", builder -> builder.rarity(LIGHT_RED).noTooltip().attribute(TCAttributes.getMagicDamage(), 0.15, ADD_MULTIPLIED_TOTAL)), // 巫士徽章
+            RANGER_EMBLEM = registerCurio("ranger_emblem", builder -> builder.rarity(LIGHT_RED).noTooltip().attribute(LibAttributes.getRangedDamage(), 0.15, ADD_MULTIPLIED_TOTAL)), // 游侠徽章
+            WARRIOR_EMBLEM = registerCurio("warrior_emblem", builder -> builder.rarity(LIGHT_RED).noTooltip().attribute(LibAttributes.getAttackDamage(), 0.15, ADD_MULTIPLIED_TOTAL)), // 战士徽章
+            SORCERER_EMBLEM = registerCurio("sorcerer_emblem", builder -> builder.rarity(LIGHT_RED).noTooltip().attribute(LibAttributes.getMagicDamage(), 0.15, ADD_MULTIPLIED_TOTAL)), // 巫士徽章
             AVENGER_EMBLEM = registerCurio("avenger_emblem", builder -> builder.jeiInfos(0).rarity(PINK).noTooltip()
-                    .attribute(Attributes.ATTACK_DAMAGE, 0.12, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getRangedDamage(), 0.12, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getMagicDamage(), 0.12, ADD_MULTIPLIED_TOTAL)), // 复仇者勋章
-            EYE_OF_THE_GOLEM = registerCurio("eye_of_the_golem", builder -> builder.rarity(LIME).noTooltip().attribute(TCAttributes.getCriticalChance(), 0.1, ADD_VALUE)), // 石巨人之眼
+                    .attribute(LibAttributes.getAttackDamage(), 0.12, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getRangedDamage(), 0.12, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getMagicDamage(), 0.12, ADD_MULTIPLIED_TOTAL)), // 复仇者勋章
+            EYE_OF_THE_GOLEM = registerCurio("eye_of_the_golem", builder -> builder.rarity(LIME).noTooltip().attribute(LibAttributes.getCriticalChance(), 0.1, ADD_VALUE)), // 石巨人之眼
             DESTROYER_EMBLEM = registerCurio("destroyer_emblem", builder -> builder.jeiInfos(0).rarity(LIME).noTooltip()
-                    .attribute(Attributes.ATTACK_DAMAGE, 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getCriticalChance(), 0.08, ADD_VALUE)), // 毁灭者勋章
+                    .attribute(LibAttributes.getAttackDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getCriticalChance(), 0.08, ADD_VALUE)), // 毁灭者勋章
             FERAL_CLAWS = registerCurio("feral_claws", builder -> builder.rarity(ORANGE)
                     .accessories(units(AUTO$ATTACK))
                     .attribute(Attributes.ATTACK_SPEED, 0.12, ADD_MULTIPLIED_TOTAL)), // 狂爪手套
@@ -260,61 +261,61 @@ public final class TCItems {
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)), // 强力手套
             MECHANICAL_GLOVE = registerCurio("mechanical_glove", builder -> builder.jeiInfos(0).rarity(LIGHT_PURPLE)
                     .accessories(units(AUTO$ATTACK))
-                    .attribute(Attributes.ATTACK_DAMAGE, 0.12, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getAttackDamage(), 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_SPEED, 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, 1.0, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)), // 机械手套
             FIRE_GAUNTLET = registerCurio("fire_gauntlet", builder -> builder.jeiInfos(0).rarity(LIME).tooltips(1)
                     .accessories(units(AUTO$ATTACK, FIRE$ATTACK))
-                    .attribute(Attributes.ATTACK_DAMAGE, 0.12, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getAttackDamage(), 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_SPEED, 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, 1.0, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)), // 烈火手套
             FLESH_KNUCKLES = registerCurio("flesh_knuckles", builder -> builder.rarity(PINK)
                     .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
-                    .attribute(TCAttributes.AGGRO, 400, ADD_VALUE)), // 血肉指虎
+                    .attribute(ConfluenceMagicLib.AGGRO, 400, ADD_VALUE)), // 血肉指虎
             BERSERKERS_GLOVE = registerCurio("berserkers_glove", builder -> builder.jeiInfos(0).noTooltip().rarity(PINK)
                     .accessories(units(AUTO$ATTACK))
                     .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
                     .attribute(Attributes.ATTACK_SPEED, 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, 1.0, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.AGGRO, 400, ADD_VALUE)), // 狂战士手套
+                    .attribute(ConfluenceMagicLib.AGGRO, 400, ADD_VALUE)), // 狂战士手套
             PALADINS_SHIELD = registerDirectly("paladins_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).rarity(YELLOW)
                     .attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE))), // 圣骑士护盾
             HERO_SHIELD = registerDirectly("hero_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).jeiInfos(0).rarity(PINK)
                     .attribute(Attributes.ARMOR, 5.0, ADD_VALUE)
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)
-                    .attribute(TCAttributes.AGGRO, 400, ADD_VALUE))), // 英雄护盾
+                    .attribute(ConfluenceMagicLib.AGGRO, 400, ADD_VALUE))), // 英雄护盾
             FROZEN_TURTLE_SHELL = registerDirectly("frozen_turtle_shell", name -> new FrozenTurtleShell(BaseCurioItem.builder(name).rarity(PINK).particle(TerraCurio.asResource("frozen_turtle_shell")).accessories(units(FROZEN$TURTLE$SHELL)))), // 冰冻海龟壳
             FROZEN_SHIELD = registerDirectly("frozen_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).jeiInfos(0).rarity(PINK).tooltips(1)
                     .accessories(units(FROZEN$TURTLE$SHELL)).attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE))), // 冰冻护盾
             HONEY_COMB = registerCurio("honey_comb", builder -> builder.rarity(GREEN).accessories(units(HONEY$COMB))), // 蜂窝
-            SHARK_TOOTH_NECKLACE = registerCurio("shark_tooth_necklace", builder -> builder.noTooltip().attribute(TCAttributes.getArmorPenetration(), 5.0, ADD_VALUE)), // 鲨牙项链
-            STINGER_NECKLACE = registerCurio("stinger_necklace", builder -> builder.rarity(PINK).jeiInfos(0).accessories(units(HONEY$COMB)).attribute(TCAttributes.getArmorPenetration(), 5.0, ADD_VALUE)), // 毒刺项链
+            SHARK_TOOTH_NECKLACE = registerCurio("shark_tooth_necklace", builder -> builder.noTooltip().attribute(LibAttributes.getArmorPenetration(), 5.0, ADD_VALUE)), // 鲨牙项链
+            STINGER_NECKLACE = registerCurio("stinger_necklace", builder -> builder.rarity(PINK).jeiInfos(0).accessories(units(HONEY$COMB)).attribute(LibAttributes.getArmorPenetration(), 5.0, ADD_VALUE)), // 毒刺项链
             PANIC_NECKLACE = registerDirectly("panic_necklace", name -> new PanicNecklace(BaseCurioItem.builder(name))), // 恐慌项链
             SWEETHEART_NECKLACE = registerDirectly("sweetheart_necklace", name -> new PaladinsShield(BaseCurioItem.builder(name).jeiInfos(0).rarity(ORANGE).accessories(units(HONEY$COMB)))), // 甜心项链
             MAGIC_QUIVER = registerCurio("magic_quiver", builder -> builder.rarity(LIGHT_RED).accessories(units(MAGIC$QUIVER))
-                    .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getRangedVelocity(), 0.2, ADD_MULTIPLIED_TOTAL)), // 魔法箭袋
+                    .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getRangedVelocity(), 0.2, ADD_MULTIPLIED_TOTAL)), // 魔法箭袋
             MOLTEN_QUIVER = registerCurio("molten_quiver", builder -> builder.rarity(PINK).jeiInfos(0).accessories(units(MAGIC$QUIVER, IGNITE$ARROW)).tooltips(2)
-                    .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getRangedVelocity(), 0.2, ADD_MULTIPLIED_TOTAL)), // 熔火箭袋
+                    .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getRangedVelocity(), 0.2, ADD_MULTIPLIED_TOTAL)), // 熔火箭袋
             STALKERS_QUIVER = registerCurio("stalkers_quiver", builder -> builder.rarity(PINK).jeiInfos(0).accessories(units(MAGIC$QUIVER))
                     .tooltips(1)
-                    .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getRangedVelocity(), 0.2, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.AGGRO, -400, ADD_VALUE)), // 潜行者箭袋
+                    .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getRangedVelocity(), 0.2, ADD_MULTIPLIED_TOTAL)
+                    .attribute(ConfluenceMagicLib.AGGRO, -400, ADD_VALUE)), // 潜行者箭袋
             RIFLE_SCOPE = registerCurio("rifle_scope", builder -> builder.rarity(LIGHT_RED).accessories(units(SCOPE)).tooltips(1)), // 步枪瞄准镜
             SNIPER_SCOPE = registerCurio("sniper_scope", builder -> builder.rarity(LIME).jeiInfos(0).accessories(units(SCOPE)).tooltips(1)
-                    .attribute(TCAttributes.getCriticalChance(), 0.1, ADD_VALUE)
-                    .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)), // 狙击镜
+                    .attribute(LibAttributes.getCriticalChance(), 0.1, ADD_VALUE)
+                    .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)), // 狙击镜
             RECON_SCOPE = registerCurio("recon_scope", builder -> builder.rarity(PINK).jeiInfos(0).accessories(units(SCOPE)).tooltips(3)
-                    .attribute(TCAttributes.getCriticalChance(), 0.1, ADD_VALUE)
-                    .attribute(TCAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.AGGRO, -400, ADD_VALUE)), // 侦察镜
+                    .attribute(LibAttributes.getCriticalChance(), 0.1, ADD_VALUE)
+                    .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(ConfluenceMagicLib.AGGRO, -400, ADD_VALUE)), // 侦察镜
             MAGMA_STONE = registerCurio("magma_stone", builder -> builder.rarity(ORANGE).jeiInfos(1)), // 岩浆石
             OBSIDIAN_ROSE = registerCurio("obsidian_rose", builder -> builder.rarity(ORANGE).accessories(of(LAVA$HURT$REDUCE, 0.5F))), // 黑曜石玫瑰
             OBSIDIAN_SHIELD = registerCurio("obsidian_shield", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).accessories(units(FIRE$IMMUNE))
@@ -326,9 +327,9 @@ public final class TCItems {
             OBSIDIAN_SKULL_ROSE = registerCurio("obsidian_skull_rose", builder -> builder.jeiInfos(0).rarity(PINK).accessories(units(FIRE$IMMUNE), of(LAVA$HURT$REDUCE, 0.5F)).tooltips(1)), // 黑曜石骷髅头玫瑰
             HAND_WARMER = registerCurio("hand_warmer", builder -> builder.jeiInfos(0).rarity(GREEN).accessories(units(FROZEN$IMMUNE))), // 暖手宝
             PUTRID_SCENT = registerCurio("putrid_scent", builder -> builder.rarity(LIGHT_PURPLE)
-                    .attribute(Attributes.ATTACK_DAMAGE, 0.05, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.getCriticalChance(), 0.05, ADD_VALUE)
-                    .attribute(TCAttributes.AGGRO, -400, ADD_VALUE)), // 腐香囊
+                    .attribute(LibAttributes.getAttackDamage(), 0.05, ADD_MULTIPLIED_TOTAL)
+                    .attribute(LibAttributes.getCriticalChance(), 0.05, ADD_VALUE)
+                    .attribute(ConfluenceMagicLib.AGGRO, -400, ADD_VALUE)), // 腐香囊
             SHACKLE = registerCurio("shackle", builder -> builder.rarity(BLUE).noTooltip()), // 镣铐
             RAM_RUNE = registerDirectly("ram_rune", name -> new RamRune(BaseCurioItem.builder(name).rarity(GREEN))); // 牧羊符文
 
@@ -345,7 +346,7 @@ public final class TCItems {
                     .accessories(of(RIGHT$CLICK$DELAY$SUBSTRACTOR, (byte) 3))
                     .attribute(Attributes.BLOCK_INTERACTION_RANGE, 3.0, ADD_VALUE)
                     .attribute(Attributes.BLOCK_BREAK_SPEED, 0.25, ADD_MULTIPLIED_TOTAL)
-                    .attribute(TCAttributes.PICKUP_RANGE, 6.25, ADD_VALUE))); // 创造之手
+                    .attribute(ConfluenceMagicLib.PICKUP_RANGE, 6.25, ADD_VALUE))); // 创造之手
 
     public static final DeferredItem<BaseCurioItem> BAND_OF_REGENERATION = registerDirectly("band_of_regeneration", name -> new BandOfRegeneration(BaseCurioItem.builder(name)));
 
@@ -392,7 +393,7 @@ public final class TCItems {
             TABI = registerCurio("tabi", builder -> builder.rarity(LIME).accessories(units(SPRINTING))), // 分趾厚底袜
             MASTER_NINJA_GEAR = registerCurio("master_ninja_gear", builder -> builder.tooltips(2).jeiInfos(0).rarity(YELLOW)
                     .accessories(units(SPRINTING), of(WALL$CLIMB, (byte) 2))
-                    .attribute(TCAttributes.getDodgeChance(), 0.1, ADD_VALUE)), // 忍者大师装备
+                    .attribute(LibAttributes.getDodgeChance(), 0.1, ADD_VALUE)), // 忍者大师装备
             ICE_SKATES = registerCurio("ice_skates", BLUE), // 溜冰鞋
             HERMES_BOOTS = registerDirectly("hermes_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).stepHeight())), // 赫尔墨斯靴
             FLURRY_BOOTS = registerDirectly("flurry_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).jeiInfos(1).stepHeight())), // 疾风雪靴
@@ -586,7 +587,7 @@ public final class TCItems {
                     .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)
                     .stepHeight())); // 水陆两用靴
 
-    public static final DeferredItem<BaseCurioItem> TREASURE_MAGNET = registerCurio("treasure_magnet", builder -> builder.attribute(TCAttributes.PICKUP_RANGE, 6.25, ADD_VALUE)), // 宝藏磁石
+    public static final DeferredItem<BaseCurioItem> TREASURE_MAGNET = registerCurio("treasure_magnet", builder -> builder.attribute(ConfluenceMagicLib.PICKUP_RANGE, 6.25, ADD_VALUE)), // 宝藏磁石
             FLOWER_BOOTS = registerCurio("flower_boots", builder -> builder.rarity(LIME).accessories(units(FLOWER$BOOTS))); // 花靴
 
     public static final DeferredItem<BaseCurioItem> ANGLER_EARRING = registerCurio("angler_earring", builder -> builder.noTooltip()); // 渔夫耳环

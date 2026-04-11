@@ -96,7 +96,7 @@
             "terra_curio:totem_with_cooldown": 2400,
             "terra_curio:invulnerable_ticks_multiplier": 2.0,
             "terra_curio:attributes": {
-                "terra_curio:generic.dodge_chance": [
+                "confluence_magic_lib:generic.dodge_chance": [
                     {
                         "id": "terra_curio:everlasting",
                         "amount": 0.1,

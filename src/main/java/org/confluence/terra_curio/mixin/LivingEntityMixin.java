@@ -10,14 +10,12 @@ import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.mixed.SelfGetter;
-import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.mixed.ILivingEntity;
@@ -109,11 +107,6 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
     @ModifyReturnValue(method = "canFreeze", at = @At(value = "RETURN", ordinal = 1))
     private boolean checkFreeze(boolean original) {
         return TCUtils.applyFrozenImmune(confluence$self(), original);
-    }
-
-    @WrapOperation(method = "getDamageAfterArmorAbsorb", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(Lnet/minecraft/world/entity/LivingEntity;FLnet/minecraft/world/damagesource/DamageSource;FF)F"))
-    private float armorPenetration(LivingEntity entity, float damage, DamageSource damageSource, float armorValue, float armorToughness, Operation<Float> original) {
-        return original.call(entity, damage, damageSource, TCAttributes.applyArmorPenetration(damageSource, armorValue), armorToughness);
     }
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)

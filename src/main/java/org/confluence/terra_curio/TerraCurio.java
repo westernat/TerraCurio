@@ -28,7 +28,6 @@ public class TerraCurio {
         }
         TCSoundEvents.SOUNDS.register(eventBus);
         TCEffects.EFFECTS.register(eventBus);
-        TCAttributes.ATTRIBUTES.register(eventBus);
         TCEntities.ENTITIES.register(eventBus);
         TCDataComponentTypes.TYPES.register(eventBus);
         TCItems.register(eventBus);

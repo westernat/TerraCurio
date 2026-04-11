@@ -1,27 +1,21 @@
 package org.confluence.terra_curio.common.event;
 
-import net.minecraft.core.registries.Registries;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.event.entity.EntityAttributeModificationEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
 import net.neoforged.neoforge.network.registration.PayloadRegistrar;
-import net.neoforged.neoforge.registries.RegisterEvent;
-import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.init.TCAttributes;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.c2s.*;
 import org.confluence.terra_curio.network.s2c.*;
 
 @EventBusSubscriber(modid = TerraCurio.MODID)
-public final class ModEvents {
+public final class TCModEvents {
     @SubscribeEvent
     public static void commonSetup(FMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
@@ -42,27 +36,6 @@ public final class ModEvents {
         if (event.getConfig().getType() == ModConfig.Type.COMMON && TerraCurio.MODID.equals(event.getConfig().getModId())) {
             TCCommonConfigs.onLoad();
         }
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public static void register(RegisterEvent event) {
-        if (event.getRegistryKey() == Registries.ATTRIBUTE) {
-            TCAttributes.prepareReplacements();
-        }
-    }
-
-    @SubscribeEvent
-    public static void entityAttributeModification(EntityAttributeModificationEvent event) {
-        TCAttributes.registerAttribute(TCAttributes.CRIT_CHANCE, event::add);
-        TCAttributes.registerAttribute(TCAttributes.RANGED_VELOCITY, event::add);
-        TCAttributes.registerAttribute(TCAttributes.RANGED_DAMAGE, event::add);
-        TCAttributes.registerAttribute(TCAttributes.DODGE_CHANCE, event::add);
-        TCAttributes.registerAttribute(TCAttributes.AGGRO, event::add);
-        if (ConfluenceMagicLib.IS_CONFLUENCE_LOADED.get()) {
-            TCAttributes.registerAttribute(TCAttributes.MAGIC_DAMAGE, event::add);
-        }
-        TCAttributes.registerAttribute(TCAttributes.ARMOR_PENETRATION, event::add);
-        TCAttributes.registerAttribute(TCAttributes.PICKUP_RANGE, event::add);
     }
 
     @SubscribeEvent
