@@ -8,7 +8,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.mixed.SelfGetter;
-import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.StepStoolHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.mixed.IClientLivingEntity;
@@ -37,7 +36,7 @@ public abstract class LivingEntityClientMixin implements IClientLivingEntity, Se
 
     @Inject(method = "checkFallDamage", at = @At("HEAD"))
     private void fall(CallbackInfo ci, @Local(argsOnly = true) double motionY) {
-        if (motionY > 0.0 && GravitationHandler.isShouldRot(confluence$self())) {
+        if (motionY > 0.0 && IEntity.of(confluence$self()).terra_curio$isShouldRot()) {
             confluence$self().fallDistance += (float) motionY;
         }
     }

@@ -8,8 +8,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
-import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.mixed.IClientLivingEntity;
+import org.confluence.terra_curio.mixed.IEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
     @ModifyReturnValue(method = "isEntityUpsideDown", at = @At(value = "RETURN", ordinal = 1))
     private static boolean upsideDown(boolean original, @Local(argsOnly = true) LivingEntity living) {
-        if (!original && GravitationHandler.isShouldRot(living)) {
+        if (!original && IEntity.of(living).terra_curio$isShouldRot()) {
             return true;
         }
         return original;

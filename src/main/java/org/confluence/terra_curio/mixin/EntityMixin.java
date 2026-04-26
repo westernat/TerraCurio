@@ -11,7 +11,6 @@ import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.util.TCUtils;
 import org.objectweb.asm.Opcodes;
@@ -150,7 +149,7 @@ public abstract class EntityMixin implements IEntity {
 
     @Inject(method = "move", at = @At(value = "FIELD", target = "Lnet/minecraft/world/entity/Entity;verticalCollisionBelow:Z", opcode = Opcodes.PUTFIELD, shift = At.Shift.AFTER))
     private void flip(MoverType type, Vec3 pos, CallbackInfo ci) {
-        if (GravitationHandler.isShouldRot(confluence$self())) {
+        if (IEntity.of(confluence$self()).terra_curio$isShouldRot()) {
             this.verticalCollisionBelow = verticalCollision && pos.y > 0.0;
         }
     }

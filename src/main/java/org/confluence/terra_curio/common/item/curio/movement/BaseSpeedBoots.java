@@ -15,11 +15,11 @@ import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.TCClientConfigs;
-import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
+import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.joml.Vector3f;
@@ -53,7 +53,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
         emitter.active = living.zza > 0.0F && !living.horizontalCollision;
 
         if (emitter.active) {
-            if (GravitationHandler.isShouldRot(living)) {
+            if (IEntity.of(living).terra_curio$isShouldRot()) {
                 emitter.offsetPos = new Vec3(0, living.getBbHeight(), 0);
             } else {
                 emitter.offsetPos = Vec3.ZERO;

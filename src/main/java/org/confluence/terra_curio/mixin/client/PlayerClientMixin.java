@@ -7,7 +7,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.mixed.SelfGetter;
-import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -24,12 +23,12 @@ public abstract class PlayerClientMixin implements SelfGetter<Player> {
 
     @ModifyVariable(method = "maybeBackOffFromEdge", at = @At("HEAD"), argsOnly = true)
     private Vec3 backOff(Vec3 pVec) {
-        return GravitationHandler.isShouldRot(confluence$self()) ? new Vec3(pVec.x, -pVec.y, pVec.z) : pVec;
+        return IEntity.of(confluence$self()).terra_curio$isShouldRot() ? new Vec3(pVec.x, -pVec.y, pVec.z) : pVec;
     }
 
     @Inject(method = "maybeBackOffFromEdge", at = @At(value = "RETURN", ordinal = 0), cancellable = true)
     private void backOff2(CallbackInfoReturnable<Vec3> cir, @Local(ordinal = 0) double d0, @Local(ordinal = 1) double d1) {
-        if (GravitationHandler.isShouldRot(confluence$self())) {
+        if (IEntity.of(confluence$self()).terra_curio$isShouldRot()) {
             Vec3 vec3 = cir.getReturnValue();
             cir.setReturnValue(new Vec3(d0, -vec3.y, d1));
         }
@@ -37,7 +36,7 @@ public abstract class PlayerClientMixin implements SelfGetter<Player> {
 
     @Inject(method = "maybeBackOffFromEdge", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
     private void backOff3(CallbackInfoReturnable<Vec3> cir) {
-        if (GravitationHandler.isShouldRot(confluence$self())) {
+        if (IEntity.of(confluence$self()).terra_curio$isShouldRot()) {
             Vec3 vec3 = cir.getReturnValue();
             cir.setReturnValue(new Vec3(vec3.x, -vec3.y, vec3.z));
         }
@@ -46,8 +45,9 @@ public abstract class PlayerClientMixin implements SelfGetter<Player> {
     @WrapOperation(method = "maybeBackOffFromEdge", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;maxUpStep()F"))
     private float backOff4(Player instance, Operation<Float> original) {
         float maxUpStep = original.call(instance);
-        if (GravitationHandler.isShouldRot(confluence$self())) {
-            return terra_curio$fix - maxUpStep - IEntity.of(instance).terra_curio$getDimensionHeight();
+        IEntity iEntity = IEntity.of(instance);
+        if (iEntity.terra_curio$isShouldRot()) {
+            return terra_curio$fix - maxUpStep - iEntity.terra_curio$getDimensionHeight();
         }
         return maxUpStep;
     }
@@ -55,7 +55,7 @@ public abstract class PlayerClientMixin implements SelfGetter<Player> {
     @Inject(method = "jumpFromGround", at = @At("TAIL"))
     private void flipJump(CallbackInfo ci) {
         Player self = confluence$self();
-        if (GravitationHandler.isShouldRot(self)) {
+        if (IEntity.of(self).terra_curio$isShouldRot()) {
             Vec3 vec3 = self.getDeltaMovement();
             self.setDeltaMovement(vec3.x, -vec3.y, vec3.z);
         }

@@ -51,6 +51,7 @@ public final class GravitationHandler {
         }
     }
 
+    /// LocalPlayer Only
     public static boolean isShouldRot() {
         return shouldRot;
     }
@@ -85,6 +86,7 @@ public final class GravitationHandler {
         }
     }
 
+    @Deprecated
     public static boolean isShouldRot(Entity entity) {
         IEntity iEntity = IEntity.of(entity);
         return (iEntity.terra_curio$isPlayer() && (((Player) entity).isLocalPlayer()) ? isShouldRot() : iEntity.terra_curio$isShouldRot());
