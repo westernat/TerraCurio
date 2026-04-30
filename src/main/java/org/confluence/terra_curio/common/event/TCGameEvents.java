@@ -98,7 +98,9 @@ public final class TCGameEvents {
         RandomSource random = living.level().random;
 
         TCUtils.applyFireAttack(damageSource, living);
-        TCUtils.applyHoneyComb(living, random);
+        if (damageSource.getEntity() != null) {
+            TCUtils.applyHoneyComb(living, random);
+        }
         TCUtils.applyStarClock(living, random);
         PanicNecklace.apply(living);
 

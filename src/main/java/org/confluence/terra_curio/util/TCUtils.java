@@ -157,7 +157,9 @@ public final class TCUtils {
     }
 
     public static float applyBrainOfConfusion(LivingEntity living, RandomSource randomSource, DamageSource damageSource, float amount) {
-        if (damageSource.is(TCTags.HARMFUL_EFFECT)) return amount;
+        if (damageSource.getEntity() == null || damageSource.is(TCTags.HARMFUL_EFFECT)) {
+            return amount;
+        }
         if (!AccessoriesAttachment.of(living).contains(TCItems.BRAIN$OF$CONFUSION)) {
             return amount;
         }
