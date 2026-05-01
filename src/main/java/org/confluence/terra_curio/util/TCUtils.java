@@ -61,8 +61,8 @@ public final class TCUtils {
     public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(TerraCurio.asResource("ice_speed"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
 
     public static void applyFireAttack(DamageSource damageSource, Entity victim) {
-        if (damageSource.is(LibTags.DamageTypes.AS_MELEE_ATTACK) &&
-                damageSource.getEntity() instanceof LivingEntity living &&
+        if (damageSource.getEntity() instanceof LivingEntity living &&
+                damageSource.is(LibTags.DamageTypes.AS_MELEE_ATTACK) &&
                 hasType(living, TCItems.FIRE$ATTACK)
         ) {
             float f = living.getRandom().nextFloat();
