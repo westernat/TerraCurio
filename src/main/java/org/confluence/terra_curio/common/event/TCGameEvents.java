@@ -26,7 +26,7 @@ import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import org.confluence.lib.event.ArmorPenetrationEvent;
+import org.confluence.lib.api.event.ArmorPenetrationEvent;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
