@@ -7,7 +7,6 @@ import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -57,10 +56,6 @@ public final class TCJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
-        registration.addRecipeCatalyst(TCItems.WORKSHOP.get().getDefaultInstance(), WorkshopCategory.TYPE);
-    }
-
-    public static void drawArrowRight(GuiGraphics guiGraphics, int x, int y, boolean usable) {
-
+        registration.addRecipeCatalyst(TCItems.WORKSHOP.toStack(), WorkshopCategory.TYPE);
     }
 }
