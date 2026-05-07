@@ -35,6 +35,7 @@ import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.NE
 import static org.confluence.terra_curio.network.s2c.CurioExistsPacketS2C.*;
 
 public final class TCClientPacketHandler {
+    private static boolean[] curiosExists;
     private static boolean autoAttack = false;
     private static boolean hasCthulhu = false;
     private static boolean hasTabi = false;
@@ -51,6 +52,11 @@ public final class TCClientPacketHandler {
     private static final Int2IntMap remoteLuminance = new Int2IntArrayMap();
     private static final Int2IntMap pickupDelayStorage = new Int2IntArrayMap();
     private static final Int2IntMap pickupDelayCounter = Util.make(new Int2IntArrayMap(), map -> map.defaultReturnValue(0));
+
+    /// for local
+    public static boolean isCuriosExists(int index) {
+        return curiosExists != null && index >= 0 && index < curiosExists.length && curiosExists[index];
+    }
 
     public static boolean couldAutoAttack() {
         return autoAttack;
@@ -104,16 +110,17 @@ public final class TCClientPacketHandler {
         rightClickSubtractor = amount;
     }
 
-    public static void handleCurioExists(int item) {
-        autoAttack = (item & AUTO_ATTACK) != 0;
-        hasCthulhu = (item & SHIELD_OF_CTHULHU) != 0;
-        hasTabi = (item & TABI) != 0;
-        ScopeFovHandler.hasScope = (item & SCOPE) != 0;
-        GravitationHandler.hasGlobe = (item & GRAVITY_GLOBE) != 0;
-        hasMagiluminescence = (item & MAGILUMINESCENCE) != 0;
-        canFloating = (item & FLOAT_ON_LIQUID_SURFACE) != 0;
-        iceSafe = (item & ICE_SAFE) != 0;
-        boneGlove = (item & BONE_GLOVE) != 0;
+    public static void handleCurioExists(boolean[] exists) {
+        curiosExists = exists;
+        autoAttack = isCuriosExists(AUTO_ATTACK);
+        hasCthulhu = isCuriosExists(SHIELD_OF_CTHULHU);
+        hasTabi = isCuriosExists(TABI);
+        ScopeFovHandler.hasScope = isCuriosExists(SCOPE);
+        GravitationHandler.hasGlobe = isCuriosExists(GRAVITY_GLOBE);
+        hasMagiluminescence = isCuriosExists(MAGILUMINESCENCE);
+        canFloating = isCuriosExists(FLOAT_ON_LIQUID_SURFACE);
+        iceSafe = isCuriosExists(ICE_SAFE);
+        boneGlove = isCuriosExists(BONE_GLOVE);
     }
 
     public static void handleItemPickupDelay(int id, int delay) {
@@ -148,7 +155,9 @@ public final class TCClientPacketHandler {
     }
 
     private static void applyAutoAttack(Minecraft minecraft, LocalPlayer player) {
-        if (!TCClientConfigs.autoAttack || minecraft.gameMode == null || minecraft.gameMode.isDestroying()) return;
+        if (!TCClientConfigs.autoAttack || minecraft.gameMode == null || minecraft.gameMode.isDestroying()) {
+            return;
+        }
         ItemStack itemStack = player.getMainHandItem();
         if (itemStack.onEntitySwing(player, InteractionHand.MAIN_HAND)) return;
         if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
@@ -196,6 +205,7 @@ public final class TCClientPacketHandler {
     }
 
     public static void reset() {
+        curiosExists = null;
         autoAttack = false;
         hasCthulhu = false;
         hasTabi = false;

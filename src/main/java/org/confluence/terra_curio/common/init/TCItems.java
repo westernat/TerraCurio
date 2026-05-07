@@ -97,51 +97,51 @@ public final class TCItems {
 
     // client side
     public static final ValueType<Set<TagKey<Fluid>>, FluidTagsValue> FLUID$WALK = ValueType.create("fluid_walk", FluidTagsValue.EXPANSION, FluidTagsValue.CODEC, Set.of(), FluidTagsValue::new);
-    public static final ValueType<Unit, UnitValue> AUTO$ATTACK = ofUnit("auto_attack");
-    public static final ValueType<Unit, UnitValue> SPRINTING = ofUnit("sprinting");
-    public static final ValueType<Unit, UnitValue> SCOPE = ofUnit("scope");
-    public static final ValueType<Unit, UnitValue> GRAVITY$GLOBE = ofUnit("gravity_globe");
-    public static final ValueType<Unit, UnitValue> $MAGILUMINESCENCE = ofUnit("magiluminescence");
-    public static final ValueType<Unit, UnitValue> BONE$GLOVE = ofUnit("bone_glove");
+    public static final ValueType.UnitType AUTO$ATTACK = ofUnit("auto_attack");
+    public static final ValueType.UnitType SPRINTING = ofUnit("sprinting");
+    public static final ValueType.UnitType SCOPE = ofUnit("scope");
+    public static final ValueType.UnitType GRAVITY$GLOBE = ofUnit("gravity_globe");
+    public static final ValueType.UnitType $MAGILUMINESCENCE = ofUnit("magiluminescence");
+    public static final ValueType.UnitType BONE$GLOVE = ofUnit("bone_glove");
 
     // both side
-    public static final ValueType<Unit, UnitValue> FLOAT$ON$LIQUID$SURFACE = ofUnit("float_on_liquid_surface");
-    public static final ValueType<Unit, UnitValue> ICE$SAFE = ofUnit("ice_safe");
-    public static final ValueType<Unit, UnitValue> SHIELD$OF$CTHULHU = ofUnit("shield_of_cthulhu");
+    public static final ValueType.UnitType FLOAT$ON$LIQUID$SURFACE = ofUnit("float_on_liquid_surface");
+    public static final ValueType.UnitType ICE$SAFE = ofUnit("ice_safe");
+    public static final ValueType.UnitType SHIELD$OF$CTHULHU = ofUnit("shield_of_cthulhu");
 
     // require updates
-    public static final ValueType<Unit, UnitValue> FIRE$ATTACK = ofUnit("fire_attack");
-    public static final ValueType<Unit, UnitValue> HONEY$COMB = ofUnit("honey_comb");
-    public static final ValueType<Unit, UnitValue> FROZEN$TURTLE$SHELL = ofUnit("frozen_turtle_shell");
-    public static final ValueType<Unit, UnitValue> MAGIC$QUIVER = ofUnit("magic_quiver");
-    public static final ValueType<Unit, UnitValue> IGNITE$ARROW = ofUnit("ignite_arrow");
-    public static final ValueType<Unit, UnitValue> FIRE$IMMUNE = ofUnit("fire_immune");
-    public static final ValueType<Unit, UnitValue> FROZEN$IMMUNE = ofUnit("frozen_immune");
-    public static final ValueType<Unit, UnitValue> FLOWER$BOOTS = ofUnit("flower_boots");
-    public static final ValueType<Unit, UnitValue> ICE$SPEED = ofUnit("ice_speed");
-    public static final ValueType<Unit, UnitValue> DIVING = ofUnit("diving");
-    public static final ValueType<Unit, UnitValue> BRAIN$OF$CONFUSION = ofUnit("brain_of_confusion");
-    public static final ValueType<Unit, UnitValue> HIVE$PACK = ofUnit("hive_pack");
-    public static final ValueType<Unit, UnitValue> INFINITE$FLIGHT = ofUnit("infinite_flight");
+    public static final ValueType.UnitType FIRE$ATTACK = ofUnit("fire_attack");
+    public static final ValueType.UnitType HONEY$COMB = ofUnit("honey_comb");
+    public static final ValueType.UnitType FROZEN$TURTLE$SHELL = ofUnit("frozen_turtle_shell");
+    public static final ValueType.UnitType MAGIC$QUIVER = ofUnit("magic_quiver");
+    public static final ValueType.UnitType IGNITE$ARROW = ofUnit("ignite_arrow");
+    public static final ValueType.UnitType FIRE$IMMUNE = ofUnit("fire_immune");
+    public static final ValueType.UnitType FROZEN$IMMUNE = ofUnit("frozen_immune");
+    public static final ValueType.UnitType FLOWER$BOOTS = ofUnit("flower_boots");
+    public static final ValueType.UnitType ICE$SPEED = ofUnit("ice_speed");
+    public static final ValueType.UnitType DIVING = ofUnit("diving");
+    public static final ValueType.UnitType BRAIN$OF$CONFUSION = ofUnit("brain_of_confusion");
+    public static final ValueType.UnitType HIVE$PACK = ofUnit("hive_pack");
+    public static final ValueType.UnitType INFINITE$FLIGHT = ofUnit("infinite_flight");
 
     public static final ValueType<Set<Holder<MobEffect>>, MobEffectsValue> EFFECT$IMMUNITIES = ValueType.create("effect_immunities", MobEffectsValue.MERGE, MobEffectsValue.CODEC, Set.of(), MobEffectsValue::new);
     public static final ValueType<Boolean, BooleanValue> STAR$CLOCK = ValueType.create("star_clock", BooleanValue.OR, BooleanValue.CODEC, false, BooleanValue::new);
-    public static final ValueType<Float, FloatValue> INVULNERABLE$TICKS$MULTIPLIER = ValueType.ofFloat("invulnerable_ticks_multiplier", FloatValue.GET_MAX_WITHIN_0_TO_100, 1.0F);
-    public static final ValueType<Float, FloatValue> LAVA$HURT$REDUCE = ValueType.ofFloat("lava_hurt_reduce", FloatValue.GET_MAX_WITHIN_0_TO_1, 0.0F);
-    public static final ValueType<Integer, IntegerValue> LAVA$IMMUNE$TICKS = ValueType.ofInteger("lava_immune_ticks", IntegerValue.GET_MAX, 0);
+    public static final ValueType.FloatType INVULNERABLE$TICKS$MULTIPLIER = ValueType.ofFloat("invulnerable_ticks_multiplier", FloatValue.GET_MAX_WITHIN_0_TO_100, 1.0F);
+    public static final ValueType.FloatType LAVA$HURT$REDUCE = ValueType.ofFloat("lava_hurt_reduce", FloatValue.GET_MAX_WITHIN_0_TO_1, 0.0F);
+    public static final ValueType.IntegerType LAVA$IMMUNE$TICKS = ValueType.ofInteger("lava_immune_ticks", IntegerValue.GET_MAX, 0);
     public static final ValueType<Byte, ByteValue> RIGHT$CLICK$DELAY$SUBSTRACTOR = ValueType.create("right_click_delay_substractor", ByteValue.GET_MAX, ByteValue.CODEC, (byte) 0, ByteValue::new);
     public static final ValueType<Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack>, MayFlyAbilityValue> MAY$FLY = ValueType.create("may_fly", MayFlyAbilityValue.COMBINE_RULE, MayFlyAbilityValue.CODEC, Map.of(), MayFlyAbilityValue::new);
-    public static final ValueType<Integer, IntegerValue> LUMINANCE = ValueType.ofInteger("luminance", IntegerValue.GET_ABS_MAX, 0);
+    public static final ValueType.IntegerType LUMINANCE = ValueType.ofInteger("luminance", IntegerValue.GET_ABS_MAX, 0);
     public static final ValueType<Unit, UnitValue> NEPTUNES$SHELL = ofUnit("neptunes_shell");
     public static final ValueType<Byte, ByteValue> WALL$CLIMB = ValueType.create("wall_climb", ByteValue.ADDITION_WITHIN_0_TO_2, ByteValue.CODEC, (byte) 0, ByteValue::new);
-    public static final ValueType<Float, FloatValue> CLOUD = ValueType.ofFloat("cloud", FloatValue.GET_SELF, 0.0F);
+    public static final ValueType.FloatType CLOUD = ValueType.ofFloat("cloud", FloatValue.GET_SELF, 0.0F);
     public static final ValueType<Tuple<Float, Integer>, OneTimeJumpAbilityValue> BLIZZARD = ValueType.create("blizzard", OneTimeJumpAbilityValue.COMBINE_RULE, OneTimeJumpAbilityValue.CODEC, new Tuple<>(0.0F, 0), OneTimeJumpAbilityValue::new);
     public static final ValueType<Tuple<Float, Integer>, OneTimeJumpAbilityValue> SAND$STORM = ValueType.create("sand_storm", OneTimeJumpAbilityValue.COMBINE_RULE, OneTimeJumpAbilityValue.CODEC, new Tuple<>(0.0F, 0), OneTimeJumpAbilityValue::new);
-    public static final ValueType<Float, FloatValue> FART = ValueType.ofFloat("fart", FloatValue.GET_SELF, 0.0F);
-    public static final ValueType<Float, FloatValue> TSUNAMI = ValueType.ofFloat("tsunami", FloatValue.GET_SELF, 0.0F);
+    public static final ValueType.FloatType FART = ValueType.ofFloat("fart", FloatValue.GET_SELF, 0.0F);
+    public static final ValueType.FloatType TSUNAMI = ValueType.ofFloat("tsunami", FloatValue.GET_SELF, 0.0F);
     public static final ValueType<TagKey<EntityType<?>>, EntityTypeTagValue> MOB$IGNORE = ValueType.create("mob_ignore", EntityTypeTagValue.GET_SELF, EntityTypeTagValue.CODEC, TCTags.NOTHING, EntityTypeTagValue::new);
-    public static final ValueType<Float, FloatValue> INJURY$FREE = ValueType.ofFloat("injury_free", FloatValue.ADDITION_WITHIN_0_TO_1, 0.0F);
-    public static final ValueType<Integer, IntegerValue> TOTEM$WITH$COOLDOWN = ValueType.ofInteger("totem_with_cooldown", IntegerValue.GET_MIN_GREAT_EQUAL_THAN_0, -1);
+    public static final ValueType.FloatType INJURY$FREE = ValueType.ofFloat("injury_free", FloatValue.ADDITION_WITHIN_0_TO_1, 0.0F);
+    public static final ValueType.IntegerType TOTEM$WITH$COOLDOWN = ValueType.ofInteger("totem_with_cooldown", IntegerValue.GET_MIN_GREAT_EQUAL_THAN_0, -1);
 
     // no updates
     public static final ValueType<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> ATTRIBUTES = ValueType.create("attributes", AttributeModifiersValue.MERGE, AttributeModifiersValue.CODEC, ImmutableListMultimap.of(), AttributeModifiersValue::new);

@@ -54,15 +54,15 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
         return type;
     }
 
-    public static ValueType<Unit, UnitValue> ofUnit(String path) {
+    public static UnitType ofUnit(String path) {
         return UnitType.of(TerraCurio.asResource(path));
     }
 
-    public static ValueType<Integer, IntegerValue> ofInteger(String path, CombineRule<Integer, IntegerValue> combineRule, int defaultValue) {
+    public static IntegerType ofInteger(String path, CombineRule<Integer, IntegerValue> combineRule, int defaultValue) {
         return IntegerType.of(TerraCurio.asResource(path), combineRule, defaultValue);
     }
 
-    public static ValueType<Float, FloatValue> ofFloat(String path, CombineRule<Float, FloatValue> combineRule, float defaultValue) {
+    public static FloatType ofFloat(String path, CombineRule<Float, FloatValue> combineRule, float defaultValue) {
         return FloatType.of(TerraCurio.asResource(path), combineRule, defaultValue);
     }
 
