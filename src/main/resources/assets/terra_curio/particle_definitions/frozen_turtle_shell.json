@@ -12,10 +12,6 @@
             "minecraft:emitter_initialization": {
                 "per_update_expression": "variable.r=variable.emitter_age*480;variable.c=math.cos(variable.r);variable.s=math.sin(variable.r);variable.t=1.0/(1.0+variable.s*variable.s);"
             },
-            "minecraft:emitter_local_space": {
-                "position": true,
-                "rotation": false
-            },
             "minecraft:emitter_rate_steady": {
                 "spawn_rate": 20,
                 "max_particles": 20
