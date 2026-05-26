@@ -2,7 +2,6 @@ package org.confluence.terra_curio.common.item.curio.movement;
 
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.mixed.IEntity;
@@ -25,9 +24,9 @@ public class TsunamiInABottle extends BaseCurioItem {
 
         if (emitter.active) {
             if (IEntity.of(living).terra_curio$isShouldRot()) {
-                emitter.offsetPos = new Vec3(0, living.getBbHeight(), 0);
+                emitter.parentSpace.setTranslation(0, living.getBbHeight(), 0);
             } else {
-                emitter.offsetPos = Vec3.ZERO;
+                emitter.parentSpace.setTranslation(0, 0, 0);
             }
         }
     }

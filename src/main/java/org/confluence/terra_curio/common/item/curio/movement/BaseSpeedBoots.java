@@ -10,7 +10,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
@@ -22,7 +21,7 @@ import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
 import org.confluence.terra_curio.util.CuriosUtils;
-import org.joml.Vector3f;
+import org.joml.Matrix4f;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 import top.theillusivec4.curios.api.SlotContext;
 
@@ -47,16 +46,16 @@ public class BaseSpeedBoots extends BaseCurioItem {
 
     @Override
     protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
-        if (emitter.parentRotation == null) {
-            emitter.parentRotation = new Vector3f();
+        if (!emitter.isLocalSpace()) {
+            emitter.parentSpace = new Matrix4f();
         }
         emitter.active = living.zza > 0.0F && !living.horizontalCollision;
 
         if (emitter.active) {
             if (IEntity.of(living).terra_curio$isShouldRot()) {
-                emitter.offsetPos = new Vec3(0, living.getBbHeight(), 0);
+                emitter.parentSpace.setTranslation(0, living.getBbHeight(), 0);
             } else {
-                emitter.offsetPos = Vec3.ZERO;
+                emitter.parentSpace.setTranslation(0, 0, 0);
             }
         }
     }
@@ -73,7 +72,8 @@ public class BaseSpeedBoots extends BaseCurioItem {
             int speed = LibUtils.getItemStackNbtNoCopy(stack).getInt(KEY);
             if (player.zza > 0 && !player.horizontalCollision && !player.isCrouching()) {
                 if (player.onGround()) {
-                    if (TCClientPacketHandler.isHasMagiluminescence() || PlayerJumpHandler.isInfiniteFlight()) acceleration *= 2;
+                    if (TCClientPacketHandler.isHasMagiluminescence() || PlayerJumpHandler.isInfiniteFlight())
+                        acceleration *= 2;
                     int actually = Math.min(maxSpeed - speed, acceleration);
                     int value = speed + actually;
                     if (actually > 0) {

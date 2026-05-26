@@ -32,7 +32,7 @@ import org.confluence.terra_curio.mixed.ILivingEntity;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
-import org.mesdag.particlestorm.PSGameClient;
+import org.mesdag.particlestorm.particle.MolangParticleEngine;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
@@ -67,7 +67,8 @@ public class BaseCurioItem extends Item implements ICurioItem {
                 Map<ResourceLocation, ParticleEmitter> emitters = iLiving.terra_curio$getOrCreateParticleEmitters();
                 emitter = new ParticleEmitter(living.level(), living.position(), builder.particle);
                 emitter.attachEntity(living);
-                PSGameClient.LOADER.addEmitter(emitter, false);
+                emitter.hideOutline = true;
+                MolangParticleEngine.INSTANCE.addEmitter(emitter);
                 emitters.put(builder.particle, emitter);
             }
             particleTick(living, emitter, builder.particle);
