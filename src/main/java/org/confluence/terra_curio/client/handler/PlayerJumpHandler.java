@@ -17,7 +17,6 @@ import org.confluence.terra_curio.client.sound.RocketBootsStopSoundInstance;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.common.item.curio.combat.RamRune;
-import org.confluence.terra_curio.integration.airhop.AirHopHelper;
 import org.confluence.terra_curio.mixin.accessor.LivingEntityAccessor;
 import org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S;
 import org.confluence.terra_curio.network.c2s.RamRuneFallPacketC2S;
@@ -91,11 +90,6 @@ public final class PlayerJumpHandler {
                 jumpKeyDown = true;
                 return;
             }
-            if (AirHopHelper.LOADED && AirHopHelper.notFinishJump(localPlayer)) {
-                jumpKeyDown = true;
-                return;
-            }
-
             for (Map.Entry<ResourceKey<Item>, ObjectIntPair<MayFlyAbilityValue.FlyStack>> entry : wingsFlyStacks.entrySet()) {
                 ObjectIntPair<MayFlyAbilityValue.FlyStack> pair = entry.getValue();
                 int i = pair.rightInt();

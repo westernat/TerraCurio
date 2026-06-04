@@ -2,7 +2,7 @@
     "required": true,
     "minVersion": "0.8",
     "package": "org.confluence.terra_curio.mixin",
-    "compatibilityLevel": "JAVA_21",
+    "compatibilityLevel": "JAVA_17",
     "refmap": "terra_curio.refmap.json",
     "mixins": [
         "CrossbowItemMixin",
