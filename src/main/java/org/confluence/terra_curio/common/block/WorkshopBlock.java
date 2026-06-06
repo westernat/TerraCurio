@@ -1,9 +1,9 @@
 package org.confluence.terra_curio.common.block;
 
-import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.SimpleMenuProvider;
@@ -30,10 +30,7 @@ import org.jetbrains.annotations.Nullable;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.HORIZONTAL_FACING;
 import static net.minecraft.world.level.block.state.properties.BlockStateProperties.WATERLOGGED;
 
-@javax.annotation.ParametersAreNonnullByDefault
-@net.minecraft.MethodsReturnNonnullByDefault
 public class WorkshopBlock extends HorizontalDirectionalBlock implements SimpleWaterloggedBlock {
-    public static final MapCodec<WorkshopBlock> CODEC = simpleCodec(WorkshopBlock::new);
     private static final VoxelShape SHAPE = Shapes.or(box(1, 0, 1, 15, 14, 15), box(0, 14, 0, 16, 16, 16));
     private static final Component CONTAINER_TITLE = Component.translatable("container.terra_curio.workshop");
 
@@ -76,22 +73,16 @@ public class WorkshopBlock extends HorizontalDirectionalBlock implements SimpleW
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (level.isClientSide) {
             return InteractionResult.SUCCESS;
-        } else {
-            player.openMenu(state.getMenuProvider(level, pos));
-            return InteractionResult.CONSUME;
         }
+        player.openMenu(state.getMenuProvider(level, pos));
+        return InteractionResult.CONSUME;
     }
 
     @Override
     public @Nullable MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         return new SimpleMenuProvider((containerId, inventory, pPlayer) -> new WorkshopMenu(containerId, inventory, new EnvironmentLevelAccess(level, pos)), CONTAINER_TITLE);
-    }
-
-    @Override
-    protected MapCodec<WorkshopBlock> codec() {
-        return CODEC;
     }
 }

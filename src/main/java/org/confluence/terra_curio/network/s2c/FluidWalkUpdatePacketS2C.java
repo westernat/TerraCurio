@@ -1,22 +1,23 @@
 package org.confluence.terra_curio.network.s2c;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.lib.network.IPacketS2C;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.util.TCUtils;
+import org.mesdag.portlib.network.IPortPacket;
+import org.mesdag.portlib.network.codec.PortStreamCodec;
 
-public record FluidWalkUpdatePacketS2C() implements IPacketS2C {
-    public static final Type<FluidWalkUpdatePacketS2C> TYPE = new Type<>(TerraCurio.asResource("fluid_walk_update"));
-    private static final FluidWalkUpdatePacketS2C INSTANCE = new FluidWalkUpdatePacketS2C();
-    public static final StreamCodec<ByteBuf, FluidWalkUpdatePacketS2C> STREAM_CODEC = StreamCodec.unit(INSTANCE);
+public enum FluidWalkUpdatePacketS2C implements IPortPacket.S2C {
+    INSTANCE;
+
+    public static final ResourceLocation ID = TerraCurio.asResource("fluid_walk_update");
+    public static final PortStreamCodec<ByteBuf, FluidWalkUpdatePacketS2C> STREAM_CODEC = PortStreamCodec.unit(INSTANCE);
 
     @Override
-    public Type<FluidWalkUpdatePacketS2C> type() {
-        return TYPE;
+    public ResourceLocation identifier() {
+        return ID;
     }
 
     @Override
@@ -26,6 +27,6 @@ public record FluidWalkUpdatePacketS2C() implements IPacketS2C {
 
     public static void sendToClient(ServerPlayer serverPlayer) {
         TCUtils.updateWalkableFluidStates(serverPlayer);
-        PacketDistributor.sendToPlayer(serverPlayer, INSTANCE);
+        TerraCurio.HANDLER.sendToPlayer(serverPlayer, INSTANCE);
     }
 }

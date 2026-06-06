@@ -58,7 +58,7 @@ public class RamRune extends BaseCurioItem {
 
     public static void onLanding(ServerPlayer player) {
         if (!FALLING.remove(player.getId())) return;
-        player.level().playSound(null, player.getOnPos(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.0F, 1.0F);
+        player.level().playSound(null, player.getOnPos(), SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0F, 1.0F);
         ServerLevel level = player.serverLevel();
         BlockPos center = player.getOnPos();
         for (BlockPos pos : BlockPos.betweenClosed(center.offset(-2, 0, -2), center.offset(2, 0, 2))) {

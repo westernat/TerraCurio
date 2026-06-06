@@ -12,6 +12,7 @@ import org.confluence.terra_curio.common.entity.StepStoolEntity;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.network.s2c.StepStoolSteppingPacketS2C;
 import org.confluence.terra_curio.util.CuriosUtils;
+import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.List;
@@ -53,7 +54,7 @@ public class StepStool extends BaseCurioItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         if (LibUtils.isPhysicalClient()) {
             tooltipComponents.add(Component.translatable(
                     "tooltip.item.terra_curio.step_stool.0",

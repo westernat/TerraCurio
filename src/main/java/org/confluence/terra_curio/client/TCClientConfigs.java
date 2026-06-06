@@ -1,20 +1,20 @@
 package org.confluence.terra_curio.client;
 
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
 public final class TCClientConfigs {
-    private static ModConfigSpec.BooleanValue PLAY_SHOES_SOUND;
-    private static ModConfigSpec.DoubleValue SHOES_SOUND_VOLUME;
-    private static ModConfigSpec.BooleanValue SHOW_SHOES_PARTICLE;
-    private static ModConfigSpec.BooleanValue SPEED_UP;
+    private static ForgeConfigSpec.BooleanValue PLAY_SHOES_SOUND;
+    private static ForgeConfigSpec.DoubleValue SHOES_SOUND_VOLUME;
+    private static ForgeConfigSpec.BooleanValue SHOW_SHOES_PARTICLE;
+    private static ForgeConfigSpec.BooleanValue SPEED_UP;
 
-    private static ModConfigSpec.BooleanValue AUTO_ATTACK;
-    private static ModConfigSpec.BooleanValue RIGHT_CLICK_DELAY;
+    private static ForgeConfigSpec.BooleanValue AUTO_ATTACK;
+    private static ForgeConfigSpec.BooleanValue RIGHT_CLICK_DELAY;
 
-    private static ModConfigSpec.DoubleValue INFORMATION_HUD_TOP;
-    private static ModConfigSpec.BooleanValue INFORMATION_HUD_LEFT;
+    private static ForgeConfigSpec.DoubleValue INFORMATION_HUD_TOP;
+    private static ForgeConfigSpec.BooleanValue INFORMATION_HUD_LEFT;
 
     public static boolean playShoesSound = true;
     public static float shoesSoundVolume = 1.0F;
@@ -40,8 +40,8 @@ public final class TCClientConfigs {
         informationIsLeft = INFORMATION_HUD_LEFT.get();
     }
 
-    public static void register(ModContainer container) {
-        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
+    public static void register(FMLJavaModLoadingContext context) {
+        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
         PLAY_SHOES_SOUND = builder.push("Speed Shoes").define("playSound", true);
         SHOES_SOUND_VOLUME = builder.defineInRange("shoesSoundVolume", 1.0, 0.0, 1.0);
         SHOW_SHOES_PARTICLE = builder.define("showParticle", true);
@@ -52,6 +52,6 @@ public final class TCClientConfigs {
 
         INFORMATION_HUD_TOP = builder.pop().push("Information HUD").comment("finalTop = screenHeight * top").defineInRange("top", 0.5, 0.0, 1.0);
         INFORMATION_HUD_LEFT = builder.comment("left or right").define("isLeft", false);
-        container.registerConfig(ModConfig.Type.CLIENT, builder.build());
+        context.registerConfig(ModConfig.Type.CLIENT, builder.build());
     }
 }

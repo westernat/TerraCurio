@@ -1,21 +1,22 @@
 package org.confluence.terra_curio.common.item.curio;
 
+import PortLib.extensions.net.minecraft.core.Holder.PortHolderExtension;
+import PortLib.extensions.net.minecraft.world.entity.ai.attributes.Attributes.PortAttributesExtension;
+import PortLib.extensions.net.minecraft.world.item.Item.PortItemExtension;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.tags.EnchantmentTags;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.enchantment.Enchantment;
+import net.minecraft.world.level.Level;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.common.component.ModRarity;
 import org.confluence.terra_curio.TCStartupConfigs;
@@ -34,17 +35,18 @@ import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.mesdag.particlestorm.particle.MolangParticleEngine;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
+import org.mesdag.portlib.component.PortDataComponentType;
+import org.mesdag.portlib.diff.Diff;
+import org.mesdag.portlib.registries.PortRegistryEntry;
+import org.mesdag.portlib.wrapper.world.entity.ai.attributes.PortAttributeModifier;
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
-import java.util.ArrayList;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.Map;
-import java.util.function.Supplier;
+import java.util.*;
 
 public class BaseCurioItem extends Item implements ICurioItem {
-    protected static final ImmutableMultimap<Holder<Attribute>, AttributeModifier> EMPTY_ATTRIBUTE = ImmutableMultimap.of();
+    protected static final Multimap<Attribute, AttributeModifier> EMPTY_ATTRIBUTE = ImmutableMultimap.of();
+
     protected Builder builder;
 
     public BaseCurioItem(Builder builder) {
@@ -78,27 +80,27 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
         if (emitter.isRemoved()) {
-            ((ILivingEntity) living).terra_curio$getOrCreateParticleEmitters().remove(particle);
+            ILivingEntity.of(living).terra_curio$getOrCreateParticleEmitters().remove(particle);
         }
     }
 
     @Override
-    public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID uuid, ItemStack stack) {
         return getAttributeModifiers(stack);
     }
 
-    public ImmutableMultimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(ItemStack stack) {
-        PrimitiveValueComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack) {
+        PrimitiveValueComponent component = PortHolderExtension.getData(stack.getItemHolder(), TCDataMaps.ACCESSORIES);
         AttributeModifiersValue value;
         if (component != null && (value = component.get(TCItems.ATTRIBUTES)) != null) {
-            return value.get();
+            return value.getOldValue();
         }
         return builder == null ? EMPTY_ATTRIBUTE : builder.attributes;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
-        PrimitiveValueComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
+        PrimitiveValueComponent component = PortHolderExtension.getData(stack.getItemHolder(), TCDataMaps.ACCESSORIES);
         ComponentsValue value;
         if (component != null && (value = component.get(TCItems.COMPONENTS)) != null) {
             tooltipComponents.addAll(value.components());
@@ -138,9 +140,14 @@ public class BaseCurioItem extends Item implements ICurioItem {
         return new Builder(name, new Properties());
     }
 
+//    @Override
+//    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
+//        return enchantment.is(EnchantmentTags.CURSE) || stack.is(enchantment.value().definition().supportedItems());
+//    }
+
     @Override
-    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
-        return enchantment.is(EnchantmentTags.CURSE) || stack.is(enchantment.value().definition().supportedItems());
+    public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
+        return enchantment.isCurse() || enchantment.category.canEnchant(stack.getItem());
     }
 
     public static class Builder {
@@ -150,8 +157,8 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         private final List<Component> additionTip = new ArrayList<>();
         private boolean hasToolTip = true;
-        private transient ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> attributesBuilder = ImmutableMultimap.builder();
-        private ImmutableMultimap<Holder<Attribute>, AttributeModifier> attributes;
+        private transient ImmutableMultimap.Builder<Attribute, AttributeModifier> attributesBuilder = ImmutableMultimap.builder();
+        private Multimap<Attribute, AttributeModifier> attributes;
         private ModRarity rarity = ModRarity.BLUE;
         private int jeiInformationCount = 1;
         private boolean makePiglinsNeutral = false;
@@ -180,24 +187,36 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
-        public <T> Builder component(Supplier<DataComponentType<T>> type, T value) {
-            properties.component(type, value);
+        public <T> Builder component(PortRegistryEntry<PortDataComponentType<?>, PortDataComponentType<T>> type, T value) {
+            PortItemExtension.Properties.component(properties, type, value);
             return this;
         }
 
-        public Builder attribute(Holder<Attribute> attribute, String path, double amount, AttributeModifier.Operation operation) {
-            attributesBuilder.put(attribute, new AttributeModifier(TerraCurio.asResource(name + "_" + path), amount, operation));
+        @Diff
+        public Builder attribute(Attribute attribute, String path, double amount, PortAttributeModifier.PortOperation operation) {
+            attributesBuilder.put(attribute, new AttributeModifier(UUID.fromString(defaultId.getPath()), name + "_" + path, amount, operation.unwrap()));
             return this;
         }
 
-        public Builder attribute(Holder<Attribute> attribute, double amount, AttributeModifier.Operation operation) {
-            attributesBuilder.put(attribute, new AttributeModifier(defaultId, amount, operation));
+        @Diff
+        public Builder attribute(Attribute attribute, double amount, PortAttributeModifier.PortOperation operation) {
+            attributesBuilder.put(attribute, new AttributeModifier(UUID.fromString(defaultId.getPath()), defaultId.getPath(), amount, operation.unwrap()));
+            return this;
+        }
+
+        public Builder attribute(Holder<Attribute> attribute, String path, double amount, PortAttributeModifier.PortOperation operation) {
+            attributesBuilder.put(attribute.value(), new AttributeModifier(UUID.fromString(defaultId.getPath()), name + "_" + path, amount, operation.unwrap()));
+            return this;
+        }
+
+        public Builder attribute(Holder<Attribute> attribute, double amount, PortAttributeModifier.PortOperation operation) {
+            attributesBuilder.put(attribute.value(), new AttributeModifier(UUID.fromString(defaultId.getPath()), defaultId.getPath(), amount, operation.unwrap()));
             return this;
         }
 
         public Builder stepHeight() {
             if (TCStartupConfigs.shoesExtraStepHeight()) {
-                return attribute(Attributes.STEP_HEIGHT, 0.5, AttributeModifier.Operation.ADD_VALUE);
+                return attribute(PortAttributesExtension.stepHeight().value(), 0.5, PortAttributeModifier.PortOperation.ADD_VALUE);
             }
             return this;
         }
@@ -212,13 +231,13 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         public Builder accessories(PrimitiveValueComponent component, PrimitiveValueComponent... components) {
             if (components.length == 0) {
-                properties.component(TCDataComponentTypes.ACCESSORIES, component);
+                PortItemExtension.Properties.component(properties, TCDataComponentTypes.ACCESSORIES, component);
             } else {
                 Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component.types());
                 for (PrimitiveValueComponent component1 : components) {
                     map.putAll(component1.types());
                 }
-                properties.component(TCDataComponentTypes.ACCESSORIES, new PrimitiveValueComponent(map));
+                PortItemExtension.Properties.component(properties, TCDataComponentTypes.ACCESSORIES, new PrimitiveValueComponent(map));
             }
             return this;
         }
@@ -261,14 +280,14 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         @ApiStatus.Internal
         public Builder initialize() {
-            properties.stacksTo(1).component(ConfluenceMagicLib.MOD_RARITY, rarity);
+            PortItemExtension.Properties.component(properties.stacksTo(1), ConfluenceMagicLib.MOD_RARITY, rarity);
             this.attributes = attributesBuilder.build();
             this.attributesBuilder = null;
             return this;
         }
 
         @ApiStatus.Internal
-        public ImmutableMultimap<Holder<Attribute>, AttributeModifier> getAttributes() {
+        public Multimap<Attribute, AttributeModifier> getAttributes() {
             return attributes;
         }
 

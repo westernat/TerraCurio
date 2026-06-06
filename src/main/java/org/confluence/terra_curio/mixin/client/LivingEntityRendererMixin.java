@@ -23,10 +23,10 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
         return original;
     }
 
-    @WrapWithCondition(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;III)V"))
-    private boolean couldRender(EntityModel<T> instance, PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color, @Local(argsOnly = true) T living) {
-        boolean b = ((IClientLivingEntity) living).terra_curio$isShowingCosmetic();
-        ((IClientLivingEntity) living).terra_curio$setShowingCosmetic(false);
+    @WrapWithCondition(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;IIFFFF)V"))
+    private boolean couldRender(EntityModel<T> instance, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha, @Local(argsOnly = true) T living) {
+        boolean b = IClientLivingEntity.of(living).terra_curio$isShowingCosmetic();
+        IClientLivingEntity.of(living).terra_curio$setShowingCosmetic(false);
         return !b;
     }
 }

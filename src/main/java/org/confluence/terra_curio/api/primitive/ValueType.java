@@ -1,11 +1,12 @@
 package org.confluence.terra_curio.api.primitive;
 
+import PortLib.extensions.net.minecraft.resources.ResourceLocation.PortResourceLocationExtension;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Unit;
 import org.confluence.terra_curio.TerraCurio;
+import org.mesdag.portlib.network.codec.PortStreamCodec;
 
 import java.util.Hashtable;
 import java.util.Map;
@@ -16,7 +17,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final Map<ValueType<?, ? extends PrimitiveValue<?>>, Codec<PrimitiveValue<?>>> VALUE_CODECS = new Hashtable<>();
     public static final Map<ResourceLocation, ValueType<?, ? extends PrimitiveValue<?>>> TYPES = new Hashtable<>();
     public static final Codec<ValueType<?, ? extends PrimitiveValue<?>>> CODEC = ResourceLocation.CODEC.xmap(TYPES::get, ValueType::key);
-    public static final StreamCodec<ByteBuf, ValueType<?, ?>> STREAM_CODEC = ResourceLocation.STREAM_CODEC.map(TYPES::get, ValueType::key);
+    public static final PortStreamCodec<ByteBuf, ValueType<?, ?>> STREAM_CODEC = PortResourceLocationExtension.streamCodec().map(TYPES::get, ValueType::key);
 
     private final ResourceLocation key;
     private final CombineRule<T, V> combineRule;
@@ -32,9 +33,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     }
 
     private static <T, V extends PrimitiveValue<T>> void registerCodec(ValueType<?, ? extends PrimitiveValue<?>> type, Codec<V> codec) {
-        if (codec instanceof Codec<? extends PrimitiveValue<?>> codec1) {
-            VALUE_CODECS.put(type, (Codec<PrimitiveValue<?>>) codec1);
-        }
+        VALUE_CODECS.put(type, (Codec<PrimitiveValue<?>>) codec);
     }
 
     private static void registerType(ResourceLocation id, ValueType<?, ? extends PrimitiveValue<?>> type) {

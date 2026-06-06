@@ -1,26 +1,26 @@
 package org.confluence.terra_curio.network.s2c;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.server.ServerLifecycleHooks;
-import org.confluence.lib.network.IPacketS2C;
+import net.minecraftforge.server.ServerLifecycleHooks;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
+import org.mesdag.portlib.network.IPortPacket;
+import org.mesdag.portlib.network.codec.PortByteBufCodecs;
+import org.mesdag.portlib.network.codec.PortStreamCodec;
 
-public record SetItemEntityPickupDelayPacketS2C(int id, int delay) implements IPacketS2C {
-    public static final Type<SetItemEntityPickupDelayPacketS2C> TYPE = new Type<>(TerraCurio.asResource("set_item_entity_pickup_delay"));
-    public static final StreamCodec<ByteBuf, SetItemEntityPickupDelayPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT, SetItemEntityPickupDelayPacketS2C::id,
-            ByteBufCodecs.VAR_INT, SetItemEntityPickupDelayPacketS2C::delay,
+public record SetItemEntityPickupDelayPacketS2C(int id, int delay) implements IPortPacket.S2C {
+    public static final ResourceLocation ID = TerraCurio.asResource("set_item_entity_pickup_delay");
+    public static final PortStreamCodec<ByteBuf, SetItemEntityPickupDelayPacketS2C> STREAM_CODEC = PortStreamCodec.composite(
+            PortByteBufCodecs.VAR_INT, SetItemEntityPickupDelayPacketS2C::id,
+            PortByteBufCodecs.VAR_INT, SetItemEntityPickupDelayPacketS2C::delay,
             SetItemEntityPickupDelayPacketS2C::new
     );
 
     @Override
-    public Type<SetItemEntityPickupDelayPacketS2C> type() {
-        return TYPE;
+    public ResourceLocation identifier() {
+        return ID;
     }
 
     @Override
@@ -30,7 +30,7 @@ public record SetItemEntityPickupDelayPacketS2C(int id, int delay) implements IP
 
     public static void sendToAll(int id, int delay) {
         if (ServerLifecycleHooks.getCurrentServer() != null) {
-            PacketDistributor.sendToAllPlayers(new SetItemEntityPickupDelayPacketS2C(id, delay));
+            TerraCurio.HANDLER.sendToAllPlayers(new SetItemEntityPickupDelayPacketS2C(id, delay));
         } else {
             TerraCurio.LOGGER.warn("Trying send a packet with no server!");
         }

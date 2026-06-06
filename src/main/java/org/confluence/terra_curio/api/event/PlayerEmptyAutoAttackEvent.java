@@ -2,10 +2,11 @@ package org.confluence.terra_curio.api.event;
 
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.ICancellableEvent;
-import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.eventbus.api.Cancelable;
 
-public class PlayerEmptyAutoAttackEvent extends PlayerEvent implements ICancellableEvent {
+@Cancelable
+public class PlayerEmptyAutoAttackEvent extends PlayerEvent {
     private final ItemStack itemStack;
 
     public PlayerEmptyAutoAttackEvent(Player player, ItemStack itemStack) {

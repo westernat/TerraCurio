@@ -60,7 +60,7 @@ public abstract class LivingEntityClientMixin implements IClientLivingEntity, Se
         return original.call(instance, factorX, factorY, factorZ);
     }
 
-    @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1))
+    @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z", ordinal = 1))
     private boolean neptunesShell(boolean original) {
         return original || (TCClientPacketHandler.isHasNeptunesShell() && IEntity.of(confluence$self()).terra_curio$isPlayer());
     }

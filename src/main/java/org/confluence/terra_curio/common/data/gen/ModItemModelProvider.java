@@ -2,8 +2,8 @@ package org.confluence.terra_curio.common.data.gen;
 
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.BlockItem;
-import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
+import net.minecraftforge.client.model.generators.ItemModelProvider;
+import net.minecraftforge.common.data.ExistingFileHelper;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCItems;
 

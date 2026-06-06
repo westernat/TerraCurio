@@ -5,7 +5,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.common.Tags;
+import org.mesdag.portlib.wrapper.common.PortTags;
 
 public final class ScopeFovHandler {
     static boolean hasScope = false;
@@ -15,7 +15,7 @@ public final class ScopeFovHandler {
 
     public static void handle(Player player) {
         // confluence mixin here
-        if (hasScope && player.isCrouching() && Minecraft.getInstance().options.getCameraType().isFirstPerson() && player.getItemInHand(InteractionHand.MAIN_HAND).is(Tags.Items.RANGED_WEAPON_TOOLS)) {
+        if (hasScope && player.isCrouching() && Minecraft.getInstance().options.getCameraType().isFirstPerson() && player.getItemInHand(InteractionHand.MAIN_HAND).is(PortTags.Items.RANGED_WEAPON_TOOLS)) {
             if (!scoping) {
                 if (fovModifier != 1.0F) {
                     player.playSound(SoundEvents.SPYGLASS_USE);

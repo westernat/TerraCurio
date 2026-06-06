@@ -1,15 +1,14 @@
 package org.confluence.terra_curio.common.init;
 
-import net.neoforged.neoforge.attachment.AttachmentType;
-import net.neoforged.neoforge.registries.DeferredRegister;
-import net.neoforged.neoforge.registries.NeoForgeRegistries;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
-
-import java.util.function.Supplier;
+import org.mesdag.portlib.attachment.PortAttachmentType;
+import org.mesdag.portlib.registries.PortAttachmentRegistration;
+import org.mesdag.portlib.registries.PortRegisterHandler;
+import org.mesdag.portlib.registries.PortRegistryEntry;
 
 public final class TCAttachments {
-    public static final DeferredRegister<AttachmentType<?>> TYPES = DeferredRegister.create(NeoForgeRegistries.Keys.ATTACHMENT_TYPES, TerraCurio.MODID);
+    public static final PortAttachmentRegistration TYPES = PortRegisterHandler.attachment(TerraCurio.MODID);
 
-    public static final Supplier<AttachmentType<AccessoriesAttachment>> ACCESSORIES = TCAttachments.TYPES.register("accessories", () -> AttachmentType.serializable(AccessoriesAttachment::new).copyOnDeath().build());
+    public static final PortRegistryEntry<PortAttachmentType<?>, PortAttachmentType<AccessoriesAttachment>> ACCESSORIES = TCAttachments.TYPES.register("accessories", () -> PortAttachmentType.serializable(AccessoriesAttachment::new).copyOnDeath().build());
 }

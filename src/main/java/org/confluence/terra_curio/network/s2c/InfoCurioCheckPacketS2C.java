@@ -1,15 +1,12 @@
 package org.confluence.terra_curio.network.s2c;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.lib.common.item.IFunctionCouldEnable;
-import org.confluence.lib.network.IPacketS2C;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.client.handler.InformationHandler;
@@ -18,23 +15,26 @@ import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.item.IMultiFunctionCouldEnable;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.confluence.terra_curio.util.TCUtils;
+import org.mesdag.portlib.network.IPortPacket;
+import org.mesdag.portlib.network.codec.PortByteBufCodecs;
+import org.mesdag.portlib.network.codec.PortStreamCodec;
 
 import java.util.ArrayList;
 import java.util.Set;
 
-public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements IPacketS2C {
-    public static final Type<InfoCurioCheckPacketS2C> TYPE = new Type<>(TerraCurio.asResource("info_curio_check"));
-    public static final StreamCodec<ByteBuf, InfoCurioCheckPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT, InfoCurioCheckPacketS2C::playerId,
-            ByteBufCodecs.BYTE_ARRAY, InfoCurioCheckPacketS2C::enabled,
+public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements IPortPacket.S2C {
+    public static final ResourceLocation ID = TerraCurio.asResource("info_curio_check");
+    public static final PortStreamCodec<ByteBuf, InfoCurioCheckPacketS2C> STREAM_CODEC = PortStreamCodec.composite(
+            PortByteBufCodecs.VAR_INT, InfoCurioCheckPacketS2C::playerId,
+            PortByteBufCodecs.BYTE_ARRAY, InfoCurioCheckPacketS2C::enabled,
             InfoCurioCheckPacketS2C::new
     );
     public static final int ARRAY_LENGTH = 13;
     public static final double MAX_SHARE_DISTANCE_SQR = 1024.0;
 
     @Override
-    public Type<InfoCurioCheckPacketS2C> type() {
-        return TYPE;
+    public ResourceLocation identifier() {
+        return ID;
     }
 
     @Override
@@ -107,7 +107,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements I
             if (lens == 0 && list.contains(TCItems.MECHANICAL$LENS))
                 lens = checkEnabled(lens, (byte) 1, stack, TCItems.MECHANICAL$LENS);
         }
-        PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), new byte[]{
+        TerraCurio.HANDLER.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), new byte[]{
                 watch, weatherRadio, sextant, guide, detector, analyzer,
                 radar, counter, dpsMeter, stopwatch, compass, depthMeter, lens
         }));
@@ -169,7 +169,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements I
         }
         boolean equals = watch == -125 && weatherRadio == -128 && sextant == -128 && guide == -128 && detector == -128 && analyzer == -128 &&
                 radar == -128 && counter == -128 && dpsMeter == -128 && stopwatch == -128 && compass == -128 && depthMeter == -128 && lens == -128;
-        if (equals) return; // 如果不需要发送, 则返回
+        if (equals) return;
         InfoCurioCheckPacketS2C packet = new InfoCurioCheckPacketS2C(serverPlayer.getId(), new byte[]{
                 watch, weatherRadio, sextant, guide, detector, analyzer,
                 radar, counter, dpsMeter, stopwatch, compass, depthMeter, lens
@@ -177,7 +177,7 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements I
         Object team = TCUtils.getTeam(serverPlayer);
         serverPlayer.serverLevel().players().forEach(player -> {
             if (player != serverPlayer && TCUtils.getTeam(player) == team && player.distanceToSqr(serverPlayer) < MAX_SHARE_DISTANCE_SQR) {
-                PacketDistributor.sendToPlayer(player, packet);
+                TerraCurio.HANDLER.sendToPlayer(player, packet);
             }
         });
     }

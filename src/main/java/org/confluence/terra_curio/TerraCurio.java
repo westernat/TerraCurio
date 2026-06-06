@@ -1,15 +1,19 @@
 package org.confluence.terra_curio;
 
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.loading.FMLEnvironment;
-import net.neoforged.neoforge.client.gui.ConfigurationScreen;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.client.TCClientConfigs;
+import org.confluence.terra_curio.client.event.TCGameClientEvents;
+import org.confluence.terra_curio.client.event.TCModClientEvent;
 import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
+import org.confluence.terra_curio.common.event.TCGameEvents;
+import org.confluence.terra_curio.common.event.TCModEvents;
 import org.confluence.terra_curio.common.init.*;
+import org.mesdag.portlib.diff.Diff;
+import org.mesdag.portlib.network.PortNetworkHandler;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,27 +22,31 @@ public class TerraCurio {
     public static final String MODID = "terra_curio";
     public static final Logger LOGGER = LoggerFactory.getLogger("Terra Curio");
     public static final String CURIO_SLOT = "accessory";
+    @Diff
+    public static final PortNetworkHandler HANDLER = new PortNetworkHandler(MODID, "1");
 
-    public TerraCurio(IEventBus eventBus, ModContainer modContainer) {
-        TCStartupConfigs.register(modContainer);
-        TCCommonConfigs.register(modContainer);
-        if (FMLEnvironment.dist.isClient()) {
-            TCClientConfigs.register(modContainer);
-            modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+    public TerraCurio(FMLJavaModLoadingContext context) {
+        IEventBus eventBus = context.getModEventBus();
+        TCStartupConfigs.register();
+        TCCommonConfigs.register(context);
+        TCModEvents.init();
+        TCGameEvents.init();
+        if (LibUtils.isPhysicalClient()) {
+            TCModEvents.init();
+            TCModClientEvent.init();
+            TCGameClientEvents.init();
+            TCClientConfigs.register(context);
+//            container.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, ConfigurationScreen::new);
         }
         TCSoundEvents.SOUNDS.register(eventBus);
         TCEffects.EFFECTS.register(eventBus);
         TCEntities.ENTITIES.register(eventBus);
-        TCDataComponentTypes.TYPES.register(eventBus);
         TCItems.register(eventBus);
         TCTabs.TABS.register(eventBus);
-        TCAttachments.TYPES.register(eventBus);
-        TCTriggers.TYPES.register(eventBus);
         TCRecipes.register(eventBus);
         TCBlocks.BLOCKS.register(eventBus);
         TCMenus.TYPES.register(eventBus);
         AccessoriesValueCommand.INFOS.register(eventBus);
-        TCArmorMaterials.MATERIALS.register(eventBus);
         eventBus.addListener(TCDataMaps::registerDataMapTypes);
     }
 

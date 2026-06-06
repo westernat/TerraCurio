@@ -5,7 +5,6 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.mixin.accessor.LivingEntityAccessor;
 import org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S;
 
@@ -54,7 +53,7 @@ public final class PlayerClimbHandler {
             localPlayer.fallDistance = 0.0F;
             localPlayer.setDeltaMovement(motion.x * 0.93, motionY, motion.z * 0.93);
             PlayerJumpHandler.reset(true);
-            PacketDistributor.sendToServer(new PlayerJumpPacketC2S(RESET_FALL_DISTANCE, (float) motionY));
+            PlayerJumpPacketC2S.sendToServer(RESET_FALL_DISTANCE, (float) motionY);
         }
     }
 
@@ -78,11 +77,11 @@ public final class PlayerClimbHandler {
     }
 
     private static void wallJump(LocalPlayer localPlayer, double x, double z) {
-        double motionY = ((LivingEntityAccessor) localPlayer).callGetJumpPower(GravitationHandler.getJumpDir()) * 1.1;
+        double motionY = ((LivingEntityAccessor) localPlayer).callGetJumpPower() * GravitationHandler.getJumpDir() * 1.1;
         Vec3 vec3 = localPlayer.getDeltaMovement();
         localPlayer.setDeltaMovement(vec3.add(vec3.x - x * 0.11, motionY, vec3.z - z * 0.11));
         localPlayer.hasImpulse = true;
-        PacketDistributor.sendToServer(new PlayerJumpPacketC2S(JUMP_BY_SELF, (float) motionY));
+        PlayerJumpPacketC2S.sendToServer(JUMP_BY_SELF, (float) motionY);
     }
 
     public static void handlePacket(byte climberAmount) {

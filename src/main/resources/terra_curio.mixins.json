@@ -5,10 +5,10 @@
     "compatibilityLevel": "JAVA_17",
     "refmap": "terra_curio.refmap.json",
     "mixins": [
+        "BowItemMixin",
         "CrossbowItemMixin",
         "EntityMixin",
         "LivingEntityMixin",
-        "ProjectileWeaponItemMixin",
         "ServerGamePacketListenerImplMixin",
         "ServerPlayer$ContainerListenerMixin",
         "SlimeBlockMixin",
@@ -28,9 +28,7 @@
         "client.PlayerClientMixin",
         "client.accessor.LocalPlayerAccessor",
         "client.accessor.MinecraftAccessor",
-        "client.accessor.ModelPartAccessor",
-        "integration.curios.CuriosClientPacketsMixin",
-        "integration.sodiumdynamiclights.DynamicLightHandlersMixin"
+        "integration.curios.CuriosClientPacketsMixin"
     ],
     "injectors": {
         "defaultRequire": 1

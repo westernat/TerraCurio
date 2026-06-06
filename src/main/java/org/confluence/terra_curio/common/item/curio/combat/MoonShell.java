@@ -1,23 +1,22 @@
 package org.confluence.terra_curio.common.item.curio.combat;
 
+import PortLib.extensions.net.minecraft.world.entity.ai.attributes.Attributes.PortAttributesExtension;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.core.Holder;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.item.curio.NightBonusCurioItem;
 import org.confluence.terra_curio.util.CuriosUtils;
 import top.theillusivec4.curios.api.SlotContext;
 
+import java.util.UUID;
+
 public class MoonShell extends NightBonusCurioItem implements ICosmetic {
-    public static final ResourceLocation ID = TerraCurio.asResource("moon_shell");
-    private static final ImmutableMultimap<Holder<Attribute>, AttributeModifier> UNDER_WATER = ImmutableMultimap.of(
-            Attributes.SUBMERGED_MINING_SPEED, new AttributeModifier(ID, 0.8, AttributeModifier.Operation.ADD_VALUE)
+    public static final UUID ID = UUID.fromString("moon_shell");
+    private static final Multimap<Attribute, AttributeModifier> UNDER_WATER = ImmutableMultimap.of(
+            PortAttributesExtension.submergedMiningSpeed().value(), new AttributeModifier(ID, "moon_shell", 0.8, AttributeModifier.Operation.ADDITION)
     );
 
     public MoonShell(Builder builder) {
@@ -31,7 +30,7 @@ public class MoonShell extends NightBonusCurioItem implements ICosmetic {
     }
 
     @Override
-    public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID id, ItemStack stack) {
         LivingEntity living = slotContext.entity();
         if (living != null && living.isInWaterOrBubble()) {
             return UNDER_WATER;

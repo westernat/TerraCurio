@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
@@ -14,7 +15,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Player.class)
 public abstract class PlayerClientMixin implements SelfGetter<Player> {
@@ -26,20 +26,20 @@ public abstract class PlayerClientMixin implements SelfGetter<Player> {
         return IEntity.of(confluence$self()).terra_curio$isShouldRot() ? new Vec3(pVec.x, -pVec.y, pVec.z) : pVec;
     }
 
-    @Inject(method = "maybeBackOffFromEdge", at = @At(value = "RETURN", ordinal = 0), cancellable = true)
-    private void backOff2(CallbackInfoReturnable<Vec3> cir, @Local(ordinal = 0) double d0, @Local(ordinal = 1) double d1) {
+    @ModifyExpressionValue(method = "maybeBackOffFromEdge", at = @At(value = "NEW", target = "(DDD)Lnet/minecraft/world/phys/Vec3;"))
+    private Vec3 backOff2(Vec3 original, @Local(name = "d0") double d0, @Local(name = "d1") double d1) {
         if (IEntity.of(confluence$self()).terra_curio$isShouldRot()) {
-            Vec3 vec3 = cir.getReturnValue();
-            cir.setReturnValue(new Vec3(d0, -vec3.y, d1));
+            return new Vec3(d0, -original.y, d1);
         }
+        return original;
     }
 
-    @Inject(method = "maybeBackOffFromEdge", at = @At(value = "RETURN", ordinal = 1), cancellable = true)
-    private void backOff3(CallbackInfoReturnable<Vec3> cir) {
+    @ModifyExpressionValue(method = "maybeBackOffFromEdge", at = @At(value = "NEW", target = "(DDD)Lnet/minecraft/world/phys/Vec3;"))
+    private Vec3 backOff3(Vec3 original) {
         if (IEntity.of(confluence$self()).terra_curio$isShouldRot()) {
-            Vec3 vec3 = cir.getReturnValue();
-            cir.setReturnValue(new Vec3(vec3.x, -vec3.y, vec3.z));
+            return new Vec3(original.x, -original.y, original.z);
         }
+        return original;
     }
 
     @WrapOperation(method = "maybeBackOffFromEdge", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;maxUpStep()F"))

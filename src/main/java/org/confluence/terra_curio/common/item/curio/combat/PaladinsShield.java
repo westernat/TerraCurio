@@ -3,6 +3,7 @@ package org.confluence.terra_curio.common.item.curio.combat;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -25,14 +26,14 @@ public class PaladinsShield extends BaseCurioItem {
             Object team = TCUtils.getTeam(serverPlayer);
             for (Player player : serverPlayer.level().players()) {
                 if (TCUtils.getTeam(player) != team) continue;
-                player.addEffect(new MobEffectInstance(TCEffects.PALADINS_SHIELD, 600, player == serverPlayer ? 1 : 0));
+                player.addEffect(new MobEffectInstance(TCEffects.PALADINS_SHIELD.get(), 600, player == serverPlayer ? 1 : 0));
             }
         }
     }
 
     @Override
-    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
-        return CuriosUtils.noSameCurio(entity, PaladinsShield.class);
+    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, Entity entity) {
+        return entity instanceof LivingEntity living && CuriosUtils.noSameCurio(living, PaladinsShield.class);
     }
 
     public static float apply(LivingEntity living, DamageSource damageSource, float amount) {
@@ -56,7 +57,7 @@ public class PaladinsShield extends BaseCurioItem {
     }
 
     public static boolean isOwner(LivingEntity living) {
-        MobEffectInstance effect = living.getEffect(TCEffects.PALADINS_SHIELD);
+        MobEffectInstance effect = living.getEffect(TCEffects.PALADINS_SHIELD.get());
         return effect != null && effect.getAmplifier() != 0;
     }
 }

@@ -1,5 +1,7 @@
 package org.confluence.terra_curio.common.entity;
 
+import PortLib.extensions.net.minecraft.world.entity.Entity.PortEntityExtension;
+import PortLib.extensions.net.minecraft.world.phys.AABB.PortAABBExtension;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -46,8 +48,8 @@ public class BeeProjectile extends Projectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(DATA_IS_GIANT, false);
+    protected void defineSynchedData() {
+        entityData.define(DATA_IS_GIANT, false);
     }
 
     public boolean isGiant() {
@@ -59,7 +61,12 @@ public class BeeProjectile extends Projectile {
         trackTarget();
         if (tickCount % 4 == 0) {
             AABB boundingBox = getBoundingBox().inflate(1.0);
-            HitResult hitresult = ProjectileUtil.getEntityHitResult(level(), this, boundingBox.getMinPosition(), boundingBox.getMaxPosition(), boundingBox, this::canHitEntity);
+            HitResult hitresult = ProjectileUtil.getEntityHitResult(
+                    level(), this,
+                    PortAABBExtension.getMinPosition(boundingBox),
+                    PortAABBExtension.getMaxPosition(boundingBox),
+                    boundingBox, this::canHitEntity
+            );
             if (hitresult instanceof EntityHitResult entityHitResult) {
                 onHitEntity(entityHitResult);
             }
@@ -77,7 +84,7 @@ public class BeeProjectile extends Projectile {
             setDeltaMovement(motion);
             blockHitCount++;
         }
-        if (getInBlockState().liquid()) discard();
+        if (PortEntityExtension.getInBlockState(this).liquid()) discard();
         else if (blockHitCount > (isGiant() ? 2 : 1) || tickCount > (isGiant() ? 220 : 200))
             discard();
 
@@ -182,7 +189,7 @@ public class BeeProjectile extends Projectile {
     }
 
     @Override
-    public boolean canChangeDimensions(Level oldLevel, Level newLevel) {
+    public boolean canChangeDimensions() {
         return false;
     }
 }

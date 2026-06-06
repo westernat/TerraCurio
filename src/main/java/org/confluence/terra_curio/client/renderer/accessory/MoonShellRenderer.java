@@ -30,13 +30,13 @@ public class MoonShellRenderer implements ICurioRenderer {
         if (living.isInWaterOrBubble()) {
             ICurioRenderer.followBodyRotations(living, mermanModel);
             ICurioRenderer.followHeadRotations(living, mermanModel.head);
-            mermanModel.renderToBuffer(poseStack, multiBufferSource.getBuffer(MermanRenderer.CUTOUT), light, OverlayTexture.NO_OVERLAY);
-            ((IClientLivingEntity) living).terra_curio$setShowingCosmetic(true);
+            mermanModel.renderToBuffer(poseStack, multiBufferSource.getBuffer(MermanRenderer.CUTOUT), light, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+            IClientLivingEntity.of(living).terra_curio$setShowingCosmetic(true);
         } else if (LibDateUtils.isNight(living.level())) {
             ICurioRenderer.followBodyRotations(living, werewolfModel);
             ICurioRenderer.followHeadRotations(living, werewolfModel.head);
-            werewolfModel.renderToBuffer(poseStack, multiBufferSource.getBuffer(WerewolfRenderer.CUTOUT), light, OverlayTexture.NO_OVERLAY);
-            ((IClientLivingEntity) living).terra_curio$setShowingCosmetic(true);
+            werewolfModel.renderToBuffer(poseStack, multiBufferSource.getBuffer(WerewolfRenderer.CUTOUT), light, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+            IClientLivingEntity.of(living).terra_curio$setShowingCosmetic(true);
         }
     }
 }

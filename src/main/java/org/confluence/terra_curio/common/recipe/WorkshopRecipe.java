@@ -2,8 +2,6 @@ package org.confluence.terra_curio.common.recipe;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
@@ -13,6 +11,8 @@ import org.confluence.lib.common.recipe.EnvironmentLevelAccess;
 import org.confluence.lib.common.recipe.SimpleRecipeSerializer;
 import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCRecipes;
+import org.mesdag.portlib.network.PortRegistryFriendlyByteBuf;
+import org.mesdag.portlib.network.codec.PortStreamCodec;
 
 public class WorkshopRecipe extends EnvironmentAmountRecipe {
     public WorkshopRecipe(ItemStack result, NonNullList<Ingredient> ingredients, EnvironmentLevelAccess.Matcher environment) {
@@ -31,7 +31,7 @@ public class WorkshopRecipe extends EnvironmentAmountRecipe {
 
     @Override
     public ItemStack getToastSymbol() {
-        return TCBlocks.WORKSHOP.toStack();
+        return TCBlocks.WORKSHOP.get().asItem().getDefaultInstance();
     }
 
     @Override
@@ -45,13 +45,15 @@ public class WorkshopRecipe extends EnvironmentAmountRecipe {
     }
 
     public static class Serializer extends SimpleRecipeSerializer<WorkshopRecipe> {
+        public static final MapCodec<WorkshopRecipe> CODEC = environmentShapelessSerializerMapCodec(WorkshopRecipe::new);
+
         @Override
         protected MapCodec<WorkshopRecipe> getCodec() {
-            return environmentShapelessSerializerMapCodec(WorkshopRecipe::new);
+            return CODEC;
         }
 
         @Override
-        protected StreamCodec<RegistryFriendlyByteBuf, WorkshopRecipe> getStreamCodec() {
+        protected PortStreamCodec<PortRegistryFriendlyByteBuf, WorkshopRecipe> getStreamCodec() {
             return environmentShapelessSerializerSteamCodec(WorkshopRecipe::new);
         }
     }

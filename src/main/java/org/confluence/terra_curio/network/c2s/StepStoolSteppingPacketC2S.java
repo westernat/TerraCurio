@@ -1,35 +1,35 @@
 package org.confluence.terra_curio.network.c2s;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.lib.network.IPacketC2S;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.entity.StepStoolEntity;
 import org.confluence.terra_curio.common.item.curio.movement.StepStool;
 import org.confluence.terra_curio.util.CuriosUtils;
+import org.mesdag.portlib.network.IPortPacket;
+import org.mesdag.portlib.network.codec.PortByteBufCodecs;
+import org.mesdag.portlib.network.codec.PortStreamCodec;
 
 import java.util.function.Predicate;
 
-public record StepStoolSteppingPacketC2S(int slot, byte step) implements IPacketC2S {
+public record StepStoolSteppingPacketC2S(int slot, byte step) implements IPortPacket.C2S {
     public static final byte STEP_MASK = 0b0111111;
     public static final byte INCREASE = 0b1000000;
 
-    public static final Type<StepStoolSteppingPacketC2S> TYPE = new Type<>(TerraCurio.asResource("step_stool_stepping_c2s"));
-    public static final StreamCodec<ByteBuf, StepStoolSteppingPacketC2S> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT, StepStoolSteppingPacketC2S::slot,
-            ByteBufCodecs.BYTE, StepStoolSteppingPacketC2S::step,
+    public static final ResourceLocation ID = TerraCurio.asResource("step_stool_stepping_c2s");
+    public static final PortStreamCodec<ByteBuf, StepStoolSteppingPacketC2S> STREAM_CODEC = PortStreamCodec.composite(
+            PortByteBufCodecs.VAR_INT, StepStoolSteppingPacketC2S::slot,
+            PortByteBufCodecs.BYTE, StepStoolSteppingPacketC2S::step,
             StepStoolSteppingPacketC2S::new
     );
     private static final Predicate<ItemStack> PREDICATE = itemStack -> itemStack.getItem() instanceof StepStool;
 
     @Override
-    public Type<StepStoolSteppingPacketC2S> type() {
-        return TYPE;
+    public ResourceLocation identifier() {
+        return ID;
     }
 
     @Override
@@ -61,6 +61,6 @@ public record StepStoolSteppingPacketC2S(int slot, byte step) implements IPacket
     }
 
     public static void sendToServer(int slot, byte step) {
-        PacketDistributor.sendToServer(new StepStoolSteppingPacketC2S(slot, step));
+        TerraCurio.HANDLER.sendToServer(new StepStoolSteppingPacketC2S(slot, step));
     }
 }

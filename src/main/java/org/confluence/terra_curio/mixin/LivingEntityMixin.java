@@ -1,18 +1,17 @@
 package org.confluence.terra_curio.mixin;
 
+import PortLib.extensions.net.minecraft.world.entity.ai.attributes.Attributes.PortAttributesExtension;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
-import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.mixed.SelfGetter;
@@ -93,7 +92,7 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
     }
 
     @Shadow
-    public abstract boolean hasEffect(Holder<MobEffect> effect);
+    public abstract boolean hasEffect(MobEffect effect);
 
     @ModifyArg(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"), index = 2)
     private double modifyParticlePosY(double posY) {
@@ -111,7 +110,7 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
 
     @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
     private Vec3 confused(Vec3 vec3) {
-        if (hasEffect(TCEffects.CONFUSED)) {
+        if (hasEffect(TCEffects.CONFUSED.get())) {
             vec3 = vec3.reverse();
         }
         if (IEntity.of(confluence$self()).terra_curio$isShouldRot()) {
@@ -121,14 +120,14 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
     }
 
     @Inject(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z", ordinal = 0))
-    private void cacheFluidWalkable(CallbackInfo ci, @Local FluidState fluidState, @Share("isFluidWalkable") LocalBooleanRef isFluidWalkable) {
-        isFluidWalkable.set(TCUtils.isFluidWalkable(confluence$self(), fluidState));
+    private void cacheFluidWalkable(CallbackInfo ci, @Local(name = "fluidstate") FluidState fluidstate, @Share("isFluidWalkable") LocalBooleanRef isFluidWalkable) {
+        isFluidWalkable.set(TCUtils.isFluidWalkable(confluence$self(), fluidstate));
     }
 
-    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getAttributeValue(Lnet/minecraft/core/Holder;)D", ordinal = 0))
-    private double skipEfficiency(LivingEntity instance, Holder<Attribute> attribute, Operation<Double> original, @Share("isFluidWalkable") LocalBooleanRef isFluidWalkable) {
+    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getDepthStrider(Lnet/minecraft/world/entity/LivingEntity;)I"))
+    private int skipEfficiency(LivingEntity entity, Operation<Integer> original, @Share("isFluidWalkable") LocalBooleanRef isFluidWalkable) {
         if (isFluidWalkable.get()) return 0;
-        return original.call(instance, attribute);
+        return (int) (original.call(entity) * entity.getAttributeValue(PortAttributesExtension.waterMovementEfficiency()));
     }
 
     @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
@@ -155,8 +154,8 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
     }
 
     @Inject(method = "onChangedBlock", at = @At("TAIL"))
-    private void onMoved(CallbackInfo ci, @Local(argsOnly = true) ServerLevel level) {
-        TCUtils.onChangedBlock(confluence$self(), level);
+    private void onMoved(CallbackInfo ci) {
+        TCUtils.onChangedBlock(confluence$self(), (ServerLevel) confluence$self().level());
     }
 
     @Inject(method = "checkTotemDeathProtection", at = @At(value = "CONSTANT", args = "nullValue=true"), cancellable = true)

@@ -2,16 +2,16 @@ package org.confluence.terra_curio.common.data.gen;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
+import net.minecraftforge.common.data.ExistingFileHelper;
+import net.minecraftforge.data.event.GatherDataEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 
 import java.util.concurrent.CompletableFuture;
 
 import static org.confluence.terra_curio.TerraCurio.MODID;
 
-@EventBusSubscriber(modid = MODID)
+@Mod.EventBusSubscriber(modid = MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class DataGenerator {
     @SubscribeEvent
     public static void gatherData(GatherDataEvent event) {
@@ -29,6 +29,6 @@ public class DataGenerator {
         generator.addProvider(server, new ModItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
         generator.addProvider(server, new ModLanguageProvider(output, "en_us"));
         generator.addProvider(server, new ModLanguageProvider(output, "zh_cn"));
-        generator.addProvider(server, new WorkshopProvider(output, lookup));
+        generator.addProvider(server, new WorkshopProvider(output));
     }
 }

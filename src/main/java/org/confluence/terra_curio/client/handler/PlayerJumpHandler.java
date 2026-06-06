@@ -8,7 +8,6 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
 import org.confluence.terra_curio.api.primitive.MayFlyAbilityValue;
@@ -71,9 +70,9 @@ public final class PlayerJumpHandler {
         if (StepStoolHandler.onStool()) return;
 
         if (lastFlight != currentFlight) {
-            if (currentFlight == TCItems.ROCKET_BOOTS.getKey()) {
+            if (TCItems.ROCKET_BOOTS.getKey().equals(currentFlight)) {
                 Minecraft.getInstance().getSoundManager().play(new RocketBootsBoostSoundInstance(localPlayer));
-            } else if (lastFlight == TCItems.ROCKET_BOOTS.getKey()) {
+            } else if (TCItems.ROCKET_BOOTS.getKey().equals(lastFlight)) {
                 Minecraft.getInstance().getSoundManager().play(new RocketBootsStopSoundInstance(localPlayer));
             }
             lastFlight = currentFlight;
@@ -86,7 +85,7 @@ public final class PlayerJumpHandler {
                 Vec3 vec3 = localPlayer.getDeltaMovement();
                 localPlayer.setDeltaMovement(vec3.x, RamRune.FALL_VELOCITY, vec3.z);
                 localPlayer.hasImpulse = true;
-                PacketDistributor.sendToServer(RamRuneFallPacketC2S.INSTANCE);
+                RamRuneFallPacketC2S.sendToServer();
                 jumpKeyDown = true;
                 return;
             }
@@ -201,7 +200,7 @@ public final class PlayerJumpHandler {
 
     public static void multiJump(LocalPlayer localPlayer, float speed) {
         Vec3 vec3 = localPlayer.getDeltaMovement();
-        double motionY = ((LivingEntityAccessor) localPlayer).callGetJumpPower(GravitationHandler.getJumpDir()) * speed;
+        double motionY = ((LivingEntityAccessor) localPlayer).callGetJumpPower() * GravitationHandler.getJumpDir() * speed;
         localPlayer.setDeltaMovement(vec3.x, motionY, vec3.z);
         if (localPlayer.isSprinting()) {
             float f = localPlayer.getYRot() * Mth.DEG_TO_RAD;
@@ -209,7 +208,7 @@ public final class PlayerJumpHandler {
         }
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
-        PacketDistributor.sendToServer(new PlayerJumpPacketC2S((byte) (JUMP_BY_SELF | RESET_FALL_DISTANCE), speed));
+        PlayerJumpPacketC2S.sendToServer((byte) (JUMP_BY_SELF | RESET_FALL_DISTANCE), speed);
     }
 
     private static void oneTimeJump(LocalPlayer localPlayer, float speed) {
@@ -218,7 +217,7 @@ public final class PlayerJumpHandler {
         localPlayer.setDeltaMovement(vec3.x, speed, vec3.z);
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
-        PacketDistributor.sendToServer(new PlayerJumpPacketC2S(RESET_FALL_DISTANCE, speed));
+        PlayerJumpPacketC2S.sendToServer(RESET_FALL_DISTANCE, speed);
     }
 
     private static void fly(LocalPlayer localPlayer, float speed) {
@@ -255,7 +254,7 @@ public final class PlayerJumpHandler {
         localPlayer.setDeltaMovement(motion.x + mx, y, motion.z + mz);
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
-        PacketDistributor.sendToServer(new PlayerJumpPacketC2S(RESET_FALL_DISTANCE, y));
+        PlayerJumpPacketC2S.sendToServer(RESET_FALL_DISTANCE, y);
     }
 
     public static void handleJumpPacket(

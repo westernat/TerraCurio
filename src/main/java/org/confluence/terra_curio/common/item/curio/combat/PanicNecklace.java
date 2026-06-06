@@ -1,10 +1,9 @@
 package org.confluence.terra_curio.common.item.curio.combat;
 
 import com.google.common.collect.Multimap;
-import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -17,6 +16,8 @@ import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.util.CuriosUtils;
 import top.theillusivec4.curios.api.SlotContext;
+
+import java.util.UUID;
 
 public class PanicNecklace extends BaseCurioItem {
     public static final String KEY = TerraCurio.MODID + ":last_hurt";
@@ -37,14 +38,14 @@ public class PanicNecklace extends BaseCurioItem {
     }
 
     @Override
-    public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID id, ItemStack stack) {
         if (!(slotContext.entity() instanceof Player player)) return EMPTY_ATTRIBUTE;
         return LibUtils.getOrCreatePersistedData(player).getLong(KEY) == 0 ? EMPTY_ATTRIBUTE : super.getAttributeModifiers(slotContext, id, stack);
     }
 
     @Override
-    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, LivingEntity entity) {
-        return CuriosUtils.noSameCurio(entity, PanicNecklace.class);
+    public boolean canEquip(ItemStack stack, EquipmentSlot armorType, Entity entity) {
+        return entity instanceof LivingEntity living && CuriosUtils.noSameCurio(living, PanicNecklace.class);
     }
 
     public static void apply(LivingEntity living) {

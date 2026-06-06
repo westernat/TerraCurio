@@ -1,30 +1,29 @@
 package org.confluence.terra_curio.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCItems;
-import org.jetbrains.annotations.NotNull;
+import org.mesdag.portlib.client.GuiLayer;
+import org.mesdag.portlib.client.PortDeltaTicker;
 
-public class DivingHelmetOverlay implements LayeredDraw.Layer {
+public class DivingHelmetOverlay implements GuiLayer {
     private static final ResourceLocation TEXTURE = TerraCurio.asResource("textures/gui/diving_helmet.png");
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, @NotNull DeltaTracker deltaTracker) {
+    public void render(GuiGraphics guiGraphics, PortDeltaTicker ticker) {
         Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.player == null) return;
         if (minecraft.options.getCameraType().isFirstPerson()) {
             ItemStack itemstack = minecraft.player.getInventory().getArmor(3);
             if (itemstack.is(TCItems.DIVING_HELMET.get())) {
-                float f = (float)Math.min(guiGraphics.guiWidth(), guiGraphics.guiHeight());
-                float f1 = Math.min((float)guiGraphics.guiWidth() / f, (float)guiGraphics.guiHeight() / f);
+                float f = (float) Math.min(guiGraphics.guiWidth(), guiGraphics.guiHeight());
+                float f1 = Math.min((float) guiGraphics.guiWidth() / f, (float) guiGraphics.guiHeight() / f);
                 int i = Mth.floor(f * f1);
                 int j = Mth.floor(f * f1);
                 int k = (guiGraphics.guiWidth() - i) / 2;

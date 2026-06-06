@@ -1,30 +1,30 @@
 package org.confluence.terra_curio.network.s2c;
 
+import PortLib.extensions.net.minecraft.resources.ResourceLocation.PortResourceLocationExtension;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.lib.network.IPacketS2C;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.InformationHandler;
+import org.mesdag.portlib.network.IPortPacket;
+import org.mesdag.portlib.network.codec.PortByteBufCodecs;
+import org.mesdag.portlib.network.codec.PortStreamCodec;
 
-public record EntityKilledPacketS2C(int amount, ResourceLocation entityType) implements IPacketS2C {
-    public static final Type<EntityKilledPacketS2C> TYPE = new Type<>(TerraCurio.asResource("entity_killed"));
-    public static final StreamCodec<ByteBuf, EntityKilledPacketS2C> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.VAR_INT, EntityKilledPacketS2C::amount,
-            ResourceLocation.STREAM_CODEC, EntityKilledPacketS2C::entityType,
+public record EntityKilledPacketS2C(int amount, ResourceLocation entityType) implements IPortPacket.S2C {
+    public static final ResourceLocation ID = TerraCurio.asResource("entity_killed");
+    public static final PortStreamCodec<ByteBuf, EntityKilledPacketS2C> STREAM_CODEC = PortStreamCodec.composite(
+            PortByteBufCodecs.VAR_INT, EntityKilledPacketS2C::amount,
+            PortResourceLocationExtension.streamCodec(), EntityKilledPacketS2C::entityType,
             EntityKilledPacketS2C::new
     );
 
     @Override
-    public Type<EntityKilledPacketS2C> type() {
-        return TYPE;
+    public ResourceLocation identifier() {
+        return ID;
     }
 
     @Override
@@ -33,7 +33,7 @@ public record EntityKilledPacketS2C(int amount, ResourceLocation entityType) imp
     }
 
     public static void sendToClient(ServerPlayer serverPlayer, EntityType<?> entityType) {
-        PacketDistributor.sendToPlayer(serverPlayer, new EntityKilledPacketS2C(
+        TerraCurio.HANDLER.sendToPlayer(serverPlayer, new EntityKilledPacketS2C(
                 serverPlayer.getStats().getValue(Stats.ENTITY_KILLED.get(entityType)),
                 BuiltInRegistries.ENTITY_TYPE.getKey(entityType)
         ));

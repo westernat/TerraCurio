@@ -1,68 +1,66 @@
 package org.confluence.terra_curio.common.event;
 
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.fml.event.config.ModConfigEvent;
-import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
-import net.neoforged.neoforge.network.registration.PayloadRegistrar;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCCommonConfigs;
 import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.c2s.*;
 import org.confluence.terra_curio.network.s2c.*;
+import org.mesdag.portlib.event.PortEventHandler;
+import org.mesdag.portlib.event.lifecycle.PortFMLCommonSetupEvent;
+import org.mesdag.portlib.network.PortNetworkHandler;
 
-@EventBusSubscriber(modid = TerraCurio.MODID)
 public final class TCModEvents {
-    @SubscribeEvent
-    public static void commonSetup(FMLCommonSetupEvent event) {
+    public static void init() {
+        PortEventHandler.addListener(TCModEvents::commonSetup);
+        PortEventHandler.addListener(TCModEvents::modConfig$Loading);
+        PortEventHandler.addListener(TCModEvents::modConfig$Reloading);
+        registerPayloadHandlers();
+    }
+
+    private static void commonSetup(PortFMLCommonSetupEvent event) {
         event.enqueueWork(() -> {
-//            TCCommonConfigs.onLoad();
-            NeoForgeMod.enableMergedAttributeTooltips();
+//            NeoForgeMod.enableMergedAttributeTooltips();
         });
     }
 
-    @SubscribeEvent
-    public static void modConfig$Loading(ModConfigEvent.Loading event) {
+    private static void modConfig$Loading(ModConfigEvent.Loading event) {
         if (event.getConfig().getType() == ModConfig.Type.COMMON && TerraCurio.MODID.equals(event.getConfig().getModId())) {
             TCCommonConfigs.onLoad();
         }
     }
 
-    @SubscribeEvent
-    public static void modConfig$Reloading(ModConfigEvent.Reloading event) {
+    private static void modConfig$Reloading(ModConfigEvent.Reloading event) {
         if (event.getConfig().getType() == ModConfig.Type.COMMON && TerraCurio.MODID.equals(event.getConfig().getModId())) {
             TCCommonConfigs.onLoad();
         }
     }
 
-    @SubscribeEvent
-    public static void registerPayloadHandlers(RegisterPayloadHandlersEvent event) {
-        PayloadRegistrar registrar = event.registrar("1");
-        registrar.playToServer(GravitationPacketC2S.TYPE, GravitationPacketC2S.STREAM_CODEC, GravitationPacketC2S::handle);
-        registrar.playToServer(StepStoolSteppingPacketC2S.TYPE, StepStoolSteppingPacketC2S.STREAM_CODEC, StepStoolSteppingPacketC2S::handle);
-        registrar.playToServer(PlayerJumpPacketC2S.TYPE, PlayerJumpPacketC2S.STREAM_CODEC, PlayerJumpPacketC2S::handle);
-        registrar.playToServer(SpeedBootsNBTPacketC2S.TYPE, SpeedBootsNBTPacketC2S.STREAM_CODEC, SpeedBootsNBTPacketC2S::handle);
-        registrar.playToServer(PlayerSprintPacketC2S.TYPE, PlayerSprintPacketC2S.STREAM_CODEC, PlayerSprintPacketC2S::handle);
-        registrar.playToServer(ShootXBonePacketC2S.TYPE, ShootXBonePacketC2S.STREAM_CODEC, ShootXBonePacketC2S::handle);
-        registrar.playToServer(RamRuneFallPacketC2S.TYPE, RamRuneFallPacketC2S.STREAM_CODEC, RamRuneFallPacketC2S::handle);
+    private static void registerPayloadHandlers() {
+        PortNetworkHandler handler = TerraCurio.HANDLER;
+        handler.registerInGameC2S(GravitationPacketC2S.class, GravitationPacketC2S.ID, GravitationPacketC2S.STREAM_CODEC);
+        handler.registerInGameC2S(StepStoolSteppingPacketC2S.class, StepStoolSteppingPacketC2S.ID, StepStoolSteppingPacketC2S.STREAM_CODEC);
+        handler.registerInGameC2S(PlayerJumpPacketC2S.class, PlayerJumpPacketC2S.ID, PlayerJumpPacketC2S.STREAM_CODEC);
+        handler.registerInGameC2S(SpeedBootsNBTPacketC2S.class, SpeedBootsNBTPacketC2S.ID, SpeedBootsNBTPacketC2S.STREAM_CODEC);
+        handler.registerInGameC2S(PlayerSprintPacketC2S.class, PlayerSprintPacketC2S.ID, PlayerSprintPacketC2S.STREAM_CODEC);
+        handler.registerInGameC2S(ShootXBonePacketC2S.class, ShootXBonePacketC2S.ID, ShootXBonePacketC2S.STREAM_CODEC);
+        handler.registerInGameC2S(RamRuneFallPacketC2S.class, RamRuneFallPacketC2S.ID, RamRuneFallPacketC2S.STREAM_CODEC);
 
-        registrar.playToClient(BroadcastGravitationRotPacketS2C.TYPE, BroadcastGravitationRotPacketS2C.STREAM_CODEC, BroadcastGravitationRotPacketS2C::handle);
-        registrar.playToClient(CurioExistsPacketS2C.TYPE, CurioExistsPacketS2C.STREAM_CODEC, CurioExistsPacketS2C::handle);
-        registrar.playToClient(EntityKilledPacketS2C.TYPE, EntityKilledPacketS2C.STREAM_CODEC, EntityKilledPacketS2C::handle);
-        registrar.playToClient(InfoCurioCheckPacketS2C.TYPE, InfoCurioCheckPacketS2C.STREAM_CODEC, InfoCurioCheckPacketS2C::handle);
-        registrar.playToClient(StepStoolSteppingPacketS2C.TYPE, StepStoolSteppingPacketS2C.STREAM_CODEC, StepStoolSteppingPacketS2C::handle);
-        registrar.playToClient(PlayerJumpPacketS2C.TYPE, PlayerJumpPacketS2C.STREAM_CODEC, PlayerJumpPacketS2C::handle);
-        registrar.playToClient(PlayerFlyPacketS2C.TYPE, PlayerFlyPacketS2C.STREAM_CODEC, PlayerFlyPacketS2C::handle);
-        registrar.playToClient(PlayerClimbPacketS2C.TYPE, PlayerClimbPacketS2C.STREAM_CODEC, PlayerClimbPacketS2C::handle);
-        registrar.playToClient(RightClickSubtractorPacketS2C.TYPE, RightClickSubtractorPacketS2C.STREAM_CODEC, RightClickSubtractorPacketS2C::handle);
-        registrar.playToClient(SetItemEntityPickupDelayPacketS2C.TYPE, SetItemEntityPickupDelayPacketS2C.STREAM_CODEC, SetItemEntityPickupDelayPacketS2C::handle);
-        registrar.playToClient(BroadcastRenderPacketS2C.TYPE, BroadcastRenderPacketS2C.STREAM_CODEC, BroadcastRenderPacketS2C::handle);
-        registrar.playToClient(InfiniteFlightPacketS2C.TYPE, InfiniteFlightPacketS2C.STREAM_CODEC, InfiniteFlightPacketS2C::handle);
-        registrar.playToClient(FluidWalkUpdatePacketS2C.TYPE, FluidWalkUpdatePacketS2C.STREAM_CODEC, FluidWalkUpdatePacketS2C::handle);
+        handler.registerInGameS2C(BroadcastGravitationRotPacketS2C.class, BroadcastGravitationRotPacketS2C.ID, BroadcastGravitationRotPacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(CurioExistsPacketS2C.class, CurioExistsPacketS2C.ID, CurioExistsPacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(EntityKilledPacketS2C.class, EntityKilledPacketS2C.ID, EntityKilledPacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(InfoCurioCheckPacketS2C.class, InfoCurioCheckPacketS2C.ID, InfoCurioCheckPacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(StepStoolSteppingPacketS2C.class, StepStoolSteppingPacketS2C.ID, StepStoolSteppingPacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(PlayerJumpPacketS2C.class, PlayerJumpPacketS2C.ID, PlayerJumpPacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(PlayerFlyPacketS2C.class, PlayerFlyPacketS2C.ID, PlayerFlyPacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(PlayerClimbPacketS2C.class, PlayerClimbPacketS2C.ID, PlayerClimbPacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(RightClickSubtractorPacketS2C.class, RightClickSubtractorPacketS2C.ID, RightClickSubtractorPacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(SetItemEntityPickupDelayPacketS2C.class, SetItemEntityPickupDelayPacketS2C.ID, SetItemEntityPickupDelayPacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(BroadcastRenderPacketS2C.class, BroadcastRenderPacketS2C.ID, BroadcastRenderPacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(InfiniteFlightPacketS2C.class, InfiniteFlightPacketS2C.ID, InfiniteFlightPacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(FluidWalkUpdatePacketS2C.class, FluidWalkUpdatePacketS2C.ID, FluidWalkUpdatePacketS2C.STREAM_CODEC);
 
-        registrar.playBidirectional(InfoDisablePacket.TYPE, InfoDisablePacket.STREAM_CODEC, InfoDisablePacket::handle);
+        handler.registerInGameBidirectional(InfoDisablePacket.class, InfoDisablePacket.ID, InfoDisablePacket.STREAM_CODEC);
     }
 }

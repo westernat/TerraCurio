@@ -42,7 +42,7 @@ public class MagmaSkullModel extends HumanoidModel<LivingEntity> {
     }
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, int color) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
         head.render(poseStack, vertexConsumer, packedLight, packedOverlay);
         magma.render(poseStack, vertexConsumer, LightTexture.FULL_BRIGHT, packedOverlay);
     }

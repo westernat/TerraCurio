@@ -1,7 +1,10 @@
 package org.confluence.terra_curio.common.init;
 
+import PortLib.extensions.net.minecraft.world.entity.ai.attributes.Attributes.PortAttributesExtension;
+import PortLib.extensions.net.minecraft.world.item.Item.PortItemExtension;
 import com.google.common.collect.ImmutableListMultimap;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.TagKey;
@@ -12,15 +15,13 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.material.Fluid;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.registries.DeferredItem;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.minecraftforge.registries.RegistryObject;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.common.LibAttributes;
 import org.confluence.lib.common.component.ModRarity;
@@ -39,6 +40,7 @@ import org.confluence.terra_curio.common.item.curio.information.MetalDetector;
 import org.confluence.terra_curio.common.item.curio.information.MultiInfoCurioItem;
 import org.confluence.terra_curio.common.item.curio.master.BasePoint;
 import org.confluence.terra_curio.common.item.curio.movement.*;
+import org.mesdag.portlib.wrapper.world.entity.ai.attributes.PortAttributeModifier;
 
 import java.util.List;
 import java.util.Map;
@@ -48,18 +50,18 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
-import static net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation.ADD_VALUE;
 import static org.confluence.lib.common.component.ModRarity.*;
 import static org.confluence.terra_curio.api.primitive.ValueType.create;
 import static org.confluence.terra_curio.api.primitive.ValueType.ofUnit;
 import static org.confluence.terra_curio.common.component.PrimitiveValueComponent.of;
 import static org.confluence.terra_curio.common.component.PrimitiveValueComponent.units;
+import static org.mesdag.portlib.wrapper.world.entity.ai.attributes.PortAttributeModifier.PortOperation.ADD_MULTIPLIED_TOTAL;
+import static org.mesdag.portlib.wrapper.world.entity.ai.attributes.PortAttributeModifier.PortOperation.ADD_VALUE;
 
 @SuppressWarnings("all")
 public final class TCItems {
-    public static final DeferredRegister.Items OTHERS = DeferredRegister.createItems(TerraCurio.MODID);
-    public static final DeferredRegister.Items CURIOS = DeferredRegister.createItems(TerraCurio.MODID);
+    public static final DeferredRegister<Item> OTHERS = DeferredRegister.create(Registries.ITEM, TerraCurio.MODID);
+    public static final DeferredRegister<Item> CURIOS = DeferredRegister.create(Registries.ITEM, TerraCurio.MODID);
 
     // client side info_check
     public static final ValueType<List<TooltipComponentsValue.Storage>, TooltipComponentsValue> INFORMATION = create("information", TooltipComponentsValue.EXPANSION, TooltipComponentsValue.CODEC, List.of(), TooltipComponentsValue::new);
@@ -124,7 +126,7 @@ public final class TCItems {
     public static final ValueType.UnitType HIVE$PACK = ofUnit("hive_pack");
     public static final ValueType.UnitType INFINITE$FLIGHT = ofUnit("infinite_flight");
 
-    public static final ValueType<Set<Holder<MobEffect>>, MobEffectsValue> EFFECT$IMMUNITIES = ValueType.create("effect_immunities", MobEffectsValue.MERGE, MobEffectsValue.CODEC, Set.of(), MobEffectsValue::new);
+    public static final ValueType<Set<MobEffect>, MobEffectsValue> EFFECT$IMMUNITIES = ValueType.create("effect_immunities", MobEffectsValue.MERGE, MobEffectsValue.CODEC, Set.of(), MobEffectsValue::new);
     public static final ValueType<Boolean, BooleanValue> STAR$CLOCK = ValueType.create("star_clock", BooleanValue.OR, BooleanValue.CODEC, false, BooleanValue::new);
     public static final ValueType.FloatType INVULNERABLE$TICKS$MULTIPLIER = ValueType.ofFloat("invulnerable_ticks_multiplier", FloatValue.GET_MAX_WITHIN_0_TO_100, 1.0F);
     public static final ValueType.FloatType LAVA$HURT$REDUCE = ValueType.ofFloat("lava_hurt_reduce", FloatValue.GET_MAX_WITHIN_0_TO_1, 0.0F);
@@ -144,22 +146,22 @@ public final class TCItems {
     public static final ValueType.IntegerType TOTEM$WITH$COOLDOWN = ValueType.ofInteger("totem_with_cooldown", IntegerValue.GET_MIN_GREAT_EQUAL_THAN_0, -1);
 
     // no updates
-    public static final ValueType<ImmutableListMultimap<Holder<Attribute>, AttributeModifier>, AttributeModifiersValue> ATTRIBUTES = ValueType.create("attributes", AttributeModifiersValue.MERGE, AttributeModifiersValue.CODEC, ImmutableListMultimap.of(), AttributeModifiersValue::new);
+    public static final ValueType<ImmutableListMultimap<Holder<Attribute>, PortAttributeModifier>, AttributeModifiersValue> ATTRIBUTES = ValueType.create("attributes", AttributeModifiersValue.MERGE, AttributeModifiersValue.CODEC, ImmutableListMultimap.of(), AttributeModifiersValue::new);
     public static final ValueType<List<Component>, ComponentsValue> COMPONENTS = ValueType.create("components", ComponentsValue.COMBINE_RULE, ComponentsValue.CODEC, List.of(), ComponentsValue::new);
 
 
-    public static final DeferredItem<MasterItem> STAR = OTHERS.register("star", MasterItem::new);
-    public static final DeferredItem<MasterItem> ICON = OTHERS.register("icon", MasterItem::new);
-    public static final DeferredItem<BasePoint> BASE_POINT = OTHERS.register("base_point", BasePoint::new);
-    public static final DeferredItem<BaseCurioItem> EVERLASTING = OTHERS.register("everlasting", () -> BaseCurioItem.builder("everlasting").rarity(ModRarity.MASTER).build());
+    public static final RegistryObject<MasterItem> STAR = OTHERS.register("star", MasterItem::new);
+    public static final RegistryObject<MasterItem> ICON = OTHERS.register("icon", MasterItem::new);
+    public static final RegistryObject<BasePoint> BASE_POINT = OTHERS.register("base_point", BasePoint::new);
+    public static final RegistryObject<BaseCurioItem> EVERLASTING = OTHERS.register("everlasting", () -> BaseCurioItem.builder("everlasting").rarity(ModRarity.MASTER).build());
 
-    public static final DeferredItem<BlockItem> WORKSHOP = OTHERS.register("workshop", () -> new BlockItem(TCBlocks.WORKSHOP.get(), new Item.Properties()));
-    public static final DeferredItem<DemonHeart> DEMON_HEART = OTHERS.register("demon_heart", DemonHeart::new);
-    public static final DeferredItem<MagicMirror> MAGIC_MIRROR = OTHERS.register("magic_mirror", () -> new MagicMirror(BLUE));
-    public static final DeferredItem<CellPhone> CELL_PHONE = OTHERS.register("cell_phone", CellPhone::new);
-    public static final DeferredItem<DivingHelmet> DIVING_HELMET = OTHERS.register("diving_helmet", DivingHelmet::new);
+    public static final RegistryObject<BlockItem> WORKSHOP = OTHERS.register("workshop", () -> new BlockItem(TCBlocks.WORKSHOP.get(), new Item.Properties()));
+    public static final RegistryObject<DemonHeart> DEMON_HEART = OTHERS.register("demon_heart", DemonHeart::new);
+    public static final RegistryObject<MagicMirror> MAGIC_MIRROR = OTHERS.register("magic_mirror", () -> new MagicMirror(BLUE));
+    public static final RegistryObject<CellPhone> CELL_PHONE = OTHERS.register("cell_phone", CellPhone::new);
+    public static final RegistryObject<DivingHelmet> DIVING_HELMET = OTHERS.register("diving_helmet", DivingHelmet::new);
 
-    public static final DeferredItem<BaseCurioItem> BEZOAR = registerCurio("bezoar", builder -> builder.rarity(LIGHT_RED).accessories(of(EFFECT$IMMUNITIES, Set.of(MobEffects.POISON)))), // 牛黄 中毒
+    public static final RegistryObject<BaseCurioItem> BEZOAR = registerCurio("bezoar", builder -> builder.rarity(LIGHT_RED).accessories(of(EFFECT$IMMUNITIES, Set.of(MobEffects.POISON)))), // 牛黄 中毒
             HOLY_WATER = registerCurio("holy_water", builder -> builder.rarity(LIGHT_RED).accessories(of(EFFECT$IMMUNITIES, Set.of(MobEffects.WITHER)))), // 圣水 凋零
             DETOXIFICATION_CAPSULE = registerCurio("detoxification_capsule", builder -> builder.rarity(PINK).jeiInfos(0).accessories(of(EFFECT$IMMUNITIES, Set.of(MobEffects.POISON, MobEffects.WITHER)))), // 解毒囊
             VITAMINS = registerCurio("vitamins", builder -> builder.rarity(LIGHT_RED).accessories(of(EFFECT$IMMUNITIES, Set.of(MobEffects.WEAKNESS)))), // 维生素 虚弱
@@ -193,7 +195,7 @@ public final class TCItems {
                     .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(LibAttributes.getAttackDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
-                    .attribute(Attributes.BLOCK_BREAK_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.blockBreakSpeed(), 0.15, ADD_MULTIPLIED_TOTAL)
                     .attribute(LibAttributes.getCriticalChance(), 0.02, ADD_VALUE)
                     .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(LibAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 月亮石
@@ -201,7 +203,7 @@ public final class TCItems {
                     .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(LibAttributes.getAttackDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 2.0, ADD_VALUE)
-                    .attribute(Attributes.BLOCK_BREAK_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.blockBreakSpeed(), 0.15, ADD_MULTIPLIED_TOTAL)
                     .attribute(LibAttributes.getCriticalChance(), 0.02, ADD_VALUE)
                     .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(LibAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 天界石
@@ -214,7 +216,7 @@ public final class TCItems {
                     .attribute(Attributes.JUMP_STRENGTH, 0.1, ADD_MULTIPLIED_TOTAL))), // 月光护身符
             NEPTUNES_SHELL = registerDirectly("neptunes_shell", (name, builder) -> new NeptunesShell(builder.rarity(PINK)
                     .accessories(units(NEPTUNES$SHELL))
-                    .attribute(Attributes.SUBMERGED_MINING_SPEED, 0.8, ADD_VALUE))), // 海神贝壳
+                    .attribute(PortAttributesExtension.submergedMiningSpeed(), 0.8, ADD_VALUE))), // 海神贝壳
             MOON_SHELL = registerDirectly("moon_shell", (name, builder) -> new MoonShell(builder.rarity(LIGHT_PURPLE).jeiInfos(0)
                     .accessories(units(NEPTUNES$SHELL))
                     .attribute(LibAttributes.getCriticalChance(), 0.02, ADD_VALUE)
@@ -225,11 +227,11 @@ public final class TCItems {
                     .attribute(Attributes.JUMP_STRENGTH, 0.1, ADD_MULTIPLIED_TOTAL))), // 月亮贝壳
             CELESTIAL_SHELL = registerDirectly("celestial_shell", (name, builder) -> new CelestialShell(builder.rarity(YELLOW).jeiInfos(0)
                     .accessories(units(NEPTUNES$SHELL))
-                    .attribute(Attributes.SUBMERGED_MINING_SPEED, 0.8, ADD_VALUE)
+                    .attribute(PortAttributesExtension.submergedMiningSpeed(), 0.8, ADD_VALUE)
                     .attribute(Attributes.ATTACK_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(LibAttributes.getAttackDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 2.0, ADD_VALUE)
-                    .attribute(Attributes.BLOCK_BREAK_SPEED, 0.15, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.blockBreakSpeed(), 0.15, ADD_MULTIPLIED_TOTAL)
                     .attribute(LibAttributes.getCriticalChance(), 0.02, ADD_VALUE)
                     .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(LibAttributes.getMagicDamage(), 0.1, ADD_MULTIPLIED_TOTAL))), // 天界贝壳
@@ -253,41 +255,41 @@ public final class TCItems {
                     .attribute(Attributes.ATTACK_SPEED, 0.12, ADD_MULTIPLIED_TOTAL)), // 狂爪手套
             TITAN_GLOVE = registerCurio("titan_glove", builder -> builder.rarity(LIGHT_RED).noTooltip()
                     .attribute(Attributes.ATTACK_KNOCKBACK, 1.0, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)), // 泰坦手套
+                    .attribute(PortAttributesExtension.entityInteractionRange(), 0.1, ADD_MULTIPLIED_TOTAL)), // 泰坦手套
             POWER_GLOVE = registerCurio("power_glove", builder -> builder.jeiInfos(0).rarity(PINK)
                     .accessories(units(AUTO$ATTACK))
                     .attribute(Attributes.ATTACK_SPEED, 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, 1.0, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)), // 强力手套
+                    .attribute(PortAttributesExtension.entityInteractionRange(), 0.1, ADD_MULTIPLIED_TOTAL)), // 强力手套
             MECHANICAL_GLOVE = registerCurio("mechanical_glove", builder -> builder.jeiInfos(0).rarity(LIGHT_PURPLE)
                     .accessories(units(AUTO$ATTACK))
                     .attribute(LibAttributes.getAttackDamage(), 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_SPEED, 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, 1.0, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)), // 机械手套
+                    .attribute(PortAttributesExtension.entityInteractionRange(), 0.1, ADD_MULTIPLIED_TOTAL)), // 机械手套
             FIRE_GAUNTLET = registerCurio("fire_gauntlet", builder -> builder.jeiInfos(0).rarity(LIME).tooltips(1)
                     .accessories(units(AUTO$ATTACK, FIRE$ATTACK))
                     .attribute(LibAttributes.getAttackDamage(), 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_SPEED, 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, 1.0, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)), // 烈火手套
+                    .attribute(PortAttributesExtension.entityInteractionRange(), 0.1, ADD_MULTIPLIED_TOTAL)), // 烈火手套
             FLESH_KNUCKLES = registerCurio("flesh_knuckles", builder -> builder.rarity(PINK)
                     .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
-                    .attribute(ConfluenceMagicLib.AGGRO, 400, ADD_VALUE)), // 血肉指虎
+                    .attribute(ConfluenceMagicLib.AGGRO.get(), 400, ADD_VALUE)), // 血肉指虎
             BERSERKERS_GLOVE = registerCurio("berserkers_glove", builder -> builder.jeiInfos(0).noTooltip().rarity(PINK)
                     .accessories(units(AUTO$ATTACK))
                     .attribute(Attributes.ARMOR, 4.0, ADD_VALUE)
                     .attribute(Attributes.ATTACK_SPEED, 0.12, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ATTACK_KNOCKBACK, 1.0, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.ENTITY_INTERACTION_RANGE, 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(ConfluenceMagicLib.AGGRO, 400, ADD_VALUE)), // 狂战士手套
+                    .attribute(PortAttributesExtension.entityInteractionRange(), 0.1, ADD_MULTIPLIED_TOTAL)
+                    .attribute(ConfluenceMagicLib.AGGRO.get(), 400, ADD_VALUE)), // 狂战士手套
             PALADINS_SHIELD = registerDirectly("paladins_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).rarity(YELLOW)
                     .attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE))), // 圣骑士护盾
             HERO_SHIELD = registerDirectly("hero_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).jeiInfos(0).rarity(PINK)
                     .attribute(Attributes.ARMOR, 5.0, ADD_VALUE)
                     .attribute(Attributes.KNOCKBACK_RESISTANCE, 1.0, ADD_VALUE)
-                    .attribute(ConfluenceMagicLib.AGGRO, 400, ADD_VALUE))), // 英雄护盾
+                    .attribute(ConfluenceMagicLib.AGGRO.get(), 400, ADD_VALUE))), // 英雄护盾
             FROZEN_TURTLE_SHELL = registerDirectly("frozen_turtle_shell", name -> new FrozenTurtleShell(BaseCurioItem.builder(name).rarity(PINK).particle(TerraCurio.asResource("frozen_turtle_shell")).accessories(units(FROZEN$TURTLE$SHELL)))), // 冰冻海龟壳
             FROZEN_SHIELD = registerDirectly("frozen_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).jeiInfos(0).rarity(PINK).tooltips(1)
                     .accessories(units(FROZEN$TURTLE$SHELL)).attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
@@ -307,7 +309,7 @@ public final class TCItems {
                     .tooltips(1)
                     .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
                     .attribute(LibAttributes.getRangedVelocity(), 0.2, ADD_MULTIPLIED_TOTAL)
-                    .attribute(ConfluenceMagicLib.AGGRO, -400, ADD_VALUE)), // 潜行者箭袋
+                    .attribute(ConfluenceMagicLib.AGGRO.get(), -400, ADD_VALUE)), // 潜行者箭袋
             RIFLE_SCOPE = registerCurio("rifle_scope", builder -> builder.rarity(LIGHT_RED).accessories(units(SCOPE)).tooltips(1)), // 步枪瞄准镜
             SNIPER_SCOPE = registerCurio("sniper_scope", builder -> builder.rarity(LIME).jeiInfos(0).accessories(units(SCOPE)).tooltips(1)
                     .attribute(LibAttributes.getCriticalChance(), 0.1, ADD_VALUE)
@@ -315,7 +317,7 @@ public final class TCItems {
             RECON_SCOPE = registerCurio("recon_scope", builder -> builder.rarity(PINK).jeiInfos(0).accessories(units(SCOPE)).tooltips(3)
                     .attribute(LibAttributes.getCriticalChance(), 0.1, ADD_VALUE)
                     .attribute(LibAttributes.getRangedDamage(), 0.1, ADD_MULTIPLIED_TOTAL)
-                    .attribute(ConfluenceMagicLib.AGGRO, -400, ADD_VALUE)), // 侦察镜
+                    .attribute(ConfluenceMagicLib.AGGRO.get(), -400, ADD_VALUE)), // 侦察镜
             MAGMA_STONE = registerCurio("magma_stone", builder -> builder.rarity(ORANGE).jeiInfos(1)), // 岩浆石
             OBSIDIAN_ROSE = registerCurio("obsidian_rose", builder -> builder.rarity(ORANGE).accessories(of(LAVA$HURT$REDUCE, 0.5F))), // 黑曜石玫瑰
             OBSIDIAN_SHIELD = registerCurio("obsidian_shield", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).accessories(units(FIRE$IMMUNE))
@@ -329,28 +331,28 @@ public final class TCItems {
             PUTRID_SCENT = registerCurio("putrid_scent", builder -> builder.rarity(LIGHT_PURPLE)
                     .attribute(LibAttributes.getAttackDamage(), 0.05, ADD_MULTIPLIED_TOTAL)
                     .attribute(LibAttributes.getCriticalChance(), 0.05, ADD_VALUE)
-                    .attribute(ConfluenceMagicLib.AGGRO, -400, ADD_VALUE)), // 腐香囊
+                    .attribute(ConfluenceMagicLib.AGGRO.get(), -400, ADD_VALUE)), // 腐香囊
             SHACKLE = registerCurio("shackle", builder -> builder.rarity(BLUE).noTooltip()), // 镣铐
             RAM_RUNE = registerDirectly("ram_rune", name -> new RamRune(BaseCurioItem.builder(name).rarity(GREEN))); // 牧羊符文
 
-    public static final DeferredItem<BaseCurioItem> TOOLBELT = registerCurio("toolbelt", builder -> builder.noTooltip().rarity(ORANGE).attribute(Attributes.BLOCK_INTERACTION_RANGE, 1.0, ADD_VALUE)), // 工具腰带
-            TOOLBOX = registerCurio("toolbox", builder -> builder.noTooltip().rarity(GREEN).attribute(Attributes.BLOCK_INTERACTION_RANGE, 1.0, ADD_VALUE)), // 工具箱
-            EXTENDO_GRIP = registerCurio("extendo_grip", builder -> builder.noTooltip().rarity(ORANGE).attribute(Attributes.BLOCK_INTERACTION_RANGE, 3.0, ADD_VALUE)), // 加长握爪
+    public static final RegistryObject<BaseCurioItem> TOOLBELT = registerCurio("toolbelt", builder -> builder.noTooltip().rarity(ORANGE).attribute(PortAttributesExtension.blockInteractionRange(), 1.0, ADD_VALUE)), // 工具腰带
+            TOOLBOX = registerCurio("toolbox", builder -> builder.noTooltip().rarity(GREEN).attribute(PortAttributesExtension.blockInteractionRange(), 1.0, ADD_VALUE)), // 工具箱
+            EXTENDO_GRIP = registerCurio("extendo_grip", builder -> builder.noTooltip().rarity(ORANGE).attribute(PortAttributesExtension.blockInteractionRange(), 3.0, ADD_VALUE)), // 加长握爪
             PORTABLE_CEMENT_MIXER = registerCurio("portable_cement_mixer", builder -> builder.rarity(ORANGE).accessories(of(RIGHT$CLICK$DELAY$SUBSTRACTOR, (byte) 1))), // 便携式水泥搅拌机
             BRICK_LAYER = registerCurio("brick_layer", builder -> builder.rarity(ORANGE).accessories(of(RIGHT$CLICK$DELAY$SUBSTRACTOR, (byte) 1))), // 砌砖刀
             ARCHITECT_GIZMO_PACK = registerCurio("architect_gizmo_pack", builder -> builder.jeiInfos(0).rarity(PINK)
                     .accessories(of(RIGHT$CLICK$DELAY$SUBSTRACTOR, (byte) 2))
-                    .attribute(Attributes.BLOCK_INTERACTION_RANGE, 3.0, ADD_VALUE)), // 建筑师发明背包
-            ANCIENT_CHISEL = registerCurio("ancient_chisel", builder -> builder.attribute(Attributes.BLOCK_BREAK_SPEED, 0.25, ADD_MULTIPLIED_TOTAL)), // 远古凿子
+                    .attribute(PortAttributesExtension.blockInteractionRange(), 3.0, ADD_VALUE)), // 建筑师发明背包
+            ANCIENT_CHISEL = registerCurio("ancient_chisel", builder -> builder.attribute(PortAttributesExtension.blockBreakSpeed(), 0.25, ADD_MULTIPLIED_TOTAL)), // 远古凿子
             HAND_OF_CREATION = registerDirectly("hand_of_creation", name -> new StepStool(BaseCurioItem.builder(name).tooltips(1).jeiInfos(0).rarity(LIGHT_PURPLE)
                     .accessories(of(RIGHT$CLICK$DELAY$SUBSTRACTOR, (byte) 3))
-                    .attribute(Attributes.BLOCK_INTERACTION_RANGE, 3.0, ADD_VALUE)
-                    .attribute(Attributes.BLOCK_BREAK_SPEED, 0.25, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.blockInteractionRange(), 3.0, ADD_VALUE)
+                    .attribute(PortAttributesExtension.blockBreakSpeed(), 0.25, ADD_MULTIPLIED_TOTAL)
                     .attribute(ConfluenceMagicLib.PICKUP_RANGE, 6.25, ADD_VALUE))); // 创造之手
 
-    public static final DeferredItem<BaseCurioItem> BAND_OF_REGENERATION = registerDirectly("band_of_regeneration", name -> new BandOfRegeneration(BaseCurioItem.builder(name)));
+    public static final RegistryObject<BaseCurioItem> BAND_OF_REGENERATION = registerDirectly("band_of_regeneration", name -> new BandOfRegeneration(BaseCurioItem.builder(name)));
 
-    public static final DeferredItem<BaseCurioItem> COPPER_WATCH = registerCurio("copper_watch", builder -> builder.rarity(WHITE).jeiInfos(0).accessories(of(INFORMATION, List.of(HOUR$WATCH)))), // 铜表
+    public static final RegistryObject<BaseCurioItem> COPPER_WATCH = registerCurio("copper_watch", builder -> builder.rarity(WHITE).jeiInfos(0).accessories(of(INFORMATION, List.of(HOUR$WATCH)))), // 铜表
             TIN_WATCH = registerCurio("tin_watch", builder -> builder.jeiInfos(0).rarity(WHITE).accessories(of(INFORMATION, List.of(HOUR$WATCH)))), // 锡表
             SILVER_WATCH = registerCurio("silver_watch", builder -> builder.jeiInfos(0).rarity(WHITE).accessories(of(INFORMATION, List.of(HALF$HOUR$WATCH)))), // 银表
             TUNGSTEN_WATCH = registerCurio("tungsten_watch", builder -> builder.jeiInfos(0).rarity(WHITE).accessories(of(INFORMATION, List.of(HALF$HOUR$WATCH)))), // 钨表
@@ -373,7 +375,7 @@ public final class TCItems {
             FISH_FINDER = registerDirectly("fish_finder", (name, builder) -> new MultiInfoCurioItem(builder.rarity(ORANGE).jeiInfos(0).tooltips(2).accessories(of(INFORMATION, List.of(FISHERMANS$POCKET$GUIDE, WEATHER$RADIO, $SEXTANT))))), // 探鱼器
             PDA = registerDirectly("pda", (name, builder) -> new MultiInfoCurioItem(builder.rarity(PINK).jeiInfos(0).tooltips(11).accessories(of(INFORMATION, FULL_INFO)))); // 个人数字助手
 
-    public static final DeferredItem<BaseCurioItem> STEP_STOOL = registerDirectly("step_stool", name -> new StepStool(BaseCurioItem.builder(name))), // 梯凳
+    public static final RegistryObject<BaseCurioItem> STEP_STOOL = registerDirectly("step_stool", name -> new StepStool(BaseCurioItem.builder(name))), // 梯凳
             FLYING_CARPET = registerCurio("flying_carpet", builder -> builder.rarity(GREEN).accessories(of(MAY$FLY, MayFlyAbilityValue.of("flying_carpet", 1200, 0.5625F, 100, false, true)))), // 飞毯
             AGLET = registerCurio("aglet", builder -> builder.noTooltip().attribute(Attributes.MOVEMENT_SPEED, 0.05, ADD_MULTIPLIED_TOTAL)), // 金属带扣
             ANKLET_OF_THE_WIND = registerCurio("anklet_of_the_wind", builder -> builder.jeiInfos(0).noTooltip().attribute(Attributes.MOVEMENT_SPEED, 0.1, ADD_MULTIPLIED_TOTAL)), // 疾风脚镯
@@ -435,56 +437,56 @@ public final class TCItems {
                     .stepHeight())), // 泰拉闪耀靴
             CLOUD_IN_A_BOTTLE = registerDirectly("cloud_in_a_bottle", (name, builder) -> new CloudInABottle(builder.particle(TerraCurio.asResource("cloud"))
                     .accessories(of(CLOUD, 1.3F))
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE))), // 云朵瓶
+                    .attribute(PortAttributesExtension.safeFallDistance(), 3, ADD_VALUE))), // 云朵瓶
             BLIZZARD_IN_A_BOTTLE = registerDirectly("blizzard_in_a_bottle", (name, builder) -> new BlizzardInABottle(builder.jeiInfos(0).particle(TerraCurio.asResource("blizzard"))
                     .accessories(of(BLIZZARD, new Tuple<>(0.4F, 14)))
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE))), // 暴雪瓶
+                    .attribute(PortAttributesExtension.safeFallDistance(), 3, ADD_VALUE))), // 暴雪瓶
             SANDSTORM_IN_A_BOTTLE = registerDirectly("sandstorm_in_a_bottle", (name, builder) -> new SandstormInABottle(builder.rarity(GREEN).particle(TerraCurio.asResource("sandstorm"))
                     .accessories(of(SAND$STORM, new Tuple<>(0.45F, 17)))
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE))), // 沙暴瓶
+                    .attribute(PortAttributesExtension.safeFallDistance(), 3, ADD_VALUE))), // 沙暴瓶
             FART_IN_A_JAR = registerCurio("fart_in_a_jar", builder -> builder.rarity(GREEN)
                     .accessories(of(FART, 1.7F))
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE)), // 罐中臭屁
+                    .attribute(PortAttributesExtension.safeFallDistance(), 3, ADD_VALUE)), // 罐中臭屁
             TSUNAMI_IN_A_BOTTLE = registerDirectly("tsunami_in_a_bottle", (name, builder) -> new TsunamiInABottle(builder.particle(TerraCurio.asResource("tsunami"))
                     .accessories(of(TSUNAMI, 1.5F))
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 3, ADD_VALUE))), // 海啸瓶
+                    .attribute(PortAttributesExtension.safeFallDistance(), 3, ADD_VALUE))), // 海啸瓶
             SHINY_RED_BALLOON = registerCurio("shiny_red_balloon", builder -> builder
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 2, ADD_VALUE)), // 闪亮红气球
+                    .attribute(PortAttributesExtension.safeFallDistance(), 2, ADD_VALUE)), // 闪亮红气球
             BALLOON_PUFFERFISH = registerCurio("balloon_pufferfish", builder -> builder
                     .jeiInfos(0)
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 2, ADD_VALUE)), // 气球河豚鱼
+                    .attribute(PortAttributesExtension.safeFallDistance(), 2, ADD_VALUE)), // 气球河豚鱼
             CLOUD_IN_A_BALLOON = registerCurio("cloud_in_a_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(1).jeiInfos(0)
                     .accessories(of(CLOUD, 1.3F))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 4, ADD_VALUE)), // 云朵气球
+                    .attribute(PortAttributesExtension.safeFallDistance(), 4, ADD_VALUE)), // 云朵气球
             BLIZZARD_IN_A_BALLOON = registerCurio("blizzard_in_a_balloon", builder -> builder
                     .jeiInfos(0).rarity(LIGHT_RED).tooltips(1).jeiInfos(0)
                     .accessories(of(BLIZZARD, new Tuple<>(0.4F, 14)))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 4, ADD_VALUE)), // 暴雪气球
+                    .attribute(PortAttributesExtension.safeFallDistance(), 4, ADD_VALUE)), // 暴雪气球
             SANDSTORM_IN_A_BALLOON = registerCurio("sandstorm_in_a_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(1).jeiInfos(0)
                     .accessories(of(SAND$STORM, new Tuple<>(0.45F, 17)))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 4, ADD_VALUE)), // 沙暴气球
+                    .attribute(PortAttributesExtension.safeFallDistance(), 4, ADD_VALUE)), // 沙暴气球
             FART_IN_A_BALLOON = registerCurio("fart_in_a_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(1).jeiInfos(0)
                     .accessories(of(FART, 1.1F))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 4, ADD_VALUE)), // 臭屁气球
+                    .attribute(PortAttributesExtension.safeFallDistance(), 4, ADD_VALUE)), // 臭屁气球
             SHARKRON_BALLOON = registerCurio("sharkron_balloon", builder -> builder
                     .jeiInfos(0)
                     .accessories(of(TSUNAMI, 1.3F))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 4, ADD_VALUE)), // 鲨鱼龙气球
+                    .attribute(PortAttributesExtension.safeFallDistance(), 4, ADD_VALUE)), // 鲨鱼龙气球
             HONEY_BALLOON = registerCurio("honey_balloon", builder -> builder
                     .rarity(GREEN).tooltips(1).jeiInfos(0)
                     .accessories(units(HONEY$COMB))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 2, ADD_VALUE)), // 蜂蜜气球
+                    .attribute(PortAttributesExtension.safeFallDistance(), 2, ADD_VALUE)), // 蜂蜜气球
             BUNDLE_OF_BALLOONS = registerCurio("bundle_of_balloons", builder -> builder
                     .rarity(YELLOW).tooltips(1).jeiInfos(0)
                     .accessories(
@@ -493,52 +495,52 @@ public final class TCItems {
                             of(CLOUD, 1.3F)
                     )
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 7, ADD_VALUE)), // 气球束
+                    .attribute(PortAttributesExtension.safeFallDistance(), 7, ADD_VALUE)), // 气球束
             LUCKY_HORSESHOE = registerCurio("lucky_horseshoe", builder -> builder
                     .tooltips(1)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
-                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 幸运马掌
+                    .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 幸运马掌
             OBSIDIAN_HORSESHOE = registerCurio("obsidian_horseshoe", builder -> builder
                     .jeiInfos(0).rarity(LIGHT_RED).tooltips(1)
                     .accessories(units(FIRE$IMMUNE))
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
-                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 黑曜石马掌
+                    .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 黑曜石马掌
             BLUE_HORSESHOE_BALLOON = registerCurio("blue_horseshoe_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(CLOUD, 1.3F))
                     .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
-                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 蓝马掌气球
+                    .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 蓝马掌气球
             WHITE_HORSESHOE_BALLOON = registerCurio("white_horseshoe_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(BLIZZARD, new Tuple<>(0.4F, 14)))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
-                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 白马掌气球
+                    .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 白马掌气球
             YELLOW_HORSESHOE_BALLOON = registerCurio("yellow_horseshoe_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(SAND$STORM, new Tuple<>(0.45F, 17)))
                     .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
-                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 黄马掌气球
+                    .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 黄马掌气球
             GREEN_HORSESHOE_BALLOON = registerCurio("green_horseshoe_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(FART, 1.1F))
                     .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
-                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 绿马掌气球
+                    .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 绿马掌气球
             PINK_HORSESHOE_BALLOON = registerCurio("pink_horseshoe_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(TSUNAMI, 1.3F))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
-                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 粉马掌气球
+                    .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 粉马掌气球
             AMBER_HORSESHOE_BALLOON = registerCurio("amber_horseshoe_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(units(HONEY$COMB))
                     .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
-                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 琥珀马掌气球
+                    .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 琥珀马掌气球
             BUNDLE_OF_HORSESHOE_BALLOONS = registerCurio("bundle_of_horseshoe_balloons", builder -> builder
                     .rarity(YELLOW).tooltips(2).jeiInfos(0)
                     .accessories(
@@ -547,52 +549,52 @@ public final class TCItems {
                             of(CLOUD, 1.3F)
                     ).attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
-                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)), // 马掌气球束
+                    .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 马掌气球束
             INNER_TUBE = registerCurio("inner_tube", builder -> builder.rarity(WHITE).accessories(units(FLOAT$ON$LIQUID$SURFACE))),
-            FLIPPER = registerCurio("flipper", builder -> builder.noTooltip().attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)), // 脚蹼
-            DIVING_GEAR = registerCurio("diving_gear", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).equipable(EquipmentSlot.HEAD).accessories(units(DIVING)).attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)), // 潜水装备
+            FLIPPER = registerCurio("flipper", builder -> builder.noTooltip().attribute(PortAttributesExtension.swimSpeed(), 0.5, ADD_VALUE)), // 脚蹼
+            DIVING_GEAR = registerCurio("diving_gear", builder -> builder.jeiInfos(0).rarity(LIGHT_RED).equipable(EquipmentSlot.HEAD).accessories(units(DIVING)).attribute(PortAttributesExtension.swimSpeed(), 0.5, ADD_VALUE)), // 潜水装备
             JELLYFISH_NECKLACE = registerDirectly("jellyfish_necklace", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(GREEN).accessories(of(LUMINANCE, -12)), "sodiumdynamiclights")), // 水母项链
             JELLYFISH_DIVING_GEAR = registerDirectly("jellyfish_diving_gear", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(PINK).tooltips(1).jeiInfos(0)
                     .accessories(units(DIVING), of(LUMINANCE, -12), of(EFFECT$IMMUNITIES, Set.of()))
-                    .attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE), "sodiumdynamiclights")), // 水母潜水装备
+                    .attribute(PortAttributesExtension.swimSpeed(), 0.5, ADD_VALUE), "sodiumdynamiclights")), // 水母潜水装备
             ARCTIC_DIVING_GEAR = registerDirectly("arctic_diving_gear", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(LIGHT_PURPLE).tooltips(2)
                     .accessories(units(DIVING, ICE$SPEED, FROZEN$IMMUNE), of(LUMINANCE, -12))
-                    .attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE), "sodiumdynamiclights")), // 北极潜水装备
+                    .attribute(PortAttributesExtension.swimSpeed(), 0.5, ADD_VALUE), "sodiumdynamiclights")), // 北极潜水装备
             FROG_LEG = registerCurio("frog_leg", builder -> builder
                     .tooltips(1)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 7.0, ADD_VALUE)
+                    .attribute(PortAttributesExtension.safeFallDistance(), 7.0, ADD_VALUE)
                     .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)), // 蛙腿
             FROG_FLIPPER = registerCurio("frog_flipper", builder -> builder
                     .tooltips(1)
                     .jeiInfos(0)
-                    .attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 7.0, ADD_VALUE)
+                    .attribute(PortAttributesExtension.swimSpeed(), 0.5, ADD_VALUE)
+                    .attribute(PortAttributesExtension.safeFallDistance(), 7.0, ADD_VALUE)
                     .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)), // 青蛙脚蹼
             FROG_WEBBING = registerCurio("frog_webbing", builder -> builder.rarity(PINK)
                     .tooltips(2)
                     .jeiInfos(0)
                     .accessories(of(WALL$CLIMB, (byte) 2))
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 7.0, ADD_VALUE)
+                    .attribute(PortAttributesExtension.safeFallDistance(), 7.0, ADD_VALUE)
                     .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)), // 青蛙蹼
             FROG_GEAR = registerCurio("frog_gear", builder -> builder.rarity(PINK)
                     .tooltips(3)
                     .jeiInfos(0)
                     .accessories(of(WALL$CLIMB, (byte) 2))
-                    .attribute(NeoForgeMod.SWIM_SPEED, 0.5, ADD_VALUE)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 7.0, ADD_VALUE)
+                    .attribute(PortAttributesExtension.swimSpeed(), 0.5, ADD_VALUE)
+                    .attribute(PortAttributesExtension.safeFallDistance(), 7.0, ADD_VALUE)
                     .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)), // 青蛙装备
             AMBHIPIAN_BOOTS = registerDirectly("ambhipian_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name)
                     .jeiInfos(0)
-                    .attribute(Attributes.SAFE_FALL_DISTANCE, 7.0, ADD_VALUE)
+                    .attribute(PortAttributesExtension.safeFallDistance(), 7.0, ADD_VALUE)
                     .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)
                     .stepHeight())); // 水陆两用靴
 
-    public static final DeferredItem<BaseCurioItem> TREASURE_MAGNET = registerCurio("treasure_magnet", builder -> builder.attribute(ConfluenceMagicLib.PICKUP_RANGE, 6.25, ADD_VALUE)), // 宝藏磁石
+    public static final RegistryObject<BaseCurioItem> TREASURE_MAGNET = registerCurio("treasure_magnet", builder -> builder.attribute(ConfluenceMagicLib.PICKUP_RANGE, 6.25, ADD_VALUE)), // 宝藏磁石
             FLOWER_BOOTS = registerCurio("flower_boots", builder -> builder.rarity(LIME).accessories(units(FLOWER$BOOTS))); // 花靴
 
-    public static final DeferredItem<BaseCurioItem> ANGLER_EARRING = registerCurio("angler_earring", builder -> builder.noTooltip()); // 渔夫耳环
+    public static final RegistryObject<BaseCurioItem> ANGLER_EARRING = registerCurio("angler_earring", builder -> builder.noTooltip()); // 渔夫耳环
 
-    public static final DeferredItem<BaseCurioItem> ROYAL_GEL = registerCurio("royal_gel", builder -> builder.rarity(EXPERT).accessories(of(MOB$IGNORE, TCTags.SLIME))), // 皇家凝胶
+    public static final RegistryObject<BaseCurioItem> ROYAL_GEL = registerCurio("royal_gel", builder -> builder.rarity(EXPERT).accessories(of(MOB$IGNORE, TCTags.SLIME))), // 皇家凝胶
             SHIELD_OF_CTHULHU = registerDirectly("shield_of_cthulhu", (name, builder) -> new ShieldOfCthulhu(builder.rarity(EXPERT).noTooltip()
                     .accessories(units(SHIELD$OF$CTHULHU))
                     .attribute(Attributes.ARMOR, 2, ADD_VALUE))), // 克苏鲁护盾
@@ -611,9 +613,9 @@ public final class TCItems {
             GRAVITY_GLOBE = registerDirectly("gravity_globe", (name, builder) -> new GravityGlobe(builder.rarity(EXPERT).accessories(units(GRAVITY$GLOBE)))), // 重力球
             CELESTIAL_STARBOARD = registerCurio("celestial_starboard", builder -> builder.rarity(EXPERT).tooltips(2)
                     .accessories(of(MAY$FLY, MayFlyAbilityValue.of("celestial_starboard", 1100, 1.0F, 60, true, true)))
-                    .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)); // 天界星盘
+                    .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)); // 天界星盘
 
-    public static DeferredItem<BaseCurioItem> registerCurio(String name, Consumer<BaseCurioItem.Builder> consumer) {
+    public static RegistryObject<BaseCurioItem> registerCurio(String name, Consumer<BaseCurioItem.Builder> consumer) {
         return CURIOS.register(name, () -> {
             BaseCurioItem.Builder builder = BaseCurioItem.builder(name);
             consumer.accept(builder);
@@ -621,23 +623,23 @@ public final class TCItems {
         });
     }
 
-    public static DeferredItem<BaseCurioItem> registerCurio(String name, ModRarity rarity) {
+    public static RegistryObject<BaseCurioItem> registerCurio(String name, ModRarity rarity) {
         return CURIOS.register(name, () -> {
-            Item.Properties properties = new Item.Properties().component(ConfluenceMagicLib.MOD_RARITY, rarity);
+            Item.Properties properties = PortItemExtension.Properties.component(new Item.Properties(), ConfluenceMagicLib.MOD_RARITY, rarity);
             if (rarity != WHITE && rarity != GRAY) properties.fireResistant();
             return new BaseCurioItem(properties);
         });
     }
 
-    public static DeferredItem<BaseCurioItem> registerCurio(String name, Supplier<BaseCurioItem> supplier) {
+    public static RegistryObject<BaseCurioItem> registerCurio(String name, Supplier<BaseCurioItem> supplier) {
         return CURIOS.register(name, supplier);
     }
 
-    public static DeferredItem<BaseCurioItem> registerDirectly(String name, Function<String, BaseCurioItem> function) {
+    public static RegistryObject<BaseCurioItem> registerDirectly(String name, Function<String, BaseCurioItem> function) {
         return CURIOS.register(name, () -> function.apply(name));
     }
 
-    public static DeferredItem<BaseCurioItem> registerDirectly(String name, BiFunction<String, BaseCurioItem.Builder, BaseCurioItem> function) {
+    public static RegistryObject<BaseCurioItem> registerDirectly(String name, BiFunction<String, BaseCurioItem.Builder, BaseCurioItem> function) {
         return CURIOS.register(name, () -> function.apply(name, BaseCurioItem.builder(name)));
     }
 

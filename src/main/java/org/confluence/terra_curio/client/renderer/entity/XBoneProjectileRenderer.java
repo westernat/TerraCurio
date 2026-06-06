@@ -11,24 +11,23 @@ import net.minecraft.util.Mth;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.model.entity.XBoneProjectileModel;
 import org.confluence.terra_curio.common.entity.XBoneProjectile;
-import org.jetbrains.annotations.NotNull;
 
 public class XBoneProjectileRenderer extends EntityRenderer<XBoneProjectile> {
     private static final ResourceLocation TEXTURE = TerraCurio.asResource("textures/entity/x_bone_projectile.png");
     private final XBoneProjectileModel model;
 
-    public XBoneProjectileRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext);
-        this.model = new XBoneProjectileModel(pContext.bakeLayer(XBoneProjectileModel.LAYER_LOCATION));
+    public XBoneProjectileRenderer(EntityRendererProvider.Context context) {
+        super(context);
+        this.model = new XBoneProjectileModel(context.bakeLayer(XBoneProjectileModel.LAYER_LOCATION));
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull XBoneProjectile pEntity) {
+    public ResourceLocation getTextureLocation(XBoneProjectile entity) {
         return TEXTURE;
     }
 
     @Override
-    public void render(XBoneProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, @NotNull MultiBufferSource multiBufferSource, int packedLight) {
+    public void render(XBoneProjectile entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
         poseStack.pushPose();
         poseStack.scale(0.75F, 0.75F, 0.75F);
         poseStack.translate(0, 0.5F, 0);
@@ -36,7 +35,7 @@ public class XBoneProjectileRenderer extends EntityRenderer<XBoneProjectile> {
         poseStack.mulPose(Axis.ZP.rotation(-Mth.lerp(partialTick, entity.rotate.old, entity.rotate.neo)));
         poseStack.mulPose(Axis.YP.rotation(-Mth.HALF_PI));
         poseStack.translate(0,0 -0.5F, 0);
-        model.renderToBuffer(poseStack, multiBufferSource.getBuffer(model.renderType(TEXTURE)), packedLight, OverlayTexture.NO_OVERLAY);
+        model.renderToBuffer(poseStack, buffer.getBuffer(model.renderType(TEXTURE)), packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
         poseStack.popPose();
     }
 }

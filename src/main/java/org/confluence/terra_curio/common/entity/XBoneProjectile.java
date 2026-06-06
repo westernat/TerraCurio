@@ -1,7 +1,7 @@
 package org.confluence.terra_curio.common.entity;
 
+import PortLib.extensions.net.minecraft.world.phys.AABB.PortAABBExtension;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -28,7 +28,7 @@ public class XBoneProjectile extends Projectile implements IAxisZRotate {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {}
+    protected void defineSynchedData() {}
 
     @Override
     public void tick() {
@@ -57,8 +57,14 @@ public class XBoneProjectile extends Projectile implements IAxisZRotate {
             rotateZ(rotate, this, 0.125F);
         } else {
             AABB boundingBox = getBoundingBox().inflate(1.0);
-            if (ProjectileUtil.getEntityHitResult(level(), this, boundingBox.getMinPosition(), boundingBox.getMaxPosition(), boundingBox, this::canHitEntity, 0.5F) instanceof EntityHitResult entityHitResult) {
-                Entity entity = entityHitResult.getEntity();
+            EntityHitResult result = ProjectileUtil.getEntityHitResult(
+                    level(), this,
+                    PortAABBExtension.getMinPosition(boundingBox),
+                    PortAABBExtension.getMaxPosition(boundingBox),
+                    boundingBox, this::canHitEntity, 0.5F
+            );
+            if (result != null) {
+                Entity entity = result.getEntity();
                 entity.hurt(damageSources().mobProjectile(this, owner), 5);
                 if (passThrough.add(entity) && passThrough.size() >= 3) {
                     discard();
@@ -79,7 +85,6 @@ public class XBoneProjectile extends Projectile implements IAxisZRotate {
         return LibUtils.canHitEntity(target, getOwner());
     }
 
-    @Override
     protected double getDefaultGravity() {
         return 0.04;
     }
@@ -97,7 +102,7 @@ public class XBoneProjectile extends Projectile implements IAxisZRotate {
     }
 
     @Override
-    public boolean canChangeDimensions(Level oldLevel, Level newLevel) {
+    public boolean canChangeDimensions() {
         return false;
     }
 }

@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.menu;
 
+import PortLib.extensions.net.minecraft.world.entity.Entity.PortEntityExtension;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
@@ -10,7 +11,6 @@ import net.minecraft.world.inventory.DataSlot;
 import net.minecraft.world.inventory.ResultContainer;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import org.confluence.lib.common.menu.AmountResultSlot;
 import org.confluence.lib.common.recipe.EnvironmentLevelAccess;
 import org.confluence.lib.common.recipe.EnvironmentRecipeInput;
@@ -22,8 +22,6 @@ import org.confluence.terra_curio.common.recipe.WorkshopRecipe;
 import java.util.ArrayList;
 import java.util.List;
 
-@javax.annotation.ParametersAreNonnullByDefault
-@net.minecraft.MethodsReturnNonnullByDefault
 public class WorkshopMenu extends AbstractContainerMenu {
     private final EnvironmentLevelAccess access;
     private final Player player;
@@ -31,7 +29,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
     private final ResultContainer result;
     private final AmountResultSlot<WorkshopRecipe> resultSlot;
     private final DataSlot selectedRecipeIndex = DataSlot.standalone();
-    private List<RecipeHolder<WorkshopRecipe>> recipes = new ArrayList<>();
+    private List<WorkshopRecipe> recipes = new ArrayList<>();
 
     public WorkshopMenu(int containerId, Inventory inventory) {
         this(containerId, inventory, EnvironmentLevelAccess.empty());
@@ -93,7 +91,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
     public ItemStack getUpResult() {
         int index = getUpIndex();
         if (index == -1) return result.getItem(0);
-        return recipes.get(index).value().getResultItem(null);
+        return recipes.get(index).getResultItem(PortEntityExtension.registryAccess(player));
     }
 
     public int getUpIndex() {
@@ -113,7 +111,7 @@ public class WorkshopMenu extends AbstractContainerMenu {
     public ItemStack getDownResult() {
         int index = getDownIndex();
         if (index == -1) return result.getItem(0);
-        return recipes.get(index).value().getResultItem(null);
+        return recipes.get(index).getResultItem(PortEntityExtension.registryAccess(player));
     }
 
     public int getDownIndex() {
@@ -131,14 +129,14 @@ public class WorkshopMenu extends AbstractContainerMenu {
         return -1;
     }
 
-    private boolean isValidRecipeIndex(int pRecipeIndex) {
-        return pRecipeIndex >= 0 && pRecipeIndex < recipes.size();
+    private boolean isValidRecipeIndex(int recipeIndex) {
+        return recipeIndex >= 0 && recipeIndex < recipes.size();
     }
 
     @Override
-    public boolean clickMenuButton(Player pPlayer, int pId) {
-        if (isValidRecipeIndex(pId)) {
-            selectedRecipeIndex.set(pId);
+    public boolean clickMenuButton(Player player, int id) {
+        if (isValidRecipeIndex(id)) {
+            selectedRecipeIndex.set(id);
             setupResultSlot();
         }
         return true;
@@ -146,8 +144,8 @@ public class WorkshopMenu extends AbstractContainerMenu {
 
     private void setupResultSlot() {
         if (!recipes.isEmpty() && isValidRecipeIndex(selectedRecipeIndex.get())) {
-            WorkshopRecipe recipe = recipes.get(selectedRecipeIndex.get()).value();
-            ItemStack itemStack = recipe.getResultItem(null).copy();
+            WorkshopRecipe recipe = recipes.get(selectedRecipeIndex.get());
+            ItemStack itemStack = recipe.getResultItem(PortEntityExtension.registryAccess(player)).copy();
             if (itemStack.isItemEnabled(player.level().enabledFeatures())) {
                 result.setItem(0, itemStack);
                 resultSlot.setCurrentRecipe(recipe);
@@ -161,32 +159,33 @@ public class WorkshopMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public boolean stillValid(Player pPlayer) {
-        return stillValid(access, pPlayer, TCBlocks.WORKSHOP.get());
+    public boolean stillValid(Player player) {
+        return stillValid(access, player, TCBlocks.WORKSHOP.get());
     }
 
     @Override
-    public void removed(Player pPlayer) {
-        super.removed(pPlayer);
-        access.execute((level, blockPos) -> clearContainer(pPlayer, input));
+    public void removed(Player player) {
+        super.removed(player);
+        access.execute((level, blockPos) -> clearContainer(player, input));
     }
 
     @Override
-    public boolean canTakeItemForPickAll(ItemStack pStack, Slot pSlot) {
-        return pSlot.container != result && super.canTakeItemForPickAll(pStack, pSlot);
+    public boolean canTakeItemForPickAll(ItemStack stack, Slot slot) {
+        return slot.container != result && super.canTakeItemForPickAll(stack, slot);
     }
 
     @Override
-    public void slotsChanged(Container pContainer) {
+    public void slotsChanged(Container container) {
         this.recipes = player.level().getRecipeManager().getRecipesFor(TCRecipes.WORKSHOP_TYPE.get(), input, player.level());
-        if (selectedRecipeIndex.get() >= recipes.size()) selectedRecipeIndex.set(recipes.size() - 1);
+        if (selectedRecipeIndex.get() >= recipes.size())
+            selectedRecipeIndex.set(recipes.size() - 1);
         access.execute((level, pos) -> {
             if (player instanceof ServerPlayer serverPlayer) {
                 ItemStack itemStack = ItemStack.EMPTY;
                 if (!recipes.isEmpty()) {
                     if (selectedRecipeIndex.get() == -1) selectedRecipeIndex.set(0);
-                    WorkshopRecipe recipe = recipes.get(selectedRecipeIndex.get()).value();
-                    itemStack = recipe.getResultItem(null).copy();
+                    WorkshopRecipe recipe = recipes.get(selectedRecipeIndex.get());
+                    itemStack = recipe.getResultItem(PortEntityExtension.registryAccess(player)).copy();
                     resultSlot.setCurrentRecipe(recipe);
                 }
                 result.setItem(0, itemStack);
@@ -197,22 +196,22 @@ public class WorkshopMenu extends AbstractContainerMenu {
     }
 
     @Override
-    public ItemStack quickMoveStack(Player pPlayer, int pIndex) {
+    public ItemStack quickMoveStack(Player player, int index) {
         ItemStack itemStack = ItemStack.EMPTY;
-        Slot slot = slots.get(pIndex);
+        Slot slot = slots.get(index);
         if (slot.hasItem()) {
             ItemStack slotItem = slot.getItem();
             itemStack = slotItem.copy();
-            if (pIndex == 0) { // resultSlot
-                access.execute((level, blockPos) -> slotItem.getItem().onCraftedBy(slotItem, level, pPlayer));
+            if (index == 0) { // resultSlot
+                access.execute((level, blockPos) -> slotItem.getItem().onCraftedBy(slotItem, level, player));
                 if (!moveItemStackTo(slotItem, 13, 49, true)) { // playerInventory(ALL)
                     return ItemStack.EMPTY;
                 }
 
                 slot.onQuickCraft(slotItem, itemStack);
-            } else if (pIndex >= 13 && pIndex < 49) { // playerInventory(ALL)
+            } else if (index >= 13 && index < 49) { // playerInventory(ALL)
                 if (!moveItemStackTo(slotItem, 1, 13, false)) { // craftSlots
-                    if (pIndex < 40) {
+                    if (index < 40) {
                         if (!moveItemStackTo(slotItem, 40, 49, false)) { // playerInventory(HOT BAR)
                             return ItemStack.EMPTY;
                         }
@@ -234,9 +233,9 @@ public class WorkshopMenu extends AbstractContainerMenu {
                 return ItemStack.EMPTY;
             }
 
-            slot.onTake(pPlayer, slotItem);
-            if (pIndex == 0) { // resultSlot
-                pPlayer.drop(slotItem, false);
+            slot.onTake(player, slotItem);
+            if (index == 0) { // resultSlot
+                player.drop(slotItem, false);
             }
         }
 

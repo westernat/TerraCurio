@@ -1,17 +1,17 @@
 package org.confluence.terra_curio.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import cpw.mods.util.Lazy;
 import net.minecraft.client.KeyMapping;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
-import net.neoforged.neoforge.client.settings.KeyConflictContext;
-import net.neoforged.neoforge.common.util.Lazy;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
+import net.minecraftforge.client.settings.KeyConflictContext;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
 import org.confluence.terra_curio.TerraCurio;
 import org.lwjgl.glfw.GLFW;
 
-@EventBusSubscriber(modid = TerraCurio.MODID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = TerraCurio.MODID, value = Dist.CLIENT)
 public final class TCKeyBindings {
     @SubscribeEvent
     public static void keyBinding(RegisterKeyMappingsEvent event) {

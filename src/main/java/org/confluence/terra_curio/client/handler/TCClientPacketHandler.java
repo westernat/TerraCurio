@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.client.handler;
 
+import PortLib.extensions.net.minecraft.world.entity.player.Player.PortPlayerExtension;
 import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2BooleanMap;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
@@ -22,13 +23,12 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.NeoForge;
-import net.neoforged.neoforge.common.NeoForgeMod;
+import net.minecraftforge.common.ForgeMod;
 import org.confluence.terra_curio.api.event.PlayerAboutToAutoAttackEvent;
 import org.confluence.terra_curio.api.event.PlayerEmptyAutoAttackEvent;
 import org.confluence.terra_curio.client.TCClientConfigs;
-import org.confluence.terra_curio.integration.bettercombat.BetterCombatHelper;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
+import org.mesdag.portlib.event.PortEventHandler;
 
 import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.LUMINANCE_MASK;
 import static org.confluence.terra_curio.network.s2c.BroadcastRenderPacketS2C.NEPTUNES_SHELL;
@@ -101,7 +101,7 @@ public final class TCClientPacketHandler {
     public static int getLuminance(Entity entity) {
         int ret = entity == Minecraft.getInstance().player ? luminance : remoteLuminance.getOrDefault(entity.getId(), 0);
         if (ret < 0) { // 只能在水下发光
-            return entity.isEyeInFluidType(NeoForgeMod.WATER_TYPE.value()) ? -ret : 0; // confluence mixin here
+            return entity.isEyeInFluidType(ForgeMod.WATER_TYPE.get()) ? -ret : 0; // confluence mixin here
         }
         return ret; // confluence mixin here
     }
@@ -159,13 +159,13 @@ public final class TCClientPacketHandler {
             return;
         }
         ItemStack itemStack = player.getMainHandItem();
-        if (itemStack.onEntitySwing(player, InteractionHand.MAIN_HAND)) return;
-        if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
+        if (itemStack.onEntitySwing(player/*, InteractionHand.MAIN_HAND*/)) return;
+//        if (BetterCombatHelper.hasWeaponAttributes(itemStack)) return;
         if (minecraft.options.keyAttack.isDown() && couldAutoAttack() /* confluence mixin here */) {
             if (player.getAttackStrengthScale(0.5F) < 1.0F - Mth.EPSILON) return;
             MinecraftAccessor accessor = (MinecraftAccessor) minecraft;
             if (accessor.getMissTime() > 0) accessor.setMissTime(0);
-            double reach = Math.max(player.entityInteractionRange(), player.blockInteractionRange());
+            double reach = Math.max(PortPlayerExtension.entityInteractionRange(player), PortPlayerExtension.blockInteractionRange(player));
             double squared = Mth.square(reach);
             Vec3 from = player.getEyePosition(1.0F);
             HitResult hitResult = player.pick(reach, 1.0F, false);
@@ -180,12 +180,12 @@ public final class TCClientPacketHandler {
             EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(
                     player, from, to, aabb, entity -> !entity.isSpectator() && entity.isPickable(), squared
             );
-            if (NeoForge.EVENT_BUS.post(new PlayerAboutToAutoAttackEvent(player, entityHitResult != null && entityHitResult.getLocation().distanceToSqr(from) < sqr)).couldPerform()) {
+            if (PortEventHandler.postEventWithReturn(new PlayerAboutToAutoAttackEvent(player, entityHitResult != null && entityHitResult.getLocation().distanceToSqr(from) < sqr)).couldPerform()) {
                 if (entityHitResult != null) {
                     minecraft.gameMode.attack(player, entityHitResult.getEntity());
                     player.swing(InteractionHand.MAIN_HAND);
                 }
-            } else if (!NeoForge.EVENT_BUS.post(new PlayerEmptyAutoAttackEvent(player, itemStack)).isCanceled()) {
+            } else if (!PortEventHandler.postEventWithReturn(new PlayerEmptyAutoAttackEvent(player, itemStack)).isCanceled()) {
                 player.swing(InteractionHand.MAIN_HAND, false);
                 player.resetAttackStrengthTicker();
             }

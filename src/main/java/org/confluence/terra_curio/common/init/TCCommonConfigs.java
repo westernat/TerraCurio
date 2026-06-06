@@ -7,24 +7,25 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.common.ModConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.ForgeRegistries;
 import org.confluence.terra_curio.TerraCurio;
 
 import java.util.List;
 
 public final class TCCommonConfigs {
-    private static ModConfigSpec.ConfigValue<List<? extends String>> RARE_BLOCKS;
-    private static ModConfigSpec.ConfigValue<List<? extends String>> RARE_CREATURES;
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> RARE_BLOCKS;
+    private static ForgeConfigSpec.ConfigValue<List<? extends String>> RARE_CREATURES;
     public static Object2IntSortedMap<BlockState> rareBlocks = new Object2IntLinkedOpenHashMap<>();
     public static Object2IntSortedMap<EntityType<?>> rareCreatures = new Object2IntLinkedOpenHashMap<>();
 
-    public static ModConfigSpec.BooleanValue RANDOM_ATTACK_DAMAGE;
-    public static ModConfigSpec.DoubleValue RANDOM_ATTACK_DAMAGE_MIN;
-    public static ModConfigSpec.DoubleValue RANDOM_ATTACK_DAMAGE_MAX;
+    public static ForgeConfigSpec.BooleanValue RANDOM_ATTACK_DAMAGE;
+    public static ForgeConfigSpec.DoubleValue RANDOM_ATTACK_DAMAGE_MIN;
+    public static ForgeConfigSpec.DoubleValue RANDOM_ATTACK_DAMAGE_MAX;
 
-    public static ModConfigSpec.IntValue MAX_ACCESSORIES;
+    public static ForgeConfigSpec.IntValue MAX_ACCESSORIES;
 
     public static void onLoad() {
         Object2IntSortedMap<BlockState> blockStates = new Object2IntLinkedOpenHashMap<>();
@@ -40,16 +41,16 @@ public final class TCCommonConfigs {
         Object2IntSortedMap<EntityType<?>> entityTypes = new Object2IntLinkedOpenHashMap<>();
         RARE_CREATURES.get().forEach(s -> {
             ResourceLocation id = ResourceLocation.parse(s);
-            BuiltInRegistries.ENTITY_TYPE.getOptional(id).ifPresentOrElse(
-                    entityType -> entityTypes.put(entityType, entityTypes.size()),
+            ForgeRegistries.ENTITY_TYPES.getHolder(id).ifPresentOrElse(
+                    type -> entityTypes.put(type.value(), entityTypes.size()),
                     () -> TerraCurio.LOGGER.warn("EntityType {} not found", id)
             );
         });
         rareCreatures = entityTypes;
     }
 
-    public static void register(ModContainer container) {
-        ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
+    public static void register(FMLJavaModLoadingContext context) {
+        ForgeConfigSpec.Builder BUILDER = new ForgeConfigSpec.Builder();
         RARE_BLOCKS = BUILDER.comment(
                 "In order for the block to be found by the Metal Detector",
                 "You need to fill the list with string like 'modid:block[state1=true]' or 'modid:block'",
@@ -113,7 +114,7 @@ public final class TCCommonConfigs {
                 "confluence:deepslate_tin_ore",
                 "minecraft:copper_ore",
                 "minecraft:deepslate_copper_ore"
-        ), () -> "minecraft:stone", o -> true);
+        ), o -> true);
         RARE_CREATURES = BUILDER.comment(
                 "In order for the creature to be found by the Life Form Analyzer",
                 "You need to fill the list with string like 'modid:entity'",
@@ -139,11 +140,11 @@ public final class TCCommonConfigs {
                 "minecraft:warden",
                 "minecraft:mooshroom",
                 "minecraft:panda"
-        ), () -> "minecraft:pig", o -> true);
+        ), o -> true);
         RANDOM_ATTACK_DAMAGE = BUILDER.push("Random Attack Damage").define("enable", false);
         RANDOM_ATTACK_DAMAGE_MIN = BUILDER.defineInRange("min", 0.8, 0.0, 1.0);
         RANDOM_ATTACK_DAMAGE_MAX = BUILDER.defineInRange("max", 1.2, 1.0, 2.0);
         MAX_ACCESSORIES = BUILDER.pop().defineInRange("Max Accessory Amount", 7, 6, 100);
-        container.registerConfig(ModConfig.Type.COMMON, BUILDER.build());
+        context.registerConfig(ModConfig.Type.COMMON, BUILDER.build());
     }
 }

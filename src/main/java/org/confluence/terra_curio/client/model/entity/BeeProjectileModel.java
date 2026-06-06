@@ -32,7 +32,7 @@ public class BeeProjectileModel extends EntityModel<BeeProjectile> {
     public void setupAnim(BeeProjectile entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {}
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
-        root.render(poseStack, buffer, packedLight, packedOverlay, color);
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        root.render(poseStack, buffer, packedLight, packedOverlay);
     }
 }

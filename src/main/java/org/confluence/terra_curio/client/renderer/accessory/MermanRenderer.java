@@ -30,8 +30,8 @@ public class MermanRenderer implements ICurioRenderer {
         if (living.isInWaterOrBubble()) {
             ICurioRenderer.followBodyRotations(living, model);
             ICurioRenderer.followHeadRotations(living, model.head);
-            model.renderToBuffer(poseStack, multiBufferSource.getBuffer(CUTOUT), light, OverlayTexture.NO_OVERLAY);
-            ((IClientLivingEntity) living).terra_curio$setShowingCosmetic(true);
+            model.renderToBuffer(poseStack, multiBufferSource.getBuffer(CUTOUT), light, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+            IClientLivingEntity.of(living).terra_curio$setShowingCosmetic(true);
         }
     }
 }

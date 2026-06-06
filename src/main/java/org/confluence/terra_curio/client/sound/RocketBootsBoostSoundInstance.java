@@ -19,7 +19,7 @@ public class RocketBootsBoostSoundInstance extends AbstractTickableSoundInstance
 
     @Override
     public void tick() {
-        if (!player.isRemoved() && PlayerJumpHandler.getCurrentFlight() == TCItems.ROCKET_BOOTS.getKey()) {
+        if (!player.isRemoved() && TCItems.ROCKET_BOOTS.getKey().equals(PlayerJumpHandler.getCurrentFlight())) {
             this.x = player.getX();
             this.y = player.getY();
             this.z = player.getZ();

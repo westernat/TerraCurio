@@ -88,7 +88,7 @@ public abstract class EntityMixin implements IEntity {
         Entity self = confluence$self();
         if (self instanceof LivingEntity) {
             original = TCUtils.applyLavaImmune(original, self);
-            this.terra_curio$dimensionHeight = terra_curio$isShouldRot ? getDimensions(getPose()).height() : 0.0F;
+            this.terra_curio$dimensionHeight = terra_curio$isShouldRot ? getDimensions(getPose()).height : 0.0F;
         }
         return original;
     }

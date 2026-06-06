@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.attachment;
 
+import PortLib.extensions.net.minecraft.world.entity.Entity.PortEntityExtension;
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -12,8 +13,6 @@ import net.minecraft.world.entity.Mob;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
-import net.neoforged.fml.ModLoader;
-import net.neoforged.neoforge.common.NeoForge;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.api.event.AfterAccessoryAbilitiesFlushedEvent;
 import org.confluence.terra_curio.api.event.RegisterAccessoriesComponentUpdateEvent;
@@ -26,6 +25,7 @@ import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.init.TCTags;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.util.TCUtils;
+import org.mesdag.portlib.event.PortEventHandler;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
@@ -53,7 +53,7 @@ public class AccessoriesAttachment extends PrimitiveValueHolder {
         list.add(TCItems.INFINITE$FLIGHT);
         list.add(TCItems.ICE$SAFE);
         list.add(TCItems.SHIELD$OF$CTHULHU);
-        ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.UnitType(list));
+        PortEventHandler.postEvent(new RegisterAccessoriesComponentUpdateEvent.UnitType(list));
     });
     public static final Set<ValueType<?, ? extends PrimitiveValue<?>>> OTHER_REQUIRE_UPDATE = Util.make(new LinkedHashSet<>(), list -> {
         list.add(TCItems.NEPTUNES$SHELL);
@@ -74,7 +74,7 @@ public class AccessoriesAttachment extends PrimitiveValueHolder {
         list.add(TCItems.EFFECT$IMMUNITIES);
         list.add(TCItems.TOTEM$WITH$COOLDOWN);
         list.add(TCItems.LUMINANCE);
-        ModLoader.postEvent(new RegisterAccessoriesComponentUpdateEvent.OtherType(list));
+        PortEventHandler.postEvent(new RegisterAccessoriesComponentUpdateEvent.OtherType(list));
     });
     private boolean panicNecklace;
     private transient int remainLavaImmuneTicks;
@@ -133,7 +133,7 @@ public class AccessoriesAttachment extends PrimitiveValueHolder {
             }
             this.totalLavaImmuneTicks = getValue(TCItems.LAVA$IMMUNE$TICKS);
         });
-        NeoForge.EVENT_BUS.post(new AfterAccessoryAbilitiesFlushedEvent(living));
+        PortEventHandler.postEvent(new AfterAccessoryAbilitiesFlushedEvent(living));
     }
 
     @Override
@@ -166,6 +166,6 @@ public class AccessoriesAttachment extends PrimitiveValueHolder {
     }
 
     public static AccessoriesAttachment of(Entity entity) {
-        return entity.getData(TCAttachments.ACCESSORIES);
+        return PortEntityExtension.getAttach(entity, TCAttachments.ACCESSORIES);
     }
 }

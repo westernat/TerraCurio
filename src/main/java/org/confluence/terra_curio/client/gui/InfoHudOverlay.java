@@ -2,11 +2,9 @@ package org.confluence.terra_curio.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -14,17 +12,18 @@ import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.handler.InformationHandler;
 import org.confluence.terra_curio.common.init.TCItems;
-import org.jetbrains.annotations.NotNull;
+import org.mesdag.portlib.client.GuiLayer;
+import org.mesdag.portlib.client.PortDeltaTicker;
 
-public class InfoHudOverlay implements LayeredDraw.Layer {
+public class InfoHudOverlay implements GuiLayer {
     private static final int background = (0x90 << 24) + 0x505050;
     private static final int textColor = 0xE0E0E0;
     private static final ResourceLocation[] INFO_ICON = TCItems.FULL_INFO.stream().map(TooltipComponentsValue.Storage::texture).toArray(ResourceLocation[]::new);
 
     @Override
-    public void render(@NotNull GuiGraphics guiGraphics, @NotNull DeltaTracker deltaTracker) {
+    public void render(GuiGraphics guiGraphics, PortDeltaTicker deltaTracker) {
         Minecraft minecraft = Minecraft.getInstance();
-        if (minecraft.options.hideGui || minecraft.getDebugOverlay().showDebugScreen()) return;
+        if (minecraft.options.hideGui || minecraft.options.renderDebug) return;
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.disableDepthTest();

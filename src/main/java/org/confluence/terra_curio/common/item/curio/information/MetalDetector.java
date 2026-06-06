@@ -3,9 +3,11 @@ package org.confluence.terra_curio.common.item.curio.information;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.Level;
 import org.confluence.lib.util.LibClientUtils;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.client.TCKeyBindings;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -15,12 +17,12 @@ public class MetalDetector extends MultiInfoCurioItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
+    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         if (LibUtils.isPhysicalClient()) {
             tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.metal_detector.keybinding",
                     LibClientUtils.keyMappingComponent(TCKeyBindings.METAL_DETECTOR.get())
             ));
         }
-        super.appendHoverText(stack, context, tooltipComponents, tooltipFlag);
+        super.appendHoverText(stack, level, tooltipComponents, tooltipFlag);
     }
 }

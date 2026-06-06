@@ -17,25 +17,25 @@ public class StepStoolRenderer extends EntityRenderer<StepStoolEntity> {
 
     private final StepStoolModel model;
 
-    public StepStoolRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext);
-        this.model = new StepStoolModel((pContext.bakeLayer(StepStoolModel.LAYER_LOCATION)));
+    public StepStoolRenderer(EntityRendererProvider.Context context) {
+        super(context);
+        this.model = new StepStoolModel((context.bakeLayer(StepStoolModel.LAYER_LOCATION)));
     }
 
     @Override
-    public ResourceLocation getTextureLocation(StepStoolEntity pEntity) {
+    public ResourceLocation getTextureLocation(StepStoolEntity entity) {
         return TEXTURE;
     }
 
     @Override
-    public void render(StepStoolEntity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, MultiBufferSource pBuffer, int pPackedLight) {
-        pPoseStack.pushPose();
-        pPoseStack.translate(0.0F, 1.5F, 0.0F);
-        pPoseStack.mulPose(Axis.ZP.rotation(Mth.PI));
-        for (int i = 0; i < pEntity.getStep(); i++) {
-            model.renderToBuffer(pPoseStack, pBuffer.getBuffer(model.renderType(getTextureLocation(pEntity))), pPackedLight, OverlayTexture.NO_OVERLAY);
-            pPoseStack.translate(0.0F, -1.0F, 0.0F);
+    public void render(StepStoolEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        poseStack.pushPose();
+        poseStack.translate(0.0F, 1.5F, 0.0F);
+        poseStack.mulPose(Axis.ZP.rotation(Mth.PI));
+        for (int i = 0; i < entity.getStep(); i++) {
+            model.renderToBuffer(poseStack, buffer.getBuffer(model.renderType(getTextureLocation(entity))), packedLight, OverlayTexture.NO_OVERLAY, 1, 1, 1, 1);
+            poseStack.translate(0.0F, -1.0F, 0.0F);
         }
-        pPoseStack.popPose();
+        poseStack.popPose();
     }
 }

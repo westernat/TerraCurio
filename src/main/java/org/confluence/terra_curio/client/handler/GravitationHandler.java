@@ -6,7 +6,6 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.Pose;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.mixin.client.accessor.LocalPlayerAccessor;
@@ -26,7 +25,7 @@ public final class GravitationHandler {
             if (!keyDown) {
                 shouldRot = !shouldRot;
                 player.resetFallDistance();
-                PacketDistributor.sendToServer(new GravitationPacketC2S(shouldRot));
+                GravitationPacketC2S.sendToServer(shouldRot);
             }
             keyDown = true;
         } else {
@@ -40,14 +39,14 @@ public final class GravitationHandler {
         if (!shouldRot) {
             shouldRot = true;
             player.resetFallDistance();
-            PacketDistributor.sendToServer(new GravitationPacketC2S(true));
+            GravitationPacketC2S.sendToServer(true);
         }
     }
 
     public static void expire() {
         if (shouldRot) {
             shouldRot = false;
-            PacketDistributor.sendToServer(new GravitationPacketC2S(false));
+            GravitationPacketC2S.sendToServer(false);
         }
     }
 

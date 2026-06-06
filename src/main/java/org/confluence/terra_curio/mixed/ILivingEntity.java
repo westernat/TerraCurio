@@ -1,6 +1,7 @@
 package org.confluence.terra_curio.mixed;
 
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -25,4 +26,8 @@ public interface ILivingEntity {
     @Nullable Map<ResourceLocation, ParticleEmitter> terra_curio$getParticleEmitters();
 
     @NotNull Map<ResourceLocation, ParticleEmitter> terra_curio$getOrCreateParticleEmitters();
+
+    static ILivingEntity of(LivingEntity living) {
+        return (ILivingEntity) living;
+    }
 }

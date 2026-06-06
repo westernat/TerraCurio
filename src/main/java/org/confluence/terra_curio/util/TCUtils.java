@@ -1,5 +1,10 @@
 package org.confluence.terra_curio.util;
 
+import PortLib.extensions.java.util.List.PortListExtension;
+import PortLib.extensions.net.minecraft.core.Holder.PortHolderExtension;
+import PortLib.extensions.net.minecraft.world.entity.Entity.PortEntityExtension;
+import PortLib.extensions.net.minecraft.world.entity.LivingEntity.PortLivingEntityExtension;
+import PortLib.extensions.net.minecraft.world.item.ItemStack.PortItemStackExtension;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
@@ -30,13 +35,10 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.common.EffectCures;
-import net.neoforged.neoforge.common.NeoForgeMod;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.common.ForgeMod;
 import org.confluence.lib.common.LibTags;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.lib.util.VectorUtils;
-import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
@@ -52,13 +54,15 @@ import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.c2s.PlayerSprintPacketC2S;
 import org.confluence.terra_curio.network.s2c.*;
 import org.jetbrains.annotations.Nullable;
+import org.mesdag.portlib.wrapper.common.PortEffectCures;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 public final class TCUtils {
-    public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(TerraCurio.asResource("ice_speed"), 0.2, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+    public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(UUID.fromString("ice_speed"), "ice_speed", 0.2, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
     public static void applyFireAttack(DamageSource damageSource, Entity victim) {
         if (damageSource.getEntity() instanceof LivingEntity living &&
@@ -74,7 +78,7 @@ public final class TCUtils {
             } else {
                 time = 40;
             }
-            victim.igniteForTicks(time);
+            PortEntityExtension.igniteForTicks(victim, time);
         }
     }
 
@@ -139,13 +143,13 @@ public final class TCUtils {
                 projectile.setPos(living.position().add(random.nextInt(3) - 1.0, 2.0, random.nextInt(3) - 1.0));
                 living.level().addFreshEntity(projectile);
             }
-            living.addEffect(new MobEffectInstance(TCEffects.HONEY, 100));
+            living.addEffect(new MobEffectInstance(TCEffects.HONEY.get(), 100));
         }
     }
 
     public static void applyIgniteArrow(LivingEntity living, AbstractArrow arrow) {
         if (hasType(living, TCItems.IGNITE$ARROW)) {
-            arrow.igniteForTicks(2000);
+            PortEntityExtension.igniteForTicks(arrow, 2000);
         }
     }
 
@@ -177,12 +181,12 @@ public final class TCUtils {
             int duration = randomSource.nextInt((int) (90 + amount / 3), (int) (300 + amount / 2));
             living.level().getEntities(living, new AABB(living.blockPosition()).inflate(range), entity -> entity instanceof Enemy).forEach(enemy -> {
                 if (enemy instanceof LivingEntity living1) {
-                    living1.addEffect(new MobEffectInstance(TCEffects.CONFUSED, duration));
+                    living1.addEffect(new MobEffectInstance(TCEffects.CONFUSED.get(), duration));
                 }
             });
         }
-        if (randomSource.nextFloat() < 0.1667F && !living.hasEffect(TCEffects.CEREBRAL_MINDTRICK)) {
-            living.addEffect(new MobEffectInstance(TCEffects.CEREBRAL_MINDTRICK, 80));
+        if (randomSource.nextFloat() < 0.1667F && !living.hasEffect(TCEffects.CEREBRAL_MINDTRICK.get())) {
+            living.addEffect(new MobEffectInstance(TCEffects.CEREBRAL_MINDTRICK.get(), 80));
             return 0.0F;
         }
         return amount;
@@ -228,7 +232,7 @@ public final class TCUtils {
                 if (random.nextFloat() < 0.3F && level.getBlockState(aroundPos).isAir()) {
                     List<ConfiguredFeature<?, ?>> list = level.getBiome(aroundPos).value().getGenerationSettings().getFlowerFeatures();
                     if (list.isEmpty()) continue;
-                    ((RandomPatchConfiguration) list.getFirst().config()).feature().value().place(level, level.getChunkSource().getGenerator(), random, aroundPos);
+                    ((RandomPatchConfiguration) PortListExtension.getFirst(list).config()).feature().value().place(level, level.getChunkSource().getGenerator(), random, aroundPos);
                 }
             }
         }
@@ -236,7 +240,7 @@ public final class TCUtils {
             AttributeInstance instance = living.getAttribute(Attributes.MOVEMENT_SPEED);
             assert instance != null;
             if (level.getBlockState(onPos).is(BlockTags.ICE)) {
-                if (!instance.hasModifier(ICE_SPEED_MODIFIER.id())) {
+                if (!instance.hasModifier(ICE_SPEED_MODIFIER)) {
                     instance.addTransientModifier(ICE_SPEED_MODIFIER);
                 }
             } else {
@@ -253,11 +257,11 @@ public final class TCUtils {
                 walkableFluidStates.add(state);
             }
         });
-        ((ILivingEntity) player).terra_curio$resetLastWalkedFluidState(walkableFluidStates);
+        ILivingEntity.of(player).terra_curio$resetLastWalkedFluidState(walkableFluidStates);
     }
 
     public static void applyFluidWalk(Player player) {
-        if (player.getEyeInFluidType() == NeoForgeMod.EMPTY_TYPE.value()) {
+        if (player.getEyeInFluidType() == ForgeMod.EMPTY_TYPE.get()) {
             BlockPos pos = player.blockPosition();
             Level level = player.level();
             FluidState fluidState;
@@ -297,7 +301,7 @@ public final class TCUtils {
             int cooldown = getValue(living, TCItems.TOTEM$WITH$COOLDOWN);
             if (cooldown > 0) {
                 living.setHealth(1.0F);
-                living.removeEffectsCuredBy(EffectCures.PROTECTED_BY_TOTEM);
+                PortLivingEntityExtension.removeEffectsCuredBy(living, PortEffectCures.PROTECTED_BY_TOTEM);
                 living.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
                 living.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
                 living.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
@@ -333,7 +337,7 @@ public final class TCUtils {
         if (player.isLocalPlayer()) {
             if (down) {
                 if (!sprintKeyDown && TCClientPacketHandler.isHasCthulhu()) {
-                    PacketDistributor.sendToServer(PlayerSprintPacketC2S.INSTANCE);
+                    PlayerSprintPacketC2S.sendToServer();
                     sprintKeyDown = true;
                     sprint = true;
                 }
@@ -376,9 +380,9 @@ public final class TCUtils {
         return AccessoriesAttachment.of(living).getPrimitiveValue(type);
     }
 
-    public static @Nullable PrimitiveValueComponent getAccessoriesComponent(ItemStack itemStack) {
-        PrimitiveValueComponent component = itemStack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
-        if (component != null || (component = itemStack.get(TCDataComponentTypes.ACCESSORIES)) != null) {
+    public static @Nullable PrimitiveValueComponent getAccessoriesComponent(ItemStack stack) {
+        PrimitiveValueComponent component = PortHolderExtension.getData(stack.getItemHolder(), TCDataMaps.ACCESSORIES);
+        if (component != null || (component = PortItemStackExtension.getData(stack, TCDataComponentTypes.ACCESSORIES)) != null) {
             return component;
         }
         return null;

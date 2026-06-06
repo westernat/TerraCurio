@@ -1,9 +1,10 @@
 package org.confluence.terra_curio.util;
 
+import PortLib.extensions.net.minecraft.world.item.ItemStack.PortItemStackExtension;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.items.IItemHandlerModifiable;
+import net.minecraftforge.items.IItemHandlerModifiable;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
 import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
@@ -27,14 +28,14 @@ public class CuriosUtils {
     }
 
     public static boolean noSameCurio(LivingEntity living, ValueType<?, ? extends PrimitiveValue<?>> type) {
-        return noSameCurio(living, (Predicate<ItemStack>) itemStack -> {
-            PrimitiveValueComponent component = itemStack.get(TCDataComponentTypes.ACCESSORIES);
+        return noSameCurio(living, (Predicate<ItemStack>) stack -> {
+            PrimitiveValueComponent component = PortItemStackExtension.getData(stack, TCDataComponentTypes.ACCESSORIES);
             return component == null || !component.types().containsKey(type);
         });
     }
 
     public static boolean noSameCurio(LivingEntity living, Predicate<ItemStack> predicate) {
-        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living);
+        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living).resolve();
         if (curiosInventory.isEmpty()) return true;
         for (ICurioStacksHandler curioStacksHandler : curiosInventory.get().getCurios().values()) {
             IDynamicStackHandler stackHandler = curioStacksHandler.getStacks();
@@ -70,7 +71,7 @@ public class CuriosUtils {
 
     public static <T, V extends PrimitiveValue<T>> T calculateValue(LivingEntity living, ValueType<T, V> type) {
         V value = type.newInstance(type.defaultValue());
-        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living);
+        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living).resolve();
         if (curiosInventory.isEmpty()) return value.get();
         for (ICurioStacksHandler curioStacksHandler : curiosInventory.get().getCurios().values()) {
             IDynamicStackHandler stackHandler = curioStacksHandler.getStacks();
@@ -89,28 +90,28 @@ public class CuriosUtils {
     }
 
     public static <C> @Nullable C findCurio(LivingEntity living, Class<C> clazz) {
-        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living);
+        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living).resolve();
         if (curiosInventory.isEmpty()) return null;
         Optional<SlotResult> results = curiosInventory.get().findFirstCurio(itemStack -> clazz.isInstance(itemStack.getItem()));
         return results.map(result -> clazz.cast(result.stack().getItem())).orElse(null);
     }
 
     public static <C extends Item & ICurioItem> @Nullable ItemStack findCurio(LivingEntity living, C curio) {
-        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living);
+        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living).resolve();
         if (curiosInventory.isEmpty()) return null;
         Optional<SlotResult> results = curiosInventory.get().findFirstCurio(itemStack -> itemStack.getItem() == curio);
         return results.map(SlotResult::stack).orElse(null);
     }
 
     public static @Nullable ItemStack findCurio(LivingEntity living, Predicate<ItemStack> predicate) {
-        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living);
+        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living).resolve();
         if (curiosInventory.isEmpty()) return null;
         Optional<SlotResult> results = curiosInventory.get().findFirstCurio(predicate);
         return results.map(SlotResult::stack).orElse(null);
     }
 
     public static <C extends Item & ICurioItem> @Nullable ItemStack findCurioAt(LivingEntity living, C curio, String id) {
-        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living);
+        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living).resolve();
         if (curiosInventory.isEmpty()) return null;
         Map<String, ICurioStacksHandler> curios = curiosInventory.get().getCurios();
         ICurioStacksHandler stacksHandler = curios.get(id);
@@ -128,7 +129,7 @@ public class CuriosUtils {
 
     public static ArrayList<ItemStack> getCurios(LivingEntity living) {
         ArrayList<ItemStack> items = new ArrayList<>();
-        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living);
+        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living).resolve();
         if (curiosInventory.isEmpty()) return items;
         IItemHandlerModifiable itemHandlerModifiable = curiosInventory.get().getEquippedCurios();
         for (int i = 0; i < itemHandlerModifiable.getSlots(); i++) {
@@ -140,7 +141,7 @@ public class CuriosUtils {
 
     public static <C> ArrayList<C> getCurios(LivingEntity living, Class<C> clazz) {
         ArrayList<C> items = new ArrayList<>();
-        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living);
+        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living).resolve();
         if (curiosInventory.isEmpty()) return items;
         IItemHandlerModifiable itemHandlerModifiable = curiosInventory.get().getEquippedCurios();
         for (int i = 0; i < itemHandlerModifiable.getSlots(); i++) {
@@ -152,7 +153,7 @@ public class CuriosUtils {
     }
 
     public static @Nullable ItemStack getSlot(LivingEntity living, String id, int index) {
-        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living);
+        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living).resolve();
         if (curiosInventory.isEmpty()) return null;
         Map<String, ICurioStacksHandler> curios = curiosInventory.get().getCurios();
         ICurioStacksHandler stacksHandler = curios.get(id);
@@ -167,7 +168,7 @@ public class CuriosUtils {
     }
 
     public static @Nullable ItemStack getSlot(LivingEntity living, Predicate<ItemStack> predicate, int index) {
-        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living);
+        Optional<ICuriosItemHandler> curiosInventory = CuriosApi.getCuriosInventory(living).resolve();
         if (curiosInventory.isEmpty()) return null;
         for (ICurioStacksHandler curioStacksHandler : curiosInventory.get().getCurios().values()) {
             IDynamicStackHandler stackHandler = curioStacksHandler.getStacks();

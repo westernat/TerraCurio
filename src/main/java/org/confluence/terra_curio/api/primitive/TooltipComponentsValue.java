@@ -3,10 +3,10 @@ package org.confluence.terra_curio.api.primitive;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import org.confluence.terra_curio.TerraCurio;
+import org.mesdag.portlib.network.chat.PortComponentSerialization;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -66,7 +66,7 @@ public class TooltipComponentsValue implements PrimitiveValue<List<TooltipCompon
     public record Storage(ResourceLocation texture, Component text) {
         public static final Codec<Storage> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 ResourceLocation.CODEC.fieldOf("texture").forGetter(Storage::texture),
-                ComponentSerialization.CODEC.fieldOf("text").forGetter(Storage::text)
+                PortComponentSerialization.CODEC.fieldOf("text").forGetter(Storage::text)
         ).apply(instance, Storage::new));
     }
 

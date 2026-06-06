@@ -14,35 +14,34 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terra_curio.common.entity.StarCloakEntity;
 import org.confluence.terra_curio.common.init.TCItems;
-import org.jetbrains.annotations.NotNull;
 
 public class StarCloakEntityRenderer extends EntityRenderer<StarCloakEntity> {
     private final ItemRenderer itemRenderer;
     private final ItemStack item;
 
-    public StarCloakEntityRenderer(EntityRendererProvider.Context pContext) {
-        super(pContext);
-        this.itemRenderer = pContext.getItemRenderer();
+    public StarCloakEntityRenderer(EntityRendererProvider.Context context) {
+        super(context);
+        this.itemRenderer = context.getItemRenderer();
         this.item = TCItems.STAR.get().getDefaultInstance();
     }
 
     @Override
-    public @NotNull ResourceLocation getTextureLocation(@NotNull StarCloakEntity pEntity) {
+    public ResourceLocation getTextureLocation(StarCloakEntity entity) {
         return InventoryMenu.BLOCK_ATLAS;
     }
 
     @Override
-    protected int getBlockLightLevel(@NotNull StarCloakEntity pEntity, @NotNull BlockPos pPos) {
+    protected int getBlockLightLevel(StarCloakEntity entity, BlockPos pos) {
         return 15;
     }
 
     @Override
-    public void render(StarCloakEntity pEntity, float pEntityYaw, float pPartialTick, PoseStack pPoseStack, @NotNull MultiBufferSource pBuffer, int pPackedLight) {
-        pPoseStack.pushPose();
-        pPoseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
-        pPoseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
-        itemRenderer.renderStatic(item, ItemDisplayContext.GROUND, pPackedLight, OverlayTexture.NO_OVERLAY, pPoseStack, pBuffer, pEntity.level(), pEntity.getId());
-        pPoseStack.popPose();
-        super.render(pEntity, pEntityYaw, pPartialTick, pPoseStack, pBuffer, pPackedLight);
+    public void render(StarCloakEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        poseStack.pushPose();
+        poseStack.mulPose(this.entityRenderDispatcher.cameraOrientation());
+        poseStack.mulPose(Axis.YP.rotationDegrees(180.0F));
+        itemRenderer.renderStatic(item, ItemDisplayContext.GROUND, packedLight, OverlayTexture.NO_OVERLAY, poseStack, buffer, entity.level(), entity.getId());
+        poseStack.popPose();
+        super.render(entity, entityYaw, partialTick, poseStack, buffer, packedLight);
     }
 }

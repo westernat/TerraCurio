@@ -1,14 +1,11 @@
 package org.confluence.terra_curio.network.s2c;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Unit;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.fml.ModLoader;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.lib.network.IPacketS2C;
 import org.confluence.lib.util.LibStreamCodecUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.event.RegisterAccessoriesComponentUnitValueTypeLocalSyncEvent;
@@ -20,12 +17,15 @@ import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.confluence.terra_curio.util.TCUtils;
+import org.mesdag.portlib.event.PortEventHandler;
+import org.mesdag.portlib.network.IPortPacket;
+import org.mesdag.portlib.network.codec.PortStreamCodec;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public record CurioExistsPacketS2C(boolean[] exists) implements IPacketS2C {
+public record CurioExistsPacketS2C(boolean[] exists) implements IPortPacket.S2C {
     private static final List<ValueType<Unit, UnitValue>> TYPES = new ArrayList<>();
 
     public static final int AUTO_ATTACK = register(TCItems.AUTO$ATTACK);
@@ -44,17 +44,17 @@ public record CurioExistsPacketS2C(boolean[] exists) implements IPacketS2C {
         return index;
     }
 
-    public static final Type<CurioExistsPacketS2C> TYPE = new Type<>(TerraCurio.asResource("curio_exists"));
-    public static final StreamCodec<ByteBuf, CurioExistsPacketS2C> STREAM_CODEC;
+    public static final ResourceLocation ID = TerraCurio.asResource("curio_exists");
+    public static final PortStreamCodec<ByteBuf, CurioExistsPacketS2C> STREAM_CODEC;
 
     static {
-        ModLoader.postEvent(new RegisterAccessoriesComponentUnitValueTypeLocalSyncEvent(CurioExistsPacketS2C::register));
+        PortEventHandler.postEvent(new RegisterAccessoriesComponentUnitValueTypeLocalSyncEvent(CurioExistsPacketS2C::register));
         STREAM_CODEC = LibStreamCodecUtils.booleanArray(TYPES.size()).map(CurioExistsPacketS2C::new, CurioExistsPacketS2C::exists);
     }
 
     @Override
-    public Type<CurioExistsPacketS2C> type() {
-        return TYPE;
+    public ResourceLocation identifier() {
+        return ID;
     }
 
     @Override
@@ -74,6 +74,6 @@ public record CurioExistsPacketS2C(boolean[] exists) implements IPacketS2C {
                 }
             }
         }
-        PacketDistributor.sendToPlayer(player, new CurioExistsPacketS2C(arr));
+        TerraCurio.HANDLER.sendToPlayer(player, new CurioExistsPacketS2C(arr));
     }
 }

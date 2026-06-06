@@ -46,7 +46,7 @@ public class StepStoolEntity extends Entity implements TraceableEntity {
                 discard();
             } else {
                 Vec3 vec3 = owner.position().subtract(position());
-                float height = getDimensions(Pose.STANDING).height();
+                float height = getDimensions(Pose.STANDING).height;
                 if (vec3.horizontalDistanceSqr() > 1 || Math.abs(vec3.y) > height + 1) {
                     discard();
                 }
@@ -70,8 +70,8 @@ public class StepStoolEntity extends Entity implements TraceableEntity {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(DATA_STEP_ID, 1);
+    protected void defineSynchedData() {
+        entityData.define(DATA_STEP_ID, 1);
     }
 
     public void setStep(int step) {
@@ -129,5 +129,7 @@ public class StepStoolEntity extends Entity implements TraceableEntity {
     }
 
     @Override
-    public void updateFluidHeightAndDoFluidPushing() {}
+    protected boolean updateInWaterStateAndDoFluidPushing() {
+        return false;
+    }
 }

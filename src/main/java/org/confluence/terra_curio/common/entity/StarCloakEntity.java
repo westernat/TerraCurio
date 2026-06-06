@@ -36,8 +36,8 @@ public class StarCloakEntity extends Projectile {
     }
 
     @Override
-    protected void defineSynchedData(SynchedEntityData.Builder builder) {
-        builder.define(DATA_MANA, false);
+    protected void defineSynchedData() {
+        entityData.define(DATA_MANA, false);
     }
 
     @Override
@@ -103,7 +103,7 @@ public class StarCloakEntity extends Projectile {
     }
 
     @Override
-    public boolean canChangeDimensions(Level oldLevel, Level newLevel) {
+    public boolean canChangeDimensions() {
         return false;
     }
 }

@@ -1,24 +1,24 @@
 package org.confluence.terra_curio.network.s2c;
 
 import io.netty.buffer.ByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.lib.network.IPacketS2C;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.PlayerClimbHandler;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
+import org.mesdag.portlib.network.IPortPacket;
+import org.mesdag.portlib.network.codec.PortByteBufCodecs;
+import org.mesdag.portlib.network.codec.PortStreamCodec;
 
-public record PlayerClimbPacketS2C(byte climberAmount) implements IPacketS2C {
-    public static final Type<PlayerClimbPacketS2C> TYPE = new Type<>(TerraCurio.asResource("player_climb"));
-    public static final StreamCodec<ByteBuf, PlayerClimbPacketS2C> STREAM_CODEC = ByteBufCodecs.BYTE.map(PlayerClimbPacketS2C::new, PlayerClimbPacketS2C::climberAmount);
+public record PlayerClimbPacketS2C(byte climberAmount) implements IPortPacket.S2C {
+    public static final ResourceLocation ID = TerraCurio.asResource("player_climb");
+    public static final PortStreamCodec<ByteBuf, PlayerClimbPacketS2C> STREAM_CODEC = PortByteBufCodecs.BYTE.map(PlayerClimbPacketS2C::new, PlayerClimbPacketS2C::climberAmount);
 
     @Override
-    public Type<PlayerClimbPacketS2C> type() {
-        return TYPE;
+    public ResourceLocation identifier() {
+        return ID;
     }
 
     @Override
@@ -27,6 +27,6 @@ public record PlayerClimbPacketS2C(byte climberAmount) implements IPacketS2C {
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        PacketDistributor.sendToPlayer(serverPlayer, new PlayerClimbPacketS2C(TCUtils.getValue(serverPlayer, TCItems.WALL$CLIMB)));
+        TerraCurio.HANDLER.sendToPlayer(serverPlayer, new PlayerClimbPacketS2C(TCUtils.getValue(serverPlayer, TCItems.WALL$CLIMB)));
     }
 }

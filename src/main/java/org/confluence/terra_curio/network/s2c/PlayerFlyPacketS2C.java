@@ -1,35 +1,37 @@
 package org.confluence.terra_curio.network.s2c;
 
+import PortLib.extensions.net.minecraft.resources.ResourceKey.PortResourceKeyExtension;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
-import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
-import net.neoforged.neoforge.network.PacketDistributor;
-import org.confluence.lib.network.IPacketS2C;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.MayFlyAbilityValue;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.util.TCUtils;
+import org.mesdag.portlib.network.IPortPacket;
+import org.mesdag.portlib.network.PortRegistryFriendlyByteBuf;
+import org.mesdag.portlib.network.codec.PortByteBufCodecs;
+import org.mesdag.portlib.network.codec.PortStreamCodec;
 
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.function.IntFunction;
 
-public record PlayerFlyPacketS2C(Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack> flyStacks) implements IPacketS2C {
-    public static final Type<PlayerFlyPacketS2C> TYPE = new Type<>(TerraCurio.asResource("player_fly"));
-    public static final StreamCodec<RegistryFriendlyByteBuf, PlayerFlyPacketS2C> STREAM_CODEC = ByteBufCodecs.map(
+public record PlayerFlyPacketS2C(
+        Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack> flyStacks) implements IPortPacket.S2C {
+    public static final ResourceLocation ID = TerraCurio.asResource("player_fly");
+    public static final PortStreamCodec<PortRegistryFriendlyByteBuf, PlayerFlyPacketS2C> STREAM_CODEC = PortByteBufCodecs.map(
             (IntFunction<Map<ResourceKey<Item>, MayFlyAbilityValue.FlyStack>>) IdentityHashMap::new,
-            ResourceKey.streamCodec(Registries.ITEM), MayFlyAbilityValue.FlyStack.STREAM_CODEC
+            PortResourceKeyExtension.streamCodec(Registries.ITEM), MayFlyAbilityValue.FlyStack.STREAM_CODEC
     ).map(PlayerFlyPacketS2C::new, PlayerFlyPacketS2C::flyStacks);
 
     @Override
-    public Type<PlayerFlyPacketS2C> type() {
-        return TYPE;
+    public ResourceLocation identifier() {
+        return ID;
     }
 
     @Override
@@ -38,6 +40,6 @@ public record PlayerFlyPacketS2C(Map<ResourceKey<Item>, MayFlyAbilityValue.FlySt
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        PacketDistributor.sendToPlayer(serverPlayer, new PlayerFlyPacketS2C(TCUtils.getValue(serverPlayer, TCItems.MAY$FLY)));
+        TerraCurio.HANDLER.sendToPlayer(serverPlayer, new PlayerFlyPacketS2C(TCUtils.getValue(serverPlayer, TCItems.MAY$FLY)));
     }
 }

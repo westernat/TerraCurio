@@ -2,7 +2,6 @@ package org.confluence.terra_curio.common.item.curio.movement;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -10,7 +9,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.TCClientConfigs;
@@ -25,9 +23,11 @@ import org.joml.Matrix4f;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 import top.theillusivec4.curios.api.SlotContext;
 
+import java.util.UUID;
+
 public class BaseSpeedBoots extends BaseCurioItem {
     public static final String KEY = TerraCurio.MODID + ":boots_speed";
-    public static final ResourceLocation ID = TerraCurio.asResource("base_speed_boots");
+    public static final UUID ID = UUID.fromString("base_speed_boots");
 
     private final int acceleration;
     private final int maxSpeed;
@@ -77,7 +77,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
                     int actually = Math.min(maxSpeed - speed, acceleration);
                     int value = speed + actually;
                     if (actually > 0) {
-                        PacketDistributor.sendToServer(new SpeedBootsNBTPacketC2S(slotContext.index(), value));
+                        SpeedBootsNBTPacketC2S.sendToServer(slotContext.index(), value);
                     }
                     float ratio = (float) value / maxSpeed;
                     if (TCClientConfigs.playShoesSound && player.level().getGameTime() % (ratio < 0.5F ? 6L : 4L) == 0) {
@@ -88,18 +88,18 @@ public class BaseSpeedBoots extends BaseCurioItem {
                     // todo particle
                 }
             } else if (speed != 0) {
-                PacketDistributor.sendToServer(new SpeedBootsNBTPacketC2S(slotContext.index(), 0));
+                SpeedBootsNBTPacketC2S.sendToServer(slotContext.index(), 0);
             }
         }
     }
 
     @Override
-    public Multimap<Holder<Attribute>, AttributeModifier> getAttributeModifiers(SlotContext slotContext, ResourceLocation id, ItemStack stack) {
-        ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> builder1 = ImmutableMultimap.builder();
+    public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID id, ItemStack stack) {
+        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder1 = ImmutableMultimap.builder();
         builder1.putAll(super.getAttributeModifiers(slotContext, id, stack));
         double speed = LibUtils.getItemStackNbtNoCopy(stack).getInt(KEY) * 0.01;
         if (speed > 0.0) {
-            builder1.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(ID, speed, AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
+            builder1.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(ID, "base_speed_boots", speed, AttributeModifier.Operation.MULTIPLY_TOTAL));
         }
         return builder1.build();
     }

@@ -1,17 +1,12 @@
 package org.confluence.terra_curio.client.event;
 
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.BlockItem;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.*;
-import net.neoforged.neoforge.common.Tags;
-import net.neoforged.neoforge.network.PacketDistributor;
+import net.minecraftforge.client.event.MovementInputUpdateEvent;
+import net.minecraftforge.common.Tags;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.TCKeyBindings;
@@ -21,11 +16,22 @@ import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
 import org.confluence.terra_curio.network.c2s.ShootXBonePacketC2S;
 import org.confluence.terra_curio.util.TCUtils;
+import org.mesdag.portlib.event.PortEventHandler;
+import org.mesdag.portlib.event.client.*;
 
-@EventBusSubscriber(modid = TerraCurio.MODID, value = Dist.CLIENT)
-public final class GameClientEvents {
-    @SubscribeEvent
-    public static void clientTick$Post(ClientTickEvent.Pre event) {
+public final class TCGameClientEvents {
+    public static void init() {
+        PortEventHandler.addListener(TCGameClientEvents::clientTick$Post);
+        PortEventHandler.addListener(TCGameClientEvents::clientPlayerNetwork$LoggingOut);
+        PortEventHandler.addListener(TCGameClientEvents::movementInputUpdate);
+        PortEventHandler.addListener(TCGameClientEvents::cameraSetup);
+        PortEventHandler.addListener(TCGameClientEvents::fov);
+        PortEventHandler.addListener(TCGameClientEvents::interactionKeyMappingTriggered);
+        PortEventHandler.addListener(TCGameClientEvents::input$MouseScrolling);
+        PortEventHandler.addListener(TCGameClientEvents::screen$MouseScrolled$Pre);
+    }
+
+    private static void clientTick$Post(PortClientTickEvent.PortPre event) {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
         if (player != null) {
@@ -38,8 +44,7 @@ public final class GameClientEvents {
         }
     }
 
-    @SubscribeEvent
-    public static void clientPlayerNetwork$LoggingOut(ClientPlayerNetworkEvent.LoggingOut event) {
+    private static void clientPlayerNetwork$LoggingOut(PortClientPlayerNetworkEvent.PortLoggingOut event) {
         GravitationHandler.reset();
         StepStoolHandler.reset();
         TCClientPacketHandler.reset();
@@ -50,13 +55,12 @@ public final class GameClientEvents {
         ScopeFovHandler.reset();
     }
 
-    @SubscribeEvent
-    public static void movementInputUpdate(MovementInputUpdateEvent event) {
+    private static void movementInputUpdate(MovementInputUpdateEvent event) {
         LocalPlayer player = (LocalPlayer) event.getEntity();
         Input input = event.getInput();
         boolean jumping = input.jumping;
 
-        MobEffectInstance effect = player.getEffect(TCEffects.GRAVITATION);
+        MobEffectInstance effect = player.getEffect(TCEffects.GRAVITATION.get());
         if (effect != null) {
             if (effect.getAmplifier() > 0) {
                 GravitationHandler.force(player);
@@ -77,22 +81,19 @@ public final class GameClientEvents {
         }
     }
 
-    @SubscribeEvent
-    public static void cameraSetup(ViewportEvent.ComputeCameraAngles event) {
+    private static void cameraSetup(PortViewportEvent.PortComputeCameraAngles event) {
         if (GravitationHandler.isShouldRot()) {
             event.setRoll(180.0F);
         }
     }
 
-    @SubscribeEvent
-    public static void fov(ComputeFovModifierEvent event) {
+    private static void fov(PortComputeFovModifierEvent event) {
         if (ScopeFovHandler.isScoping()) {
             event.setNewFovModifier(ScopeFovHandler.getFovModifier());
         }
     }
 
-    @SubscribeEvent
-    public static void interactionKeyMappingTriggered(InputEvent.InteractionKeyMappingTriggered event) {
+    private static void interactionKeyMappingTriggered(PortInputEvent.PortInteractionKeyMappingTriggered event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
         if (TCClientConfigs.rightClickDelay && event.isUseItem() && player.getItemInHand(event.getHand()).getItem() instanceof BlockItem) {
@@ -101,12 +102,11 @@ public final class GameClientEvents {
             instance.setRightClickDelay(Math.max(0, delay));
         }
         if (TCClientPacketHandler.isBoneGlove() && player.getMainHandItem().is(Tags.Items.TOOLS)) {
-            PacketDistributor.sendToServer(ShootXBonePacketC2S.INSTANCE);
+            TerraCurio.HANDLER.sendToServer(ShootXBonePacketC2S.INSTANCE);
         }
     }
 
-    @SubscribeEvent
-    public static void input$MouseScrolling(InputEvent.MouseScrollingEvent event) {
+    private static void input$MouseScrolling(PortInputEvent.PortMouseScrollingEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && ScopeFovHandler.isScoping()) {
             ScopeFovHandler.handleScroll(player, event.getScrollDeltaY());
@@ -114,8 +114,7 @@ public final class GameClientEvents {
         }
     }
 
-    @SubscribeEvent
-    public static void screen$MouseScrolled$Pre(ScreenEvent.MouseScrolled.Pre event) {
+    private static void screen$MouseScrolled$Pre(PortScreenEvent.PortMouseScrolled.PortPre event) {
         if (MultiFunctionTooltip.isShowing) {
             MultiFunctionTooltip.mouseScrollY -= (int) event.getScrollDeltaY();
         } else {

@@ -4,7 +4,6 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.network.PacketDistributor;
 import org.confluence.lib.common.component.ModRarity;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.client.TCClientConfigs;
@@ -38,7 +37,7 @@ public class BasePoint extends BaseSpeedBoots {
                 int actually = Math.min(maxSpeed - speed, acceleration);
                 int value = speed + actually;
                 if (actually > 0) {
-                    PacketDistributor.sendToServer(new SpeedBootsNBTPacketC2S(slotContext.index(), value));
+                    SpeedBootsNBTPacketC2S.sendToServer(slotContext.index(), value);
                 }
                 if (player.onGround()) {
                     float ratio = (float) value / maxSpeed;
@@ -50,7 +49,7 @@ public class BasePoint extends BaseSpeedBoots {
                     // todo particle
                 }
             } else if (speed != 0) {
-                PacketDistributor.sendToServer(new SpeedBootsNBTPacketC2S(slotContext.index(), 0));
+                SpeedBootsNBTPacketC2S.sendToServer(slotContext.index(), 0);
             }
         }
     }

@@ -37,7 +37,7 @@ public class StepStoolModel extends EntityModel<StepStoolEntity> {
     public void setupAnim(StepStoolEntity pEntity, float pLimbSwing, float pLimbSwingAmount, float pAgeInTicks, float pNetHeadYaw, float pHeadPitch) {}
 
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, int color) {
-        bb_main.render(poseStack, buffer, packedLight, packedOverlay, color);
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+        bb_main.render(poseStack, buffer, packedLight, packedOverlay);
     }
 }
