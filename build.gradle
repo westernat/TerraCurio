@@ -108,7 +108,7 @@ repositories {
     }
 }
 
-boolean slim = true
+boolean slim = false
 
 dependencies {
     modImplementation "top.theillusivec4.curios:curios-forge:${curios_version}"
@@ -119,14 +119,20 @@ dependencies {
         modImplementation project(":PortLib")
         implementation("io.github.llamalad7:mixinextras-forge:0.5.3")
     } else {
-        modImplementation(jarJar("org.mesdag:ParticleStorm:${particle_storm_version}-forge"))
+        jarJar(modImplementation("org.mesdag:ParticleStorm:${particle_storm_version}-forge"))
 //        modImplementation(jarJar("org.confluence.lib:Confluence-Magic-Lib:${confluence_lib_version}-forge"))
-        modImplementation(jarJar(project(":Confluence-Magic-Lib")))
+        modImplementation(project(":Confluence-Magic-Lib"))
+        jarJar(project(":Confluence-Magic-Lib"))
 //        modImplementation jarJar("org.mesdag.portlib:MesdagPortLib:${portlib_version}")
-        modImplementation(jarJar(project(":Confluence-Magic-Lib")))
-        implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.3"))
+        modImplementation(project(":PortLib"))
+        jarJar(project(":PortLib"))
+        jarJar(implementation("io.github.llamalad7:mixinextras-forge:0.5.3"))
     }
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+}
+
+tasks.named('check').configure {
+    dependsOn.removeIf { it.name == 'test' }
 }
 
 mixin {

@@ -255,29 +255,32 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
-        /**
-         * 额外的工具提示
-         */
+        /// 额外的工具提示
         public Builder tooltip(String str) {
-            if (!hasToolTip)
+            if (!hasToolTip) {
                 throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
+            }
             additionTip.add(Component.translatable(str));
             return this;
         }
 
-        /**
-         * 额外的工具提示
-         *
-         * @param extra 额外的数量
-         */
-        public Builder tooltips(int extra) {
-            if (!hasToolTip)
+        /// 额外的工具提示
+        ///
+        /// @param namespace 命名空间
+        /// @param extra     额外的数量
+        public Builder tooltips(String namespace, int extra) {
+            if (!hasToolTip) {
                 throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
+            }
             extra += 1;
             for (int i = 1; i < extra; i++) {
-                additionTip.add(Component.translatable("tooltip.item.terra_curio." + name + "." + i));
+                additionTip.add(Component.translatable("tooltip.item." + namespace + "." + name + "." + i));
             }
             return this;
+        }
+
+        public Builder tooltips(int extra) {
+            return tooltips(TerraCurio.MODID, extra);
         }
 
         public Builder jeiInfos(int count) {
