@@ -1,8 +1,10 @@
 package org.confluence.terra_curio.common.init;
 
 import net.minecraft.core.registries.Registries;
+import net.minecraft.data.worldgen.BootstapContext;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.damagesource.DamageScaling;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
@@ -28,5 +30,9 @@ public final class TCDamageTypes {
 
     public static DamageSource of(Level level, ResourceKey<DamageType> key, Entity causing, Entity direct) {
         return level.damageSources().source(key, direct, causing);
+    }
+
+    public static void bootstrap(BootstapContext<DamageType> context) {
+        context.register(STAR_CLOAK, new DamageType("star_cloak", DamageScaling.ALWAYS, 5));
     }
 }

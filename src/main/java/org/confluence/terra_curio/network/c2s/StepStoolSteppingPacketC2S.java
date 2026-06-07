@@ -61,6 +61,6 @@ public record StepStoolSteppingPacketC2S(int slot, byte step) implements IPortPa
     }
 
     public static void sendToServer(int slot, byte step) {
-        TerraCurio.HANDLER.sendToServer(new StepStoolSteppingPacketC2S(slot, step));
+        TerraCurio.NETWORK_HANDLER.sendToServer(new StepStoolSteppingPacketC2S(slot, step));
     }
 }

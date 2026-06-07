@@ -8,6 +8,7 @@ import com.google.common.collect.Multimap;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -30,6 +31,7 @@ import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCDataMaps;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.mixed.ILivingEntity;
+import org.confluence.terra_curio.network.s2c.RemoveCurioParticleEmitterPacketS2C;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +44,7 @@ import org.mesdag.portlib.wrapper.world.entity.ai.attributes.PortAttributeModifi
 import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
+import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.*;
 
 public class BaseCurioItem extends Item implements ICurioItem {
@@ -58,15 +61,23 @@ public class BaseCurioItem extends Item implements ICurioItem {
         super(properties.stacksTo(1));
     }
 
+    @OverridingMethodsMustInvokeSuper
+    @Override
+    public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
+        if (builder.particle == null || ItemStack.isSameItem(newStack, stack)) return;
+        if (slotContext.entity() instanceof ServerPlayer player) {
+            RemoveCurioParticleEmitterPacketS2C.sendToClient(player, builder.particle);
+        }
+    }
+
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
         if (builder == null || builder.particle == null) return;
         LivingEntity living = slotContext.entity();
         if (living.level().isClientSide) {
-            ILivingEntity iLiving = (ILivingEntity) living;
-            ParticleEmitter emitter = iLiving.terra_curio$getOrCreateParticleEmitters().get(builder.particle);
+            Map<ResourceLocation, ParticleEmitter> emitters = ILivingEntity.of(living).terra_curio$getOrCreateParticleEmitters();
+            ParticleEmitter emitter = emitters.get(builder.particle);
             if (emitter == null || emitter.isRemoved()) {
-                Map<ResourceLocation, ParticleEmitter> emitters = iLiving.terra_curio$getOrCreateParticleEmitters();
                 emitter = new ParticleEmitter(living.level(), living.position(), builder.particle);
                 emitter.attachEntity(living);
                 emitter.hideOutline = true;
@@ -154,6 +165,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         private final String name;
         private final Properties properties;
         private final ResourceLocation defaultId;
+        private final UUID id;
 
         private final List<Component> additionTip = new ArrayList<>();
         private boolean hasToolTip = true;
@@ -170,6 +182,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
             this.name = name;
             this.properties = properties;
             this.defaultId = TerraCurio.asResource(name);
+            this.id = UUID.nameUUIDFromBytes(name.getBytes());
         }
 
         public Builder particle(ResourceLocation particle) {
@@ -194,23 +207,23 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         @Diff
         public Builder attribute(Attribute attribute, String path, double amount, PortAttributeModifier.PortOperation operation) {
-            attributesBuilder.put(attribute, new AttributeModifier(UUID.fromString(defaultId.getPath()), name + "_" + path, amount, operation.unwrap()));
+            attributesBuilder.put(attribute, new AttributeModifier(id, name + "_" + path, amount, operation.unwrap()));
             return this;
         }
 
         @Diff
         public Builder attribute(Attribute attribute, double amount, PortAttributeModifier.PortOperation operation) {
-            attributesBuilder.put(attribute, new AttributeModifier(UUID.fromString(defaultId.getPath()), defaultId.getPath(), amount, operation.unwrap()));
+            attributesBuilder.put(attribute, new AttributeModifier(id, defaultId.getPath(), amount, operation.unwrap()));
             return this;
         }
 
         public Builder attribute(Holder<Attribute> attribute, String path, double amount, PortAttributeModifier.PortOperation operation) {
-            attributesBuilder.put(attribute.value(), new AttributeModifier(UUID.fromString(defaultId.getPath()), name + "_" + path, amount, operation.unwrap()));
+            attributesBuilder.put(attribute.value(), new AttributeModifier(id, name + "_" + path, amount, operation.unwrap()));
             return this;
         }
 
         public Builder attribute(Holder<Attribute> attribute, double amount, PortAttributeModifier.PortOperation operation) {
-            attributesBuilder.put(attribute.value(), new AttributeModifier(UUID.fromString(defaultId.getPath()), defaultId.getPath(), amount, operation.unwrap()));
+            attributesBuilder.put(attribute.value(), new AttributeModifier(id, defaultId.getPath(), amount, operation.unwrap()));
             return this;
         }
 

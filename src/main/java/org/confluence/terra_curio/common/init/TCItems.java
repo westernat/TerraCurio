@@ -213,7 +213,7 @@ public final class TCItems {
                     .attribute(Attributes.ATTACK_SPEED, 0.051, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.MOVEMENT_SPEED, 0.05, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
-                    .attribute(Attributes.JUMP_STRENGTH, 0.1, ADD_MULTIPLIED_TOTAL))), // 月光护身符
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.1, ADD_MULTIPLIED_TOTAL))), // 月光护身符
             NEPTUNES_SHELL = registerDirectly("neptunes_shell", (name, builder) -> new NeptunesShell(builder.rarity(PINK)
                     .accessories(units(NEPTUNES$SHELL))
                     .attribute(PortAttributesExtension.submergedMiningSpeed(), 0.8, ADD_VALUE))), // 海神贝壳
@@ -224,7 +224,7 @@ public final class TCItems {
                     .attribute(Attributes.ATTACK_SPEED, 0.051, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.MOVEMENT_SPEED, 0.05, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.ARMOR, 3.0, ADD_VALUE)
-                    .attribute(Attributes.JUMP_STRENGTH, 0.1, ADD_MULTIPLIED_TOTAL))), // 月亮贝壳
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.1, ADD_MULTIPLIED_TOTAL))), // 月亮贝壳
             CELESTIAL_SHELL = registerDirectly("celestial_shell", (name, builder) -> new CelestialShell(builder.rarity(YELLOW).jeiInfos(0)
                     .accessories(units(NEPTUNES$SHELL))
                     .attribute(PortAttributesExtension.submergedMiningSpeed(), 0.8, ADD_VALUE)
@@ -451,41 +451,41 @@ public final class TCItems {
                     .accessories(of(TSUNAMI, 1.5F))
                     .attribute(PortAttributesExtension.safeFallDistance(), 3, ADD_VALUE))), // 海啸瓶
             SHINY_RED_BALLOON = registerCurio("shiny_red_balloon", builder -> builder
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(PortAttributesExtension.safeFallDistance(), 2, ADD_VALUE)), // 闪亮红气球
             BALLOON_PUFFERFISH = registerCurio("balloon_pufferfish", builder -> builder
                     .jeiInfos(0)
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(PortAttributesExtension.safeFallDistance(), 2, ADD_VALUE)), // 气球河豚鱼
             CLOUD_IN_A_BALLOON = registerCurio("cloud_in_a_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(1).jeiInfos(0)
                     .accessories(of(CLOUD, 1.3F))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(PortAttributesExtension.safeFallDistance(), 4, ADD_VALUE)), // 云朵气球
             BLIZZARD_IN_A_BALLOON = registerCurio("blizzard_in_a_balloon", builder -> builder
                     .jeiInfos(0).rarity(LIGHT_RED).tooltips(1).jeiInfos(0)
                     .accessories(of(BLIZZARD, new Tuple<>(0.4F, 14)))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(PortAttributesExtension.safeFallDistance(), 4, ADD_VALUE)), // 暴雪气球
             SANDSTORM_IN_A_BALLOON = registerCurio("sandstorm_in_a_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(1).jeiInfos(0)
                     .accessories(of(SAND$STORM, new Tuple<>(0.45F, 17)))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(PortAttributesExtension.safeFallDistance(), 4, ADD_VALUE)), // 沙暴气球
             FART_IN_A_BALLOON = registerCurio("fart_in_a_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(1).jeiInfos(0)
                     .accessories(of(FART, 1.1F))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(PortAttributesExtension.safeFallDistance(), 4, ADD_VALUE)), // 臭屁气球
             SHARKRON_BALLOON = registerCurio("sharkron_balloon", builder -> builder
                     .jeiInfos(0)
                     .accessories(of(TSUNAMI, 1.3F))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(PortAttributesExtension.safeFallDistance(), 4, ADD_VALUE)), // 鲨鱼龙气球
             HONEY_BALLOON = registerCurio("honey_balloon", builder -> builder
                     .rarity(GREEN).tooltips(1).jeiInfos(0)
                     .accessories(units(HONEY$COMB))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(PortAttributesExtension.safeFallDistance(), 2, ADD_VALUE)), // 蜂蜜气球
             BUNDLE_OF_BALLOONS = registerCurio("bundle_of_balloons", builder -> builder
                     .rarity(YELLOW).tooltips(1).jeiInfos(0)
@@ -494,7 +494,7 @@ public final class TCItems {
                             of(BLIZZARD, new Tuple<>(0.4F, 14)),
                             of(CLOUD, 1.3F)
                     )
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(PortAttributesExtension.safeFallDistance(), 7, ADD_VALUE)), // 气球束
             LUCKY_HORSESHOE = registerCurio("lucky_horseshoe", builder -> builder
                     .tooltips(1)
@@ -508,37 +508,37 @@ public final class TCItems {
             BLUE_HORSESHOE_BALLOON = registerCurio("blue_horseshoe_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(CLOUD, 1.3F))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.75, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 蓝马掌气球
             WHITE_HORSESHOE_BALLOON = registerCurio("white_horseshoe_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(BLIZZARD, new Tuple<>(0.4F, 14)))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 白马掌气球
             YELLOW_HORSESHOE_BALLOON = registerCurio("yellow_horseshoe_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(SAND$STORM, new Tuple<>(0.45F, 17)))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.75, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 黄马掌气球
             GREEN_HORSESHOE_BALLOON = registerCurio("green_horseshoe_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(FART, 1.1F))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.75, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.75, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 绿马掌气球
             PINK_HORSESHOE_BALLOON = registerCurio("pink_horseshoe_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(of(TSUNAMI, 1.3F))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 粉马掌气球
             AMBER_HORSESHOE_BALLOON = registerCurio("amber_horseshoe_balloon", builder -> builder
                     .rarity(LIGHT_RED).tooltips(2).jeiInfos(0)
                     .accessories(units(HONEY$COMB))
-                    .attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 琥珀马掌气球
             BUNDLE_OF_HORSESHOE_BALLOONS = registerCurio("bundle_of_horseshoe_balloons", builder -> builder
@@ -547,7 +547,7 @@ public final class TCItems {
                             of(SAND$STORM, new Tuple<>(0.45F, 17)),
                             of(BLIZZARD, new Tuple<>(0.4F, 14)),
                             of(CLOUD, 1.3F)
-                    ).attribute(Attributes.JUMP_STRENGTH, 0.43, ADD_MULTIPLIED_TOTAL)
+                    ).attribute(PortAttributesExtension.jumpStrength(), 0.43, ADD_MULTIPLIED_TOTAL)
                     .attribute(Attributes.LUCK, 0.05, ADD_VALUE)
                     .attribute(PortAttributesExtension.fallDamageMultiplier(), -100.0, ADD_VALUE)), // 马掌气球束
             INNER_TUBE = registerCurio("inner_tube", builder -> builder.rarity(WHITE).accessories(units(FLOAT$ON$LIQUID$SURFACE))),
@@ -563,30 +563,30 @@ public final class TCItems {
             FROG_LEG = registerCurio("frog_leg", builder -> builder
                     .tooltips(1)
                     .attribute(PortAttributesExtension.safeFallDistance(), 7.0, ADD_VALUE)
-                    .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)), // 蛙腿
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.6, ADD_MULTIPLIED_TOTAL)), // 蛙腿
             FROG_FLIPPER = registerCurio("frog_flipper", builder -> builder
                     .tooltips(1)
                     .jeiInfos(0)
                     .attribute(PortAttributesExtension.swimSpeed(), 0.5, ADD_VALUE)
                     .attribute(PortAttributesExtension.safeFallDistance(), 7.0, ADD_VALUE)
-                    .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)), // 青蛙脚蹼
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.6, ADD_MULTIPLIED_TOTAL)), // 青蛙脚蹼
             FROG_WEBBING = registerCurio("frog_webbing", builder -> builder.rarity(PINK)
                     .tooltips(2)
                     .jeiInfos(0)
                     .accessories(of(WALL$CLIMB, (byte) 2))
                     .attribute(PortAttributesExtension.safeFallDistance(), 7.0, ADD_VALUE)
-                    .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)), // 青蛙蹼
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.6, ADD_MULTIPLIED_TOTAL)), // 青蛙蹼
             FROG_GEAR = registerCurio("frog_gear", builder -> builder.rarity(PINK)
                     .tooltips(3)
                     .jeiInfos(0)
                     .accessories(of(WALL$CLIMB, (byte) 2))
                     .attribute(PortAttributesExtension.swimSpeed(), 0.5, ADD_VALUE)
                     .attribute(PortAttributesExtension.safeFallDistance(), 7.0, ADD_VALUE)
-                    .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)), // 青蛙装备
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.6, ADD_MULTIPLIED_TOTAL)), // 青蛙装备
             AMBHIPIAN_BOOTS = registerDirectly("ambhipian_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name)
                     .jeiInfos(0)
                     .attribute(PortAttributesExtension.safeFallDistance(), 7.0, ADD_VALUE)
-                    .attribute(Attributes.JUMP_STRENGTH, 0.6, ADD_MULTIPLIED_TOTAL)
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.6, ADD_MULTIPLIED_TOTAL)
                     .stepHeight())); // 水陆两用靴
 
     public static final RegistryObject<BaseCurioItem> TREASURE_MAGNET = registerCurio("treasure_magnet", builder -> builder.attribute(ConfluenceMagicLib.PICKUP_RANGE, 6.25, ADD_VALUE)), // 宝藏磁石
@@ -609,7 +609,7 @@ public final class TCItems {
             SOARING_INSIGNIA = registerCurio("soaring_insignia", builder -> builder.rarity(EXPERT)
                     .accessories(units(INFINITE$FLIGHT))
                     .attribute(Attributes.MOVEMENT_SPEED, 0.075, ADD_MULTIPLIED_TOTAL)
-                    .attribute(Attributes.JUMP_STRENGTH, 0.8, ADD_MULTIPLIED_TOTAL)), // 翱翔徽章
+                    .attribute(PortAttributesExtension.jumpStrength(), 0.8, ADD_MULTIPLIED_TOTAL)), // 翱翔徽章
             GRAVITY_GLOBE = registerDirectly("gravity_globe", (name, builder) -> new GravityGlobe(builder.rarity(EXPERT).accessories(units(GRAVITY$GLOBE)))), // 重力球
             CELESTIAL_STARBOARD = registerCurio("celestial_starboard", builder -> builder.rarity(EXPERT).tooltips(2)
                     .accessories(of(MAY$FLY, MayFlyAbilityValue.of("celestial_starboard", 1100, 1.0F, 60, true, true)))

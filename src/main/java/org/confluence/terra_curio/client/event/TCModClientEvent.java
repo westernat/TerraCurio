@@ -1,7 +1,7 @@
 package org.confluence.terra_curio.client.event;
 
 import net.minecraft.client.RecipeBookCategories;
-import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.client.gui.overlay.VanillaGuiOverlay;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.confluence.terra_curio.TerraCurio;
@@ -71,7 +71,7 @@ public final class TCModClientEvent {
 
     private static void registerGuiLayers(PortRegisterGuiLayersEvent event) {
         event.registerAboveAll(TerraCurio.asResource("info_hud"), new InfoHudOverlay());
-        event.registerBelow(ResourceLocation.fromNamespaceAndPath("minecraft", "camera_overlays"), TerraCurio.asResource("diving_helmet"), new DivingHelmetOverlay());
+        event.registerBelow(VanillaGuiOverlay.HELMET.id(), TerraCurio.asResource("diving_helmet"), new DivingHelmetOverlay());
     }
 
     private static void registerMenuScreens(PortRegisterMenuScreensEvent event) {

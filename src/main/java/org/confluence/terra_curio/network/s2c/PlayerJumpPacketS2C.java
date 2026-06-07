@@ -57,7 +57,7 @@ public record PlayerJumpPacketS2C(
         AccessoriesAttachment attachment = AccessoriesAttachment.of(serverPlayer);
         Tuple<Float, Integer> sandStorm = attachment.getValue(TCItems.SAND$STORM);
         Tuple<Float, Integer> blizzard = attachment.getValue(TCItems.BLIZZARD);
-        TerraCurio.HANDLER.sendToPlayer(serverPlayer, new PlayerJumpPacketS2C(
+        TerraCurio.NETWORK_HANDLER.sendToPlayer(serverPlayer, new PlayerJumpPacketS2C(
                 attachment.getValue(TCItems.FART),
                 sandStorm.getA(), sandStorm.getB(),
                 blizzard.getA(), blizzard.getB(),

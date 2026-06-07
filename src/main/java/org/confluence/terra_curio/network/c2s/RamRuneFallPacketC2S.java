@@ -24,6 +24,6 @@ public record RamRuneFallPacketC2S() implements IPortPacket.C2S {
     }
 
     public static void sendToServer() {
-        TerraCurio.HANDLER.sendToServer(INSTANCE);
+        TerraCurio.NETWORK_HANDLER.sendToServer(INSTANCE);
     }
 }

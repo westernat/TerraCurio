@@ -20,9 +20,7 @@ public class ShieldOfCthulhu extends BaseCurioItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         if (LibUtils.isPhysicalClient()) {
-            tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.shield_of_cthulhu.0",
-                    LibClientUtils.keyMappingComponent(TCKeyBindings.CTHULHU_SPRINTING.get())
-            ));
+            tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.shield_of_cthulhu.0", LibClientUtils.keyMappingComponent(TCKeyBindings.CTHULHU_SPRINTING.get())));
         }
     }
 }

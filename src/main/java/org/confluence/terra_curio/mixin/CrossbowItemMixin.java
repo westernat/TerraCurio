@@ -13,6 +13,6 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class CrossbowItemMixin {
     @WrapWithCondition(method = "onCrossbowShot", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/CrossbowItem;clearChargedProjectiles(Lnet/minecraft/world/item/ItemStack;)V"))
     private static boolean setProjectilesBack(ItemStack crossbowStack, @Local(argsOnly = true, ordinal = 0) LivingEntity shooter) {
-        return TCUtils.magicQuiver$shouldConsume(shooter);
+        return !TCUtils.magicQuiver$shouldSkip(shooter, 0);
     }
 }

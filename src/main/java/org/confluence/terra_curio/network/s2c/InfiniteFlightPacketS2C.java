@@ -28,6 +28,6 @@ public record InfiniteFlightPacketS2C(boolean enable) implements IPortPacket.S2C
 
     public static void sendToClient(ServerPlayer serverPlayer) {
         boolean enable = TCUtils.hasType(serverPlayer, TCItems.INFINITE$FLIGHT);
-        TerraCurio.HANDLER.sendToPlayer(serverPlayer, new InfiniteFlightPacketS2C(enable));
+        TerraCurio.NETWORK_HANDLER.sendToPlayer(serverPlayer, new InfiniteFlightPacketS2C(enable));
     }
 }

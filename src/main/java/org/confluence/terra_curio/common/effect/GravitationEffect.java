@@ -12,7 +12,7 @@ import org.mesdag.portlib.diff.Diff;
 import java.util.UUID;
 
 public class GravitationEffect extends MobEffect {
-    public static final UUID ID = UUID.fromString("gravitation_flip");
+    public static final UUID ID = UUID.nameUUIDFromBytes("gravitation_flip".getBytes());
     @Diff
     public static final Multimap<Attribute, AttributeModifier> GRAVITY = ImmutableMultimap.of(
             PortAttributesExtension.gravity().value(), new AttributeModifier(ID, "gravitation_flip", -2.0, AttributeModifier.Operation.MULTIPLY_TOTAL)

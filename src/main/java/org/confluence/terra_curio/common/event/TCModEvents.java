@@ -38,7 +38,7 @@ public final class TCModEvents {
     }
 
     private static void registerPayloadHandlers() {
-        PortNetworkHandler handler = TerraCurio.HANDLER;
+        PortNetworkHandler handler = TerraCurio.NETWORK_HANDLER;
         handler.registerInGameC2S(GravitationPacketC2S.class, GravitationPacketC2S.ID, GravitationPacketC2S.STREAM_CODEC);
         handler.registerInGameC2S(StepStoolSteppingPacketC2S.class, StepStoolSteppingPacketC2S.ID, StepStoolSteppingPacketC2S.STREAM_CODEC);
         handler.registerInGameC2S(PlayerJumpPacketC2S.class, PlayerJumpPacketC2S.ID, PlayerJumpPacketC2S.STREAM_CODEC);
@@ -60,6 +60,7 @@ public final class TCModEvents {
         handler.registerInGameS2C(BroadcastRenderPacketS2C.class, BroadcastRenderPacketS2C.ID, BroadcastRenderPacketS2C.STREAM_CODEC);
         handler.registerInGameS2C(InfiniteFlightPacketS2C.class, InfiniteFlightPacketS2C.ID, InfiniteFlightPacketS2C.STREAM_CODEC);
         handler.registerInGameS2C(FluidWalkUpdatePacketS2C.class, FluidWalkUpdatePacketS2C.ID, FluidWalkUpdatePacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(RemoveCurioParticleEmitterPacketS2C.class, RemoveCurioParticleEmitterPacketS2C.ID, RemoveCurioParticleEmitterPacketS2C.STREAM_CODEC);
 
         handler.registerInGameBidirectional(InfoDisablePacket.class, InfoDisablePacket.ID, InfoDisablePacket.STREAM_CODEC);
     }

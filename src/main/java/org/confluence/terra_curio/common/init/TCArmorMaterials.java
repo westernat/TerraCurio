@@ -11,6 +11,8 @@ import org.mesdag.portlib.wrapper.sounds.SoundEventHolder;
 import org.mesdag.portlib.wrapper.world.item.PortArmorMaterial;
 
 public final class TCArmorMaterials {
+    public static void init() {}
+
     public static final PortArmorMaterialRegistration MATERIALS = PortRegisterHandler.armorMaterial(TerraCurio.MODID);
 
     public static final PortRegistryEntry<PortArmorMaterial, PortArmorMaterial> DIVING = MATERIALS.register(

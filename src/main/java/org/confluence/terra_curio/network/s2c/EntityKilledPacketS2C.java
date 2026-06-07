@@ -33,7 +33,7 @@ public record EntityKilledPacketS2C(int amount, ResourceLocation entityType) imp
     }
 
     public static void sendToClient(ServerPlayer serverPlayer, EntityType<?> entityType) {
-        TerraCurio.HANDLER.sendToPlayer(serverPlayer, new EntityKilledPacketS2C(
+        TerraCurio.NETWORK_HANDLER.sendToPlayer(serverPlayer, new EntityKilledPacketS2C(
                 serverPlayer.getStats().getValue(Stats.ENTITY_KILLED.get(entityType)),
                 BuiltInRegistries.ENTITY_TYPE.getKey(entityType)
         ));

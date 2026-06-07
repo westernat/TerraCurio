@@ -52,10 +52,10 @@ public record InfoDisablePacket(boolean[] disables) implements IPortPacket {
         for (int i = 0; i < ARRAY_LENGTH; i++) {
             disables[i] = bytes[i] != 0;
         }
-        TerraCurio.HANDLER.sendToPlayer(player, new InfoDisablePacket(disables));
+        TerraCurio.NETWORK_HANDLER.sendToPlayer(player, new InfoDisablePacket(disables));
     }
 
     public static void sendToServer(boolean[] disables) {
-        TerraCurio.HANDLER.sendToServer(new InfoDisablePacket(disables));
+        TerraCurio.NETWORK_HANDLER.sendToServer(new InfoDisablePacket(disables));
     }
 }

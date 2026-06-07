@@ -8,6 +8,8 @@ import org.mesdag.portlib.registries.PortRegisterHandler;
 import org.mesdag.portlib.registries.PortRegistryEntry;
 
 public final class TCDataComponentTypes {
+    public static void init() {}
+
     public static final PortDataComponentRegistration TYPES = PortRegisterHandler.dataComponent(TerraCurio.MODID);
 
     public static final PortRegistryEntry<PortDataComponentType<?>, PortDataComponentType<PrimitiveValueComponent>> ACCESSORIES = TYPES.builder("accessories", builder -> builder.persistent(PrimitiveValueComponent.CODEC).networkSynchronized(PrimitiveValueComponent.STREAM_CODEC));

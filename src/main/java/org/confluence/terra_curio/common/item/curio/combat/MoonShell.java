@@ -14,7 +14,7 @@ import top.theillusivec4.curios.api.SlotContext;
 import java.util.UUID;
 
 public class MoonShell extends NightBonusCurioItem implements ICosmetic {
-    public static final UUID ID = UUID.fromString("moon_shell");
+    public static final UUID ID = UUID.nameUUIDFromBytes("moon_shell".getBytes());
     private static final Multimap<Attribute, AttributeModifier> UNDER_WATER = ImmutableMultimap.of(
             PortAttributesExtension.submergedMiningSpeed().value(), new AttributeModifier(ID, "moon_shell", 0.8, AttributeModifier.Operation.ADDITION)
     );

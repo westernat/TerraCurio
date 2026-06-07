@@ -34,13 +34,13 @@ public record StepStoolSteppingPacketS2C(int slot, int maxStep) implements IPort
 
     public static void sendToClient(SlotContext slotContext, int maxStep) {
         if (slotContext.entity() instanceof ServerPlayer serverPlayer) {
-            TerraCurio.HANDLER.sendToPlayer(serverPlayer, new StepStoolSteppingPacketS2C(slotContext.index(), maxStep));
+            TerraCurio.NETWORK_HANDLER.sendToPlayer(serverPlayer, new StepStoolSteppingPacketS2C(slotContext.index(), maxStep));
         }
     }
 
     public static void resetStep(Entity entity, int maxStep) {
         if (entity instanceof ServerPlayer serverPlayer) {
-            TerraCurio.HANDLER.sendToPlayer(serverPlayer, new StepStoolSteppingPacketS2C(RESET_STEP, maxStep));
+            TerraCurio.NETWORK_HANDLER.sendToPlayer(serverPlayer, new StepStoolSteppingPacketS2C(RESET_STEP, maxStep));
         }
     }
 }

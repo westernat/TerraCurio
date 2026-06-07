@@ -38,7 +38,7 @@ public record BroadcastRenderPacketS2C(int playerId, short render) implements IP
         if (ServerLifecycleHooks.getCurrentServer() != null) {
             short luminance = (short) (TCUtils.getValue(target, TCItems.LUMINANCE) & LUMINANCE_MASK);
             short neptunesShell = TCUtils.hasType(target, TCItems.NEPTUNES$SHELL) ? NEPTUNES_SHELL : 0;
-            TerraCurio.HANDLER.sendToPlayersTrackingEntityAndSelf(target, new BroadcastRenderPacketS2C(target.getId(), (short) (luminance | neptunesShell)));
+            TerraCurio.NETWORK_HANDLER.sendToPlayersTrackingEntityAndSelf(target, new BroadcastRenderPacketS2C(target.getId(), (short) (luminance | neptunesShell)));
         }
     }
 }

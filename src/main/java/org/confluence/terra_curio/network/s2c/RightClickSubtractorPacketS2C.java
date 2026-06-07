@@ -27,6 +27,6 @@ public record RightClickSubtractorPacketS2C(byte amount) implements IPortPacket.
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        TerraCurio.HANDLER.sendToPlayer(serverPlayer, new RightClickSubtractorPacketS2C(TCUtils.getValue(serverPlayer, TCItems.RIGHT$CLICK$DELAY$SUBSTRACTOR)));
+        TerraCurio.NETWORK_HANDLER.sendToPlayer(serverPlayer, new RightClickSubtractorPacketS2C(TCUtils.getValue(serverPlayer, TCItems.RIGHT$CLICK$DELAY$SUBSTRACTOR)));
     }
 }

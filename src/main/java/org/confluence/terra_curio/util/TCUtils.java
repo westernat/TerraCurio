@@ -62,7 +62,7 @@ import java.util.Set;
 import java.util.UUID;
 
 public final class TCUtils {
-    public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(UUID.fromString("ice_speed"), "ice_speed", 0.2, AttributeModifier.Operation.MULTIPLY_TOTAL);
+    public static final AttributeModifier ICE_SPEED_MODIFIER = new AttributeModifier(UUID.nameUUIDFromBytes("ice_speed".getBytes()), "ice_speed", 0.2, AttributeModifier.Operation.MULTIPLY_TOTAL);
 
     public static void applyFireAttack(DamageSource damageSource, Entity victim) {
         if (damageSource.getEntity() instanceof LivingEntity living &&
@@ -192,8 +192,18 @@ public final class TCUtils {
         return amount;
     }
 
-    public static boolean magicQuiver$shouldConsume(LivingEntity living) {
-        return !AccessoriesAttachment.of(living).contains(TCItems.MAGIC$QUIVER) || living.getRandom().nextFloat() >= 0.2F;
+    public static boolean magicQuiver$shouldSkip(LivingEntity living, int salt) {
+        if (AccessoriesAttachment.of(living).contains(TCItems.MAGIC$QUIVER)) {
+            long seed = ((living.level().getGameTime() + salt) ^ 25214903917L) & 281474976710655L;
+            int i;
+            int j;
+            do {
+                i = (int) ((seed * 25214903917L + 11L & 281474976710655L) >> 48 - 31);
+                j = i % 5;
+            } while (i - j + 4 < 0);
+            return j == 0;
+        }
+        return false;
     }
 
     public static void resetClientPacket(ServerPlayer serverPlayer) {
@@ -285,7 +295,7 @@ public final class TCUtils {
         if (fluidState.isEmpty() || living.isCrouching() || !IEntity.of(living).terra_curio$isPlayer()) {
             return false;
         }
-        ILivingEntity iLiving = (ILivingEntity) living;
+        ILivingEntity iLiving = ILivingEntity.of(living);
         if (iLiving.terra_curio$getLastWalkedFluidState() == fluidState) {
             return true;
         } else if (iLiving.terra_curio$isFluidWalkable(fluidState)) {
@@ -296,7 +306,7 @@ public final class TCUtils {
     }
 
     public static boolean applyTotemAbility(LivingEntity living) {
-        ILivingEntity iLiving = (ILivingEntity) living;
+        ILivingEntity iLiving = ILivingEntity.of(living);
         if (iLiving.terra_curio$getTotemCooldown() == 0) {
             int cooldown = getValue(living, TCItems.TOTEM$WITH$COOLDOWN);
             if (cooldown > 0) {

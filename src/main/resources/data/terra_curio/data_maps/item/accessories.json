@@ -54,21 +54,21 @@
                         "operation": "add_multiplied_total"
                     }
                 ],
-                "minecraft:generic.fall_damage_multiplier": [
+                "portlib:generic.fall_damage_multiplier": [
                     {
                         "id": "terra_curio:base_point",
                         "amount": -100.0,
                         "operation": "add_value"
                     }
                 ],
-                "minecraft:generic.jump_strength": [
+                "minecraft:horse.jump_strength": [
                     {
                         "id": "terra_curio:base_point",
                         "amount": 1.0,
                         "operation": "add_multiplied_total"
                     }
                 ],
-                "minecraft:generic.step_height": [
+                "forge:step_height_addition": [
                     {
                         "id": "terra_curio:base_point",
                         "amount": 0.5,

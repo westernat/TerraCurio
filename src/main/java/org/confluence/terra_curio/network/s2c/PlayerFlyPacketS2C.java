@@ -40,6 +40,6 @@ public record PlayerFlyPacketS2C(
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        TerraCurio.HANDLER.sendToPlayer(serverPlayer, new PlayerFlyPacketS2C(TCUtils.getValue(serverPlayer, TCItems.MAY$FLY)));
+        TerraCurio.NETWORK_HANDLER.sendToPlayer(serverPlayer, new PlayerFlyPacketS2C(TCUtils.getValue(serverPlayer, TCItems.MAY$FLY)));
     }
 }

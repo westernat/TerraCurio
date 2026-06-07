@@ -27,6 +27,6 @@ public enum FluidWalkUpdatePacketS2C implements IPortPacket.S2C {
 
     public static void sendToClient(ServerPlayer serverPlayer) {
         TCUtils.updateWalkableFluidStates(serverPlayer);
-        TerraCurio.HANDLER.sendToPlayer(serverPlayer, INSTANCE);
+        TerraCurio.NETWORK_HANDLER.sendToPlayer(serverPlayer, INSTANCE);
     }
 }

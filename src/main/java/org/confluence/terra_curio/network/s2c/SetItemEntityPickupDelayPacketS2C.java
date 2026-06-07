@@ -30,7 +30,7 @@ public record SetItemEntityPickupDelayPacketS2C(int id, int delay) implements IP
 
     public static void sendToAll(int id, int delay) {
         if (ServerLifecycleHooks.getCurrentServer() != null) {
-            TerraCurio.HANDLER.sendToAllPlayers(new SetItemEntityPickupDelayPacketS2C(id, delay));
+            TerraCurio.NETWORK_HANDLER.sendToAllPlayers(new SetItemEntityPickupDelayPacketS2C(id, delay));
         } else {
             TerraCurio.LOGGER.warn("Trying send a packet with no server!");
         }

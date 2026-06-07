@@ -27,6 +27,6 @@ public record PlayerClimbPacketS2C(byte climberAmount) implements IPortPacket.S2
     }
 
     public static void sendToClient(ServerPlayer serverPlayer) {
-        TerraCurio.HANDLER.sendToPlayer(serverPlayer, new PlayerClimbPacketS2C(TCUtils.getValue(serverPlayer, TCItems.WALL$CLIMB)));
+        TerraCurio.NETWORK_HANDLER.sendToPlayer(serverPlayer, new PlayerClimbPacketS2C(TCUtils.getValue(serverPlayer, TCItems.WALL$CLIMB)));
     }
 }

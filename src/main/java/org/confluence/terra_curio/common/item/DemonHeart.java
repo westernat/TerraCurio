@@ -27,7 +27,7 @@ import java.util.Map;
 import java.util.UUID;
 
 public class DemonHeart extends Item {
-    public static final UUID ID = UUID.fromString("demon_heart");
+    public static final UUID ID = UUID.nameUUIDFromBytes("demon_heart".getBytes());
 
     public DemonHeart() {
         super(PortItemExtension.Properties.component(new Properties().stacksTo(1).fireResistant(), ConfluenceMagicLib.MOD_RARITY, ModRarity.EXPERT));

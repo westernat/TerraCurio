@@ -23,7 +23,7 @@ public class TerraCurio {
     public static final Logger LOGGER = LoggerFactory.getLogger("Terra Curio");
     public static final String CURIO_SLOT = "accessory";
     @Diff
-    public static final PortNetworkHandler HANDLER = new PortNetworkHandler(MODID, "1");
+    public static final PortNetworkHandler NETWORK_HANDLER = new PortNetworkHandler(MODID, "1");
 
     public TerraCurio(FMLJavaModLoadingContext context) {
         IEventBus eventBus = context.getModEventBus();
@@ -32,12 +32,14 @@ public class TerraCurio {
         TCModEvents.init();
         TCGameEvents.init();
         if (LibUtils.isPhysicalClient()) {
-            TCModEvents.init();
             TCModClientEvent.init();
             TCGameClientEvents.init();
             TCClientConfigs.register(context);
 //            container.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, ConfigurationScreen::new);
         }
+        TCAttachments.init();
+        TCDataComponentTypes.init();
+        TCArmorMaterials.init();
         TCSoundEvents.SOUNDS.register(eventBus);
         TCEffects.EFFECTS.register(eventBus);
         TCEntities.ENTITIES.register(eventBus);

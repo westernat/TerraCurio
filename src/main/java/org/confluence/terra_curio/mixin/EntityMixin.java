@@ -153,21 +153,4 @@ public abstract class EntityMixin implements IEntity {
             this.verticalCollisionBelow = verticalCollision && pos.y > 0.0;
         }
     }
-// todo 反转AI
-
-//    @ModifyReturnValue(method = "blockPosition", at = @At("RETURN"))
-//    private BlockPos recalBlockPosition(BlockPos original) {
-//        if (terra_curio$isShouldRot) {
-//            return original.above(Mth.ceil(terra_curio$dimensionHeight) - 1);
-//        }
-//        return original;
-//    }
-//
-//    @ModifyVariable(method = "getOnPos(F)Lnet/minecraft/core/BlockPos;", at = @At("HEAD"), argsOnly = true)
-//    private float modifyYOffset(float yOffset) {
-//        if (terra_curio$isShouldRot) {
-//            return yOffset - terra_curio$dimensionHeight - 1;
-//        }
-//        return yOffset;
-//    }
 }

@@ -43,6 +43,6 @@ public record PlayerJumpPacketC2S(byte jumpState, float motionY) implements IPor
     }
 
     public static void sendToServer(byte jumpState, float motionY) {
-        TerraCurio.HANDLER.sendToServer(new PlayerJumpPacketC2S(jumpState, motionY));
+        TerraCurio.NETWORK_HANDLER.sendToServer(new PlayerJumpPacketC2S(jumpState, motionY));
     }
 }

@@ -102,7 +102,7 @@ public final class TCGameClientEvents {
             instance.setRightClickDelay(Math.max(0, delay));
         }
         if (TCClientPacketHandler.isBoneGlove() && player.getMainHandItem().is(Tags.Items.TOOLS)) {
-            TerraCurio.HANDLER.sendToServer(ShootXBonePacketC2S.INSTANCE);
+            TerraCurio.NETWORK_HANDLER.sendToServer(ShootXBonePacketC2S.INSTANCE);
         }
     }
 

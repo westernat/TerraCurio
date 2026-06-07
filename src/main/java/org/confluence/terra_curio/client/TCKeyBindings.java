@@ -1,7 +1,7 @@
 package org.confluence.terra_curio.client;
 
+import com.google.common.base.Suppliers;
 import com.mojang.blaze3d.platform.InputConstants;
-import cpw.mods.util.Lazy;
 import net.minecraft.client.KeyMapping;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.RegisterKeyMappingsEvent;
@@ -10,6 +10,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import org.confluence.terra_curio.TerraCurio;
 import org.lwjgl.glfw.GLFW;
+
+import java.util.function.Supplier;
 
 @Mod.EventBusSubscriber(modid = TerraCurio.MODID, value = Dist.CLIENT)
 public final class TCKeyBindings {
@@ -21,7 +23,7 @@ public final class TCKeyBindings {
         event.register(CTHULHU_SPRINTING.get());
     }
 
-    public static final Lazy<KeyMapping> METAL_DETECTOR = Lazy.of(() -> new KeyMapping(
+    public static final Supplier<KeyMapping> METAL_DETECTOR = Suppliers.memoize(() -> new KeyMapping(
             "key.terra_curio.metal_detector",
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
@@ -29,7 +31,7 @@ public final class TCKeyBindings {
             category()
     ));
 
-    public static final Lazy<KeyMapping> STEP_STOOL = Lazy.of(() -> new KeyMapping(
+    public static final Supplier<KeyMapping> STEP_STOOL = Suppliers.memoize(() -> new KeyMapping(
             "key.terra_curio.step_stool",
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
@@ -37,7 +39,7 @@ public final class TCKeyBindings {
             category()
     ));
 
-    public static final Lazy<KeyMapping> FLIP_GRAVITATION = Lazy.of(() -> new KeyMapping(
+    public static final Supplier<KeyMapping> FLIP_GRAVITATION = Suppliers.memoize(() -> new KeyMapping(
             "key.terra_curio.flip_gravitation",
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,
@@ -45,7 +47,7 @@ public final class TCKeyBindings {
             category()
     ));
 
-    public static final Lazy<KeyMapping> CTHULHU_SPRINTING = Lazy.of(() -> new KeyMapping(
+    public static final Supplier<KeyMapping> CTHULHU_SPRINTING = Suppliers.memoize(() -> new KeyMapping(
             "key.terra_curio.cthulhu_sprinting",
             KeyConflictContext.IN_GAME,
             InputConstants.Type.KEYSYM,

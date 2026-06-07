@@ -27,7 +27,7 @@ import java.util.UUID;
 
 public class BaseSpeedBoots extends BaseCurioItem {
     public static final String KEY = TerraCurio.MODID + ":boots_speed";
-    public static final UUID ID = UUID.fromString("base_speed_boots");
+    public static final UUID ID = UUID.nameUUIDFromBytes("base_speed_boots".getBytes());
 
     private final int acceleration;
     private final int maxSpeed;
@@ -72,8 +72,9 @@ public class BaseSpeedBoots extends BaseCurioItem {
             int speed = LibUtils.getItemStackNbtNoCopy(stack).getInt(KEY);
             if (player.zza > 0 && !player.horizontalCollision && !player.isCrouching()) {
                 if (player.onGround()) {
-                    if (TCClientPacketHandler.isHasMagiluminescence() || PlayerJumpHandler.isInfiniteFlight())
+                    if (TCClientPacketHandler.isHasMagiluminescence() || PlayerJumpHandler.isInfiniteFlight()) {
                         acceleration *= 2;
+                    }
                     int actually = Math.min(maxSpeed - speed, acceleration);
                     int value = speed + actually;
                     if (actually > 0) {
@@ -91,6 +92,11 @@ public class BaseSpeedBoots extends BaseCurioItem {
                 SpeedBootsNBTPacketC2S.sendToServer(slotContext.index(), 0);
             }
         }
+    }
+
+    @Override
+    public boolean canSync(SlotContext slotContext, ItemStack stack) {
+        return true;
     }
 
     @Override

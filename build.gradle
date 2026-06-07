@@ -120,8 +120,10 @@ dependencies {
         implementation("io.github.llamalad7:mixinextras-forge:0.5.3")
     } else {
         modImplementation(jarJar("org.mesdag:ParticleStorm:${particle_storm_version}-forge"))
-        modImplementation(jarJar("org.confluence.lib:Confluence-Magic-Lib:${confluence_lib_version}-forge"))
-        modImplementation jarJar("org.mesdag.portlib:MesdagPortLib:${portlib_version}")
+//        modImplementation(jarJar("org.confluence.lib:Confluence-Magic-Lib:${confluence_lib_version}-forge"))
+        modImplementation(jarJar(project(":Confluence-Magic-Lib")))
+//        modImplementation jarJar("org.mesdag.portlib:MesdagPortLib:${portlib_version}")
+        modImplementation(jarJar(project(":Confluence-Magic-Lib")))
         implementation(jarJar("io.github.llamalad7:mixinextras-forge:0.5.3"))
     }
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'

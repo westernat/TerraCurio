@@ -18,7 +18,7 @@ import java.util.UUID;
 
 public record GravitationPacketC2S(boolean enable) implements IPortPacket.C2S {
     public static final ResourceLocation ID = TerraCurio.asResource("gravitation");
-    public static final UUID UUID = java.util.UUID.fromString("gravitation");
+    public static final UUID UUID = java.util.UUID.nameUUIDFromBytes("gravitation".getBytes());
     public static final PortStreamCodec<ByteBuf, GravitationPacketC2S> STREAM_CODEC = PortByteBufCodecs.BOOL.map(GravitationPacketC2S::new, GravitationPacketC2S::enable);
 
     @Override
@@ -34,13 +34,13 @@ public record GravitationPacketC2S(boolean enable) implements IPortPacket.C2S {
             attributeMap.addTransientAttributeModifiers(GravitationEffect.GRAVITY);
         } else {
             AttributeInstance attributeInstance = attributeMap.getInstance(PortAttributesExtension.gravity().value());
-            if (attributeInstance != null) attributeInstance.removeModifier(UUID);
+            if (attributeInstance != null) attributeInstance.removeModifier(GravitationEffect.ID);
         }
         IEntity.of(player).terra_curio$setShouldRot(enable);
-        TerraCurio.HANDLER.sendToAllPlayers(new BroadcastGravitationRotPacketS2C(player.getId(), enable));
+        TerraCurio.NETWORK_HANDLER.sendToAllPlayers(new BroadcastGravitationRotPacketS2C(player.getId(), enable));
     }
 
     public static void sendToServer(boolean enable) {
-        TerraCurio.HANDLER.sendToServer(new GravitationPacketC2S(enable));
+        TerraCurio.NETWORK_HANDLER.sendToServer(new GravitationPacketC2S(enable));
     }
 }

@@ -74,6 +74,6 @@ public record CurioExistsPacketS2C(boolean[] exists) implements IPortPacket.S2C 
                 }
             }
         }
-        TerraCurio.HANDLER.sendToPlayer(player, new CurioExistsPacketS2C(arr));
+        TerraCurio.NETWORK_HANDLER.sendToPlayer(player, new CurioExistsPacketS2C(arr));
     }
 }

@@ -37,6 +37,6 @@ public record SpeedBootsNBTPacketC2S(int slot, int value) implements IPortPacket
     }
 
     public static void sendToServer(int slot, int value) {
-        TerraCurio.HANDLER.sendToServer(new SpeedBootsNBTPacketC2S(slot, value));
+        TerraCurio.NETWORK_HANDLER.sendToServer(new SpeedBootsNBTPacketC2S(slot, value));
     }
 }
