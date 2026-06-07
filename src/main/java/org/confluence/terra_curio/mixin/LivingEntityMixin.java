@@ -1,6 +1,6 @@
 package org.confluence.terra_curio.mixin;
 
-import PortLib.extensions.net.minecraft.world.entity.ai.attributes.Attributes.PortAttributesExtension;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
@@ -124,10 +124,10 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
         isFluidWalkable.set(TCUtils.isFluidWalkable(confluence$self(), fluidstate));
     }
 
-    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getDepthStrider(Lnet/minecraft/world/entity/LivingEntity;)I"))
-    private int skipEfficiency(LivingEntity entity, Operation<Integer> original, @Share("isFluidWalkable") LocalBooleanRef isFluidWalkable) {
+    @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/enchantment/EnchantmentHelper;getDepthStrider(Lnet/minecraft/world/entity/LivingEntity;)I"))
+    private int skipEfficiency(int original, @Share("isFluidWalkable") LocalBooleanRef isFluidWalkable) {
         if (isFluidWalkable.get()) return 0;
-        return (int) (original.call(entity) * entity.getAttributeValue(PortAttributesExtension.waterMovementEfficiency()));
+        return original;
     }
 
     @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/phys/Vec3;multiply(DDD)Lnet/minecraft/world/phys/Vec3;", ordinal = 0))
