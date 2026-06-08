@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.common.data;
+package org.confluence.terra_curio.common.datagen;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;

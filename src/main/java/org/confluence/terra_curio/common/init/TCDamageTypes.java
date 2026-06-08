@@ -9,6 +9,7 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.lib.util.ScheduledForMove;
 import org.confluence.terra_curio.TerraCurio;
 
@@ -21,15 +22,11 @@ public final class TCDamageTypes {
     }
 
     public static DamageSource of(Level level, ResourceKey<DamageType> key) {
-        return of(level, key, null, null);
+        return LibUtils.damageSource(level, key, null, null);
     }
 
     public static DamageSource of(Level level, ResourceKey<DamageType> key, Entity causing) {
-        return of(level, key, causing, causing);
-    }
-
-    public static DamageSource of(Level level, ResourceKey<DamageType> key, Entity causing, Entity direct) {
-        return level.damageSources().source(key, direct, causing);
+        return LibUtils.damageSource(level, key, causing, causing);
     }
 
     public static void bootstrap(BootstapContext<DamageType> context) {

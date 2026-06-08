@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.common.data;
+package org.confluence.terra_curio.common.datagen;
 
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.RegistrySetBuilder;
