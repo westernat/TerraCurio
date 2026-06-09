@@ -10,7 +10,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(BowItem.class)
 public abstract class BowItemMixin {
-    @ModifyExpressionValue(method = "releaseUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ArrowItem;isInfinite(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;)Z"))
+    @ModifyExpressionValue(method = "releaseUsing", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/item/ArrowItem;isInfinite(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/entity/player/Player;)Z", remap = false))
     private boolean isInfinity(boolean original, @Local(argsOnly = true) LivingEntity shooter, @Local(argsOnly = true) int timeLeft) {
         if (shooter.level().isClientSide) return original;
         return original || TCUtils.magicQuiver$shouldSkip(shooter, timeLeft);
