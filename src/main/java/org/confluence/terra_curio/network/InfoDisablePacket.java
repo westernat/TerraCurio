@@ -7,8 +7,8 @@ import net.minecraft.nbt.ByteTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.confluence.lib.util.LibEntityUtils;
 import org.confluence.lib.util.LibStreamCodecUtils;
-import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.InformationHandler;
 import org.mesdag.portlib.network.IPortPacket;
@@ -41,12 +41,12 @@ public record InfoDisablePacket(boolean[] disables) implements IPortPacket {
             for (int i = 0; i < ARRAY_LENGTH; i++) {
                 arrayTag.set(i, ByteTag.valueOf(disables[i]));
             }
-            LibUtils.getOrCreatePersistedData(player).put("terra_curio:info_disable", arrayTag);
+            LibEntityUtils.getOrCreatePersistedData(player).put("terra_curio:info_disable", arrayTag);
         }
     }
 
     public static void sendToClient(ServerPlayer player) {
-        byte[] bytes = LibUtils.getOrCreatePersistedData(player).getByteArray("terra_curio:info_disable");
+        byte[] bytes = LibEntityUtils.getOrCreatePersistedData(player).getByteArray("terra_curio:info_disable");
         if (bytes.length != ARRAY_LENGTH) return;
         boolean[] disables = new boolean[ARRAY_LENGTH];
         for (int i = 0; i < ARRAY_LENGTH; i++) {
