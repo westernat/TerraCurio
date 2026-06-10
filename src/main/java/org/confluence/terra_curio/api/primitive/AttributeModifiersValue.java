@@ -91,8 +91,8 @@ public record AttributeModifiersValue(
         return new Builder();
     }
 
-    public static AttributeModifiersValue simple(Attribute attribute, ResourceLocation id, double amount, AttributeModifier.Operation operation) {
-        return new AttributeModifiersValue(ImmutableListMultimap.of(attribute, new AttributeModifier(PortAttributeModifier.rl2uuid(id), id.getPath(), amount, operation)));
+    public static AttributeModifiersValue simple(Attribute attribute, ResourceLocation id, double amount, PortAttributeModifier.PortOperation operation) {
+        return new AttributeModifiersValue(ImmutableListMultimap.of(attribute, new AttributeModifier(PortAttributeModifier.rl2uuid(id), id.getPath(), amount, operation.unwrap())));
     }
 
     public ImmutableListMultimap<Attribute, AttributeModifier> value() {
@@ -115,8 +115,8 @@ public record AttributeModifiersValue(
             return this;
         }
 
-        public Builder add(Attribute attribute, ResourceLocation id, double amount, AttributeModifier.Operation operation) {
-            builder.put(attribute, new AttributeModifier(PortAttributeModifier.rl2uuid(id), id.getPath(), amount, operation));
+        public Builder add(Attribute attribute, ResourceLocation id, double amount, PortAttributeModifier.PortOperation operation) {
+            builder.put(attribute, new AttributeModifier(PortAttributeModifier.rl2uuid(id), id.getPath(), amount, operation.unwrap()));
             return this;
         }
 

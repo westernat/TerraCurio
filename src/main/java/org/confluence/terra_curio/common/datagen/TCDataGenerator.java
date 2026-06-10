@@ -27,6 +27,8 @@ public class TCDataGenerator {
 
         boolean client = event.includeClient();
         generator.addProvider(client, new TCItemModelProvider(output, helper));
+        generator.addProvider(client, new TCLanguageProvider(output, "en_us"));
+        generator.addProvider(client, new TCLanguageProvider(output, "zh_cn"));
 
         boolean server = event.includeServer();
         CompletableFuture<HolderLookup.Provider> lookup = generator.addProvider(server, new DatapackBuiltinEntriesProvider(output, event.getLookupProvider(), new RegistrySetBuilder()
@@ -35,8 +37,6 @@ public class TCDataGenerator {
         generator.addProvider(server, new TCItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
         generator.addProvider(server, new TCEntityTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TCFluidTagsProvider(output, lookup, helper));
-        generator.addProvider(server, new TCLanguageProvider(output, "en_us"));
-        generator.addProvider(server, new TCLanguageProvider(output, "zh_cn"));
         generator.addProvider(server, new CollectRecipeProvider(TerraCurio.MODID, output,
                 WorkshopProvider::new,
                 TCShapedRecipeProvider::new,
@@ -44,5 +44,6 @@ public class TCDataGenerator {
         ));
         generator.addProvider(server, new TCLootTableProvider(output));
         generator.addProvider(server, new TCGlobalLootModifierProvider(output));
+        generator.addProvider(server, new TCDataMapProvider(output, lookup));
     }
 }
