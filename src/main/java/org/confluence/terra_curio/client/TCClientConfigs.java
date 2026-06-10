@@ -16,6 +16,8 @@ public final class TCClientConfigs {
     private static ForgeConfigSpec.DoubleValue INFORMATION_HUD_TOP;
     private static ForgeConfigSpec.BooleanValue INFORMATION_HUD_LEFT;
 
+    private static ForgeConfigSpec.BooleanValue DISPLAY_INFO_TOOLTIP;
+
     public static boolean playShoesSound = true;
     public static float shoesSoundVolume = 1.0F;
     public static boolean showShoesParticle = true;
@@ -26,6 +28,8 @@ public final class TCClientConfigs {
 
     public static float informationHudTop = 0.5F;
     public static boolean informationIsLeft = false;
+
+    public static boolean displayInfoTooltip = true;
 
     public static void onLoad() {
         playShoesSound = PLAY_SHOES_SOUND.get();
@@ -38,6 +42,7 @@ public final class TCClientConfigs {
 
         informationHudTop = INFORMATION_HUD_TOP.get().floatValue();
         informationIsLeft = INFORMATION_HUD_LEFT.get();
+        displayInfoTooltip = DISPLAY_INFO_TOOLTIP.get();
     }
 
     public static void register(FMLJavaModLoadingContext context) {
@@ -52,6 +57,8 @@ public final class TCClientConfigs {
 
         INFORMATION_HUD_TOP = builder.pop().push("Information HUD").comment("finalTop = screenHeight * top").defineInRange("top", 0.5, 0.0, 1.0);
         INFORMATION_HUD_LEFT = builder.comment("left or right").define("isLeft", false);
+
+        DISPLAY_INFO_TOOLTIP = builder.comment("display the green tooltip").define("displayInfoTooltip", true);
         context.registerConfig(ModConfig.Type.CLIENT, builder.build());
     }
 }

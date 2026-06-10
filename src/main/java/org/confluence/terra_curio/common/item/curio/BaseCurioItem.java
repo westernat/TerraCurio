@@ -5,6 +5,7 @@ import PortLib.extensions.net.minecraft.world.entity.ai.attributes.Attributes.Po
 import PortLib.extensions.net.minecraft.world.item.Item.PortItemExtension;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -26,6 +27,7 @@ import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.api.primitive.ComponentsValue;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
+import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCDataMaps;
@@ -117,10 +119,19 @@ public class BaseCurioItem extends Item implements ICurioItem {
             tooltipComponents.addAll(value.components());
             return;
         }
-        boolean b = builder == null;
-        if (b || builder.hasToolTip) {
-            tooltipComponents.add(Component.translatable("tooltip." + stack.getDescriptionId() + ".0"));
-            if (!b) tooltipComponents.addAll(builder.additionTip);
+        if (builder == null || builder.hasToolTip) {
+            tooltipComponents.add(Component.translatable("tooltip." + stack.getDescriptionId() + ".0").withStyle(ChatFormatting.GRAY));
+            if (builder != null) tooltipComponents.addAll(builder.additionTip);
+        }
+        appendInfo(stack, tooltipComponents);
+    }
+
+    protected void appendInfo(ItemStack stack, List<Component> tooltipComponents) {
+        if (TCClientConfigs.displayInfoTooltip && builder != null && builder.jeiInformationCount > 0) {
+            tooltipComponents.add(Component.empty());
+            for (int i = 0; i < builder.jeiInformationCount; i++) {
+                tooltipComponents.add(Component.translatable("info.tooltip." + stack.getDescriptionId() + "." + i).withStyle(ChatFormatting.GREEN));
+            }
         }
     }
 
@@ -260,7 +271,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
             if (!hasToolTip) {
                 throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
             }
-            additionTip.add(Component.translatable(str));
+            additionTip.add(Component.translatable(str).withStyle(ChatFormatting.GRAY));
             return this;
         }
 
@@ -274,7 +285,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
             }
             extra += 1;
             for (int i = 1; i < extra; i++) {
-                additionTip.add(Component.translatable("tooltip.item." + namespace + "." + name + "." + i));
+                additionTip.add(Component.translatable("tooltip.item." + namespace + "." + name + "." + i).withStyle(ChatFormatting.GRAY));
             }
             return this;
         }

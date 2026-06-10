@@ -4,7 +4,6 @@ import PortLib.extensions.net.minecraft.world.item.Item.PortItemExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -51,11 +50,7 @@ public class MagicMirror extends Item {
             if (player.getVehicle() != null) {
                 player.removeVehicle();
             }
-            ServerLevel respawnLevel = player.server.getLevel(player.getRespawnDimension());
-            if (respawnLevel == null) {
-                respawnLevel = player.server.overworld();
-            }
-            player.changeDimension(respawnLevel);
+            player.server.getPlayerList().respawn(player, true);
         }
         living.playSound(TCSoundEvents.TRANSMISSION.get());
         return itemStack;

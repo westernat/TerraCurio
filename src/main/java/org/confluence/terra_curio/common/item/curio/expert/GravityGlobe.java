@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.item.curio.expert;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -19,6 +20,9 @@ public class GravityGlobe extends BaseCurioItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, level, tooltipComponents, tooltipFlag);
-        tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.gravity_globe.1", LibClientUtils.keyMappingComponent(TCKeyBindings.FLIP_GRAVITATION.get())));
+        tooltipComponents.add(Component.translatable(
+                "tooltip.item.terra_curio.gravity_globe.1",
+                LibClientUtils.keyMappingComponent(TCKeyBindings.FLIP_GRAVITATION.get(), ChatFormatting.WHITE)
+        ).withStyle(ChatFormatting.GRAY));
     }
 }

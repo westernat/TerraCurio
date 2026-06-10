@@ -56,10 +56,14 @@ public class StepStool extends BaseCurioItem {
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         if (LibUtils.isPhysicalClient()) {
-            tooltipComponents.add(Component.translatable("tooltip.item.terra_curio.step_stool.0", LibClientUtils.keyMappingComponent(TCKeyBindings.STEP_STOOL.get())));
+            tooltipComponents.add(Component.translatable(
+                    "tooltip.item.terra_curio.step_stool.0",
+                    LibClientUtils.keyMappingComponent(TCKeyBindings.STEP_STOOL.get(), ChatFormatting.WHITE)
+            ).withStyle(ChatFormatting.GRAY));
         }
         tooltipComponents.add(Component.translatable(
                 "tooltip.item.terra_curio.step_stool.1", LibUtils.getItemStackNbtNoCopy(stack).getInt("extraStep")
         ).withStyle(ChatFormatting.BLUE));
+        appendInfo(stack, tooltipComponents);
     }
 }
