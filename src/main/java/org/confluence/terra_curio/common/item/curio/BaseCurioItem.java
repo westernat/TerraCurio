@@ -104,7 +104,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         PrimitiveValueComponent component = PortHolderExtension.getData(stack.getItemHolder(), TCDataMaps.ACCESSORIES);
         AttributeModifiersValue value;
         if (component != null && (value = component.get(TCItems.ATTRIBUTES)) != null) {
-            return value.getOldValue();
+            return value.get();
         }
         return builder == null ? EMPTY_ATTRIBUTE : builder.attributes;
     }
