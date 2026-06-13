@@ -153,6 +153,30 @@ jar {
     ])
 }
 
+
+import groovy.json.JsonBuilder
+import groovy.json.JsonSlurper
+
+tasks.named('jarJar') { jarJarTask ->
+    String metadataPath = jarJarTask.project.buildDir.toPath()
+            .resolve('generated/jarJar/META-INF/jarjar/metadata.json')
+            .toFile()
+            .absolutePath
+    jarJarTask.doLast {
+        def metadataFile = new File(metadataPath)
+        if (metadataFile.exists()) {
+            def json = new JsonSlurper().parse(metadataFile)
+            json.jars.each { jar ->
+                if (jar.identifier.artifact == 'ParticleStorm') {
+                    jar.version.range = jar.version.range.replace('-forge', '')
+                    jar.version.artifactVersion = jar.version.artifactVersion.replace('-forge', '')
+                }
+            }
+            metadataFile.text = new JsonBuilder(json).toPrettyString()
+        }
+    }
+}
+
 tasks.withType(ProcessResources).configureEach {
     var replaceProperties = [
             minecraft_version      : minecraft_version,
