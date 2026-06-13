@@ -12,10 +12,10 @@ import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.handler.InformationHandler;
 import org.confluence.terra_curio.common.init.TCItems;
-import org.mesdag.portlib.client.GuiLayer;
 import org.mesdag.portlib.client.PortDeltaTicker;
+import org.mesdag.portlib.client.PortGuiLayer;
 
-public class InfoHudOverlay implements GuiLayer {
+public class InfoHudOverlay implements PortGuiLayer {
     private static final int background = (0x90 << 24) + 0x505050;
     private static final int textColor = 0xE0E0E0;
     private static final ResourceLocation[] INFO_ICON = TCItems.FULL_INFO.stream().map(TooltipComponentsValue.Storage::texture).toArray(ResourceLocation[]::new);

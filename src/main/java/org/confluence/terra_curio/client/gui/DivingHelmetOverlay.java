@@ -9,10 +9,10 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCItems;
-import org.mesdag.portlib.client.GuiLayer;
 import org.mesdag.portlib.client.PortDeltaTicker;
+import org.mesdag.portlib.client.PortGuiLayer;
 
-public class DivingHelmetOverlay implements GuiLayer {
+public class DivingHelmetOverlay implements PortGuiLayer {
     private static final ResourceLocation TEXTURE = TerraCurio.asResource("textures/gui/diving_helmet.png");
 
     @Override
