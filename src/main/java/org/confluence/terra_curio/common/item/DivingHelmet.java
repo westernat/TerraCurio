@@ -19,7 +19,7 @@ public class DivingHelmet extends ArmorItem {
     private static final float DIVISION = 1.0F / 6.0F;
 
     public DivingHelmet() {
-        super(TCArmorMaterials.DIVING.get().unwrap(), Type.HELMET, PortItemExtension.Properties.component(new Properties().fireResistant()
+        super(TCArmorMaterials.DIVING.get(), Type.HELMET, PortItemExtension.Properties.component(new Properties().fireResistant()
                 .durability(PortArmorItem.PortType.HELMET.getDurability(15)), ConfluenceMagicLib.MOD_RARITY, ModRarity.GREEN)
         );
     }

@@ -42,6 +42,7 @@ public record PrimitiveValueComponent(
         return new PrimitiveValueComponent(map);
     }
 
+    @SafeVarargs
     public static PrimitiveValueComponent units(ValueType<Unit, ? extends UnitValue> type, ValueType<Unit, ? extends UnitValue>... types) {
         Hashtable<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> table = new Hashtable<>(Map.of(type, UnitValue.INSTANCE));
         for (ValueType<Unit, ? extends UnitValue> type1 : types) {

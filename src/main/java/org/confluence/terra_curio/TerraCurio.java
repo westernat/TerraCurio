@@ -43,7 +43,7 @@ public class TerraCurio {
         TCSoundEvents.SOUNDS.register(eventBus);
         TCEffects.EFFECTS.register(eventBus);
         TCEntities.ENTITIES.register(eventBus);
-        TCItems.register(eventBus);
+        TCItems.init();
         TCTabs.TABS.register(eventBus);
         TCRecipes.register(eventBus);
         TCBlocks.BLOCKS.register(eventBus);
