@@ -17,7 +17,7 @@ import org.confluence.lib.common.component.ModRarity;
 import org.confluence.lib.util.LibClientUtils;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.init.TCCommonConfigs;
+import org.confluence.terra_curio.common.TCCommonConfigs;
 import org.jetbrains.annotations.Nullable;
 import top.theillusivec4.curios.api.CuriosApi;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;

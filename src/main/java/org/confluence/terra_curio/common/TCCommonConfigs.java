@@ -1,4 +1,4 @@
-package org.confluence.terra_curio.common.init;
+package org.confluence.terra_curio.common;
 
 import it.unimi.dsi.fastutil.objects.Object2IntLinkedOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntSortedMap;
@@ -33,7 +33,7 @@ public final class TCCommonConfigs {
             try {
                 blockStates.put(BlockStateParser.parseForBlock(BuiltInRegistries.BLOCK.asLookup(), s, false).blockState(), blockStates.size());
             } catch (Exception e) {
-                TerraCurio.LOGGER.warn("BlockState {} not found", s);
+                TerraCurio.LOGGER.debug("BlockState {} not found", s);
             }
         });
         rareBlocks = blockStates;
@@ -43,7 +43,7 @@ public final class TCCommonConfigs {
             ResourceLocation id = ResourceLocation.parse(s);
             ForgeRegistries.ENTITY_TYPES.getHolder(id).ifPresentOrElse(
                     type -> entityTypes.put(type.value(), entityTypes.size()),
-                    () -> TerraCurio.LOGGER.warn("EntityType {} not found", id)
+                    () -> TerraCurio.LOGGER.debug("EntityType {} not found", id)
             );
         });
         rareCreatures = entityTypes;

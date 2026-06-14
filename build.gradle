@@ -115,7 +115,7 @@ repositories {
     }
 }
 
-boolean slim = true
+boolean slim = false
 
 dependencies {
     modImplementation "top.theillusivec4.curios:curios-forge:${curios_version}"

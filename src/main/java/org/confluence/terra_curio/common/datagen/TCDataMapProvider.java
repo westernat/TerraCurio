@@ -10,8 +10,8 @@ import net.minecraft.util.Unit;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.ItemLike;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 import org.confluence.lib.common.LibAttributes;
 import org.confluence.terra_curio.api.primitive.*;
 import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
@@ -113,8 +113,8 @@ public class TCDataMapProvider extends PortDataMapProvider {
         builder.add(item.builtInRegistryHolder().key(), new PrimitiveValueComponent(map), false);
     }
 
-    protected void add(RegistryObject<? extends Item> item, Consumer<Helper> consumer) {
-        add(item.get(), consumer);
+    protected void add(ItemLike item, Consumer<Helper> consumer) {
+        add(item.asItem(), consumer);
     }
 
     public interface Helper {

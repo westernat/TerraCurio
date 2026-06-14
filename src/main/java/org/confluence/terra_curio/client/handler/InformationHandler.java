@@ -17,7 +17,7 @@ import net.minecraftforge.common.Tags;
 import org.confluence.lib.client.DPSMeter;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.client.TCKeyBindings;
-import org.confluence.terra_curio.common.init.TCCommonConfigs;
+import org.confluence.terra_curio.common.TCCommonConfigs;
 import org.confluence.terra_curio.network.s2c.InfoCurioCheckPacketS2C;
 import org.jetbrains.annotations.Nullable;
 

@@ -3,7 +3,9 @@ package org.confluence.terra_curio.common.item;
 import PortLib.extensions.net.minecraft.world.item.Item.PortItemExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -17,6 +19,7 @@ import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Set;
 
 public class MagicMirror extends Item {
     public MagicMirror(ModRarity rarity) {
@@ -50,7 +53,16 @@ public class MagicMirror extends Item {
             if (player.getVehicle() != null) {
                 player.removeVehicle();
             }
-            player.server.getPlayerList().respawn(player, true);
+            ServerLevel serverLevel = player.server.getLevel(player.getRespawnDimension());
+            if (serverLevel == null) {
+                serverLevel = player.server.overworld();
+            }
+            BlockPos pos = player.getRespawnPosition();
+            if (pos == null) {
+                pos = serverLevel.getSharedSpawnPos();
+            }
+            float angle = player.getRespawnAngle();
+            player.teleportTo(serverLevel, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, Set.of(), angle, 0);
         }
         living.playSound(TCSoundEvents.TRANSMISSION.get());
         return itemStack;

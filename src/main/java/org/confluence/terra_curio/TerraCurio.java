@@ -8,6 +8,7 @@ import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.event.TCGameClientEvents;
 import org.confluence.terra_curio.client.event.TCModClientEvent;
+import org.confluence.terra_curio.common.TCCommonConfigs;
 import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
 import org.confluence.terra_curio.common.event.TCGameEvents;
 import org.confluence.terra_curio.common.event.TCModEvents;

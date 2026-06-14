@@ -3,7 +3,7 @@ package org.confluence.terra_curio.common.event;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.config.ModConfigEvent;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.common.init.TCCommonConfigs;
+import org.confluence.terra_curio.common.TCCommonConfigs;
 import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.c2s.*;
 import org.confluence.terra_curio.network.s2c.*;
@@ -14,21 +14,12 @@ import org.mesdag.portlib.network.PortNetworkHandler;
 public final class TCModEvents {
     public static void init() {
         PortEventHandler.addListener(TCModEvents::commonSetup);
-        PortEventHandler.addListener(TCModEvents::modConfig$Loading);
         PortEventHandler.addListener(TCModEvents::modConfig$Reloading);
         registerPayloadHandlers();
     }
 
     private static void commonSetup(PortFMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-//            NeoForgeMod.enableMergedAttributeTooltips();
-        });
-    }
-
-    private static void modConfig$Loading(ModConfigEvent.Loading event) {
-        if (event.getConfig().getType() == ModConfig.Type.COMMON && TerraCurio.MODID.equals(event.getConfig().getModId())) {
-            TCCommonConfigs.onLoad();
-        }
+        event.enqueueWork(TCCommonConfigs::onLoad);
     }
 
     private static void modConfig$Reloading(ModConfigEvent.Reloading event) {

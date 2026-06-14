@@ -1,6 +1,7 @@
 package org.confluence.terra_curio.common.init;
 
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.confluence.terra_curio.TerraCurio;
@@ -15,7 +16,7 @@ public final class TCArmorMaterials {
 
     public static final PortArmorMaterialRegistration MATERIALS = PortRegisterHandler.armorMaterial(TerraCurio.MODID);
 
-    public static final PortRegistryEntry<PortArmorMaterial, PortArmorMaterial> DIVING = MATERIALS.register(
+    public static final PortRegistryEntry<ArmorMaterial, PortArmorMaterial> DIVING = MATERIALS.register(
             PortArmorMaterial.Settings.create()
                     .name("diving")
                     .defense(2, 5, 6, 2)
