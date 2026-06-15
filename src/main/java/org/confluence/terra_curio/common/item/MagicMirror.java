@@ -50,22 +50,26 @@ public class MagicMirror extends Item {
         if (level.isClientSide) {
             Minecraft.getInstance().gameRenderer.displayItemActivation(itemStack);
         } else if (living instanceof ServerPlayer player) {
-            if (player.getVehicle() != null) {
-                player.removeVehicle();
-            }
-            ServerLevel serverLevel = player.server.getLevel(player.getRespawnDimension());
-            if (serverLevel == null) {
-                serverLevel = player.server.overworld();
-            }
-            BlockPos pos = player.getRespawnPosition();
-            if (pos == null) {
-                pos = serverLevel.getSharedSpawnPos();
-            }
-            float angle = player.getRespawnAngle();
-            player.teleportTo(serverLevel, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, Set.of(), angle, 0);
+            recall(player);
         }
         living.playSound(TCSoundEvents.TRANSMISSION.get());
         return itemStack;
+    }
+
+    public static void recall(ServerPlayer player) {
+        if (player.getVehicle() != null) {
+            player.removeVehicle();
+        }
+        ServerLevel serverLevel = player.server.getLevel(player.getRespawnDimension());
+        if (serverLevel == null) {
+            serverLevel = player.server.overworld();
+        }
+        BlockPos pos = player.getRespawnPosition();
+        if (pos == null) {
+            pos = serverLevel.getSharedSpawnPos();
+        }
+        float angle = player.getRespawnAngle();
+        player.teleportTo(serverLevel, pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, Set.of(), angle, 0);
     }
 
     @Override
