@@ -46,12 +46,12 @@ public class BaseSpeedBoots extends BaseCurioItem {
 
     @Override
     protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
-        if (!emitter.isLocalSpace()) {
-            emitter.parentSpace = new Matrix4f();
-        }
         emitter.active = living.zza > 0.0F && !living.horizontalCollision;
 
         if (emitter.active) {
+            if (!emitter.isLocalSpace()) {
+                emitter.parentSpace = new Matrix4f();
+            }
             if (IEntity.of(living).terra_curio$isShouldRot()) {
                 emitter.parentSpace.setTranslation(0, living.getBbHeight(), 0);
             } else {
