@@ -83,6 +83,6 @@ public final class TCModClientEvent {
     }
 
     private static void registerRecipeBookCategories(PortRegisterRecipeBookCategoriesEvent event) {
-        event.registerRecipeCategoryFinder(TCRecipes.WORKSHOP_TYPE.get(), (location, recipe) -> RecipeBookCategories.UNKNOWN);
+        event.registerRecipeCategoryFinder(TCRecipes.WORKSHOP_TYPE.get(), recipeHolder -> RecipeBookCategories.UNKNOWN);
     }
 }
