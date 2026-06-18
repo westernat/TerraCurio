@@ -34,9 +34,7 @@ public class TCExtraStepStoolRecipeProvider extends AbstractRecipeProvider {
                 .requirements(RequirementsStrategy.OR);
         writer.accept(new FinishedRecipe() {
             @Override
-            public void serializeRecipeData(JsonObject json) {
-                json.addProperty("type", "terra_curio:extra_step_stool");
-            }
+            public void serializeRecipeData(JsonObject json) {}
 
             @Override
             public ResourceLocation getId() {
