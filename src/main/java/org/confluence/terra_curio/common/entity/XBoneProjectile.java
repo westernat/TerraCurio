@@ -85,7 +85,8 @@ public class XBoneProjectile extends Projectile implements IAxisZRotate {
         return LibEntityUtils.canHitEntity(target, getOwner());
     }
 
-    protected double getDefaultGravity() {
+    @Override
+    public double getDefaultGravity() {
         return 0.04;
     }
 

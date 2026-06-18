@@ -140,6 +140,7 @@ dependencies {
         jarJar(implementation("io.github.llamalad7:mixinextras-forge:0.5.3"))
     }
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
+    interfaceInjectionData("org.mesdag.portlib:PortLib:${portlib_version}:interfaceinjection@json")
 }
 
 mixin {
