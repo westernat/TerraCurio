@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.common.item.curio;
 
-import PortLib.extensions.net.minecraft.core.Holder.PortHolderExtension;
 import PortLib.extensions.net.minecraft.world.entity.ai.attributes.Attributes.PortAttributesExtension;
 import PortLib.extensions.net.minecraft.world.item.Item.PortItemExtension;
 import com.google.common.collect.ImmutableMultimap;
@@ -103,7 +102,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
     }
 
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(ItemStack stack) {
-        PrimitiveValueComponent component = PortHolderExtension.getData(stack.getItemHolder(), TCDataMaps.ACCESSORIES);
+        PrimitiveValueComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         AttributeModifiersValue value;
         if (component != null && (value = component.get(TCItems.ATTRIBUTES)) != null) {
             return value.get();
@@ -113,7 +112,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag isAdvanced) {
-        PrimitiveValueComponent component = PortHolderExtension.getData(stack.getItemHolder(), TCDataMaps.ACCESSORIES);
+        PrimitiveValueComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
         ComponentsValue value;
         if (component != null && (value = component.get(TCItems.COMPONENTS)) != null) {
             tooltipComponents.addAll(value.components());

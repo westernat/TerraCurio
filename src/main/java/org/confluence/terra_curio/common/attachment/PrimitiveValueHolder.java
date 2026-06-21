@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.common.attachment;
 
-import PortLib.extensions.net.minecraft.core.HolderLookup.PortHolderLookupExtension;
 import com.mojang.serialization.Codec;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -106,7 +105,7 @@ public abstract class PrimitiveValueHolder implements IPortNBTSerializable<Compo
             if (type == null) continue;
             Codec<PrimitiveValue<?>> codec = ValueType.VALUE_CODECS.get(type);
             if (codec == null) continue;
-            RegistryOps<Tag> ops = PortHolderLookupExtension.Provider.createSerializationContext(provider, NbtOps.INSTANCE);
+            RegistryOps<Tag> ops = provider.createSerializationContext(NbtOps.INSTANCE);
             codec.parse(ops, compoundTag.get(key)).result().ifPresent(value -> valueMap.put(type, value));
         }
     }

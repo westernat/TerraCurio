@@ -1,10 +1,8 @@
 package org.confluence.terra_curio.util;
 
 import PortLib.extensions.java.util.List.PortListExtension;
-import PortLib.extensions.net.minecraft.core.Holder.PortHolderExtension;
 import PortLib.extensions.net.minecraft.world.entity.Entity.PortEntityExtension;
 import PortLib.extensions.net.minecraft.world.entity.LivingEntity.PortLivingEntityExtension;
-import PortLib.extensions.net.minecraft.world.item.ItemStack.PortItemStackExtension;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
@@ -390,8 +388,8 @@ public final class TCUtils {
     }
 
     public static @Nullable PrimitiveValueComponent getAccessoriesComponent(ItemStack stack) {
-        PrimitiveValueComponent component = PortHolderExtension.getData(stack.getItemHolder(), TCDataMaps.ACCESSORIES);
-        if (component != null || (component = PortItemStackExtension.getData(stack, TCDataComponentTypes.ACCESSORIES)) != null) {
+        PrimitiveValueComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
+        if (component != null || (component = stack.getData(TCDataComponentTypes.ACCESSORIES)) != null) {
             return component;
         }
         return null;

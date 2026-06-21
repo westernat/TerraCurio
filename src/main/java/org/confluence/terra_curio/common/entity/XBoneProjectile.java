@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.common.entity;
 
-import PortLib.extensions.net.minecraft.world.phys.AABB.PortAABBExtension;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -59,8 +58,8 @@ public class XBoneProjectile extends Projectile implements IAxisZRotate {
             AABB boundingBox = getBoundingBox().inflate(1.0);
             EntityHitResult result = ProjectileUtil.getEntityHitResult(
                     level(), this,
-                    PortAABBExtension.getMinPosition(boundingBox),
-                    PortAABBExtension.getMaxPosition(boundingBox),
+                    boundingBox.getMinPosition(),
+                    boundingBox.getMaxPosition(),
                     boundingBox, this::canHitEntity, 0.5F
             );
             if (result != null) {

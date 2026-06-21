@@ -1,7 +1,5 @@
 package org.confluence.terra_curio.common.entity;
 
-import PortLib.extensions.net.minecraft.world.entity.Entity.PortEntityExtension;
-import PortLib.extensions.net.minecraft.world.phys.AABB.PortAABBExtension;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -63,8 +61,8 @@ public class BeeProjectile extends Projectile {
             AABB boundingBox = getBoundingBox().inflate(1.0);
             HitResult hitresult = ProjectileUtil.getEntityHitResult(
                     level(), this,
-                    PortAABBExtension.getMinPosition(boundingBox),
-                    PortAABBExtension.getMaxPosition(boundingBox),
+                    boundingBox.getMinPosition(),
+                    boundingBox.getMaxPosition(),
                     boundingBox, this::canHitEntity
             );
             if (hitresult instanceof EntityHitResult entityHitResult) {
@@ -84,7 +82,7 @@ public class BeeProjectile extends Projectile {
             setDeltaMovement(motion);
             blockHitCount++;
         }
-        if (PortEntityExtension.getInBlockState(this).liquid()) discard();
+        if (this.getInBlockState().liquid()) discard();
         else if (blockHitCount > (isGiant() ? 2 : 1) || tickCount > (isGiant() ? 220 : 200))
             discard();
 

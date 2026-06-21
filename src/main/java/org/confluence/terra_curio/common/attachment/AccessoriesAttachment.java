@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.common.attachment;
 
-import PortLib.extensions.net.minecraft.world.entity.Entity.PortEntityExtension;
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -166,6 +165,6 @@ public class AccessoriesAttachment extends PrimitiveValueHolder {
     }
 
     public static AccessoriesAttachment of(Entity entity) {
-        return PortEntityExtension.getAttach(entity, TCAttachments.ACCESSORIES);
+        return entity.getAttachment(TCAttachments.ACCESSORIES);
     }
 }

@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.common.item.curio.expert;
 
-import PortLib.extensions.net.minecraft.world.entity.Entity.PortEntityExtension;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -22,7 +21,7 @@ public class ShinnyStone extends BaseCurioItem {
     public void curioTick(SlotContext slotContext, ItemStack stack) {
         LivingEntity living = slotContext.entity();
         if (living.level().isClientSide) return;
-        Vec3 motion = PortEntityExtension.getKnownMovement(living);
+        Vec3 motion = living.getKnownMovement();
         if (motion.x == 0.0 && motion.z == 0.0) {
             if (IEntity.of(living).terra_curio$isPlayer() && ((Player) living).isCreative()) return;
             LibUtils.updateItemStackNbt(stack, tag -> {

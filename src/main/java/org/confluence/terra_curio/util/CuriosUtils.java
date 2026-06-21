@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.util;
 
-import PortLib.extensions.net.minecraft.world.item.ItemStack.PortItemStackExtension;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -29,7 +28,7 @@ public class CuriosUtils {
 
     public static boolean noSameCurio(LivingEntity living, ValueType<?, ? extends PrimitiveValue<?>> type) {
         return noSameCurio(living, (Predicate<ItemStack>) stack -> {
-            PrimitiveValueComponent component = PortItemStackExtension.getData(stack, TCDataComponentTypes.ACCESSORIES);
+            PrimitiveValueComponent component = stack.getData(TCDataComponentTypes.ACCESSORIES);
             return component == null || !component.types().containsKey(type);
         });
     }
