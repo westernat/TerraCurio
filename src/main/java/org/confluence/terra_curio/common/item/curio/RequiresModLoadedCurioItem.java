@@ -1,6 +1,7 @@
 package org.confluence.terra_curio.common.item.curio;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
@@ -32,6 +33,7 @@ public class RequiresModLoadedCurioItem extends BaseCurioItem {
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltipComponents, TooltipFlag tooltipFlag) {
         super.appendHoverText(stack, level, tooltipComponents, tooltipFlag);
         if (noneLoaded) {
+            tooltipComponents.add(CommonComponents.EMPTY);
             MutableComponent component = Component.empty();
             for (int i = 0; i < required.length; i++) {
                 Component require = required[i];
