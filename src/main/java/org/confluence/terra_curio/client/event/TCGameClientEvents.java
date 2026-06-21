@@ -31,7 +31,7 @@ public final class TCGameClientEvents {
         PortEventHandler.addListener(TCGameClientEvents::screen$MouseScrolled$Pre);
     }
 
-    private static void clientTick$Post(PortClientTickEvent.PortPre event) {
+    private static void clientTick$Post(PortClientTickEvent.Pre event) {
         Minecraft minecraft = Minecraft.getInstance();
         LocalPlayer player = minecraft.player;
         if (player != null) {
@@ -44,7 +44,7 @@ public final class TCGameClientEvents {
         }
     }
 
-    private static void clientPlayerNetwork$LoggingOut(PortClientPlayerNetworkEvent.PortLoggingOut event) {
+    private static void clientPlayerNetwork$LoggingOut(PortClientPlayerNetworkEvent.LoggingOut event) {
         GravitationHandler.reset();
         StepStoolHandler.reset();
         TCClientPacketHandler.reset();
@@ -81,7 +81,7 @@ public final class TCGameClientEvents {
         }
     }
 
-    private static void cameraSetup(PortViewportEvent.PortComputeCameraAngles event) {
+    private static void cameraSetup(PortViewportEvent.ComputeCameraAngles event) {
         if (GravitationHandler.isShouldRot()) {
             event.setRoll(180.0F);
         }
@@ -93,7 +93,7 @@ public final class TCGameClientEvents {
         }
     }
 
-    private static void interactionKeyMappingTriggered(PortInputEvent.PortInteractionKeyMappingTriggered event) {
+    private static void interactionKeyMappingTriggered(PortInputEvent.InteractionKeyMappingTriggered event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player == null) return;
         if (TCClientConfigs.rightClickDelay && event.isUseItem() && player.getItemInHand(event.getHand()).getItem() instanceof BlockItem) {
@@ -106,7 +106,7 @@ public final class TCGameClientEvents {
         }
     }
 
-    private static void input$MouseScrolling(PortInputEvent.PortMouseScrollingEvent event) {
+    private static void input$MouseScrolling(PortInputEvent.MouseScrollingEvent event) {
         LocalPlayer player = Minecraft.getInstance().player;
         if (player != null && ScopeFovHandler.isScoping()) {
             ScopeFovHandler.handleScroll(player, event.getScrollDeltaY());
@@ -114,7 +114,7 @@ public final class TCGameClientEvents {
         }
     }
 
-    private static void screen$MouseScrolled$Pre(PortScreenEvent.PortMouseScrolled.PortPre event) {
+    private static void screen$MouseScrolled$Pre(PortScreenEvent.PortMouseScrolled.Pre event) {
         if (MultiFunctionTooltip.isShowing) {
             MultiFunctionTooltip.mouseScrollY -= (int) event.getScrollDeltaY();
         } else {

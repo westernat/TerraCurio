@@ -100,7 +100,7 @@ public final class TCGameEvents {
         container.setPostAttackInvulnerabilityTicks((int) (container.getPostAttackInvulnerabilityTicks() * invulnerableTicksMultiplier));
     }
 
-    private static void livingDamage$Pre(PortLivingDamageEvent.PortPre event) {
+    private static void livingDamage$Pre(PortLivingDamageEvent.Pre event) {
         float amount = event.getNewDamage();
         if (amount <= 0.0F) return;
         LivingEntity living = event.getEntity();
@@ -165,7 +165,7 @@ public final class TCGameEvents {
         }
     }
 
-    private static void playerLogin(PortPlayerEvent.PortPlayerLoggedInEvent event) {
+    private static void playerLogin(PortPlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
         AccessoriesAttachment.of(player).flushAbility(player);
         ServerPlayer serverPlayer = (ServerPlayer) player;
@@ -173,17 +173,17 @@ public final class TCGameEvents {
         InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
     }
 
-    private static void playerLogout(PortPlayerEvent.PortPlayerLoggedOutEvent event) {
+    private static void playerLogout(PortPlayerEvent.PlayerLoggedOutEvent event) {
         RamRune.cancel(event.getEntity());
     }
 
-    private static void playerTick$Pre(PortPlayerTickEvent.PortPre event) {
+    private static void playerTick$Pre(PortPlayerTickEvent.Pre event) {
         if (event.getEntity().isLocalPlayer()) {
             GravitationHandler.unCrouching(event.getEntity());
         }
     }
 
-    private static void playerTick$Post(PortPlayerTickEvent.PortPost event) {
+    private static void playerTick$Post(PortPlayerTickEvent.Post event) {
         Player player = event.getEntity();
         if (!player.isPassenger()) {
             TCUtils.applyFluidWalk(player);
@@ -228,10 +228,10 @@ public final class TCGameEvents {
         }
     }
 
-    private static void mobEffect$Applicable(PortMobEffectEvent.PortApplicable event) {
-        if (event.getPortResult() != PortMobEffectEvent.PortApplicable.PortResult.DO_NOT_APPLY) {
+    private static void mobEffect$Applicable(PortMobEffectEvent.Applicable event) {
+        if (event.getPortResult() != PortMobEffectEvent.Applicable.PortResult.DO_NOT_APPLY) {
             if (TCUtils.getValue(event.getEntity(), TCItems.EFFECT$IMMUNITIES).contains(event.getEffectInstance().getEffect())) {
-                event.setPortResult(PortMobEffectEvent.PortApplicable.PortResult.DO_NOT_APPLY);
+                event.setPortResult(PortMobEffectEvent.Applicable.PortResult.DO_NOT_APPLY);
             }
         }
     }

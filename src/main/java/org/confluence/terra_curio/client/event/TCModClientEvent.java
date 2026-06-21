@@ -55,14 +55,14 @@ public final class TCModClientEvent {
         }
     }
 
-    private static void registerEntityLayers(PortEntityRenderersEvent.PortRegisterLayerDefinitions event) {
+    private static void registerEntityLayers(PortEntityRenderersEvent.RegisterLayerDefinitions event) {
         CuriosClient.registerLayers(event::registerLayerDefinition);
         event.registerLayerDefinition(BeeProjectileModel.LAYER_LOCATION, BeeProjectileModel::createBodyLayer);
         event.registerLayerDefinition(XBoneProjectileModel.LAYER_LOCATION, XBoneProjectileModel::createBodyLayer);
         event.registerLayerDefinition(StepStoolModel.LAYER_LOCATION, StepStoolModel::createBodyLayer);
     }
 
-    private static void registerEntityRenderers(PortEntityRenderersEvent.PortRegisterRenderers event) {
+    private static void registerEntityRenderers(PortEntityRenderersEvent.RegisterRenderers event) {
         event.registerEntityRenderer(TCEntities.BEE_PROJECTILE.get(), BeeProjectileRenderer::new);
         event.registerEntityRenderer(TCEntities.STEP_STOOL.get(), StepStoolRenderer::new);
         event.registerEntityRenderer(TCEntities.STAR_CLOAK.get(), StarCloakEntityRenderer::new);
