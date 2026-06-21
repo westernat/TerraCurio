@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.client.handler;
 
-import PortLib.extensions.net.minecraft.world.entity.player.Player.PortPlayerExtension;
 import it.unimi.dsi.fastutil.ints.Int2BooleanArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2BooleanMap;
 import it.unimi.dsi.fastutil.ints.Int2IntArrayMap;
@@ -165,7 +164,7 @@ public final class TCClientPacketHandler {
             if (player.getAttackStrengthScale(0.5F) < 1.0F - Mth.EPSILON) return;
             MinecraftAccessor accessor = (MinecraftAccessor) minecraft;
             if (accessor.getMissTime() > 0) accessor.setMissTime(0);
-            double reach = Math.max(PortPlayerExtension.entityInteractionRange(player), PortPlayerExtension.blockInteractionRange(player));
+            double reach = Math.max(player.entityInteractionRange(), player.blockInteractionRange());
             double squared = Mth.square(reach);
             Vec3 from = player.getEyePosition(1.0F);
             HitResult hitResult = player.pick(reach, 1.0F, false);
