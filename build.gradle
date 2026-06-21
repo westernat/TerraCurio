@@ -130,7 +130,8 @@ dependencies {
         modImplementation project(":PortLib")
         implementation("io.github.llamalad7:mixinextras-forge:0.5.3")
     } else {
-        jarJar(modImplementation("org.mesdag:ParticleStorm:${particle_storm_version}-forge"))
+        modImplementation("org.mesdag:ParticleStorm:${particle_storm_version}-forge")
+        jarJar("org.mesdag:ParticleStorm:${particle_storm_version}-forge")
 //        modImplementation(jarJar("org.confluence.lib:Confluence-Magic-Lib:${confluence_lib_version}-forge"))
         modImplementation(project(":Confluence-Magic-Lib"))
         jarJar(project(":Confluence-Magic-Lib"))
