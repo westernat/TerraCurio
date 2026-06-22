@@ -165,6 +165,6 @@ public class AccessoriesAttachment extends PrimitiveValueHolder {
     }
 
     public static AccessoriesAttachment of(Entity entity) {
-        return entity.getAttachment(TCAttachments.ACCESSORIES);
+        return entity.getData(TCAttachments.ACCESSORIES);
     }
 }
