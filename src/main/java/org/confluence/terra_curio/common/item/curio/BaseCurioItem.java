@@ -211,7 +211,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         }
 
         public <T> Builder component(PortRegistryEntry<PortDataComponentType<?>, PortDataComponentType<T>> type, T value) {
-            PortItemExtension.Properties.component(properties, type, value);
+            properties.component(type, value);
             return this;
         }
 
@@ -254,13 +254,13 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         public Builder accessories(PrimitiveValueComponent component, PrimitiveValueComponent... components) {
             if (components.length == 0) {
-                PortItemExtension.Properties.component(properties, TCDataComponentTypes.ACCESSORIES, component);
+                properties.component(TCDataComponentTypes.ACCESSORIES, component);
             } else {
                 Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Hashtable<>(component.types());
                 for (PrimitiveValueComponent component1 : components) {
                     map.putAll(component1.types());
                 }
-                PortItemExtension.Properties.component(properties, TCDataComponentTypes.ACCESSORIES, new PrimitiveValueComponent(map));
+                properties.component(TCDataComponentTypes.ACCESSORIES, new PrimitiveValueComponent(map));
             }
             return this;
         }

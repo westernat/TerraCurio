@@ -1,7 +1,6 @@
 package org.confluence.terra_curio.common.init;
 
 import PortLib.extensions.net.minecraft.world.entity.ai.attributes.Attributes.PortAttributesExtension;
-import PortLib.extensions.net.minecraft.world.item.Item.PortItemExtension;
 import com.google.common.collect.ImmutableListMultimap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -625,7 +624,7 @@ public final class TCItems {
 
     public static PortDeferredItem<BaseCurioItem> registerCurio(String name, ModRarity rarity) {
         return CURIOS.register(name, () -> {
-            Item.Properties properties = PortItemExtension.Properties.component(new Item.Properties(), ConfluenceMagicLib.MOD_RARITY, rarity);
+            Item.Properties properties = new Item.Properties().component(ConfluenceMagicLib.MOD_RARITY, rarity);
             if (rarity != WHITE && rarity != GRAY) properties.fireResistant();
             return new BaseCurioItem(properties);
         });
