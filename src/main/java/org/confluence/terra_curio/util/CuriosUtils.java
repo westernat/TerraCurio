@@ -28,7 +28,7 @@ public class CuriosUtils {
 
     public static boolean noSameCurio(LivingEntity living, ValueType<?, ? extends PrimitiveValue<?>> type) {
         return noSameCurio(living, (Predicate<ItemStack>) stack -> {
-            PrimitiveValueComponent component = stack.getData(TCDataComponentTypes.ACCESSORIES);
+            PrimitiveValueComponent component = stack.get(TCDataComponentTypes.ACCESSORIES);
             return component == null || !component.types().containsKey(type);
         });
     }

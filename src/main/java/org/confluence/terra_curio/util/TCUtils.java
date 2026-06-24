@@ -389,7 +389,7 @@ public final class TCUtils {
 
     public static @Nullable PrimitiveValueComponent getAccessoriesComponent(ItemStack stack) {
         PrimitiveValueComponent component = stack.getItemHolder().getData(TCDataMaps.ACCESSORIES);
-        if (component != null || (component = stack.getData(TCDataComponentTypes.ACCESSORIES)) != null) {
+        if (component != null || (component = stack.get(TCDataComponentTypes.ACCESSORIES)) != null) {
             return component;
         }
         return null;
