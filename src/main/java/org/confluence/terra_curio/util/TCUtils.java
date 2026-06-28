@@ -1,8 +1,6 @@
 package org.confluence.terra_curio.util;
 
 import PortLib.extensions.java.util.List.PortListExtension;
-import PortLib.extensions.net.minecraft.world.entity.Entity.PortEntityExtension;
-import PortLib.extensions.net.minecraft.world.entity.LivingEntity.PortLivingEntityExtension;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.level.ServerLevel;
@@ -75,7 +73,7 @@ public final class TCUtils {
             } else {
                 time = 40;
             }
-            PortEntityExtension.igniteForTicks(victim, time);
+            victim.igniteForTicks(time);
         }
     }
 
@@ -146,7 +144,7 @@ public final class TCUtils {
 
     public static void applyIgniteArrow(LivingEntity living, AbstractArrow arrow) {
         if (hasType(living, TCItems.IGNITE$ARROW)) {
-            PortEntityExtension.igniteForTicks(arrow, 2000);
+            arrow.igniteForTicks(2000);
         }
     }
 
@@ -308,7 +306,7 @@ public final class TCUtils {
             int cooldown = getValue(living, TCItems.TOTEM$WITH$COOLDOWN);
             if (cooldown > 0) {
                 living.setHealth(1.0F);
-                PortLivingEntityExtension.removeEffectsCuredBy(living, PortEffectCures.PROTECTED_BY_TOTEM);
+                living.removeEffectsCuredBy(PortEffectCures.PROTECTED_BY_TOTEM);
                 living.addEffect(new MobEffectInstance(MobEffects.REGENERATION, 900, 1));
                 living.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
                 living.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));

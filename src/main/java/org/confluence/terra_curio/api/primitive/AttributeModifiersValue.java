@@ -5,6 +5,7 @@ import PortLib.extensions.net.minecraft.world.entity.ai.attributes.AttributeModi
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.serialization.Codec;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -95,6 +96,10 @@ public record AttributeModifiersValue(
         return new AttributeModifiersValue(ImmutableListMultimap.of(attribute, new AttributeModifier(PortAttributeModifier.rl2uuid(id), id.getPath(), amount, operation.unwrap())));
     }
 
+    public static AttributeModifiersValue simple(Holder<Attribute> attribute, ResourceLocation id, double amount, PortAttributeModifier.PortOperation operation) {
+        return simple(attribute.value(), id, amount, operation);
+    }
+
     public ImmutableListMultimap<Attribute, AttributeModifier> value() {
         return value;
     }
@@ -118,6 +123,14 @@ public record AttributeModifiersValue(
         public Builder add(Attribute attribute, ResourceLocation id, double amount, PortAttributeModifier.PortOperation operation) {
             builder.put(attribute, new AttributeModifier(PortAttributeModifier.rl2uuid(id), id.getPath(), amount, operation.unwrap()));
             return this;
+        }
+
+        public Builder add(Holder<Attribute> attribute, AttributeModifier... modifiers) {
+            return add(attribute.value(), modifiers);
+        }
+
+        public Builder add(Holder<Attribute> attribute, ResourceLocation id, double amount, PortAttributeModifier.PortOperation operation) {
+            return add(attribute.value(), id, amount, operation);
         }
 
         public Builder addAll(Multimap<Attribute, AttributeModifier> multimap) {
