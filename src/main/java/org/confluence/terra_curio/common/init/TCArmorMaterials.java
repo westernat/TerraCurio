@@ -23,7 +23,7 @@ public final class TCArmorMaterials {
                     .enchantmentValue(9)
                     .equipSound(SoundEventHolder.wrap(SoundEvents.ARMOR_EQUIP_IRON))
                     .repairIngredient(() -> Ingredient.of(Items.IRON_INGOT))
-                    .layer(new PortArmorMaterial.PortLayer(TerraCurio.asResource("diving")))
+                    .layer(new PortArmorMaterial.Layer(TerraCurio.asResource("diving")))
                     .toughness(0)
                     .knockbackResistance(0)
     );
