@@ -6,7 +6,7 @@ import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 import net.minecraftforge.common.loot.LootTableIdCondition;
 import org.confluence.terra_curio.TerraCurio;
-import org.mesdag.portlib.loot.AddTableLootModifier;
+import org.mesdag.portlib.loot.PortAddTableLootModifier;
 
 public class TCGlobalLootModifierProvider extends GlobalLootModifierProvider {
     public TCGlobalLootModifierProvider(PackOutput output) {
@@ -91,7 +91,7 @@ public class TCGlobalLootModifierProvider extends GlobalLootModifierProvider {
     private void lootTableId(String group, String condition, String table) {
         String modifier = group + "/" + condition;
         LootItemCondition[] conditions = {LootTableIdCondition.builder(ResourceLocation.withDefaultNamespace(modifier)).build()};
-        add(modifier, new AddTableLootModifier(conditions, TerraCurio.asResource("with/" + group + "/" + table)));
+        add(modifier, new PortAddTableLootModifier(conditions, TerraCurio.asResource("with/" + group + "/" + table)));
     }
 
     private void lootTableId(String group, String table) {

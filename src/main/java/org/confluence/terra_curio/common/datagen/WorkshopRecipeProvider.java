@@ -20,6 +20,7 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import org.confluence.lib.common.data.gen.AbstractRecipeProvider;
 import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.lib.common.recipe.EnvironmentLevelAccess;
+import org.confluence.lib.common.recipe.SimpleFinishedRecipe;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.init.TCRecipes;
@@ -28,8 +29,8 @@ import org.confluence.terra_curio.common.recipe.WorkshopRecipe;
 import java.util.Map;
 import java.util.function.Consumer;
 
-public class WorkshopProvider extends AbstractRecipeProvider {
-    public WorkshopProvider(PackOutput output) {
+public class WorkshopRecipeProvider extends AbstractRecipeProvider {
+    public WorkshopRecipeProvider(PackOutput output) {
         super(output);
     }
 
@@ -246,44 +247,6 @@ public class WorkshopProvider extends AbstractRecipeProvider {
 
     private void recipe(Consumer<FinishedRecipe> writer, String name, ItemStack result, EnvironmentLevelAccess.Matcher environment, Ingredient... ingredients) {
         WorkshopRecipe recipe = new WorkshopRecipe(result, NonNullList.of(Ingredient.EMPTY, ingredients), environment);
-        ResourceLocation id = TerraCurio.asResource(name);
-        Advancement.Builder advancement = Advancement.Builder.advancement()
-                .addCriterion("has_the_recipe", RecipeUnlockedTrigger.unlocked(id))
-                .rewards(AdvancementRewards.Builder.recipe(id))
-                .requirements(RequirementsStrategy.OR);
-        writer.accept(new FinishedRecipe() {
-            private static final Codec<WorkshopRecipe> CODEC = WorkshopRecipe.Serializer.CODEC.codec();
-
-            @Override
-            public void serializeRecipeData(JsonObject json) {
-                CODEC.encodeStart(JsonOps.INSTANCE, recipe).result().ifPresent(element -> {
-                    if (element.isJsonObject()) {
-                        for (Map.Entry<String, JsonElement> entry : element.getAsJsonObject().entrySet()) {
-                            json.add(entry.getKey(), entry.getValue());
-                        }
-                    }
-                });
-            }
-
-            @Override
-            public ResourceLocation getId() {
-                return id;
-            }
-
-            @Override
-            public RecipeSerializer<?> getType() {
-                return TCRecipes.WORKSHOP_SERIALIZER.get();
-            }
-
-            @Override
-            public JsonObject serializeAdvancement() {
-                return advancement.serializeToJson();
-            }
-
-            @Override
-            public ResourceLocation getAdvancementId() {
-                return id.withPrefix("recipes/terra_curio/");
-            }
-        });
+        writer.accept(new SimpleFinishedRecipe<>(TerraCurio.asResource(name), recipe));
     }
 }

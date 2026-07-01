@@ -37,8 +37,8 @@ public class TCDataGenerator {
         generator.addProvider(server, new TCItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
         generator.addProvider(server, new TCEntityTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TCFluidTagsProvider(output, lookup, helper));
-        generator.addProvider(server, new CollectRecipeProvider(TerraCurio.MODID, output,
-                WorkshopProvider::new,
+        generator.addProvider(server, new CollectRecipeProvider(TerraCurio.MODID, output, lookup,
+                WorkshopRecipeProvider::new,
                 TCShapedRecipeProvider::new,
                 TCExtraStepStoolRecipeProvider::new
         ));
