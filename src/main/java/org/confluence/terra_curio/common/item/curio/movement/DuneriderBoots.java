@@ -10,7 +10,7 @@ import top.theillusivec4.curios.api.SlotContext;
 public class DuneriderBoots extends BaseSpeedBoots {
     public DuneriderBoots(String name) {
         super(1, 40, builder(name)
-                .attribute(PortAttributesExtension.stepHeight().value(), 0.5, PortAttributeModifier.PortOperation.ADD_VALUE)
+                .attribute(PortAttributesExtension.stepHeight().value(), 0.5, PortAttributeModifier.Operation.ADD_VALUE)
                 .tooltips(1));
     }
 

@@ -52,8 +52,8 @@ import static org.confluence.terra_curio.api.primitive.ValueType.create;
 import static org.confluence.terra_curio.api.primitive.ValueType.ofUnit;
 import static org.confluence.terra_curio.common.component.PrimitiveValueComponent.of;
 import static org.confluence.terra_curio.common.component.PrimitiveValueComponent.units;
-import static org.mesdag.portlib.wrapper.world.entity.ai.attributes.PortAttributeModifier.PortOperation.ADD_MULTIPLIED_TOTAL;
-import static org.mesdag.portlib.wrapper.world.entity.ai.attributes.PortAttributeModifier.PortOperation.ADD_VALUE;
+import static org.mesdag.portlib.wrapper.world.entity.ai.attributes.PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL;
+import static org.mesdag.portlib.wrapper.world.entity.ai.attributes.PortAttributeModifier.Operation.ADD_VALUE;
 
 @SuppressWarnings("all")
 public final class TCItems {

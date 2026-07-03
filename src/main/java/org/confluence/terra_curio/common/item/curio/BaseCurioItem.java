@@ -216,30 +216,30 @@ public class BaseCurioItem extends Item implements ICurioItem {
         }
 
         @Diff
-        public Builder attribute(Attribute attribute, String path, double amount, PortAttributeModifier.PortOperation operation) {
+        public Builder attribute(Attribute attribute, String path, double amount, PortAttributeModifier.Operation operation) {
             attributesBuilder.put(attribute, new AttributeModifier(id, name + "_" + path, amount, operation.unwrap()));
             return this;
         }
 
         @Diff
-        public Builder attribute(Attribute attribute, double amount, PortAttributeModifier.PortOperation operation) {
+        public Builder attribute(Attribute attribute, double amount, PortAttributeModifier.Operation operation) {
             attributesBuilder.put(attribute, new AttributeModifier(id, defaultId.getPath(), amount, operation.unwrap()));
             return this;
         }
 
-        public Builder attribute(Holder<Attribute> attribute, String path, double amount, PortAttributeModifier.PortOperation operation) {
+        public Builder attribute(Holder<Attribute> attribute, String path, double amount, PortAttributeModifier.Operation operation) {
             attributesBuilder.put(attribute.value(), new AttributeModifier(id, name + "_" + path, amount, operation.unwrap()));
             return this;
         }
 
-        public Builder attribute(Holder<Attribute> attribute, double amount, PortAttributeModifier.PortOperation operation) {
+        public Builder attribute(Holder<Attribute> attribute, double amount, PortAttributeModifier.Operation operation) {
             attributesBuilder.put(attribute.value(), new AttributeModifier(id, defaultId.getPath(), amount, operation.unwrap()));
             return this;
         }
 
         public Builder stepHeight() {
             if (TCStartupConfigs.shoesExtraStepHeight()) {
-                return attribute(PortAttributesExtension.stepHeight().value(), 0.5, PortAttributeModifier.PortOperation.ADD_VALUE);
+                return attribute(PortAttributesExtension.stepHeight().value(), 0.5, PortAttributeModifier.Operation.ADD_VALUE);
             }
             return this;
         }

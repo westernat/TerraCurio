@@ -20,7 +20,7 @@ public final class TCEffects {
     public static final RegistryObject<MobEffect> CONFUSED = EFFECTS.register("confused", () -> new PublicMobEffect(MobEffectCategory.HARMFUL, 0x8B008B));
     public static final RegistryObject<MobEffect> GRAVITATION = EFFECTS.register("gravitation", GravitationEffect::new);
     public static final RegistryObject<MobEffect> PALADINS_SHIELD = EFFECTS.register("paladins_shield", () -> new PublicMobEffect(MobEffectCategory.BENEFICIAL, 0x666666));
-    public static final RegistryObject<MobEffect> CEREBRAL_MINDTRICK = PortDeferredRegisterExtension.register(EFFECTS, "cerebral_mindtrick", id -> new PublicMobEffect(MobEffectCategory.NEUTRAL, 0xFFA885).addAttributeModifier(LibAttributes.getCriticalChance(), id, 0.04, PortAttributeModifier.PortOperation.ADD_VALUE));
+    public static final RegistryObject<MobEffect> CEREBRAL_MINDTRICK = PortDeferredRegisterExtension.register(EFFECTS, "cerebral_mindtrick", id -> new PublicMobEffect(MobEffectCategory.NEUTRAL, 0xFFA885).addAttributeModifier(LibAttributes.getCriticalChance(), id, 0.04, PortAttributeModifier.Operation.ADD_VALUE));
     public static final RegistryObject<MobEffect> HONEY = EFFECTS.register("honey", HoneyEffect::new);
 
     public static void healPerSecond(LivingEntity living, float amount) {

@@ -20,13 +20,13 @@ import java.util.UUID;
 public class SunStone extends BaseCurioItem {
     public SunStone() {
         super(builder("sun_stone").rarity(ModRarity.LIME)
-                .attribute(Attributes.ATTACK_SPEED, 0.1, PortAttributeModifier.PortOperation.ADD_MULTIPLIED_TOTAL)
-                .attribute(LibAttributes.getAttackDamage().value(), 0.1, PortAttributeModifier.PortOperation.ADD_MULTIPLIED_TOTAL)
-                .attribute(Attributes.ARMOR, 2.0, PortAttributeModifier.PortOperation.ADD_VALUE)
-                .attribute(PortAttributesExtension.blockBreakSpeed().value(), 0.15, PortAttributeModifier.PortOperation.ADD_MULTIPLIED_TOTAL)
-                .attribute(LibAttributes.getCriticalChance().value(), 0.02, PortAttributeModifier.PortOperation.ADD_VALUE)
-                .attribute(LibAttributes.getRangedDamage().value(), 0.1, PortAttributeModifier.PortOperation.ADD_MULTIPLIED_TOTAL)
-                .attribute(LibAttributes.getMagicDamage().value(), 0.1, PortAttributeModifier.PortOperation.ADD_MULTIPLIED_TOTAL));
+                .attribute(Attributes.ATTACK_SPEED, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                .attribute(LibAttributes.getAttackDamage().value(), 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                .attribute(Attributes.ARMOR, 2.0, PortAttributeModifier.Operation.ADD_VALUE)
+                .attribute(PortAttributesExtension.blockBreakSpeed().value(), 0.15, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                .attribute(LibAttributes.getCriticalChance().value(), 0.02, PortAttributeModifier.Operation.ADD_VALUE)
+                .attribute(LibAttributes.getRangedDamage().value(), 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                .attribute(LibAttributes.getMagicDamage().value(), 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL));
     }
 
     @Override
