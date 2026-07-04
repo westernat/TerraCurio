@@ -81,8 +81,12 @@ public class TCDataMapProvider extends PortDataMapProvider {
         });
     }
 
+    protected void add(ItemLike item, Consumer<Helper> consumer) {
+        builder.add(item.asItem().builtInRegistryHolder().key(), new PrimitiveValueComponent(wrap(item.asItem(), consumer)), false);
+    }
+
     @SuppressWarnings("deprecation")
-    protected void add(Item item, Consumer<Helper> consumer) {
+    public static Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> wrap(Item item, Consumer<Helper> consumer) {
         Map<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> map = new Reference2ObjectOpenHashMap<>();
         consumer.accept(new Helper() {
             @Override
@@ -110,11 +114,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
                 return item.builtInRegistryHolder().key();
             }
         });
-        builder.add(item.builtInRegistryHolder().key(), new PrimitiveValueComponent(map), false);
-    }
-
-    protected void add(ItemLike item, Consumer<Helper> consumer) {
-        add(item.asItem(), consumer);
+        return map;
     }
 
     public interface Helper {

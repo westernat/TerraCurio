@@ -35,7 +35,6 @@ public class TCDataGenerator {
                 .add(Registries.DAMAGE_TYPE, TCDamageTypes::bootstrap), Set.of(TerraCurio.MODID))).getRegistryProvider();
         TCBlockTagsProvider blockTagsProvider = generator.addProvider(server, new TCBlockTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TCItemTagsProvider(output, lookup, blockTagsProvider.contentsGetter(), helper));
-        generator.addProvider(server, new TCEntityTypeTagsProvider(output, lookup, helper));
         generator.addProvider(server, new TCFluidTagsProvider(output, lookup, helper));
         generator.addProvider(server, new CollectRecipeProvider(TerraCurio.MODID, output, lookup,
                 WorkshopRecipeProvider::new,
