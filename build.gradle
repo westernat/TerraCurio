@@ -129,7 +129,7 @@ repositories {
     }
 }
 
-boolean slim = false
+boolean slim = true
 
 dependencies {
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"

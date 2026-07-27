@@ -7,8 +7,9 @@ import org.confluence.lib.network.IPacketC2S;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.item.curio.combat.RamRune;
 
-public record RamRuneFallPacketC2S() implements IPacketC2S {
-    public static final RamRuneFallPacketC2S INSTANCE = new RamRuneFallPacketC2S();
+public enum RamRuneFallPacketC2S implements IPacketC2S {
+    INSTANCE;
+
     public static final Type<RamRuneFallPacketC2S> TYPE = new Type<>(TerraCurio.asResource("ram_rune_fall"));
     public static final StreamCodec<ByteBuf, RamRuneFallPacketC2S> STREAM_CODEC = StreamCodec.unit(INSTANCE);
 

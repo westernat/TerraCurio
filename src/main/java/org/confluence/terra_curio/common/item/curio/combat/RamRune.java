@@ -29,7 +29,6 @@ public class RamRune extends BaseCurioItem {
     }
 
     public static void startFalling(ServerPlayer player) {
-        System.out.println(FALLING);
         if (player.onGround()) return;
         if (!FALLING.add(player.getId())) return;
         Vec3 vec3 = player.getDeltaMovement();
