@@ -95,9 +95,7 @@ public final class TCUtils {
         return false;
     }
 
-    /**
-     * 不包括熔岩
-     */
+    /// 不包括熔岩
     public static boolean isFire(DamageSource damageSource) {
         return damageSource.is(DamageTypes.IN_FIRE) ||
                 damageSource.is(DamageTypes.ON_FIRE) ||
@@ -174,12 +172,15 @@ public final class TCUtils {
             else if (amount <= 100) rangeMax = amount * 0.75F + 525;
             else rangeMax = amount * 0.1875F + 806.25F;
             float range = Mth.nextFloat(randomSource, rangeMin, rangeMax) / 24;
-            int duration = randomSource.nextInt((int) (90 + amount / 3), (int) (300 + amount / 2));
-            living.level().getEntities(living, new AABB(living.blockPosition()).inflate(range), entity -> entity instanceof Enemy).forEach(enemy -> {
+            int origin = (int) (90 + amount / 3);
+            int bound = (int) (300 + amount / 2);
+            int duration = origin >= bound ? 1 : origin + randomSource.nextInt(bound - origin);
+            AABB aabb = new AABB(living.blockPosition()).inflate(range);
+            for (Entity enemy : living.level().getEntities(living, aabb, entity -> entity instanceof Enemy)) {
                 if (enemy instanceof LivingEntity living1) {
                     living1.addEffect(new MobEffectInstance(TCEffects.CONFUSED, duration));
                 }
-            });
+            }
         }
         if (randomSource.nextFloat() < 0.1667F && !living.hasEffect(TCEffects.CEREBRAL_MINDTRICK)) {
             living.addEffect(new MobEffectInstance(TCEffects.CEREBRAL_MINDTRICK, 80));
