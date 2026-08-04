@@ -1,0 +1,31 @@
+{
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "chance": 0.4,
+              "condition": "minecraft:random_chance"
+            }
+          ],
+          "name": "terra_curio:hermes_boots"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "chance": 0.2,
+              "condition": "minecraft:random_chance"
+            }
+          ],
+          "name": "terra_curio:shiny_red_balloon"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "terra_curio:with/chests/village/village_plains_house"
+}

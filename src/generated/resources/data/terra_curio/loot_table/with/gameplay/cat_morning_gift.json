@@ -1,0 +1,21 @@
+{
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "chance": 0.1,
+              "condition": "minecraft:random_chance"
+            }
+          ],
+          "name": "terra_curio:worm_scarf"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "terra_curio:with/gameplay/cat_morning_gift"
+}

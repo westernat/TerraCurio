@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:tsunami_in_a_bottle",
+    "terra_curio:balloon_pufferfish"
+  ],
+  "result": {
+    "id": "terra_curio:sharkron_balloon"
+  }
+}

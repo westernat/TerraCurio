@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "minecraft:iron_chain",
+    "R": "minecraft:redstone",
+    "c": "#c:ingots/silver"
+  },
+  "pattern": [
+    " # ",
+    "cRc",
+    " c "
+  ],
+  "result": {
+    "id": "terra_curio:silver_watch"
+  }
+}

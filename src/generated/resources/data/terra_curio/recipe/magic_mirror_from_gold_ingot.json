@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "D": "minecraft:diamond",
+    "G": "minecraft:glass",
+    "g": "minecraft:gold_ingot"
+  },
+  "pattern": [
+    "gGg",
+    "GDG",
+    "gGg"
+  ],
+  "result": {
+    "id": "terra_curio:magic_mirror"
+  }
+}

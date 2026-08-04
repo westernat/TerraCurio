@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:ankh_charm",
+    "terra_curio:obsidian_shield"
+  ],
+  "result": {
+    "id": "terra_curio:ankh_shield"
+  }
+}

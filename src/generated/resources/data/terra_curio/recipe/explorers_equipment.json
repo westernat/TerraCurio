@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:hand_drill",
+    "terra_curio:shot_put"
+  ],
+  "result": {
+    "id": "terra_curio:explorers_equipment"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:power_glove",
+    "terra_curio:avenger_emblem"
+  ],
+  "result": {
+    "id": "terra_curio:mechanical_glove"
+  }
+}

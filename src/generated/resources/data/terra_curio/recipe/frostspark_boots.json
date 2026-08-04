@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:lightning_boots",
+    "terra_curio:ice_skates"
+  ],
+  "result": {
+    "id": "terra_curio:frostspark_boots"
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:panic_necklace",
+    "terra_curio:honey_comb"
+  ],
+  "result": {
+    "id": "terra_curio:sweetheart_necklace"
+  }
+}

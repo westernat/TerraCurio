@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:sniper_scope",
+    "terra_curio:putrid_scent"
+  ],
+  "result": {
+    "id": "terra_curio:recon_scope"
+  }
+}

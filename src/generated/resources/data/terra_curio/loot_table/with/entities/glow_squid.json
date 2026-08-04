@@ -1,0 +1,37 @@
+{
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "chance": 0.08,
+              "condition": "minecraft:random_chance"
+            },
+            {
+              "condition": "minecraft:killed_by_player"
+            }
+          ],
+          "name": "terra_curio:life_form_analyzer"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "chance": 0.08,
+              "condition": "minecraft:random_chance"
+            },
+            {
+              "condition": "minecraft:killed_by_player"
+            }
+          ],
+          "name": "terra_curio:jellyfish_necklace"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "terra_curio:with/entities/glow_squid"
+}

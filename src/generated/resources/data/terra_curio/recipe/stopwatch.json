@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "c": "minecraft:iron_chain",
+    "i": "minecraft:iron_ingot",
+    "r": "minecraft:redstone"
+  },
+  "pattern": [
+    "ici",
+    "iri",
+    "iii"
+  ],
+  "result": {
+    "id": "terra_curio:stopwatch"
+  }
+}

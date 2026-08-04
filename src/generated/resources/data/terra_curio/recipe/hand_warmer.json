@@ -1,0 +1,11 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "minecraft:red_wool",
+    "minecraft:white_wool",
+    "minecraft:leather"
+  ],
+  "result": {
+    "id": "terra_curio:hand_warmer"
+  }
+}

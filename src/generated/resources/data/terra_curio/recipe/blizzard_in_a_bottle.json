@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "minecraft:blue_ice",
+    "S": "terra_curio:cloud_in_a_bottle"
+  },
+  "pattern": [
+    " # ",
+    "#S#",
+    " # "
+  ],
+  "result": {
+    "id": "terra_curio:blizzard_in_a_bottle"
+  }
+}

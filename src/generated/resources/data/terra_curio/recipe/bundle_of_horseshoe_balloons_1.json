@@ -1,0 +1,11 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:yellow_horseshoe_balloon",
+    "#terra_curio:any_blizzard_balloons",
+    "#terra_curio:any_cloud_balloons"
+  ],
+  "result": {
+    "id": "terra_curio:bundle_of_horseshoe_balloons"
+  }
+}

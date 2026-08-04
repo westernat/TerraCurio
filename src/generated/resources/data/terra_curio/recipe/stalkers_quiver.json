@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:putrid_scent",
+    "terra_curio:magic_quiver"
+  ],
+  "result": {
+    "id": "terra_curio:stalkers_quiver"
+  }
+}

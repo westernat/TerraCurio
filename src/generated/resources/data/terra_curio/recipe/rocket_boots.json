@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "minecraft:fire_charge",
+    "I": "minecraft:iron_boots",
+    "i": "minecraft:iron_ingot"
+  },
+  "pattern": [
+    "#I#",
+    "i#i"
+  ],
+  "result": {
+    "id": "terra_curio:rocket_boots"
+  }
+}

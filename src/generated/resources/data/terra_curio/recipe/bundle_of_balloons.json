@@ -1,0 +1,11 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:cloud_in_a_balloon",
+    "terra_curio:sandstorm_in_a_balloon",
+    "terra_curio:blizzard_in_a_balloon"
+  ],
+  "result": {
+    "id": "terra_curio:bundle_of_balloons"
+  }
+}

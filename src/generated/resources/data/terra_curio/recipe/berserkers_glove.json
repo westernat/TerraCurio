@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:power_glove",
+    "terra_curio:flesh_knuckles"
+  ],
+  "result": {
+    "id": "terra_curio:berserkers_glove"
+  }
+}

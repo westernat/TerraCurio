@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:spectre_boots",
+    "terra_curio:flower_boots"
+  ],
+  "result": {
+    "id": "terra_curio:fairy_boots"
+  }
+}

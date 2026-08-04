@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:rifle_scope",
+    "terra_curio:destroyer_emblem"
+  ],
+  "result": {
+    "id": "terra_curio:sniper_scope"
+  }
+}

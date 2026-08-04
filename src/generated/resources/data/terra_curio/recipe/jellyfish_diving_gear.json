@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:diving_gear",
+    "terra_curio:jellyfish_necklace"
+  ],
+  "result": {
+    "id": "terra_curio:jellyfish_diving_gear"
+  }
+}

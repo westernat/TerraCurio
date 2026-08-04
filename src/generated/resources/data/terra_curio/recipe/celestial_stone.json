@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:sun_stone",
+    "terra_curio:moon_stone"
+  ],
+  "result": {
+    "id": "terra_curio:celestial_stone"
+  }
+}

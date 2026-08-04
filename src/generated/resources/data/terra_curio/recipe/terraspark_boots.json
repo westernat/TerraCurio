@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:frostspark_boots",
+    "terra_curio:lava_waders"
+  ],
+  "result": {
+    "id": "terra_curio:terraspark_boots"
+  }
+}

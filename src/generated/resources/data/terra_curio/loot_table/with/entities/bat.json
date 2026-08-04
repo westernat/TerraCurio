@@ -1,0 +1,50 @@
+{
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "chance": 0.5,
+              "condition": "minecraft:random_chance"
+            },
+            {
+              "condition": "minecraft:killed_by_player"
+            }
+          ],
+          "name": "terra_curio:radar"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "chance": 0.2,
+              "condition": "minecraft:random_chance"
+            },
+            {
+              "condition": "minecraft:killed_by_player"
+            }
+          ],
+          "name": "terra_curio:compass"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "chance": 0.2,
+              "condition": "minecraft:random_chance"
+            },
+            {
+              "condition": "minecraft:killed_by_player"
+            }
+          ],
+          "name": "terra_curio:depth_meter"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "terra_curio:with/entities/bat"
+}

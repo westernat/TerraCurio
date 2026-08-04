@@ -1,0 +1,36 @@
+{
+    "required": true,
+    "minVersion": "0.8",
+    "package": "org.confluence.terra_curio.mixin",
+    "compatibilityLevel": "JAVA_25",
+    "refmap": "terra_curio.refmap.json",
+    "mixins": [
+        "CrossbowItemMixin",
+        "EntityMixin",
+        "LivingEntityMixin",
+        "ProjectileWeaponItemMixin",
+        "ServerGamePacketListenerImplMixin",
+        "ServerPlayer$ContainerListenerMixin",
+        "SlimeBlockMixin",
+        "TargetingConditionsMixin",
+        "accessor.ItemEntityAccessor",
+        "accessor.LivingEntityAccessor"
+    ],
+    "client": [
+        "client.ClientLivingEntityMixin",
+        "client.ClientPacketListenerMixin",
+        "client.EntityClientMixin",
+        "client.LivingEntityRendererMixin",
+        "client.LivingEntityRenderStateMixin",
+        "client.LocalPlayerMixin",
+        "client.MouseHandlerMixin",
+        "client.PlayerClientMixin",
+        "client.accessor.LocalPlayerAccessor",
+        "client.accessor.MinecraftAccessor",
+        "client.accessor.ModelPartAccessor",
+        "integration.curios.CuriosClientPacketsMixin"
+    ],
+    "injectors": {
+        "defaultRequire": 1
+    }
+}

@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:cloud_in_a_bottle",
+    "terra_curio:shiny_red_balloon"
+  ],
+  "result": {
+    "id": "terra_curio:cloud_in_a_balloon"
+  }
+}

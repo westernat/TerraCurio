@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "#": "minecraft:iron_chain",
+    "R": "minecraft:redstone",
+    "c": "minecraft:gold_ingot"
+  },
+  "pattern": [
+    " # ",
+    "cRc",
+    " c "
+  ],
+  "result": {
+    "id": "terra_curio:gold_watch"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:platinum_watch",
+    "terra_curio:depth_meter",
+    "terra_curio:compass"
+  ],
+  "result": {
+    "id": "terra_curio:gps"
+  }
+}

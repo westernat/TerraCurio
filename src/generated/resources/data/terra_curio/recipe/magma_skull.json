@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:lava_charm",
+    "terra_curio:obsidian_skull"
+  ],
+  "result": {
+    "id": "terra_curio:magma_skull"
+  }
+}

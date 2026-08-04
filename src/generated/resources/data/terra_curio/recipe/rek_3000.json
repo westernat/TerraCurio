@@ -1,0 +1,11 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:radar",
+    "terra_curio:life_form_analyzer",
+    "terra_curio:tally_counter"
+  ],
+  "result": {
+    "id": "terra_curio:rek_3000"
+  }
+}

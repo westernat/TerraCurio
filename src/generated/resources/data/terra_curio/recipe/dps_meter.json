@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "i": "minecraft:iron_ingot",
+    "t": "minecraft:target"
+  },
+  "pattern": [
+    " i ",
+    "iti",
+    " i "
+  ],
+  "result": {
+    "id": "terra_curio:dps_meter"
+  }
+}

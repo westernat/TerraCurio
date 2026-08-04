@@ -1,0 +1,11 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:warrior_emblem",
+    "terra_curio:sorcerer_emblem",
+    "terra_curio:ranger_emblem"
+  ],
+  "result": {
+    "id": "terra_curio:avenger_emblem"
+  }
+}

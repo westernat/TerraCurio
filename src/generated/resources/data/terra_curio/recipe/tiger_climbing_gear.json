@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:climbing_claws",
+    "terra_curio:shoe_spikes"
+  ],
+  "result": {
+    "id": "terra_curio:tiger_climbing_gear"
+  }
+}

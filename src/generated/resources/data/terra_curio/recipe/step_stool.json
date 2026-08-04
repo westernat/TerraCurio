@@ -1,0 +1,18 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    {
+      "neoforge:ingredient_type": "confluence_magic_lib:amount_ingredient",
+      "count": 2,
+      "ingredient": "minecraft:stick"
+    },
+    {
+      "neoforge:ingredient_type": "confluence_magic_lib:amount_ingredient",
+      "count": 5,
+      "ingredient": "minecraft:scaffolding"
+    }
+  ],
+  "result": {
+    "id": "terra_curio:step_stool"
+  }
+}

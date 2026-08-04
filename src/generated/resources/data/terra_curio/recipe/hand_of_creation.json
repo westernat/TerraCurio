@@ -1,0 +1,12 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:step_stool",
+    "terra_curio:architect_gizmo_pack",
+    "terra_curio:ancient_chisel",
+    "terra_curio:treasure_magnet"
+  ],
+  "result": {
+    "id": "terra_curio:hand_of_creation"
+  }
+}

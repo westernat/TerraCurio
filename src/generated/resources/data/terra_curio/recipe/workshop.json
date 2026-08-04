@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "a": "minecraft:red_wool",
+    "b": "minecraft:crafting_table",
+    "c": "minecraft:stick",
+    "d": "minecraft:bookshelf"
+  },
+  "pattern": [
+    "aba",
+    "ada",
+    "c c"
+  ],
+  "result": {
+    "id": "terra_curio:workshop"
+  }
+}

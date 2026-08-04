@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:blindfold",
+    "terra_curio:flashlight"
+  ],
+  "result": {
+    "id": "terra_curio:searchlight"
+  }
+}

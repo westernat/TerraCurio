@@ -1,0 +1,10 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:frog_leg",
+    "terra_curio:flipper"
+  ],
+  "result": {
+    "id": "terra_curio:frog_flipper"
+  }
+}

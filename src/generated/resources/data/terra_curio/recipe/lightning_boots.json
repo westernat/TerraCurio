@@ -1,0 +1,11 @@
+{
+  "type": "terra_curio:workshop",
+  "ingredients": [
+    "terra_curio:spectre_boots",
+    "terra_curio:aglet",
+    "terra_curio:anklet_of_the_wind"
+  ],
+  "result": {
+    "id": "terra_curio:lightning_boots"
+  }
+}
