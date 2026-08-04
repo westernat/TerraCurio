@@ -174,7 +174,8 @@ public final class TCUtils {
             float range = Mth.nextFloat(randomSource, rangeMin, rangeMax) / 24;
             int origin = (int) (90 + amount / 3);
             int bound = (int) (300 + amount / 2);
-            int duration = origin >= bound ? 1 : origin + randomSource.nextInt(bound - origin);
+            if (origin >= bound) return amount;
+            int duration = origin + randomSource.nextInt(bound - origin);
             AABB aabb = new AABB(living.blockPosition()).inflate(range);
             for (Entity enemy : living.level().getEntities(living, aabb, entity -> entity instanceof Enemy)) {
                 if (enemy instanceof LivingEntity living1) {
