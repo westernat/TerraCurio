@@ -6,7 +6,7 @@ plugins {
     id 'net.neoforged.moddev.legacyforge' version '2.0.141'
 }
 
-version = mod_version + "-forge"
+version = mod_version + "+" + minecraft_version
 group = mod_group_id
 
 repositories {
@@ -14,7 +14,7 @@ repositories {
 }
 
 base {
-    archivesName = mod_id
+    archivesName = "TerraCurio-forge"
 }
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(17)
@@ -119,6 +119,7 @@ boolean slim = false
 
 dependencies {
     modImplementation "top.theillusivec4.curios:curios-forge:${curios_version}"
+    modImplementation project(":PortLib")
     modCompileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     modCompileOnly("mezz.jei:jei-${minecraft_version}-forge-api:${jei_version}")
     modRuntimeOnly("mezz.jei:jei-${minecraft_version}-forge:${jei_version}")
@@ -127,15 +128,12 @@ dependencies {
     if (slim) {
         modImplementation("org.mesdag:ParticleStorm:${particle_storm_version}-forge")
         modImplementation project(":Confluence-Magic-Lib")
-        modImplementation project(":PortLib")
         implementation("io.github.llamalad7:mixinextras-forge:0.5.3")
     } else {
         modImplementation("org.mesdag:ParticleStorm:${particle_storm_version}-forge")
         jarJar("org.mesdag:ParticleStorm:${particle_storm_version}-forge")
         modImplementation(project(":Confluence-Magic-Lib"))
         jarJar(project(":Confluence-Magic-Lib"))
-        modImplementation(project(":PortLib"))
-        jarJar(project(":PortLib"))
         jarJar(implementation("io.github.llamalad7:mixinextras-forge:0.5.3"))
     }
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
