@@ -30,3 +30,10 @@ mandatory=true
 versionRange = "[${curios_version},)"
 ordering = "NONE"
 side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "portlib"
+mandatory=true
+versionRange = "[1.0.0,)"
+ordering = "NONE"
+side = "BOTH"
