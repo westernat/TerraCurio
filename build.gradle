@@ -19,6 +19,8 @@ base {
 
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
+boolean isRunningInIdea = System.getProperty("idea.active") == "true"
+
 neoForge {
     // Specify the version of NeoForge to use.
     version = project.neo_version
@@ -77,6 +79,16 @@ neoForge {
             // You can set various levels here.
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
             logLevel = org.slf4j.event.Level.DEBUG
+
+            jvmArguments.addAll([
+                    // 忽略无效指令，避免有的人没安装 JetBrain Runtime 无法启动游戏
+                    "-XX:+IgnoreUnrecognizedVMOptions",
+                    // 启用 JetBrain Runtime 热重载功能
+                    "-XX:+AllowEnhancedClassRedefinition"
+            ])
+            if (isRunningInIdea) {
+                systemProperty "terminal.jline", "true"
+            }
         }
     }
 
@@ -127,12 +139,20 @@ repositories {
         name "org.confluenceSnapshots"
         url "https://maven.confluence.ink/snapshots"
     }
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+        content {
+            includeGroup("software.bernie.geckolib")
+        }
+    }
 }
 
 boolean slim = true
 
 dependencies {
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+    implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     if (slim) {
         implementation("org.mesdag:ParticleStorm:${particle_storm_version}")
         implementation(project(":Confluence-Magic-Lib"))

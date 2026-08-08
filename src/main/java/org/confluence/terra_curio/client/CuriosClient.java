@@ -9,6 +9,7 @@ import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
+import net.neoforged.neoforge.registries.DeferredItem;
 import org.confluence.terra_curio.client.model.accessory.*;
 import org.confluence.terra_curio.client.renderer.accessory.*;
 import org.confluence.terra_curio.common.init.TCItems;
@@ -32,6 +33,17 @@ public final class CuriosClient {
         CuriosRendererRegistry.register(TCItems.MOON_CHARM.get(), () -> new WerewolfRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.MOON_SHELL.get(), () -> new MoonShellRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.CELESTIAL_SHELL.get(), () -> new MoonShellRenderer(entityModels));
+
+        normalBalloon(TCItems.BLIZZARD_IN_A_BALLOON);
+        normalBalloon(TCItems.CLOUD_IN_A_BALLOON);
+        normalBalloon(TCItems.FART_IN_A_BALLOON);
+        normalBalloon(TCItems.HONEY_BALLOON);
+        normalBalloon(TCItems.SANDSTORM_IN_A_BALLOON);
+        normalBalloon(TCItems.SHINY_RED_BALLOON);
+    }
+
+    private static void normalBalloon(DeferredItem<?> item) {
+        CuriosRendererRegistry.register(item.get(), () -> new NormalBalloonGeoRenderer(item.getId()));
     }
 
     public static void registerLayers(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> layerDefinition) {
