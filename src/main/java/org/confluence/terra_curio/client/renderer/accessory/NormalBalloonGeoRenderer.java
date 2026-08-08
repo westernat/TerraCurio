@@ -23,7 +23,7 @@ import org.joml.Matrix4f;
 public class NormalBalloonGeoRenderer extends AccessoryGeoRenderer {
     public static final ResourceLocation MODEL = TerraCurio.asResource("geo/accessory/normal_balloon.geo.json");
 
-    protected final Int2ObjectMap<BallonRenderState> states = new Int2ObjectOpenHashMap<>();
+    protected final Int2ObjectMap<BallonRenderState> states;
     protected final long seed;
     protected final RandomSource random;
 
@@ -44,6 +44,8 @@ public class NormalBalloonGeoRenderer extends AccessoryGeoRenderer {
 
     public NormalBalloonGeoRenderer(ResourceLocation id) {
         super(new AccessoryGeoModel(MODEL, AccessoryGeoModel.createTextureResource(id)));
+        this.states = new Int2ObjectOpenHashMap<>();
+        states.defaultReturnValue(new BallonRenderState());
         this.seed = RandomSupport.generateUniqueSeed();
         this.random = RandomSource.create(seed);
     }
