@@ -11,7 +11,9 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
+import org.confluence.lib.common.LibTags;
 import org.confluence.terra_curio.TerraCurio;
+import org.jetbrains.annotations.ApiStatus;
 import top.theillusivec4.curios.api.CuriosApi;
 
 public final class TCTags {
@@ -25,5 +27,8 @@ public final class TCTags {
     public static final TagKey<Fluid> LAVA_LIKE_WALK = FluidTags.create(TerraCurio.asResource("lava_like_walk"));
     public static final TagKey<DamageType> HARMFUL_EFFECT = TagKey.create(Registries.DAMAGE_TYPE, TerraCurio.asResource("harmful_effect"));
     public static final TagKey<EntityType<?>> NOTHING = TagKey.create(Registries.ENTITY_TYPE, TerraCurio.asResource("nothing"));
-    public static final TagKey<EntityType<?>> SLIME = TagKey.create(Registries.ENTITY_TYPE, TerraCurio.asResource("slime"));
+
+    @Deprecated(since = "1.3.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.4.0")
+    public static final TagKey<EntityType<?>> SLIME = LibTags.EntityTypes.SLIME;
 }

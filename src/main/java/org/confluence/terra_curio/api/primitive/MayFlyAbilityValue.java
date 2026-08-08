@@ -41,6 +41,14 @@ public record MayFlyAbilityValue(Map<ResourceKey<Item>, FlyStack> flyStacks) imp
         return Map.of(ResourceKey.create(Registries.ITEM, TerraCurio.asResource(path)), new FlyStack(1000, flySpeed, flyTicks, couldGlide, horizontalFlight));
     }
 
+    public static Map<ResourceKey<Item>, FlyStack> of(ResourceKey<Item> key, int order, float flySpeed, int flyTicks, boolean couldGlide, boolean horizontalFlight) {
+        return Map.of(key, new FlyStack(order, flySpeed, flyTicks, couldGlide, horizontalFlight));
+    }
+
+    public static Map<ResourceKey<Item>, FlyStack> of(ResourceKey<Item> key, float flySpeed, int flyTicks, boolean couldGlide, boolean horizontalFlight) {
+        return Map.of(key, new FlyStack(1000, flySpeed, flyTicks, couldGlide, horizontalFlight));
+    }
+
     public record FlyStack(int older, float flySpeed, int flyTicks, boolean couldGlide, boolean horizontalFlight) {
         public static final Codec<FlyStack> CODEC = RecordCodecBuilder.create(instance -> instance.group(
                 Codec.INT.lenientOptionalFieldOf("order", 1000).forGetter(FlyStack::older),

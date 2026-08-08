@@ -26,13 +26,15 @@ import net.neoforged.neoforge.event.entity.item.ItemTossEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import org.confluence.lib.api.event.ArmorPenetrationEvent;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
-import org.confluence.terra_curio.common.init.*;
+import org.confluence.terra_curio.common.init.TCCommonConfigs;
+import org.confluence.terra_curio.common.init.TCItems;
+import org.confluence.terra_curio.common.init.TCTags;
+import org.confluence.terra_curio.common.init.TCTriggers;
 import org.confluence.terra_curio.common.item.DivingHelmet;
 import org.confluence.terra_curio.common.item.curio.combat.PaladinsShield;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
@@ -230,13 +232,6 @@ public final class TCGameEvents {
             if (TCUtils.getValue(event.getEntity(), TCItems.EFFECT$IMMUNITIES).contains(event.getEffectInstance().getEffect())) {
                 event.setResult(MobEffectEvent.Applicable.Result.DO_NOT_APPLY);
             }
-        }
-    }
-
-    @SubscribeEvent
-    public static void armorPenetration(ArmorPenetrationEvent event) {
-        if (event.getDamageSource().is(TCDamageTypes.STAR_CLOAK)) {
-            event.setPenetration(event.getPenetration() - 3);
         }
     }
 }
