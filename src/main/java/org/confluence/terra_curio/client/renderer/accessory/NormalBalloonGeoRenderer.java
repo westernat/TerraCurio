@@ -14,6 +14,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.LightLayer;
+import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.model.accessory.AccessoryGeoModel;
@@ -23,7 +24,8 @@ public class NormalBalloonGeoRenderer extends AccessoryGeoRenderer {
     public static final ResourceLocation MODEL = TerraCurio.asResource("geo/accessory/normal_balloon.geo.json");
 
     protected final Int2ObjectMap<BallonRenderState> states = new Int2ObjectOpenHashMap<>();
-    protected final RandomSource random = RandomSource.create(260808);
+    protected final long seed;
+    protected final RandomSource random;
 
     public static class BallonRenderState {
         public float x;
@@ -42,6 +44,8 @@ public class NormalBalloonGeoRenderer extends AccessoryGeoRenderer {
 
     public NormalBalloonGeoRenderer(ResourceLocation id) {
         super(new AccessoryGeoModel(MODEL, AccessoryGeoModel.createTextureResource(id)));
+        this.seed = RandomSupport.generateUniqueSeed();
+        this.random = RandomSource.create(seed);
     }
 
     @Override
@@ -55,13 +59,13 @@ public class NormalBalloonGeoRenderer extends AccessoryGeoRenderer {
         float sin = Mth.sin(yawRad);
         float localVelX = state.x * cos + state.z * sin;
         float localVelZ = -state.x * sin + state.z * cos;
-        float angleOffset = slotIndex * 15.0F * Mth.DEG_TO_RAD;
+        float angleOffset = (slotIndex - 2) * 13.0F * Mth.DEG_TO_RAD;
         float staticX = Mth.cos(angleOffset);
         float staticZ = Mth.sin(angleOffset);
         float xDif = -(localVelX + staticX);
-        random.setSeed(260808);
+        random.setSeed(seed * living.getId());
         random.consumeCount(slotIndex);
-        float randomY = 0.5F + random.nextFloat() * 0.5F;
+        float randomY = 1 + random.nextFloat();
         float yDif = state.y - randomY + Mth.sin(staticX + ageInTick * 0.05F) * 0.125F;
         float zDif = -(localVelZ + staticZ);
         Vec3 ropeGripPosition = living.getRopeHoldPosition(partialTick);
