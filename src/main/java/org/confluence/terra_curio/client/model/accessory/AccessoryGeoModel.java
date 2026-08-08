@@ -11,7 +11,7 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
 
 public class AccessoryGeoModel extends GeoModel<AccessoryGeoModel> implements GeoAnimatable {
-    private static final ResourceLocation ANIMATION = TerraCurio.asResource("animations/nothing.animation.json");
+    protected static final ResourceLocation ANIMATION = TerraCurio.asResource("animations/nothing.animation.json");
 
     private final ResourceLocation model;
     private final ResourceLocation texture;
