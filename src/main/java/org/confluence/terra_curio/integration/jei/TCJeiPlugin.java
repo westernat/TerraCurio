@@ -8,14 +8,11 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeManager;
-import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.init.TCRecipes;
-import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 
 @JeiPlugin
 public final class TCJeiPlugin implements IModPlugin {
@@ -34,19 +31,6 @@ public final class TCJeiPlugin implements IModPlugin {
 
     @Override
     public void registerRecipes(IRecipeRegistration registration) {
-        if (!ConfluenceMagicLib.IS_CONFLUENCE_LOAD) {
-            registration.addItemStackInfo(TCItems.DEMON_HEART.get().getDefaultInstance(), Component.translatable("info.tooltip.item.terra_curio.demon_heart.0"));
-            registration.addItemStackInfo(TCItems.DIVING_HELMET.get().getDefaultInstance(), Component.translatable("info.tooltip.item.terra_curio.diving_helmet.0"), Component.translatable("info.tooltip.item.terra_curio.diving_helmet.1"));
-            TCItems.CURIOS.getEntries().forEach(entry -> {
-                if (entry.get() instanceof BaseCurioItem curioItem && curioItem.getJeiInformationCount() > 0) {
-                    Component[] information = new Component[curioItem.getJeiInformationCount()];
-                    for (int i = 0; i < information.length; i++) {
-                        information[i] = Component.translatable("info.tooltip." + curioItem.getDescriptionId() + "." + i);
-                    }
-                    registration.addItemStackInfo(entry.get().getDefaultInstance(), information);
-                }
-            });
-        }
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null) return;
         RecipeManager recipeManager = level.getRecipeManager();

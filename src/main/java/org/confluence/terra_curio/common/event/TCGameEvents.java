@@ -17,13 +17,13 @@ import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
 import org.confluence.lib.api.event.ArmorPenetrationEvent;
+import org.confluence.lib.common.LibDamageTypes;
 import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.TCCommonConfigs;
 import org.confluence.terra_curio.common.advancement.CuriosEquippedTrigger;
 import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
-import org.confluence.terra_curio.common.init.TCDamageTypes;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.init.TCTags;
 import org.confluence.terra_curio.common.item.DivingHelmet;
@@ -237,7 +237,7 @@ public final class TCGameEvents {
     }
 
     private static void armorPenetration(ArmorPenetrationEvent event) {
-        if (event.getDamageSource().is(TCDamageTypes.STAR_CLOAK)) {
+        if (event.getDamageSource().is(LibDamageTypes.STAR_CLOAK)) {
             event.setPenetration(event.getPenetration() - 3);
         }
     }

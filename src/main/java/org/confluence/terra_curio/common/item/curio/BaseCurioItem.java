@@ -126,16 +126,12 @@ public class BaseCurioItem extends Item implements ICurioItem {
     }
 
     protected void appendInfo(ItemStack stack, List<Component> tooltipComponents) {
-        if (TCClientConfigs.displayInfoTooltip && builder != null && builder.jeiInformationCount > 0) {
+        if (TCClientConfigs.displayInfoTooltip && builder != null && builder.infoTooltipCount > 0) {
             tooltipComponents.add(Component.empty());
-            for (int i = 0; i < builder.jeiInformationCount; i++) {
+            for (int i = 0; i < builder.infoTooltipCount; i++) {
                 tooltipComponents.add(Component.translatable("info.tooltip." + stack.getDescriptionId() + "." + i).withStyle(ChatFormatting.GREEN));
             }
         }
-    }
-
-    public int getJeiInformationCount() {
-        return builder == null ? 0 : builder.jeiInformationCount;
     }
 
     @Override
@@ -182,7 +178,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         private transient ImmutableMultimap.Builder<Attribute, AttributeModifier> attributesBuilder = ImmutableMultimap.builder();
         private Multimap<Attribute, AttributeModifier> attributes;
         private ModRarity rarity = ModRarity.BLUE;
-        private int jeiInformationCount = 1;
+        private int infoTooltipCount = 1;
         private boolean makePiglinsNeutral = false;
         private EquipmentSlot equipmentSlot = null;
 
@@ -293,8 +289,8 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return tooltips(TerraCurio.MODID, extra);
         }
 
-        public Builder jeiInfos(int count) {
-            this.jeiInformationCount = count;
+        public Builder infos(int count) {
+            this.infoTooltipCount = count;
             return this;
         }
 

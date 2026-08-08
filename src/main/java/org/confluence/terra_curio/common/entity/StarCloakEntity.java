@@ -12,9 +12,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.lib.common.LibDamageTypes;
 import org.confluence.lib.util.LibEntityUtils;
 import org.confluence.lib.util.LibUtils;
-import org.confluence.terra_curio.common.init.TCDamageTypes;
 import org.confluence.terra_curio.common.init.TCEntities;
 
 public class StarCloakEntity extends Projectile {
@@ -84,7 +84,7 @@ public class StarCloakEntity extends Projectile {
         if (isManaState()) {
             LibUtils.forMixin$Inject();
         } else {
-            pResult.getEntity().hurt(TCDamageTypes.of(level(), TCDamageTypes.STAR_CLOAK, getOwner()), 10.0F);
+            pResult.getEntity().hurt(LibDamageTypes.of(level(), LibDamageTypes.STAR_CLOAK, getOwner()), 10.0F);
         }
     }
 

@@ -1,24 +1,16 @@
 package org.confluence.terra_curio.common.datagen;
 
-import com.google.gson.JsonObject;
-import net.minecraft.data.CachedOutput;
-import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.data.LanguageProvider;
+import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCBlocks;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.common.init.TCEntities;
 import org.confluence.terra_curio.common.init.TCItems;
 
-import java.nio.file.Path;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class TCLanguageProvider extends LanguageProvider {
     public static final String[] ALL_INFO_EN = {
@@ -63,22 +55,18 @@ public class TCLanguageProvider extends LanguageProvider {
             "compass",
             "depth_meter"
     };
-    private final Map<String, String> enData = new TreeMap<>();
-    private final Map<String, String> zhData = new TreeMap<>();
-    private final PackOutput output;
-    private final String locale;
+    private final boolean isEn;
 
-    public TCLanguageProvider(PackOutput output, String locale) {
-        super(output, TerraCurio.MODID, locale);
-        this.output = output;
-        this.locale = locale;
+    public TCLanguageProvider(PackOutput output, boolean isEn) {
+        super(output, TerraCurio.MODID, isEn ? "en_us" : "zh_cn");
+        this.isEn = isEn;
     }
 
     @Override
     protected void addTranslations() {
         add("creativetab.terra_curio", "Terra Curio", "泰拉饰品");
 
-        add("tooltip.terra_curio.requires_mod_loaded", "This item requires any of the following mods: [%s]", "该物品需要以下任意模组：[%s]");
+        add("tooltip.terra_curio.requires_mod_loaded", "This item requires any of the following mods: %s", "该物品需要以下任意模组：%s");
         add("tooltip.terra_curio.hold_and_scroll", "Hold [Left Shift] and scroll the mouse wheel", "按住[左Shift]并滚动鼠标滚轮");
         add("tooltip.terra_curio.right_click", "Right click it on inventory to toggle", "在物品栏内右键以开关");
         for (int i = 0; i < ALL_INFO_EN.length; i++) {
@@ -116,8 +104,6 @@ public class TCLanguageProvider extends LanguageProvider {
         add("info.terra_curio.weather_radio.thunder", "Weather: Thunder", "天气: 雷暴");
         add("info.terra_curio.weather_radio.thunder_snow", "Weather: Thunder Snow", "天气: 雷打雪");
         add("info.terra_curio.fishermans_pocket_guide", "Fishing Power: %s", "渔力: %s");
-
-        add("death.attack.star_cloak", "%1$s was squashed by a falling star", "%1%s 被坠星压扁了");
 
         add("key.terra_curio.gameplay", "Terra Curio", "泰拉饰品");
         add("key.terra_curio.metal_detector", "Detect Metal", "检测矿物");
@@ -625,7 +611,7 @@ public class TCLanguageProvider extends LanguageProvider {
                         "对熔岩免疫7秒",
                         "减少因触碰熔岩而造成的伤害"
                 });
-        tooltipAndInfo(TCItems.MOON_STONE, "月亮石", "During nighttime, grants minor increase.", "在夜晚时略微增强属性值", "It has a Chance to be dropped from Phantom.", "它有几率从幻翼身上掉落。");
+        tooltipAndInfo(TCItems.MOON_STONE, "月亮石", "It has a Chance to be dropped from Phantom.", "在夜晚时略微增强属性值", "It has a Chance to be dropped from Phantom.", "它有几率从幻翼身上掉落。");
         onlyTooltip(TCItems.NUTRIENT_SOLUTION, "营养液", "Immunity to Weakness and Hunger", "对虚弱和饥饿免疫");
         onlyTooltips(TCItems.OBSIDIAN_HORSESHOE, "黑曜石马掌",
                 new String[]{
@@ -755,10 +741,18 @@ public class TCLanguageProvider extends LanguageProvider {
         onlyTooltip(TCItems.SEARCHLIGHT, "探照灯", "Immunity to Blindness and Darkness", "对失明和黑暗免疫");
         tooltipAndInfo(TCItems.SEXTANT, "六分仪", "Displays the phase of the moon", "显示月相", "This item can be located in the chests found within Fisherman Villagers' houses.", "这件物品可以在渔夫村民家中的箱子中找到。");
         onlyInfo(TCItems.SHACKLE, "镣铐", "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。");
-        tooltipsAndInfo(TCItems.RAM_RUNE, "牧羊符文",
-            new String[]{"Jump while holding crouch to slam downward","Slamming into the ground will deal damage to nearby enemies"},
-            new String[]{"按住潜行键跳跃即可向下猛击","猛击地面会对附近的敌人造成伤害"},
-            "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。(TODO)");
+        /*tooltipsAndInfo*/onlyTooltips(TCItems.RAM_RUNE, "牧羊符文",
+                new String[]{
+                        "Jump while holding crouch to slam downward",
+                        "Slamming into the ground will deal damage to nearby enemies"
+                },
+                new String[]{
+                        "按住潜行键跳跃即可向下猛击",
+                        "猛击地面会对附近的敌人造成伤害"
+                }/*,
+                "It can be found in Chests in the Dungeon.",
+                "它可以在地牢中的宝箱中找到。"*/
+        );
         onlyInfo(TCItems.SHARK_TOOTH_NECKLACE, "鲨牙项链", "It has a chance to drop from Drowned.", "它有几率从溺尸身上掉落。");
         onlyTooltips(TCItems.SHARKRON_BALLOON, "鲨鱼龙气球",
                 new String[]{
@@ -805,18 +799,6 @@ public class TCLanguageProvider extends LanguageProvider {
                         "增加受到伤害后的无敌时间",
                         "受到伤害后会使星星坠落"
                 });
-        tooltipsAndInfo(TCItems.MAGILUMINESCENCE, "魔光护符",
-                new String[]{
-                        "Increases movement speed and acceleration",
-                        "'A brief light in my dark life.'"
-                },
-                new String[]{
-                        "提高移动速度和加速度",
-                        "‘我黑暗生命中的一道短暂曙光’"
-                },
-                "It can be found in End City Chests.",
-                "它可以在末地城的宝箱中找到。"
-        );
         tooltipsAndInfo(TCItems.STEP_STOOL, "梯凳",
                 new String[]{
                         "Press [%s] to stand higher, and press Crouch key to down",
@@ -920,32 +902,32 @@ public class TCLanguageProvider extends LanguageProvider {
         onlyTooltip(TCItems.MOON_SHELL, "月亮贝壳", "Turns the holder into a werewolf at night and a merfolk when entering water", "在晚上将持有者变成狼人，入水时将持有者变成人鱼");
         onlyTooltip(TCItems.CELESTIAL_SHELL, "天界壳", "Turns the holder into a werewolf at night and a merfolk when entering water", "在晚上将持有者变成狼人，入水时将持有者变成人鱼");
 
-        if (locale.equals("en_us")) {
-            sidedAdd(TCItems.EXPLORERS_EQUIPMENT.get().getDescriptionId(), "Explorer's Equipment", enData);
-            sidedAdd(TCItems.PALADINS_SHIELD.get().getDescriptionId(), "Paladin's Shield", enData);
-            sidedAdd(TCItems.STALKERS_QUIVER.get().getDescriptionId(), "Stalker's Quiver", enData);
-            sidedAdd(TCItems.DPS_METER.get().getDescriptionId(), "DPS Meter", enData);
-            sidedAdd(TCItems.FISHERMANS_POCKET_GUIDE.get().getDescriptionId(), "Fisherman's Pocket Guide", enData);
-            sidedAdd(TCItems.GPS.get().getDescriptionId(), "GPS", enData);
-            sidedAdd(TCItems.PDA.get().getDescriptionId(), "PDA", enData);
-            sidedAdd(TCItems.REK_3000.get().getDescriptionId(), "R.E.K.3000", enData);
-            sidedAdd(TCItems.NEPTUNES_SHELL.get().getDescriptionId(), "Neptune's Shell", enData);
-            sidedAdd(TCItems.DIVING_HELMET.get().getDescriptionId(), "Diving Helmet", enData);
+        if (isEn) {
+            add(TCItems.EXPLORERS_EQUIPMENT.get().getDescriptionId(), "Explorer's Equipment");
+            add(TCItems.PALADINS_SHIELD.get().getDescriptionId(), "Paladin's Shield");
+            add(TCItems.STALKERS_QUIVER.get().getDescriptionId(), "Stalker's Quiver");
+            add(TCItems.DPS_METER.get().getDescriptionId(), "DPS Meter");
+            add(TCItems.FISHERMANS_POCKET_GUIDE.get().getDescriptionId(), "Fisherman's Pocket Guide");
+            add(TCItems.GPS.get().getDescriptionId(), "GPS");
+            add(TCItems.PDA.get().getDescriptionId(), "PDA");
+            add(TCItems.REK_3000.get().getDescriptionId(), "R.E.K.3000");
+            add(TCItems.NEPTUNES_SHELL.get().getDescriptionId(), "Neptune's Shell");
+            add(TCItems.DIVING_HELMET.get().getDescriptionId(), "Diving Helmet");
             TCItems.CURIOS.getEntries().forEach(item -> {
                 Item item1 = item.get();
-                sidedAdd(item1.getDescriptionId(), toTitleCase(item.getId().getPath()), enData);
+                add(item1.getDescriptionId(), LibUtils.toTitleCase(item.getId().getPath()));
             });
-            TCEntities.ENTITIES.getEntries().forEach(entity -> sidedAdd(entity.get().getDescriptionId(), toTitleCase(entity.getId().getPath()), enData));
-            TCEffects.EFFECTS.getEntries().forEach(effect -> sidedAdd(effect.get().getDescriptionId(), toTitleCase(effect.getId().getPath()), enData));
-        } else if (locale.equals("zh_cn")) {
-            sidedAdd(TCEffects.CONFUSED.get().getDescriptionId(), "困惑", zhData);
-            sidedAdd(TCEffects.CEREBRAL_MINDTRICK.get().getDescriptionId(), "控脑术", zhData);
-            sidedAdd(TCEffects.HONEY.get().getDescriptionId(), "蜂蜜", zhData);
-            sidedAdd(TCEffects.PALADINS_SHIELD.get().getDescriptionId(), "圣骑士护盾", zhData);
-            sidedAdd(TCEffects.GRAVITATION.get().getDescriptionId(), "重力", zhData);
-            sidedAdd(TCEntities.BEE_PROJECTILE.get().getDescriptionId(), "蜜蜂射弹", zhData);
-            sidedAdd(TCEntities.STAR_CLOAK.get().getDescriptionId(), "星星斗篷", zhData);
-            sidedAdd(TCEntities.STEP_STOOL.get().getDescriptionId(), "梯凳", zhData);
+            TCEntities.ENTITIES.getEntries().forEach(entity -> add(entity.get().getDescriptionId(), LibUtils.toTitleCase(entity.getId().getPath())));
+            TCEffects.EFFECTS.getEntries().forEach(effect -> add(effect.get().getDescriptionId(), LibUtils.toTitleCase(effect.getId().getPath())));
+        } else {
+            add(TCEffects.CONFUSED.get().getDescriptionId(), "困惑");
+            add(TCEffects.CEREBRAL_MINDTRICK.get().getDescriptionId(), "控脑术");
+            add(TCEffects.HONEY.get().getDescriptionId(), "蜂蜜");
+            add(TCEffects.PALADINS_SHIELD.get().getDescriptionId(), "圣骑士护盾");
+            add(TCEffects.GRAVITATION.get().getDescriptionId(), "重力");
+            add(TCEntities.BEE_PROJECTILE.get().getDescriptionId(), "蜜蜂射弹");
+            add(TCEntities.STAR_CLOAK.get().getDescriptionId(), "星星斗篷");
+            add(TCEntities.STEP_STOOL.get().getDescriptionId(), "梯凳");
         }
         add(TCBlocks.WORKSHOP.get().getDescriptionId(), "Workshop", "工匠作坊");
 
@@ -991,84 +973,59 @@ public class TCLanguageProvider extends LanguageProvider {
         add("terra_curio.configuration.autoAttack.tooltip", "Auto Attack", "启用近战武器自动挥动");
     }
 
-    private static String toTitleCase(String raw) {
-        return Arrays.stream(raw.split("_"))
-                .map(word -> Character.toUpperCase(word.charAt(0)) + word.substring(1).toLowerCase())
-                .collect(Collectors.joining(" "));
-    }
-
-    @Override
-    public CompletableFuture<?> run(CachedOutput cache) {
-        addTranslations();
-        Path path = output.getOutputFolder(PackOutput.Target.RESOURCE_PACK).resolve(TerraCurio.MODID).resolve("lang");
-        if (locale.equals("en_us") && !enData.isEmpty()) {
-            return save(enData, cache, path.resolve("en_us.json"));
-        }
-        if (locale.equals("zh_cn") && !zhData.isEmpty()) {
-            return save(zhData, cache, path.resolve("zh_cn.json"));
-        }
-        return CompletableFuture.allOf();
-    }
-
-    private CompletableFuture<?> save(Map<String, String> data, CachedOutput cache, Path target) {
-        JsonObject json = new JsonObject();
-        data.forEach(json::addProperty);
-        return DataProvider.saveStable(cache, json, target);
-    }
-
     private void tooltipsAndInfos(Supplier<? extends Item> item, String zhName, String[] enTooltip, String[] zhTooltip, String[] enInfo, String[] zhInfo) {
         String key = item.get().getDescriptionId();
-        sidedAdd(key, zhName, zhData);
+        if (!isEn) add(key, zhName);
         addTooltips(key, enTooltip, zhTooltip);
         addInfos(key, enInfo, zhInfo);
     }
 
     private void tooltipsAndInfo(Supplier<? extends Item> item, String zhName, String[] enTooltip, String[] zhTooltip, String enInfo, String zhInfo) {
         String key = item.get().getDescriptionId();
-        sidedAdd(key, zhName, zhData);
+        if (!isEn) add(key, zhName);
         addTooltips(key, enTooltip, zhTooltip);
         add("info.tooltip." + key + ".0", enInfo, zhInfo);
     }
 
     private void tooltipAndInfo(Supplier<? extends Item> item, String zhName, String enTooltip, String zhTooltip, String enInfo, String zhInfo) {
         String key = item.get().getDescriptionId();
-        sidedAdd(key, zhName, zhData);
+        if (!isEn) add(key, zhName);
         add("tooltip." + key + ".0", enTooltip, zhTooltip);
         add("info.tooltip." + key + ".0", enInfo, zhInfo);
     }
 
     private void tooltipAndInfos(Supplier<? extends Item> item, String zhName, String enTooltip, String zhTooltip, String[] enInfo, String[] zhInfo) {
         String key = item.get().getDescriptionId();
-        sidedAdd(key, zhName, zhData);
+        if (!isEn) add(key, zhName);
         add("tooltip." + key + ".0", enTooltip, zhTooltip);
         addInfos(key, enInfo, zhInfo);
     }
 
     private void onlyTooltips(Supplier<? extends Item> item, String zhName, String[] enTooltip, String[] zhTooltip) {
         String key = item.get().getDescriptionId();
-        sidedAdd(key, zhName, zhData);
+        if (!isEn) add(key, zhName);
         addTooltips(key, enTooltip, zhTooltip);
     }
 
     private void onlyInfos(Supplier<? extends Item> item, String zhName, String[] enInfo, String[] zhInfo) {
         String key = item.get().getDescriptionId();
-        sidedAdd(key, zhName, zhData);
+        if (!isEn) add(key, zhName);
         addInfos(key, enInfo, zhInfo);
     }
 
     private void onlyZhName(Supplier<? extends Item> item, String zhName) {
-        sidedAdd(item.get().getDescriptionId(), zhName, zhData);
+        if (!isEn) add(item.get().getDescriptionId(), zhName);
     }
 
     private void onlyTooltip(Supplier<? extends Item> item, String zhName, String enTooltip, String zhTooltip) {
         String key = item.get().getDescriptionId();
-        sidedAdd(key, zhName, zhData);
+        if (!isEn) add(key, zhName);
         add("tooltip." + key + ".0", enTooltip, zhTooltip);
     }
 
     private void onlyInfo(Supplier<? extends Item> item, String zhName, String enInfo, String zhInfo) {
         String key = item.get().getDescriptionId();
-        sidedAdd(key, zhName, zhData);
+        if (!isEn) add(key, zhName);
         add("info.tooltip." + key + ".0", enInfo, zhInfo);
     }
 
@@ -1099,14 +1056,13 @@ public class TCLanguageProvider extends LanguageProvider {
     }
 
     private void add(String key, String en, String zh) {
-        if (locale.equals("en_us") && !enData.containsKey(key)) {
-            enData.put(key, en);
-        } else if (locale.equals("zh_cn") && !zhData.containsKey(key)) {
-            zhData.put(key, zh);
-        }
+        add(key, isEn ? en : zh);
     }
 
-    private void sidedAdd(String key, String value, Map<String, String> side) {
-        if (!side.containsKey(key)) side.put(key, value);
+    @Override
+    public void add(String key, String value) {
+        try {
+            super.add(key, value);
+        } catch (Exception ignored) {}
     }
 }
