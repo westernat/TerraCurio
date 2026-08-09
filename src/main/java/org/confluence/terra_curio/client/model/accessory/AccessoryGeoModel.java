@@ -11,12 +11,12 @@ import software.bernie.geckolib.cache.object.BakedGeoModel;
 import software.bernie.geckolib.model.GeoModel;
 
 public class AccessoryGeoModel extends GeoModel<AccessoryGeoModel> implements GeoAnimatable {
-    protected static final ResourceLocation ANIMATION = TerraCurio.asResource("animations/nothing.animation.json");
+    protected static final ResourceLocation NOTHING_ANIMATION = TerraCurio.asResource("animations/nothing.animation.json");
 
-    private final ResourceLocation model;
-    private final ResourceLocation texture;
+    protected final ResourceLocation model;
+    protected final ResourceLocation texture;
 
-    private final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
+    protected final AnimatableInstanceCache cache = new SingletonAnimatableInstanceCache(this);
 
     public AccessoryGeoModel(ResourceLocation id) {
         this(createModelResource(id), createTextureResource(id));
@@ -47,7 +47,7 @@ public class AccessoryGeoModel extends GeoModel<AccessoryGeoModel> implements Ge
 
     @Override
     public ResourceLocation getAnimationResource(AccessoryGeoModel animatable) {
-        return ANIMATION;
+        return NOTHING_ANIMATION;
     }
 
     @Override

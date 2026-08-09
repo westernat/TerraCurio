@@ -50,9 +50,9 @@ public class TCRecipeProvider extends RecipeProvider {
                 Ingredient.of(TCItems.SANDSTORM_IN_A_BALLOON.get()),
                 Ingredient.of(TCItems.BLIZZARD_IN_A_BALLOON.get()));
         workshop(output, "bundle_of_horseshoe_balloons_0", TCItems.BUNDLE_OF_HORSESHOE_BALLOONS, Ingredient.of(TCItems.BUNDLE_OF_BALLOONS.get()), Ingredient.of(TCItems.LUCKY_HORSESHOE.get()));
-        Ingredient anyBlizzardBalloons = Ingredient.of(TCTags.ANY_BLIZZARD_BALLOONS);
-        Ingredient anyCloudBalloons = Ingredient.of(TCTags.ANY_CLOUD_BALLOONS);
-        Ingredient anySandstormBalloons = Ingredient.of(TCTags.ANY_SANDSTORM_BALLOONS);
+        Ingredient anyBlizzardBalloons = Ingredient.of(TCTags.Items.ANY_BLIZZARD_BALLOONS);
+        Ingredient anyCloudBalloons = Ingredient.of(TCTags.Items.ANY_CLOUD_BALLOONS);
+        Ingredient anySandstormBalloons = Ingredient.of(TCTags.Items.ANY_SANDSTORM_BALLOONS);
         workshop(output, "bundle_of_horseshoe_balloons_1", TCItems.BUNDLE_OF_HORSESHOE_BALLOONS,
                 Ingredient.of(TCItems.YELLOW_HORSESHOE_BALLOON.get()),
                 anyBlizzardBalloons,

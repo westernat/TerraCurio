@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.data.gen;
 
+import com.google.common.collect.Iterables;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.data.LanguageProvider;
@@ -902,6 +903,36 @@ public class TCLanguageProvider extends LanguageProvider {
         onlyTooltip(TCItems.MOON_SHELL, "月亮贝壳", "Turns the holder into a werewolf at night and a merfolk when entering water", "在晚上将持有者变成狼人，入水时将持有者变成人鱼");
         onlyTooltip(TCItems.CELESTIAL_SHELL, "天界壳", "Turns the holder into a werewolf at night and a merfolk when entering water", "在晚上将持有者变成狼人，入水时将持有者变成人鱼");
 
+        add(TCItems.FLEDGLING_WINGS.get(), "雏翼");
+        add(TCItems.ANGEL_WINGS.get(), "天使之翼");
+        add(TCItems.DEMON_WINGS.get(), "恶魔之翼");
+        add(TCItems.FAIRY_WINGS.get(), "仙灵之翼");
+        add(TCItems.FIN_WINGS.get(), "鳍翼");
+        add(TCItems.FROZEN_WINGS.get(), "冰冻之翼");
+        add(TCItems.HARPY_WINGS.get(), "女妖之翼");
+        add(TCItems.JETPACK.get(), "喷气背包");
+        add(TCItems.LEAF_WINGS.get(), "叶之翼");
+        add(TCItems.BAT_WINGS.get(), "蝙蝠之翼");
+        add(TCItems.BEE_WINGS.get(), "蜜蜂之翼");
+        add(TCItems.BUTTERFLY_WINGS.get(), "蝴蝶之翼");
+        add(TCItems.FLAME_WINGS.get(), "烈焰之翼");
+        add(TCItems.HOVERBOARD.get(), "悬浮板");
+        add(TCItems.BONE_WINGS.get(), "骨之翼");
+        add(TCItems.MOTHRON_WINGS.get(), "蛾怪之翼");
+        add(TCItems.SPECTRE_WINGS.get(), "幽灵之翼");
+        add(TCItems.BEETLE_WINGS.get(), "甲虫之翼");
+        add(TCItems.FESTIVE_WINGS.get(), "喜庆之翼");
+        add(TCItems.SPOOKY_WINGS.get(), "阴森之翼");
+        add(TCItems.TATTERED_WINGS.get(), "褴褛仙灵之翼");
+        add(TCItems.STEAMPUNK_WINGS.get(), "蒸汽朋克之翼");
+        add(TCItems.BETSYS_WINGS.get(), "双足翼龙之翼");
+        add(TCItems.EMPRESS_WINGS.get(), "女皇之翼");
+        add(TCItems.FISHRON_WINGS.get(), "猪鱼龙之翼");
+        add(TCItems.NEBULA_WINGS.get(), "星云斗篷");
+        add(TCItems.VORTEX_BOOSTER.get(), "星旋强化翼");
+        add(TCItems.SOLAR_WINGS.get(), "日耀之翼");
+        add(TCItems.STARDUST_WINGS.get(), "星尘之翼");
+
         if (isEn) {
             add(TCItems.EXPLORERS_EQUIPMENT.get().getDescriptionId(), "Explorer's Equipment");
             add(TCItems.PALADINS_SHIELD.get().getDescriptionId(), "Paladin's Shield");
@@ -913,9 +944,9 @@ public class TCLanguageProvider extends LanguageProvider {
             add(TCItems.REK_3000.get().getDescriptionId(), "R.E.K.3000");
             add(TCItems.NEPTUNES_SHELL.get().getDescriptionId(), "Neptune's Shell");
             add(TCItems.DIVING_HELMET.get().getDescriptionId(), "Diving Helmet");
-            TCItems.CURIOS.getEntries().forEach(item -> {
-                Item item1 = item.get();
-                add(item1.getDescriptionId(), LibUtils.toTitleCase(item.getId().getPath()));
+            Iterables.concat(TCItems.CURIOS.getEntries(), TCItems.OTHERS.getEntries(), TCItems.WINGS.getEntries()).forEach(holder -> {
+                assert holder != null;
+                add(holder.get().getDescriptionId(), LibUtils.toTitleCase(holder.getId().getPath()));
             });
             TCEntities.ENTITIES.getEntries().forEach(entity -> add(entity.get().getDescriptionId(), LibUtils.toTitleCase(entity.getId().getPath())));
             TCEffects.EFFECTS.getEntries().forEach(effect -> add(effect.get().getDescriptionId(), LibUtils.toTitleCase(effect.getId().getPath())));

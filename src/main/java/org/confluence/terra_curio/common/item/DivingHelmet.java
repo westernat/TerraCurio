@@ -29,7 +29,7 @@ public class DivingHelmet extends ArmorItem {
     }
 
     public static float apply(LivingEntity living, DamageSource damageSource, float amount) {
-        if (damageSource.is(DamageTypeTags.IS_DROWNING) && living.getItemBySlot(EquipmentSlot.HEAD).is(TCTags.DIVING)) {
+        if (damageSource.is(DamageTypeTags.IS_DROWNING) && living.getItemBySlot(EquipmentSlot.HEAD).is(TCTags.Items.DIVING)) {
             return amount * DIVISION;
         }
         return amount;

@@ -59,14 +59,14 @@ public final class PlayerJumpHandler {
 
     private static Map<ResourceKey<Item>, ObjectIntPair<MayFlyAbilityValue.FlyStack>> wingsFlyStacks = Map.of();
     private static Map<ResourceKey<Item>, ObjectIntPair<MayFlyAbilityValue.FlyStack>> otherFlyStacks = Map.of();
-    private static boolean onWings = false;
+    private static boolean onFlight = false;
     private static boolean horizontalFlight = false;
     private static boolean infiniteFlight = false;
     private static float infiniteFlightSpeed = 0.0F;
 
     private static ResourceKey<Item> currentFlight;
     private static ResourceKey<Item> lastFlight;
-    private static boolean onFlight = false;
+    private static boolean onGlide = false;
 
     public static void handle(LocalPlayer localPlayer, boolean jumping) {
         if (StepStoolHandler.onStool()) return;
@@ -100,9 +100,10 @@ public final class PlayerJumpHandler {
                 ObjectIntPair<MayFlyAbilityValue.FlyStack> pair = entry.getValue();
                 int i = pair.rightInt();
                 if (infiniteFlight || i > 0) {
-                    onWings = true;
                     float flySpeed = infiniteFlight ? infiniteFlightSpeed : pair.key().flySpeed();
                     boolean horizontal = pair.left().horizontalFlight();
+                    onFlight = true;
+                    onGlide = false;
                     fly(horizontal && localPlayer.isShiftKeyDown(), localPlayer, flySpeed);
                     if (!infiniteFlight) currentFlight = entry.getKey();
                     if (!horizontal || localPlayer.level().getGameTime() % 2 == 0) {
@@ -110,8 +111,8 @@ public final class PlayerJumpHandler {
                     }
                     if (infiniteFlight || i > 0) return;
                 } else if (!localPlayer.getAbilities().flying && localPlayer.getDeltaMovement().y < -0.15) {
-                    onWings = false;
                     onFlight = false;
+                    onGlide = true;
                     glide(localPlayer);
                 }
             }
@@ -151,7 +152,7 @@ public final class PlayerJumpHandler {
                 jumpKeyDown = true;
                 multiJump(localPlayer, cloudSpeed);
                 localPlayer.playSound(TCSoundEvents.DOUBLE_JUMP.get());
-            } else if (!onWings) {
+            } else if (!onFlight) {
                 for (Map.Entry<ResourceKey<Item>, ObjectIntPair<MayFlyAbilityValue.FlyStack>> entry : otherFlyStacks.entrySet()) {
                     ObjectIntPair<MayFlyAbilityValue.FlyStack> pair = entry.getValue();
                     int i = pair.rightInt();
@@ -173,6 +174,7 @@ public final class PlayerJumpHandler {
             isOnSandstormJump = false;
             isOnBlizzardJump = false;
             onFlight = false;
+            onGlide = false;
             currentFlight = null;
         }
     }
@@ -182,7 +184,6 @@ public final class PlayerJumpHandler {
     }
 
     private static void fly(boolean horizontalFlight, LocalPlayer localPlayer, float flySpeed) {
-        onFlight = true;
         if (horizontalFlight) {
             horizontalFlight(localPlayer, flySpeed);
         } else {
@@ -202,7 +203,7 @@ public final class PlayerJumpHandler {
         setupRemainFlyTicks();
         currentFlight = null;
         lastFlight = null;
-        onWings = false;
+        onFlight = false;
     }
 
     public static void multiJump(LocalPlayer localPlayer, float speed) {
@@ -319,12 +320,12 @@ public final class PlayerJumpHandler {
         infiniteFlight = enable;
     }
 
-    public static boolean isOnFlight() {
-        return onFlight;
+    public static boolean isOnGlide() {
+        return onGlide;
     }
 
-    public static boolean isOnWings() {
-        return onWings;
+    public static boolean isOnFlight() {
+        return onFlight;
     }
 
     public static boolean isOnHorizontalFlight() {

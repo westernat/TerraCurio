@@ -14,14 +14,41 @@ import net.minecraft.world.level.material.Fluid;
 import org.confluence.lib.common.LibTags;
 import org.confluence.terra_curio.TerraCurio;
 import org.jetbrains.annotations.ApiStatus;
-import top.theillusivec4.curios.api.CuriosApi;
+import top.theillusivec4.curios.CuriosConstants;
 
 public final class TCTags {
-    public static final TagKey<Item> ACCESSORY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(CuriosApi.MODID, TerraCurio.CURIO_SLOT));
-    public static final TagKey<Item> DIVING = ItemTags.create(TerraCurio.asResource("diving"));
-    public static final TagKey<Item> ANY_SANDSTORM_BALLOONS = ItemTags.create(TerraCurio.asResource("any_sandstorm_balloons"));
-    public static final TagKey<Item> ANY_BLIZZARD_BALLOONS = ItemTags.create(TerraCurio.asResource("any_blizzard_balloons"));
-    public static final TagKey<Item> ANY_CLOUD_BALLOONS = ItemTags.create(TerraCurio.asResource("any_cloud_balloons"));
+    public static class Items {
+        public static final TagKey<Item> ACCESSORY = ItemTags.create(ResourceLocation.fromNamespaceAndPath(CuriosConstants.MOD_ID, TerraCurio.CURIO_SLOT));
+        public static final TagKey<Item> DIVING = register("diving");
+        public static final TagKey<Item> ANY_SANDSTORM_BALLOONS = register("any_sandstorm_balloons");
+        public static final TagKey<Item> ANY_BLIZZARD_BALLOONS = register("any_blizzard_balloons");
+        public static final TagKey<Item> ANY_CLOUD_BALLOONS = register("any_cloud_balloons");
+        public static final TagKey<Item> WINGS = register("wings");
+
+        private static TagKey<Item> register(String id) {
+            return ItemTags.create(TerraCurio.asResource(id));
+        }
+    }
+
+    @Deprecated(since = "1.3.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.4.0")
+    public static final TagKey<Item> ACCESSORY = Items.ACCESSORY;
+    @Deprecated(since = "1.3.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.4.0")
+    public static final TagKey<Item> DIVING = Items.DIVING;
+    @Deprecated(since = "1.3.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.4.0")
+    public static final TagKey<Item> ANY_SANDSTORM_BALLOONS = Items.ANY_SANDSTORM_BALLOONS;
+    @Deprecated(since = "1.3.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.4.0")
+    public static final TagKey<Item> ANY_BLIZZARD_BALLOONS = Items.ANY_BLIZZARD_BALLOONS;
+    @Deprecated(since = "1.3.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.4.0")
+    public static final TagKey<Item> ANY_CLOUD_BALLOONS = Items.ANY_CLOUD_BALLOONS;
+    @Deprecated(since = "1.3.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.4.0")
+    public static final TagKey<Item> WINGS = Items.WINGS;
+
     public static final TagKey<Block> FLOWER_BOOTS_AVAILABLE = BlockTags.create(TerraCurio.asResource("flower_boots_available"));
     public static final TagKey<Fluid> WATER_LIKE_WALK = FluidTags.create(TerraCurio.asResource("water_like_walk"));
     public static final TagKey<Fluid> LAVA_LIKE_WALK = FluidTags.create(TerraCurio.asResource("lava_like_walk"));

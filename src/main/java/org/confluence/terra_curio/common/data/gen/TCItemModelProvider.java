@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.data.gen;
 
+import com.google.common.collect.Iterables;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.BlockItem;
 import net.neoforged.neoforge.client.model.generators.ItemModelProvider;
@@ -23,10 +24,10 @@ public class TCItemModelProvider extends ItemModelProvider {
                 TerraCurio.LOGGER.error(e.getMessage());
             }
         });
-        TCItems.CURIOS.getEntries().forEach(item -> {
+        Iterables.concat(TCItems.CURIOS.getEntries(), TCItems.WINGS.getEntries()).forEach(holder -> {
             try {
-                String path = item.getId().getPath().toLowerCase();
-                withExistingParent(path, "item/generated").texture("layer0", TerraCurio.asResource("item/curio/" + path));
+                String path = holder.getId().getPath().toLowerCase();
+                withExistingParent(path, "item/generated").texture("layer0", TerraCurio.asResource("item/accessory/" + path));
             } catch (Exception e) {
                 TerraCurio.LOGGER.error(e.getMessage());
             }

@@ -1,7 +1,9 @@
 package org.confluence.terra_curio.common.data.gen;
 
+import com.google.common.collect.Iterables;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -20,27 +22,30 @@ public class TCItemTagsProvider extends ItemTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        IntrinsicTagAppender<Item> accessory = tag(TCTags.ACCESSORY);
+        IntrinsicTagAppender<Item> accessory = tag(TCTags.Items.ACCESSORY);
         accessory.add(TCItems.BASE_POINT.get());
         accessory.add(TCItems.EVERLASTING.get());
-        TCItems.CURIOS.getEntries().forEach(item -> accessory.add(item.get()));
-        tag(TCTags.DIVING).add(
+        Iterables.concat(TCItems.CURIOS.getEntries(), TCItems.WINGS.getEntries()).forEach(holder -> accessory.add(holder.get()));
+        tag(TCTags.Items.DIVING).add(
                 TCItems.DIVING_HELMET.get(),
                 TCItems.DIVING_GEAR.get(),
                 TCItems.JELLYFISH_DIVING_GEAR.get(),
                 TCItems.ARCTIC_DIVING_GEAR.get()
         );
-        tag(TCTags.ANY_SANDSTORM_BALLOONS).add(
+        tag(TCTags.Items.ANY_SANDSTORM_BALLOONS).add(
                 TCItems.SANDSTORM_IN_A_BALLOON.get(),
                 TCItems.YELLOW_HORSESHOE_BALLOON.get()
         );
-        tag(TCTags.ANY_BLIZZARD_BALLOONS).add(
+        tag(TCTags.Items.ANY_BLIZZARD_BALLOONS).add(
                 TCItems.BLIZZARD_IN_A_BALLOON.get(),
                 TCItems.WHITE_HORSESHOE_BALLOON.get()
         );
-        tag(TCTags.ANY_CLOUD_BALLOONS).add(
+        tag(TCTags.Items.ANY_CLOUD_BALLOONS).add(
                 TCItems.CLOUD_IN_A_BALLOON.get(),
                 TCItems.BLUE_HORSESHOE_BALLOON.get()
         );
+        IntrinsicHolderTagsProvider.IntrinsicTagAppender<Item> wings = tag(TCTags.Items.WINGS);
+        TCItems.WINGS.getEntries().forEach(holder -> wings.add(holder.get()));
+        wings.add(TCItems.CELESTIAL_STARBOARD.get());
     }
 }

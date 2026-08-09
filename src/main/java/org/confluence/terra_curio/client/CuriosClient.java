@@ -40,6 +40,12 @@ public final class CuriosClient {
         normalBalloon(TCItems.HONEY_BALLOON);
         normalBalloon(TCItems.SANDSTORM_IN_A_BALLOON);
         normalBalloon(TCItems.SHINY_RED_BALLOON);
+
+        normalWings(TCItems.FLEDGLING_WINGS);
+    }
+
+    private static void normalWings(DeferredItem<?> item) {
+        CuriosRendererRegistry.register(item.get(), () -> new WingsGeoRenderer(new NormalWingsGeoModel(item.getId())));
     }
 
     private static void normalBalloon(DeferredItem<?> item) {

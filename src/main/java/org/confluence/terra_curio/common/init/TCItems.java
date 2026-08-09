@@ -61,6 +61,7 @@ import static org.confluence.terra_curio.common.component.PrimitiveValueComponen
 public final class TCItems {
     public static final DeferredRegister.Items OTHERS = DeferredRegister.createItems(TerraCurio.MODID);
     public static final DeferredRegister.Items CURIOS = DeferredRegister.createItems(TerraCurio.MODID);
+    public static final DeferredRegister.Items WINGS = DeferredRegister.createItems(TerraCurio.MODID);
 
     // client side info_check
     public static final ValueType<List<TooltipComponentsValue.Storage>, TooltipComponentsValue> INFORMATION = create("information", TooltipComponentsValue.EXPANSION, TooltipComponentsValue.CODEC, List.of(), TooltipComponentsValue::new);
@@ -614,6 +615,36 @@ public final class TCItems {
                     .accessories(of(MAY$FLY, MayFlyAbilityValue.of("celestial_starboard", 1100, 1.0F, 60, true, true)))
                     .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100.0, ADD_VALUE)); // 天界星盘
 
+    public static final DeferredItem<BaseCurioItem> FLEDGLING_WINGS = registerWings("fledgling_wings", WHITE, 0.3F, 28, true, false),  // 飞行高度：12
+            ANGEL_WINGS = registerWings("angel_wings", PINK, 0.6F, 50, true, false),  // 飞行高度：34
+            DEMON_WINGS = registerWings("demon_wings", PINK, 0.6F, 50, true, false), // 飞行高度：34
+            FAIRY_WINGS = registerWings("fairy_wings", PINK, 0.65F, 56, true, false), // 飞行高度：44
+            FIN_WINGS = registerWings("fin_wings", LIGHT_RED, 0.65F, 56, true, false), // 飞行高度：44
+            FROZEN_WINGS = registerWings("frozen_wings", PINK, 0.65F, 56, true, false),  // 飞行高度：44
+            HARPY_WINGS = registerWings("harpy_wings", PINK, 0.65F, 56, true, false), // 飞行高度：44
+            JETPACK = registerWings("jetpack", PINK, 0.65F, 63, true, false),  // 飞行高度：51
+            LEAF_WINGS = registerWings("leaf_wings", PINK, 0.6F, 50, true, false),  // 飞行高度：34
+            BAT_WINGS = registerWings("bat_wings", PINK, 0.68F, 62, true, false), // 飞行高度：54
+            BEE_WINGS = registerWings("bee_wings", PINK, 0.68F, 62, true, false), // 飞行高度：54
+            BUTTERFLY_WINGS = registerWings("butterfly_wings", PINK, 0.68F, 62, true, false), // 飞行高度：54
+            FLAME_WINGS = registerWings("flame_wings", PINK, 0.68F, 62, true, false), // 飞行高度：54
+            HOVERBOARD = registerWings("hoverboard", PINK, 0.68F, 74, true, true), // 飞行高度：62
+            BONE_WINGS = registerWings("bone_wings", PINK, 0.68F, 74, true, false), // 飞行高度：62
+            MOTHRON_WINGS = registerWings("mothron_wings", YELLOW, 0.68F, 74, true, false), // 飞行高度：62
+            SPECTRE_WINGS = registerWings("spectre_wings", YELLOW, 0.68F, 74, true, false),// 飞行高度：62
+            BEETLE_WINGS = registerWings("beetle_wings", LIME, 0.68F, 74, true, false), // 飞行高度：62
+            FESTIVE_WINGS = registerWings("festive_wings", PINK, 0.7F, 84, true, false), // 飞行高度：71
+            SPOOKY_WINGS = registerWings("spooky_wings", LIME, 0.7F, 84, true, false), // 飞行高度：71
+            TATTERED_WINGS = registerWings("tattered_wings", LIME, 0.7F, 84, true, false), // 飞行高度：71
+            STEAMPUNK_WINGS = registerWings("steampunk_wings", YELLOW, 0.7F, 84, true, false), // 飞行高度：71
+            BETSYS_WINGS = registerWings("betsys_wings", YELLOW, 0.72F, 84, true, true), // 飞行高度：79
+            EMPRESS_WINGS = registerWings("empress_wings", CYAN, 0.85F, 86, true, false),  // 飞行高度：85
+            FISHRON_WINGS = registerWings("fishron_wings", YELLOW, 0.85F, 92, true, false),  // 飞行高度：95
+            NEBULA_WINGS = registerWings("nebula_wings", RED, 0.85F, 92, true, true), // 飞行高度：95
+            VORTEX_BOOSTER = registerWings("vortex_booster", RED, 0.85F, 92, true, true), // 飞行高度：95
+            SOLAR_WINGS = registerWings("solar_wings", RED, 0.85F, 92, true, false), // 飞行高度：95
+            STARDUST_WINGS = registerWings("stardust", RED, 0.85F, 92, true, false); // 飞行高度：95
+
     public static DeferredItem<BaseCurioItem> registerCurio(String name, Consumer<BaseCurioItem.Builder> consumer) {
         return CURIOS.register(name, () -> {
             BaseCurioItem.Builder builder = BaseCurioItem.builder(name);
@@ -645,5 +676,12 @@ public final class TCItems {
     public static void register(IEventBus eventBus) {
         CURIOS.register(eventBus);
         OTHERS.register(eventBus);
+        WINGS.register(eventBus);
+    }
+
+    private static DeferredItem<BaseCurioItem> registerWings(String name, ModRarity rarity, float flySpeed, int flyTicks, boolean couldGlide, boolean horizontalFlight) {
+        return registerCurio(name, builder -> builder.rarity(rarity)
+                .accessories(of(MAY$FLY, MayFlyAbilityValue.of(name, 1100, flySpeed, flyTicks, couldGlide, horizontalFlight)))
+                .attribute(Attributes.FALL_DAMAGE_MULTIPLIER, -100, ADD_VALUE));
     }
 }

@@ -23,8 +23,8 @@ import top.theillusivec4.curios.api.SlotContext;
 import top.theillusivec4.curios.api.client.ICurioRenderer;
 
 public class AccessoryGeoRenderer implements ICurioRenderer {
-    private final AccessoryGeoModel geoModel;
-    private final RenderType renderType;
+    protected final AccessoryGeoModel geoModel;
+    protected final RenderType renderType;
 
     public AccessoryGeoRenderer(AccessoryGeoModel model) {
         this.geoModel = model;
@@ -47,12 +47,16 @@ public class AccessoryGeoRenderer implements ICurioRenderer {
             float headPitch
     ) {
         if (slotContext.visible()) {
-            poseStack.pushPose();
-            poseStack.scale(-1, -1, 1);
-            poseStack.translate(0, -1.501F, 0);
-            actuallyRender(slotContext.entity(), poseStack, bufferSource, packedLight, partialTick, ageInTicks, slotContext.index());
-            poseStack.popPose();
+            defaultRender(slotContext, poseStack, bufferSource, packedLight, partialTick, ageInTicks);
         }
+    }
+
+    protected void defaultRender(SlotContext slotContext, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick, float ageInTicks) {
+        poseStack.pushPose();
+        poseStack.scale(-1, -1, 1);
+        poseStack.translate(0, -1.501F, 0);
+        actuallyRender(slotContext.entity(), poseStack, bufferSource, packedLight, partialTick, ageInTicks, slotContext.index());
+        poseStack.popPose();
     }
 
     protected void actuallyRender(LivingEntity living, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick, float ageInTick, int slotIndex) {
