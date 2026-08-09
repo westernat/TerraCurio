@@ -1,6 +1,7 @@
 package org.confluence.terra_curio.client.renderer.accessory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.entity.LivingEntity;
 import org.confluence.terra_curio.client.model.accessory.AccessoryGeoModel;
@@ -26,10 +27,16 @@ public class WingsGeoRenderer extends AccessoryGeoRenderer {
 
     @Override
     protected void actuallyRender(LivingEntity living, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick, float ageInTick, int slotIndex) {
-        AnimationState<AccessoryGeoModel> state = new AnimationState<>(geoModel, 0, 0, partialTick, false);
-        state.setData(DataTickets.TICK, (double) living.tickCount + partialTick);
-        state.setData(NormalWingsGeoModel.STATE, NormalWingsGeoModel.State.current());
-        geoModel.handleAnimations(geoModel, living.getId() + slotIndex, state, partialTick);
+        AnimationState<AccessoryGeoModel> animationState = new AnimationState<>(geoModel, 0, 0, partialTick, false);
+        animationState.setData(DataTickets.TICK, (double) living.tickCount + partialTick);
+        NormalWingsGeoModel.State state;
+        if (living == Minecraft.getInstance().player) {
+            state = NormalWingsGeoModel.State.local();
+        } else {
+            state = NormalWingsGeoModel.State.remote(living.getDeltaMovement().y);
+        }
+        animationState.setData(NormalWingsGeoModel.STATE, state);
+        geoModel.handleAnimations(geoModel, living.getId() + slotIndex, animationState, partialTick);
         super.actuallyRender(living, poseStack, bufferSource, packedLight, partialTick, ageInTick, slotIndex);
     }
 }

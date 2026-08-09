@@ -39,8 +39,14 @@ public class NormalWingsGeoModel extends AccessoryGeoModel {
     public enum State {
         IDLING, FLYING, GLIDING;
 
-        public static State current() {
+        public static State local() {
             return PlayerJumpHandler.isOnFlight() ? State.FLYING : (PlayerJumpHandler.isOnGlide() ? State.GLIDING : State.IDLING);
+        }
+
+        public static State remote(double dy) {
+            if (dy > 0) return FLYING;
+            if (dy < 0) return GLIDING;
+            return IDLING;
         }
     }
 }
