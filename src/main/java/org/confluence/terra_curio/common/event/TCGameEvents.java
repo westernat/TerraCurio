@@ -58,9 +58,9 @@ public final class TCGameEvents {
         LivingEntity living = event.getEntity();
         if (!living.level().isClientSide && !ItemStack.isSameItem(event.getFrom(), event.getTo())) {
             AccessoriesAttachment.of(living).flushAbility(living);
-            if (living instanceof ServerPlayer serverPlayer) {
-                TCUtils.resetClientPacket(serverPlayer);
-                TCTriggers.CURIOS_EQUIPPED.get().trigger(serverPlayer, event.getTo());
+            if (living instanceof ServerPlayer player) {
+                TCUtils.resetClientPacket(player);
+                TCTriggers.CURIOS_EQUIPPED.get().trigger(player, event.getTo());
             }
         }
     }
@@ -136,18 +136,15 @@ public final class TCGameEvents {
     @SubscribeEvent
     public static void livingDeath(LivingDeathEvent event) {
         DamageSource damageSource = event.getSource();
-        if (damageSource.getEntity() instanceof ServerPlayer serverPlayer) {
-            EntityType<?> entityType = event.getEntity().getType();
-            EntityKilledPacketS2C.sendToClient(serverPlayer, entityType);
+        if (damageSource.getEntity() instanceof ServerPlayer player) {
+            EntityType<?> type = event.getEntity().getType();
+            EntityKilledPacketS2C.sendToClient(player, type);
         }
     }
 
     @SubscribeEvent
     public static void entityJoinLevel(EntityJoinLevelEvent event) {
         if (event.loadedFromDisk() || event.getLevel().isClientSide) {
-            if (event.getEntity() instanceof LivingEntity living) {
-                AccessoriesAttachment.of(living).flushAbility(living);
-            }
             return;
         }
         if (event.getEntity() instanceof AbstractArrow arrow && arrow.getOwner() instanceof LivingEntity living) {
@@ -157,11 +154,10 @@ public final class TCGameEvents {
 
     @SubscribeEvent
     public static void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        Player player = event.getEntity();
+        ServerPlayer player = (ServerPlayer) event.getEntity();
         AccessoriesAttachment.of(player).flushAbility(player);
-        ServerPlayer serverPlayer = (ServerPlayer) player;
-        TCUtils.resetClientPacket(serverPlayer);
-        InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
+        TCUtils.resetClientPacket(player);
+        InfoCurioCheckPacketS2C.sendToClient(player, player.getInventory());
     }
 
     @SubscribeEvent
@@ -182,10 +178,10 @@ public final class TCGameEvents {
         if (!player.isPassenger()) {
             TCUtils.applyFluidWalk(player);
         }
-        if (player instanceof ServerPlayer serverPlayer) {
-            if (serverPlayer.level().getGameTime() % 200 == 0) {
+        if (player instanceof ServerPlayer sp) {
+            if (sp.level().getGameTime() % 200 == 0) {
                 // 每十秒向周围玩家共享一次信息配饰
-                InfoCurioCheckPacketS2C.sendToOthers(serverPlayer);
+                InfoCurioCheckPacketS2C.sendToOthers(sp);
             }
         }
     }

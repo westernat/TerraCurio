@@ -6,9 +6,12 @@ import net.neoforged.fml.event.IModBusEvent;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.UnitValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Set;
 
+@Deprecated(since = "1.3.0", forRemoval = true)
+@ApiStatus.ScheduledForRemoval(inVersion = "1.4.0")
 public abstract class RegisterAccessoriesComponentUpdateEvent extends Event implements IModBusEvent {
     public static class UnitType extends RegisterAccessoriesComponentUpdateEvent {
         private final Set<ValueType<Unit, UnitValue>> set;

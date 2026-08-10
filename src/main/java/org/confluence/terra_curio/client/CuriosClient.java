@@ -42,6 +42,8 @@ public final class CuriosClient {
         normalBalloon(TCItems.SHINY_RED_BALLOON);
 
         normalWings(TCItems.FLEDGLING_WINGS);
+
+        LayeredGeoRenderer.registerAll();
     }
 
     private static void normalWings(DeferredItem<?> item) {

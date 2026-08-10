@@ -46,9 +46,13 @@ public class AccessoryGeoRenderer implements ICurioRenderer {
             float netHeadYaw,
             float headPitch
     ) {
-        if (slotContext.visible()) {
+        if (shouldRender(stack, slotContext)) {
             defaultRender(slotContext, poseStack, bufferSource, packedLight, partialTick, ageInTicks);
         }
+    }
+
+    protected boolean shouldRender(ItemStack stack, SlotContext slotContext) {
+        return slotContext.visible();
     }
 
     protected void defaultRender(SlotContext slotContext, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick, float ageInTicks) {

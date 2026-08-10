@@ -9,10 +9,12 @@ import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.core.BlockPos;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LightLayer;
 import net.minecraft.world.level.levelgen.RandomSupport;
 import net.minecraft.world.phys.Vec3;
@@ -26,6 +28,7 @@ public class NormalBalloonGeoRenderer extends AccessoryGeoRenderer {
     protected final Int2ObjectMap<BallonRenderState> states;
     protected final long seed;
     protected final RandomSource random;
+    protected ResourceKey<Level> currentLevel;
 
     public static class BallonRenderState {
         public float x;
@@ -52,6 +55,10 @@ public class NormalBalloonGeoRenderer extends AccessoryGeoRenderer {
 
     @Override
     protected void actuallyRender(LivingEntity living, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick, float ageInTick, int slotIndex) {
+        if (living.level().dimension() != currentLevel) {
+            this.currentLevel = living.level().dimension();
+            states.clear();
+        }
         BallonRenderState state = states.computeIfAbsent(living.getId(), id -> new BallonRenderState());
         float entityYaw = Mth.lerp(partialTick, living.yBodyRotO, living.yBodyRot);
         state.update(living, entityYaw, slotIndex);

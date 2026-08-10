@@ -53,8 +53,8 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements I
         return original;
     }
 
-    public static void sendToClient(ServerPlayer serverPlayer, Inventory inventory) {
-        ArrayList<ItemStack> itemStacks = CuriosUtils.getCurios(serverPlayer);
+    public static void sendToClient(ServerPlayer player, Inventory inventory) {
+        ArrayList<ItemStack> itemStacks = CuriosUtils.getCurios(player);
         itemStacks.addAll(inventory.items);
         byte watch = 0;
         byte weatherRadio = 0;
@@ -107,15 +107,15 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements I
             if (lens == 0 && list.contains(TCItems.MECHANICAL$LENS))
                 lens = checkEnabled(lens, (byte) 1, stack, TCItems.MECHANICAL$LENS);
         }
-        PacketDistributor.sendToPlayer(serverPlayer, new InfoCurioCheckPacketS2C(serverPlayer.getId(), new byte[]{
+        PacketDistributor.sendToPlayer(player, new InfoCurioCheckPacketS2C(player.getId(), new byte[]{
                 watch, weatherRadio, sextant, guide, detector, analyzer,
                 radar, counter, dpsMeter, stopwatch, compass, depthMeter, lens
         }));
     }
 
-    public static void sendToOthers(ServerPlayer serverPlayer) {
-        ArrayList<ItemStack> itemStacks = CuriosUtils.getCurios(serverPlayer);
-        itemStacks.addAll(serverPlayer.getInventory().items);
+    public static void sendToOthers(ServerPlayer player) {
+        ArrayList<ItemStack> itemStacks = CuriosUtils.getCurios(player);
+        itemStacks.addAll(player.getInventory().items);
         byte watch = -125;
         byte weatherRadio = -128;
         byte sextant = -128;
@@ -170,14 +170,14 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements I
         boolean equals = watch == -125 && weatherRadio == -128 && sextant == -128 && guide == -128 && detector == -128 && analyzer == -128 &&
                 radar == -128 && counter == -128 && dpsMeter == -128 && stopwatch == -128 && compass == -128 && depthMeter == -128 && lens == -128;
         if (equals) return; // 如果不需要发送, 则返回
-        InfoCurioCheckPacketS2C packet = new InfoCurioCheckPacketS2C(serverPlayer.getId(), new byte[]{
+        InfoCurioCheckPacketS2C packet = new InfoCurioCheckPacketS2C(player.getId(), new byte[]{
                 watch, weatherRadio, sextant, guide, detector, analyzer,
                 radar, counter, dpsMeter, stopwatch, compass, depthMeter, lens
         });
-        Object team = TCUtils.getTeam(serverPlayer);
-        serverPlayer.serverLevel().players().forEach(player -> {
-            if (player != serverPlayer && TCUtils.getTeam(player) == team && player.distanceToSqr(serverPlayer) < MAX_SHARE_DISTANCE_SQR) {
-                PacketDistributor.sendToPlayer(player, packet);
+        Object team = TCUtils.getTeam(player);
+        player.serverLevel().players().forEach(sp -> {
+            if (sp != player && TCUtils.getTeam(sp) == team && sp.distanceToSqr(player) < MAX_SHARE_DISTANCE_SQR) {
+                PacketDistributor.sendToPlayer(sp, packet);
             }
         });
     }

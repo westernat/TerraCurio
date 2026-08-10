@@ -194,17 +194,17 @@ public final class TCUtils {
         return !AccessoriesAttachment.of(living).contains(TCItems.MAGIC$QUIVER) || living.getRandom().nextFloat() >= 0.2F;
     }
 
-    public static void resetClientPacket(ServerPlayer serverPlayer) {
-        InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
-        InfoDisablePacket.sendToClient(serverPlayer);
-        CurioExistsPacketS2C.sendToClient(serverPlayer);
-        PlayerClimbPacketS2C.sendToClient(serverPlayer);
-        PlayerJumpPacketS2C.sendToClient(serverPlayer);
-        PlayerFlyPacketS2C.sendToClient(serverPlayer);
-        RightClickSubtractorPacketS2C.sendToClient(serverPlayer);
-        InfiniteFlightPacketS2C.sendToClient(serverPlayer);
-        BroadcastRenderPacketS2C.sendToPlayersTrackingTarget(serverPlayer);
-        FluidWalkUpdatePacketS2C.sendToClient(serverPlayer);
+    public static void resetClientPacket(ServerPlayer player) {
+        InfoCurioCheckPacketS2C.sendToClient(player, player.getInventory());
+        InfoDisablePacket.sendToClient(player);
+        CurioExistsPacketS2C.sendToClient(player);
+        PlayerClimbPacketS2C.sendToClient(player);
+        PlayerJumpPacketS2C.sendToClient(player);
+        PlayerFlyPacketS2C.sendToClient(player);
+        RightClickSubtractorPacketS2C.sendToClient(player);
+        InfiniteFlightPacketS2C.sendToClient(player);
+        BroadcastRenderPacketS2C.sendToPlayersTrackingTarget(player);
+        FluidWalkUpdatePacketS2C.sendToClient(player);
     }
 
     // confluence mixin here

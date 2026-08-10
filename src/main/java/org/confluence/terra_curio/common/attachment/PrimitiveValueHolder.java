@@ -54,18 +54,24 @@ public abstract class PrimitiveValueHolder implements INBTSerializable<CompoundT
         for (Map.Entry<ValueType<?, ? extends PrimitiveValue<?>>, PrimitiveValue<?>> entry : component.types().entrySet()) {
             ValueType<?, ? extends PrimitiveValue<?>> type = entry.getKey();
             if (type.defaultValue() == Unit.INSTANCE) {
-                putUnitIfPresent(type);
+                putUnit(type);
             } else {
                 combineValue(type, tryCast(entry.getValue()));
             }
         }
     }
 
-    protected <T, V extends PrimitiveValue<T>> void putUnitIfPresent(ValueType<T, V> type) {
+    public <T, V extends PrimitiveValue<T>> void putUnit(ValueType<T, V> type) {
         valueMap.put(type, UnitValue.INSTANCE);
     }
 
-    protected <T, V extends PrimitiveValue<T>> void combineValue(ValueType<T, V> type, V value) {
+    @Deprecated(since = "1.3.0", forRemoval = true)
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.4.0")
+    protected <T, V extends PrimitiveValue<T>> void putUnitIfPresent(ValueType<T, V> type) {
+        putUnit(type);
+    }
+
+    public <T, V extends PrimitiveValue<T>> void combineValue(ValueType<T, V> type, V value) {
         V other = (V) valueMap.get(type);
         if (other == null) {
             valueMap.put(type, value);
