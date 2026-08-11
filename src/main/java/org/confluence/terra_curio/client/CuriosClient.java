@@ -8,6 +8,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.builders.LayerDefinition;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.registries.DeferredItem;
 import org.confluence.terra_curio.client.model.accessory.*;
@@ -27,7 +28,6 @@ public final class CuriosClient {
         CuriosRendererRegistry.register(TCItems.MAGMA_SKULL.get(), () -> new MagmaSkullRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.FLURRY_BOOTS.get(), () -> new FlurryBootsRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.HERMES_BOOTS.get(), () -> new HermesBootsRenderer(entityModels));
-        //CuriosRendererRegistry.register(TCItems.OBSIDIAN_SKULL.get(), () -> new ObsidianSkullRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.SHIELD_OF_CTHULHU.get(), () -> new ShieldOfCthulhuRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.NEPTUNES_SHELL.get(), () -> new MermanRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.MOON_CHARM.get(), () -> new WerewolfRenderer(entityModels));
@@ -40,6 +40,19 @@ public final class CuriosClient {
         normalBalloon(TCItems.HONEY_BALLOON);
         normalBalloon(TCItems.SANDSTORM_IN_A_BALLOON);
         normalBalloon(TCItems.SHINY_RED_BALLOON);
+        CuriosRendererRegistry.register(TCItems.BALLOON_PUFFERFISH.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(TCItems.BALLOON_PUFFERFISH.getId())));
+        CuriosRendererRegistry.register(TCItems.SHARKRON_BALLOON.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(TCItems.SHARKRON_BALLOON.getId())));
+        normalBalloon(TCItems.BUNDLE_OF_BALLOONS);
+        normalBalloon(TCItems.BUNDLE_OF_HORSESHOE_BALLOONS);
+
+        // Horseshoe balloons — same balloon model + base balloon texture + horseshoe overlay
+        horseshoeBalloon(TCItems.BLUE_HORSESHOE_BALLOON, TCItems.CLOUD_IN_A_BALLOON.getId());
+        horseshoeBalloon(TCItems.YELLOW_HORSESHOE_BALLOON, TCItems.SANDSTORM_IN_A_BALLOON.getId());
+        horseshoeBalloon(TCItems.GREEN_HORSESHOE_BALLOON, TCItems.FART_IN_A_BALLOON.getId());
+        horseshoeBalloon(TCItems.AMBER_HORSESHOE_BALLOON, TCItems.HONEY_BALLOON.getId());
+        // Pink and white have their own model
+        CuriosRendererRegistry.register(TCItems.PINK_HORSESHOE_BALLOON.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(TCItems.PINK_HORSESHOE_BALLOON.getId())));
+        CuriosRendererRegistry.register(TCItems.WHITE_HORSESHOE_BALLOON.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(TCItems.WHITE_HORSESHOE_BALLOON.getId())));
 
         normalWings(TCItems.FLEDGLING_WINGS);
 
@@ -54,6 +67,10 @@ public final class CuriosClient {
         CuriosRendererRegistry.register(item.get(), () -> new NormalBalloonGeoRenderer(item.getId()));
     }
 
+    private static void horseshoeBalloon(DeferredItem<?> item, ResourceLocation baseTextureId) {
+        CuriosRendererRegistry.register(item.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(NormalBalloonGeoRenderer.MODEL, AccessoryGeoModel.createTextureResource(baseTextureId))));
+    }
+
     public static void registerLayers(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> layerDefinition) {
         layerDefinition.accept(WormScarfModel.LAYER_LOCATION, WormScarfModel::createBodyLayer);
         layerDefinition.accept(TerrasparkBootsModel.LAYER_LOCATION, TerrasparkBootsModel::createBodyLayer);
@@ -61,7 +78,6 @@ public final class CuriosClient {
         layerDefinition.accept(MagmaSkullModel.LAYER_LOCATION, MagmaSkullModel::createBodyLayer);
         layerDefinition.accept(FlurryBootsModel.LAYER_LOCATION, FlurryBootsModel::createBodyLayer);
         layerDefinition.accept(HermesBootsModel.LAYER_LOCATION, HermesBootsModel::createBodyLayer);
-        //layerDefinition.accept(ObsidianSkullModel.LAYER_LOCATION, ObsidianSkullModel::createBodyLayer);
         layerDefinition.accept(ShieldOfCthulhuModel.LAYER_LOCATION, ShieldOfCthulhuModel::createBodyLayer);
         layerDefinition.accept(MermanModel.LAYER_LOCATION, MermanModel::createBodyLayer);
         layerDefinition.accept(WerewolfModel.LAYER_LOCATION, WerewolfModel::createBodyLayer);

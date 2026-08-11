@@ -62,9 +62,18 @@ public class BalloonPhysicsGroup {
     }
 
     public BallonRenderState getState(int slotIndex) {
-        return states.computeIfAbsent(slotIndex, k -> {
+        return getSubState(slotIndex, 0, 1);
+    }
+
+    public BallonRenderState getSubState(int slotIndex, int subIndex, int subCount) {
+        int key = slotIndex * 16 + subIndex;
+        return states.computeIfAbsent(key, k -> {
             BallonRenderState state = new BallonRenderState(slotIndex);
-            state.initRestOffsets();
+            float baseAngle = (slotIndex - 2) * ANGLE_STEP;
+            float offset = (subIndex - (subCount - 1) / 2.0f) * 10.0F * Mth.DEG_TO_RAD;
+            float angle = baseAngle + offset;
+            state.restX = Mth.cos(angle);
+            state.restZ = Mth.sin(angle);
             return state;
         });
     }

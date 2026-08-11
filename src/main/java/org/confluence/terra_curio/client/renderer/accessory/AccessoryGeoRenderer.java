@@ -25,6 +25,7 @@ import top.theillusivec4.curios.api.client.ICurioRenderer;
 public class AccessoryGeoRenderer implements ICurioRenderer {
     protected final AccessoryGeoModel geoModel;
     protected final RenderType renderType;
+    protected ItemStack stack;
 
     public AccessoryGeoRenderer(AccessoryGeoModel model) {
         this.geoModel = model;
@@ -47,6 +48,7 @@ public class AccessoryGeoRenderer implements ICurioRenderer {
             float headPitch
     ) {
         if (shouldRender(stack, slotContext)) {
+            this.stack = stack;
             defaultRender(slotContext, poseStack, bufferSource, packedLight, partialTick, ageInTicks);
         }
     }

@@ -9,6 +9,7 @@ import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -16,6 +17,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.registries.DeferredItem;
+import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.model.accessory.AccessoryGeoModel;
 import org.confluence.terra_curio.common.init.TCItems;
 import software.bernie.geckolib.cache.object.BakedGeoModel;
@@ -29,9 +31,9 @@ import top.theillusivec4.curios.api.type.capability.ICuriosItemHandler;
 import top.theillusivec4.curios.api.type.inventory.ICurioStacksHandler;
 import top.theillusivec4.curios.api.type.inventory.IDynamicStackHandler;
 
-import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.BiConsumer;
 
 public class LayeredGeoRenderer extends AccessoryGeoRenderer {
     protected static final Reference2ObjectMap<Item, ObjectIntPair<Layer>> RENDER_LAYERS = new Reference2ObjectOpenHashMap<>();
@@ -70,12 +72,12 @@ public class LayeredGeoRenderer extends AccessoryGeoRenderer {
         // 魔法手铐 1100
         // 天界手铐 1200
 
-        register(TCItems.COPPER_WATCH, Layer.RIGHT_HAND, 0);
-        register(TCItems.TIN_WATCH, Layer.RIGHT_HAND, 10);
-        register(TCItems.SILVER_WATCH, Layer.RIGHT_HAND, 30);
-        register(TCItems.TUNGSTEN_WATCH, Layer.RIGHT_HAND, 40);
-        register(TCItems.GOLD_WATCH, Layer.RIGHT_HAND, 50);
-        register(TCItems.PLATINUM_WATCH, Layer.RIGHT_HAND, 60);
+        register(TCItems.COPPER_WATCH, Layer.RIGHT_HAND, 0, LayeredGeoRenderer::watch);
+        register(TCItems.TIN_WATCH, Layer.RIGHT_HAND, 10, LayeredGeoRenderer::watch);
+        register(TCItems.SILVER_WATCH, Layer.RIGHT_HAND, 30, LayeredGeoRenderer::watch);
+        register(TCItems.TUNGSTEN_WATCH, Layer.RIGHT_HAND, 40, LayeredGeoRenderer::watch);
+        register(TCItems.GOLD_WATCH, Layer.RIGHT_HAND, 50, LayeredGeoRenderer::watch);
+        register(TCItems.PLATINUM_WATCH, Layer.RIGHT_HAND, 60, LayeredGeoRenderer::watch);
         register(TCItems.BAND_OF_REGENERATION, Layer.RIGHT_HAND, 100);
         // 星力手环 200
         // 神话护身符 300
@@ -91,14 +93,21 @@ public class LayeredGeoRenderer extends AccessoryGeoRenderer {
         register(TCItems.FROZEN_SHIELD, Layer.SHIELD, 400);
         register(TCItems.ANKH_SHIELD, Layer.SHIELD, 500);
 //        register(TCItems.SHIELD_OF_CTHULHU, Layer.SHIELD, 600);
+    }
 
-        for (Map.Entry<Item, ObjectIntPair<Layer>> entry : RENDER_LAYERS.entrySet()) {
-            CuriosRendererRegistry.register(entry.getKey(), () -> new LayeredGeoRenderer(entry.getValue().key(), new AccessoryGeoModel(entry.getKey().builtInRegistryHolder().unwrapKey().orElseThrow().location())));
-        }
+    protected static final ResourceLocation WATCH_MODEL = TerraCurio.asResource("geo/accessory/watch.geo.json");
+
+    protected static void watch(DeferredItem<?> item, Layer layer) {
+        CuriosRendererRegistry.register(item.get(), () -> new LayeredGeoRenderer(layer, new AccessoryGeoModel(WATCH_MODEL, AccessoryGeoModel.createTextureResource(item.getId()))));
     }
 
     protected static void register(DeferredItem<?> item, Layer layer, int order) {
+        register(item, layer, order, (i, l) -> CuriosRendererRegistry.register(i.get(), () -> new LayeredGeoRenderer(l, new AccessoryGeoModel(i.getId()))));
+    }
+
+    protected static void register(DeferredItem<?> item, Layer layer, int order, BiConsumer<DeferredItem<?>, Layer> onRegister) {
         RENDER_LAYERS.put(item.get(), new ObjectIntImmutablePair<>(layer, order));
+        onRegister.accept(item, layer);
     }
 
     /// [GeoArmorRenderer#applyBaseTransformations]
