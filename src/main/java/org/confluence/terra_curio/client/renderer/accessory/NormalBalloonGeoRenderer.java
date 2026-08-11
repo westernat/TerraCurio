@@ -3,8 +3,6 @@ package org.confluence.terra_curio.client.renderer.accessory;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -25,30 +23,12 @@ import org.joml.Matrix4f;
 public class NormalBalloonGeoRenderer extends AccessoryGeoRenderer {
     public static final ResourceLocation MODEL = TerraCurio.asResource("geo/accessory/normal_balloon.geo.json");
 
-    protected final Int2ObjectMap<BallonRenderState> states;
     protected final long seed;
     protected final RandomSource random;
     protected ResourceKey<Level> currentLevel;
 
-    public static class BallonRenderState {
-        public float x;
-        public float y;
-        public float z;
-        public float balloonYaw;
-
-        public void update(LivingEntity living, float entityYaw, int slotIndex) {
-            float step = 0.1F + slotIndex * 0.01F;
-            x += ((float) (living.getX() - living.xo) - x) * step;
-            y += ((float) (living.getY() - living.yo) - y) * step;
-            z += ((float) (living.getZ() - living.zo) - z) * step;
-            balloonYaw = Mth.wrapDegrees(balloonYaw + Mth.wrapDegrees(entityYaw - balloonYaw) * step);
-        }
-    }
-
     public NormalBalloonGeoRenderer(ResourceLocation id) {
         super(new AccessoryGeoModel(MODEL, AccessoryGeoModel.createTextureResource(id)));
-        this.states = new Int2ObjectOpenHashMap<>();
-        states.defaultReturnValue(new BallonRenderState());
         this.seed = RandomSupport.generateUniqueSeed();
         this.random = RandomSource.create(seed);
     }
@@ -57,26 +37,29 @@ public class NormalBalloonGeoRenderer extends AccessoryGeoRenderer {
     protected void actuallyRender(LivingEntity living, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, float partialTick, float ageInTick, int slotIndex) {
         if (living.level().dimension() != currentLevel) {
             this.currentLevel = living.level().dimension();
-            states.clear();
+            BalloonPhysicsGroup.reset();
         }
-        BallonRenderState state = states.computeIfAbsent(living.getId(), id -> new BallonRenderState());
-        float entityYaw = Mth.lerp(partialTick, living.yBodyRotO, living.yBodyRot);
-        state.update(living, entityYaw, slotIndex);
 
+        BalloonPhysicsGroup group = BalloonPhysicsGroup.getOrCreate(living.getId());
+        group.step(living, partialTick);
+        BalloonPhysicsGroup.BallonRenderState state = group.getState(slotIndex);
+
+        float entityYaw = Mth.lerp(partialTick, living.yBodyRotO, living.yBodyRot);
         float yawRad = entityYaw * Mth.DEG_TO_RAD;
         float cos = Mth.cos(yawRad);
         float sin = Mth.sin(yawRad);
-        float localVelX = state.x * cos + state.z * sin;
-        float localVelZ = -state.x * sin + state.z * cos;
-        float angleOffset = (slotIndex - 2) * 13.0F * Mth.DEG_TO_RAD;
-        float staticX = Mth.cos(angleOffset);
-        float staticZ = Mth.sin(angleOffset);
-        float xDif = -(localVelX + staticX);
+
+        // Convert world-space physics position to entity-local space
+        float localX = state.posX * cos + state.posZ * sin;
+        float localZ = -state.posX * sin + state.posZ * cos;
+        float xDif = -localX;
+        float zDif = -localZ;
+
         random.setSeed(seed * living.getId());
         random.consumeCount(slotIndex);
         float randomY = 1 + random.nextFloat();
-        float yDif = state.y - randomY + Mth.sin(staticX + ageInTick * 0.05F) * 0.125F;
-        float zDif = -(localVelZ + staticZ);
+        float yDif = state.y - randomY + Mth.sin((slotIndex + 1) * 1.3F + ageInTick * 0.05F) * 0.125F;
+
         Vec3 ropeGripPosition = living.getRopeHoldPosition(partialTick);
 
         poseStack.mulPose(Axis.YN.rotationDegrees(Mth.wrapDegrees(state.balloonYaw - entityYaw)));

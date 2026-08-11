@@ -70,6 +70,28 @@ public class LayeredGeoRenderer extends AccessoryGeoRenderer {
         // 魔法手铐 1100
         // 天界手铐 1200
 
+        register(TCItems.COPPER_WATCH, Layer.RIGHT_HAND, 0);
+        register(TCItems.TIN_WATCH, Layer.RIGHT_HAND, 10);
+        register(TCItems.SILVER_WATCH, Layer.RIGHT_HAND, 30);
+        register(TCItems.TUNGSTEN_WATCH, Layer.RIGHT_HAND, 40);
+        register(TCItems.GOLD_WATCH, Layer.RIGHT_HAND, 50);
+        register(TCItems.PLATINUM_WATCH, Layer.RIGHT_HAND, 60);
+        register(TCItems.BAND_OF_REGENERATION, Layer.RIGHT_HAND, 100);
+        // 星力手环 200
+        // 神话护身符 300
+
+        register(TCItems.LAVA_CHARM, Layer.RIGHT_ARM, 0);
+        register(TCItems.MOON_STONE, Layer.RIGHT_ARM, 100);
+        register(TCItems.SUN_STONE, Layer.RIGHT_ARM, 200);
+
+        register(TCItems.COBALT_SHIELD, Layer.SHIELD, 0);
+        register(TCItems.OBSIDIAN_SHIELD, Layer.SHIELD, 100);
+        register(TCItems.PALADINS_SHIELD, Layer.SHIELD, 200);
+        register(TCItems.HERO_SHIELD, Layer.SHIELD, 300);
+        register(TCItems.FROZEN_SHIELD, Layer.SHIELD, 400);
+        register(TCItems.ANKH_SHIELD, Layer.SHIELD, 500);
+//        register(TCItems.SHIELD_OF_CTHULHU, Layer.SHIELD, 600);
+
         for (Map.Entry<Item, ObjectIntPair<Layer>> entry : RENDER_LAYERS.entrySet()) {
             CuriosRendererRegistry.register(entry.getKey(), () -> new LayeredGeoRenderer(entry.getValue().key(), new AccessoryGeoModel(entry.getKey().builtInRegistryHolder().unwrapKey().orElseThrow().location())));
         }

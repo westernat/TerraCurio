@@ -16,6 +16,7 @@ import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.client.handler.*;
+import org.confluence.terra_curio.client.renderer.accessory.BalloonPhysicsGroup;
 import org.confluence.terra_curio.client.renderer.tooltip.MultiFunctionTooltip;
 import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.mixin.client.accessor.MinecraftAccessor;
@@ -48,6 +49,7 @@ public final class GameClientEvents {
         PlayerClimbHandler.reset();
         PlayerSprintingHandler.reset();
         ScopeFovHandler.reset();
+        BalloonPhysicsGroup.reset();
     }
 
     @SubscribeEvent
