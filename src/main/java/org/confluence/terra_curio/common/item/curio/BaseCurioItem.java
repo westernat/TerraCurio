@@ -2,6 +2,7 @@ package org.confluence.terra_curio.common.item.curio;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
+import net.minecraft.ChatFormatting;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.chat.Component;
@@ -24,6 +25,7 @@ import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
 import org.confluence.terra_curio.api.primitive.ComponentsValue;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
 import org.confluence.terra_curio.api.primitive.ValueType;
+import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCDataMaps;
@@ -109,10 +111,22 @@ public class BaseCurioItem extends Item implements ICurioItem {
             tooltipComponents.add(Component.translatable("tooltip." + stack.getDescriptionId() + ".0"));
             if (!b) tooltipComponents.addAll(builder.additionTip);
         }
+        appendInfo(stack, tooltipComponents);
     }
 
+    protected void appendInfo(ItemStack stack, List<Component> tooltipComponents) {
+        if (TCClientConfigs.displayInfoTooltip && builder != null && builder.infoTooltipCount > 0) {
+            tooltipComponents.add(Component.empty());
+            for (int i = 0; i < builder.infoTooltipCount; i++) {
+                tooltipComponents.add(Component.translatable("info.tooltip." + stack.getDescriptionId() + "." + i).withStyle(ChatFormatting.GREEN));
+            }
+        }
+    }
+
+    @Deprecated(forRemoval = true, since = "1.3.0")
+    @ApiStatus.ScheduledForRemoval(inVersion = "1.4.0")
     public int getJeiInformationCount() {
-        return builder == null ? 0 : builder.jeiInformationCount;
+        return builder == null ? 0 : builder.infoTooltipCount;
     }
 
     @Override
@@ -153,7 +167,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         private transient ImmutableMultimap.Builder<Holder<Attribute>, AttributeModifier> attributesBuilder = ImmutableMultimap.builder();
         private ImmutableMultimap<Holder<Attribute>, AttributeModifier> attributes;
         private ModRarity rarity = ModRarity.BLUE;
-        private int jeiInformationCount = 1;
+        private int infoTooltipCount = 1;
         private boolean makePiglinsNeutral = false;
         private EquipmentSlot equipmentSlot = null;
 
@@ -223,9 +237,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
-        /**
-         * 额外的工具提示
-         */
+        /// 额外的工具提示
         public Builder tooltip(String str) {
             if (!hasToolTip)
                 throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
@@ -233,24 +245,34 @@ public class BaseCurioItem extends Item implements ICurioItem {
             return this;
         }
 
-        /**
-         * 额外的工具提示
-         *
-         * @param extra 额外的数量
-         */
-        public Builder tooltips(int extra) {
-            if (!hasToolTip)
+        /// 额外的工具提示
+        ///
+        /// @param namespace 命名空间
+        /// @param extra     额外的数量
+        public Builder tooltips(String namespace, int extra) {
+            if (!hasToolTip) {
                 throw new IllegalArgumentException("Can not add tooltip when noTooltip() invoked!");
+            }
             extra += 1;
             for (int i = 1; i < extra; i++) {
-                additionTip.add(Component.translatable("tooltip.item.terra_curio." + name + "." + i));
+                additionTip.add(Component.translatable("tooltip.item." + namespace + "." + name + "." + i).withStyle(ChatFormatting.GRAY));
             }
             return this;
         }
 
-        public Builder jeiInfos(int count) {
-            this.jeiInformationCount = count;
+        public Builder tooltips(int extra) {
+            return tooltips(TerraCurio.MODID, extra);
+        }
+
+        public Builder infos(int count) {
+            this.infoTooltipCount = count;
             return this;
+        }
+
+        @Deprecated(forRemoval = true, since = "1.3.0")
+        @ApiStatus.ScheduledForRemoval(inVersion = "1.4.0")
+        public Builder jeiInfos(int count) {
+            return infos(count);
         }
 
         public Builder noTooltip() {

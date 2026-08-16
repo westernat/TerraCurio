@@ -3,6 +3,7 @@ package org.confluence.terra_curio.client;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import org.confluence.lib.ConfluenceMagicLib;
 
 public final class TCClientConfigs {
     private static ModConfigSpec.BooleanValue PLAY_SHOES_SOUND;
@@ -16,6 +17,8 @@ public final class TCClientConfigs {
     private static ModConfigSpec.DoubleValue INFORMATION_HUD_TOP;
     private static ModConfigSpec.BooleanValue INFORMATION_HUD_LEFT;
 
+    private static ModConfigSpec.BooleanValue DISPLAY_INFO_TOOLTIP;
+
     public static boolean playShoesSound = true;
     public static float shoesSoundVolume = 1.0F;
     public static boolean showShoesParticle = true;
@@ -26,6 +29,8 @@ public final class TCClientConfigs {
 
     public static float informationHudTop = 0.5F;
     public static boolean informationIsLeft = false;
+
+    public static boolean displayInfoTooltip = !ConfluenceMagicLib.IS_CONFLUENCE_LOAD;
 
     public static void onLoad() {
         playShoesSound = PLAY_SHOES_SOUND.get();
@@ -38,6 +43,7 @@ public final class TCClientConfigs {
 
         informationHudTop = INFORMATION_HUD_TOP.get().floatValue();
         informationIsLeft = INFORMATION_HUD_LEFT.get();
+        displayInfoTooltip = !ConfluenceMagicLib.IS_CONFLUENCE_LOAD && DISPLAY_INFO_TOOLTIP.get();
     }
 
     public static void register(ModContainer container) {
@@ -52,6 +58,10 @@ public final class TCClientConfigs {
 
         INFORMATION_HUD_TOP = builder.pop().push("Information HUD").comment("finalTop = screenHeight * top").defineInRange("top", 0.5, 0.0, 1.0);
         INFORMATION_HUD_LEFT = builder.comment("left or right").define("isLeft", false);
+
+        if (!ConfluenceMagicLib.IS_CONFLUENCE_LOAD) {
+            DISPLAY_INFO_TOOLTIP = builder.comment("display the green tooltip").define("displayInfoTooltip", true);
+        }
         container.registerConfig(ModConfig.Type.CLIENT, builder.build());
     }
 }

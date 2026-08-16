@@ -69,7 +69,8 @@ public class TCItemTagsProvider extends ItemTagsProvider {
                 TCItems.FISHRON_WINGS.get(),
                 TCItems.NEBULA_WINGS.get(),
                 TCItems.SOLAR_WINGS.get(),
-                TCItems.STARDUST_WINGS.get()
+                TCItems.STARDUST_WINGS.get(),
+                TCItems.VORTEX_BOOSTER.get()
         );
     }
 }

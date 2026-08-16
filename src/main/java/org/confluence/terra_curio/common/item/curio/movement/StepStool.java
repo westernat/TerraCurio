@@ -63,5 +63,6 @@ public class StepStool extends BaseCurioItem {
         tooltipComponents.add(Component.translatable(
                 "tooltip.item.terra_curio.step_stool.1", LibUtils.getItemStackNbtNoCopy(stack).getInt("extraStep")
         ).withStyle(ChatFormatting.BLUE));
+        appendInfo(stack, tooltipComponents);
     }
 }

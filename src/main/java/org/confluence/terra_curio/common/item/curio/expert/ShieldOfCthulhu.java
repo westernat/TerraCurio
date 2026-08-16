@@ -22,5 +22,6 @@ public class ShieldOfCthulhu extends BaseCurioItem {
                     LibClientUtils.keyMappingComponent(TCKeyBindings.CTHULHU_SPRINTING.get())
             ));
         }
+        appendInfo(stack, tooltipComponents);
     }
 }

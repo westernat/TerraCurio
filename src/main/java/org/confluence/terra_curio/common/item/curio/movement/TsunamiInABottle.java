@@ -25,12 +25,12 @@ public class TsunamiInABottle extends BaseCurioItem {
 
         if (emitter.active) {
             if (!emitter.isLocalSpace()) {
-                emitter.parentSpace = new Matrix4f();
+                emitter.setLocalSpace(new Matrix4f(), false);
             }
             if (IEntity.of(living).terra_curio$isShouldRot()) {
-                emitter.parentSpace.setTranslation(0, living.getBbHeight(), 0);
+                emitter.getLocalSpace().setTranslation(0, living.getBbHeight(), 0);
             } else {
-                emitter.parentSpace.setTranslation(0, 0, 0);
+                emitter.getLocalSpace().setTranslation(0, 0, 0);
             }
         }
     }
