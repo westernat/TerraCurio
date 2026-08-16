@@ -21,7 +21,7 @@ import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.mixed.IEntity;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
 import org.confluence.terra_curio.util.CuriosUtils;
-import org.joml.Matrix4f;
+import org.joml.Matrix4x3f;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 import top.theillusivec4.curios.api.SlotContext;
 
@@ -50,7 +50,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
 
         if (emitter.active) {
             if (!emitter.isLocalSpace()) {
-                emitter.setLocalSpace(new Matrix4f(), false);
+                emitter.setLocalSpace(new Matrix4x3f(), false);
             }
             if (IEntity.of(living).terra_curio$isShouldRot()) {
                 emitter.getLocalSpace().setTranslation(0, living.getBbHeight(), 0);

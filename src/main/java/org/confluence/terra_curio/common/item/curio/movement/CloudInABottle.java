@@ -5,7 +5,7 @@ import net.minecraft.world.entity.LivingEntity;
 import org.confluence.terra_curio.client.handler.PlayerJumpHandler;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.mixed.IEntity;
-import org.joml.Matrix4f;
+import org.joml.Matrix4x3f;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 
 public class CloudInABottle extends BaseCurioItem {
@@ -25,7 +25,7 @@ public class CloudInABottle extends BaseCurioItem {
 
         if (emitter.active) {
             if (!emitter.isLocalSpace()) {
-                emitter.setLocalSpace(new Matrix4f(), false);
+                emitter.setLocalSpace(new Matrix4x3f(), false);
             }
             if (IEntity.of(living).terra_curio$isShouldRot()) {
                 emitter.getLocalSpace().setTranslation(0, living.getBbHeight(), 0);
