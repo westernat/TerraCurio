@@ -46,7 +46,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
 
     @Override
     protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
-        emitter.active = living.zza > 0.0F && !living.horizontalCollision;
+        emitter.active = TCClientConfigs.showShoesParticle && living.zza > 0.0F && !living.horizontalCollision;
 
         if (emitter.active) {
             if (!emitter.isLocalSpace()) {
@@ -83,9 +83,6 @@ public class BaseSpeedBoots extends BaseCurioItem {
                     if (TCClientConfigs.playShoesSound && player.level().getGameTime() % (ratio < 0.5F ? 6L : 4L) == 0) {
                         player.playSound(TCSoundEvents.SHOES_WALK.get(), TCClientConfigs.shoesSoundVolume, 1.0F);
                     }
-                }
-                if (TCClientConfigs.showShoesParticle) {
-                    // todo particle
                 }
             } else if (speed != 0) {
                 PacketDistributor.sendToServer(new SpeedBootsNBTPacketC2S(slotContext.index(), 0));

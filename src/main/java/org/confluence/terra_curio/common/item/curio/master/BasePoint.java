@@ -46,9 +46,6 @@ public class BasePoint extends BaseSpeedBoots {
                         player.playSound(TCSoundEvents.SHOES_WALK.get());
                     }
                 }
-                if (TCClientConfigs.showShoesParticle) {
-                    // todo particle
-                }
             } else if (speed != 0) {
                 PacketDistributor.sendToServer(new SpeedBootsNBTPacketC2S(slotContext.index(), 0));
             }

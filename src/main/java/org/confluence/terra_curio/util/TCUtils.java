@@ -255,7 +255,7 @@ public final class TCUtils {
                 walkableFluidStates.add(state);
             }
         });
-        ((ILivingEntity) player).terra_curio$resetLastWalkedFluidState(walkableFluidStates);
+        ILivingEntity.of(player).terra_curio$resetLastWalkedFluidState(walkableFluidStates);
     }
 
     public static void applyFluidWalk(Player player) {
@@ -283,19 +283,17 @@ public final class TCUtils {
         if (fluidState.isEmpty() || living.isCrouching() || !IEntity.of(living).terra_curio$isPlayer()) {
             return false;
         }
-        ILivingEntity iLiving = (ILivingEntity) living;
-        if (iLiving.terra_curio$getLastWalkedFluidState() == fluidState) {
+        if (ILivingEntity.of(living).terra_curio$getLastWalkedFluidState() == fluidState) {
             return true;
-        } else if (iLiving.terra_curio$isFluidWalkable(fluidState)) {
-            iLiving.terra_curio$setLastWalkedFluidState(fluidState);
+        } else if (ILivingEntity.of(living).terra_curio$isFluidWalkable(fluidState)) {
+            ILivingEntity.of(living).terra_curio$setLastWalkedFluidState(fluidState);
             return true;
         }
         return false; // confluence mixin here
     }
 
     public static boolean applyTotemAbility(LivingEntity living) {
-        ILivingEntity iLiving = (ILivingEntity) living;
-        if (iLiving.terra_curio$getTotemCooldown() == 0) {
+        if (ILivingEntity.of(living).terra_curio$getTotemCooldown() == 0) {
             int cooldown = getValue(living, TCItems.TOTEM$WITH$COOLDOWN);
             if (cooldown > 0) {
                 living.setHealth(1.0F);
@@ -304,10 +302,10 @@ public final class TCUtils {
                 living.addEffect(new MobEffectInstance(MobEffects.ABSORPTION, 100, 1));
                 living.addEffect(new MobEffectInstance(MobEffects.FIRE_RESISTANCE, 800, 0));
                 living.level().broadcastEntityEvent(living, EntityEvent.TALISMAN_ACTIVATE);
-                iLiving.terra_curio$setTotemCooldown(cooldown);
+                ILivingEntity.of(living).terra_curio$setTotemCooldown(cooldown);
                 return true;
             } else {
-                iLiving.terra_curio$setTotemCooldown(-1);
+                ILivingEntity.of(living).terra_curio$setTotemCooldown(-1);
             }
         }
         return false;

@@ -63,10 +63,9 @@ public class BaseCurioItem extends Item implements ICurioItem {
         if (builder == null || builder.particle == null) return;
         LivingEntity living = slotContext.entity();
         if (living.level().isClientSide) {
-            ILivingEntity iLiving = (ILivingEntity) living;
-            ParticleEmitter emitter = iLiving.terra_curio$getOrCreateParticleEmitters().get(builder.particle);
+            ParticleEmitter emitter = ILivingEntity.of(living).terra_curio$getOrCreateParticleEmitters().get(builder.particle);
             if (emitter == null || emitter.isRemoved()) {
-                Map<ResourceLocation, ParticleEmitter> emitters = iLiving.terra_curio$getOrCreateParticleEmitters();
+                Map<ResourceLocation, ParticleEmitter> emitters = ILivingEntity.of(living).terra_curio$getOrCreateParticleEmitters();
                 emitter = new ParticleEmitter(living.level(), living.position(), builder.particle);
                 emitter.attachEntity(living);
                 emitter.hideOutline = true;
@@ -80,7 +79,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
         if (emitter.isRemoved()) {
-            ((ILivingEntity) living).terra_curio$getOrCreateParticleEmitters().remove(particle);
+            ILivingEntity.of(living).terra_curio$getOrCreateParticleEmitters().remove(particle);
         }
     }
 
