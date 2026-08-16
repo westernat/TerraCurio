@@ -154,10 +154,10 @@ dependencies {
     implementation "top.theillusivec4.curios:curios-neoforge:${curios_version}"
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
     if (slim) {
-        implementation("org.mesdag:ParticleStorm:${particle_storm_version}")
+        implementation("org.mesdag:ParticleStorm-neoforge-${minecraft_version}:${particlestorm_version}")
         implementation(project(":Confluence-Magic-Lib"))
     } else {
-        implementation(jarJar("org.mesdag:ParticleStorm:${particle_storm_version}"))
+        implementation(jarJar("org.mesdag:ParticleStorm-neoforge-${minecraft_version}:${particlestorm_version}"))
         implementation(jarJar(project(":Confluence-Magic-Lib")))
     }
 

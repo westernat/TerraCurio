@@ -11,6 +11,8 @@ import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.LivingEntity;
 import net.neoforged.neoforge.registries.DeferredItem;
+import org.confluence.lib.util.LibUtils;
+import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.model.accessory.*;
 import org.confluence.terra_curio.client.renderer.accessory.*;
 import org.confluence.terra_curio.common.init.TCItems;
@@ -20,6 +22,8 @@ import java.util.function.BiConsumer;
 import java.util.function.Supplier;
 
 public final class CuriosClient {
+    public static final ResourceLocation DUMMY_ID = TerraCurio.asResource("");
+
     public static void registerRenderers() {
         EntityModelSet entityModels = Minecraft.getInstance().getEntityModels();
         CuriosRendererRegistry.register(TCItems.WORM_SCARF.get(), () -> new WormScarfRenderer(entityModels));
@@ -34,29 +38,32 @@ public final class CuriosClient {
         CuriosRendererRegistry.register(TCItems.MOON_SHELL.get(), () -> new MoonShellRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.CELESTIAL_SHELL.get(), () -> new MoonShellRenderer(entityModels));
 
-        normalBalloon(TCItems.BLIZZARD_IN_A_BALLOON);
-        normalBalloon(TCItems.CLOUD_IN_A_BALLOON);
-        normalBalloon(TCItems.FART_IN_A_BALLOON);
-        normalBalloon(TCItems.HONEY_BALLOON);
-        normalBalloon(TCItems.SANDSTORM_IN_A_BALLOON);
-        normalBalloon(TCItems.SHINY_RED_BALLOON);
-        CuriosRendererRegistry.register(TCItems.BALLOON_PUFFERFISH.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(TCItems.BALLOON_PUFFERFISH.getId())));
-        CuriosRendererRegistry.register(TCItems.SHARKRON_BALLOON.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(TCItems.SHARKRON_BALLOON.getId())));
-        normalBalloon(TCItems.BUNDLE_OF_BALLOONS);
-        normalBalloon(TCItems.BUNDLE_OF_HORSESHOE_BALLOONS);
+        if (LibUtils.isDev()) {
+            normalBalloon(TCItems.BLIZZARD_IN_A_BALLOON);
+            normalBalloon(TCItems.CLOUD_IN_A_BALLOON);
+            normalBalloon(TCItems.FART_IN_A_BALLOON);
+            normalBalloon(TCItems.HONEY_BALLOON);
+            normalBalloon(TCItems.SANDSTORM_IN_A_BALLOON);
+            normalBalloon(TCItems.SHINY_RED_BALLOON);
+            CuriosRendererRegistry.register(TCItems.BALLOON_PUFFERFISH.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(TCItems.BALLOON_PUFFERFISH.getId())));
+            CuriosRendererRegistry.register(TCItems.SHARKRON_BALLOON.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(TCItems.SHARKRON_BALLOON.getId())));
+            normalBalloon(TCItems.BUNDLE_OF_BALLOONS);
 
-        // Horseshoe balloons — same balloon model + base balloon texture + horseshoe overlay
-        horseshoeBalloon(TCItems.BLUE_HORSESHOE_BALLOON, TCItems.CLOUD_IN_A_BALLOON.getId());
-        horseshoeBalloon(TCItems.YELLOW_HORSESHOE_BALLOON, TCItems.SANDSTORM_IN_A_BALLOON.getId());
-        horseshoeBalloon(TCItems.GREEN_HORSESHOE_BALLOON, TCItems.FART_IN_A_BALLOON.getId());
-        horseshoeBalloon(TCItems.AMBER_HORSESHOE_BALLOON, TCItems.HONEY_BALLOON.getId());
-        // Pink and white have their own model
-        CuriosRendererRegistry.register(TCItems.PINK_HORSESHOE_BALLOON.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(TCItems.PINK_HORSESHOE_BALLOON.getId())));
-        CuriosRendererRegistry.register(TCItems.WHITE_HORSESHOE_BALLOON.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(TCItems.WHITE_HORSESHOE_BALLOON.getId())));
+            // Horseshoe balloons — same balloon model + base balloon texture + horseshoe overlay
+            horseshoeBalloon(TCItems.BUNDLE_OF_HORSESHOE_BALLOONS, TerraCurio.asResource("horseshoe"));
+            horseshoeBalloon(TCItems.BLUE_HORSESHOE_BALLOON, TerraCurio.asResource("blue_horseshoe"));
+            horseshoeBalloon(TCItems.YELLOW_HORSESHOE_BALLOON, TerraCurio.asResource("horseshoe"));
+            horseshoeBalloon(TCItems.GREEN_HORSESHOE_BALLOON, TerraCurio.asResource("green_horseshoe"));
+            horseshoeBalloon(TCItems.AMBER_HORSESHOE_BALLOON, TerraCurio.asResource("horseshoe"));
+            // Pink and white have their own model
+            CuriosRendererRegistry.register(TCItems.PINK_HORSESHOE_BALLOON.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(TCItems.PINK_HORSESHOE_BALLOON.getId())));
+            CuriosRendererRegistry.register(TCItems.WHITE_HORSESHOE_BALLOON.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(TCItems.WHITE_HORSESHOE_BALLOON.getId())));
 
-        normalWings(TCItems.FLEDGLING_WINGS);
+            normalWings(TCItems.FLEDGLING_WINGS);
 
-        LayeredGeoRenderer.registerAll();
+            LayeredGeoRenderer.registerAll();
+            NormalBalloonGeoRenderer.registerAll();
+        }
     }
 
     private static void normalWings(DeferredItem<?> item) {
@@ -67,8 +74,8 @@ public final class CuriosClient {
         CuriosRendererRegistry.register(item.get(), () -> new NormalBalloonGeoRenderer(item.getId()));
     }
 
-    private static void horseshoeBalloon(DeferredItem<?> item, ResourceLocation baseTextureId) {
-        CuriosRendererRegistry.register(item.get(), () -> new NormalBalloonGeoRenderer(new AccessoryGeoModel(NormalBalloonGeoRenderer.MODEL, AccessoryGeoModel.createTextureResource(baseTextureId))));
+    private static void horseshoeBalloon(DeferredItem<?> item, ResourceLocation horseshoeTextureId) {
+        CuriosRendererRegistry.register(item.get(), () -> new NormalBalloonGeoRenderer(DUMMY_ID).setHorseshoe(horseshoeTextureId));
     }
 
     public static void registerLayers(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> layerDefinition) {

@@ -3,6 +3,8 @@ package org.confluence.terra_curio.client.renderer.accessory;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Reference2IntOpenHashMap;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -25,82 +27,63 @@ import org.confluence.terra_curio.client.model.accessory.AccessoryGeoModel;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.joml.Matrix4f;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class NormalBalloonGeoRenderer extends AccessoryGeoRenderer {
     public static final ResourceLocation MODEL = TerraCurio.asResource("geo/accessory/normal_balloon.geo.json");
 
     // Balloon type flags — each bit represents a balloon variant
-    public static final int FLAG_CLOUD      = 1;
-    public static final int FLAG_BLIZZARD   = 2;
-    public static final int FLAG_SANDSTORM  = 4;
-    public static final int FLAG_FART       = 8;
-    public static final int FLAG_HONEY      = 16;
-    public static final int FLAG_SHINY_RED  = 32;
-    public static final int FLAG_PUFFERFISH = 64;
-    public static final int FLAG_SHARKRON   = 128;
+    protected static final int FLAG_CLOUD = 1;
+    protected static final int FLAG_BLIZZARD = 2;
+    protected static final int FLAG_SANDSTORM = 4;
+    protected static final int FLAG_FART = 8;
+    protected static final int FLAG_HONEY = 16;
+    protected static final int FLAG_SHINY_RED = 32;
+    protected static final int FLAG_PUFFERFISH = 64;
+    protected static final int FLAG_SHARKRON = 128;
 
     // Meta flags — above 0xFF, not counted as sub-balloons
-    private static final int FLAG_HORSESHOE       = 256;
-    private static final int FLAG_PINK_HORSESHOE  = 512;
-    private static final int FLAG_WHITE_HORSESHOE = 1024;
-    private static final int BALLOON_MASK = 0xFF;
+    protected static final int FLAG_HORSESHOE = 256;
+    protected static final int FLAG_PINK_HORSESHOE = 512;
+    protected static final int FLAG_WHITE_HORSESHOE = 1024;
+    protected static final int BALLOON_MASK = 0xFF;
 
-    private static final Reference2IntOpenHashMap<Item> BALLOON_FLAGS = new Reference2IntOpenHashMap<>();
-    private static final Map<Integer, ResourceLocation> SUB_TEXTURES = new HashMap<>();
-    private static final Map<Integer, RenderType> SUB_RENDER_TYPES = new HashMap<>();
+    protected static final Reference2IntOpenHashMap<Item> BALLOON_FLAGS = new Reference2IntOpenHashMap<>();
+    protected static final Int2ObjectMap<ResourceLocation> SUB_TEXTURES = new Int2ObjectOpenHashMap<>();
+    protected static final Int2ObjectMap<RenderType> SUB_RENDER_TYPES = new Int2ObjectOpenHashMap<>();
+    protected static final ResourceLocation HORSESHOE_MODEL_PATH = TerraCurio.asResource("geo/accessory/horseshoe.geo.json");
 
-    private static final ResourceLocation HORSESHOE_MODEL_PATH = TerraCurio.asResource("geo/accessory/horseshoe.geo.json");
-    private static final ResourceLocation HORSESHOE_TEXTURE_PATH = TerraCurio.asResource("textures/accessory/horseshoe.png");
-    private static AccessoryGeoModel horseshoeModel;
-    private static RenderType horseshoeRenderType;
-
-    static {
-        registerBalloon(TCItems.CLOUD_IN_A_BALLOON,      FLAG_CLOUD);
-        registerBalloon(TCItems.BLIZZARD_IN_A_BALLOON,   FLAG_BLIZZARD);
-        registerBalloon(TCItems.SANDSTORM_IN_A_BALLOON,  FLAG_SANDSTORM);
-        registerBalloon(TCItems.FART_IN_A_BALLOON,       FLAG_FART);
-        registerBalloon(TCItems.HONEY_BALLOON,            FLAG_HONEY);
-        registerBalloon(TCItems.SHINY_RED_BALLOON,        FLAG_SHINY_RED);
-        registerBalloon(TCItems.BALLOON_PUFFERFISH,       FLAG_PUFFERFISH);
-        registerBalloon(TCItems.SHARKRON_BALLOON,         FLAG_SHARKRON);
+    public static void registerAll() {
+        registerBalloon(TCItems.CLOUD_IN_A_BALLOON, FLAG_CLOUD);
+        registerBalloon(TCItems.BLIZZARD_IN_A_BALLOON, FLAG_BLIZZARD);
+        registerBalloon(TCItems.SANDSTORM_IN_A_BALLOON, FLAG_SANDSTORM);
+        registerBalloon(TCItems.FART_IN_A_BALLOON, FLAG_FART);
+        registerBalloon(TCItems.HONEY_BALLOON, FLAG_HONEY);
+        registerBalloon(TCItems.SHINY_RED_BALLOON, FLAG_SHINY_RED);
+        registerBalloon(TCItems.BALLOON_PUFFERFISH, FLAG_PUFFERFISH);
+        registerBalloon(TCItems.SHARKRON_BALLOON, FLAG_SHARKRON);
 
         // Bundles — composite flags
-        BALLOON_FLAGS.put(TCItems.BUNDLE_OF_BALLOONS.get(),              FLAG_CLOUD | FLAG_BLIZZARD | FLAG_SANDSTORM);
-        BALLOON_FLAGS.put(TCItems.BUNDLE_OF_HORSESHOE_BALLOONS.get(),    FLAG_CLOUD | FLAG_BLIZZARD | FLAG_SANDSTORM | FLAG_HORSESHOE);
+        BALLOON_FLAGS.put(TCItems.BUNDLE_OF_BALLOONS.get(), FLAG_CLOUD | FLAG_BLIZZARD | FLAG_SANDSTORM);
+        BALLOON_FLAGS.put(TCItems.BUNDLE_OF_HORSESHOE_BALLOONS.get(), FLAG_CLOUD | FLAG_BLIZZARD | FLAG_SANDSTORM | FLAG_HORSESHOE);
 
         // Horseshoe balloons — base balloon flag + HORSESHOE meta
-        BALLOON_FLAGS.put(TCItems.BLUE_HORSESHOE_BALLOON.get(),    FLAG_CLOUD     | FLAG_HORSESHOE);
-        BALLOON_FLAGS.put(TCItems.WHITE_HORSESHOE_BALLOON.get(),   FLAG_BLIZZARD  | FLAG_HORSESHOE | FLAG_WHITE_HORSESHOE);
-        BALLOON_FLAGS.put(TCItems.YELLOW_HORSESHOE_BALLOON.get(),  FLAG_SANDSTORM | FLAG_HORSESHOE);
-        BALLOON_FLAGS.put(TCItems.GREEN_HORSESHOE_BALLOON.get(),   FLAG_FART      | FLAG_HORSESHOE);
-        BALLOON_FLAGS.put(TCItems.PINK_HORSESHOE_BALLOON.get(),    FLAG_SHARKRON  | FLAG_HORSESHOE | FLAG_PINK_HORSESHOE);
-        BALLOON_FLAGS.put(TCItems.AMBER_HORSESHOE_BALLOON.get(),   FLAG_HONEY     | FLAG_HORSESHOE);
+        BALLOON_FLAGS.put(TCItems.BLUE_HORSESHOE_BALLOON.get(), FLAG_CLOUD | FLAG_HORSESHOE);
+        BALLOON_FLAGS.put(TCItems.WHITE_HORSESHOE_BALLOON.get(), FLAG_BLIZZARD | FLAG_HORSESHOE | FLAG_WHITE_HORSESHOE);
+        BALLOON_FLAGS.put(TCItems.YELLOW_HORSESHOE_BALLOON.get(), FLAG_SANDSTORM | FLAG_HORSESHOE);
+        BALLOON_FLAGS.put(TCItems.GREEN_HORSESHOE_BALLOON.get(), FLAG_FART | FLAG_HORSESHOE);
+        BALLOON_FLAGS.put(TCItems.PINK_HORSESHOE_BALLOON.get(), FLAG_SHARKRON | FLAG_HORSESHOE | FLAG_PINK_HORSESHOE);
+        BALLOON_FLAGS.put(TCItems.AMBER_HORSESHOE_BALLOON.get(), FLAG_HONEY | FLAG_HORSESHOE);
     }
 
-    private static void registerBalloon(DeferredItem<?> item, int flag) {
+    protected static void registerBalloon(DeferredItem<?> item, int flag) {
         BALLOON_FLAGS.put(item.get(), flag);
         SUB_TEXTURES.put(flag, AccessoryGeoModel.createTextureResource(item.getId()));
-    }
-
-    private static RenderType getHorseshoeRenderType() {
-        if (horseshoeRenderType == null) {
-            horseshoeRenderType = RenderType.armorCutoutNoCull(HORSESHOE_TEXTURE_PATH);
-        }
-        return horseshoeRenderType;
-    }
-
-    private static AccessoryGeoModel getHorseshoeModel() {
-        if (horseshoeModel == null) {
-            horseshoeModel = new AccessoryGeoModel(HORSESHOE_MODEL_PATH, HORSESHOE_TEXTURE_PATH);
-        }
-        return horseshoeModel;
     }
 
     protected final long seed;
     protected final RandomSource random;
     protected ResourceKey<Level> currentLevel;
+    protected AccessoryGeoModel horseshoeModel;
+    protected RenderType horseshoeRenderType;
 
     public NormalBalloonGeoRenderer(ResourceLocation id) {
         this(new AccessoryGeoModel(MODEL, AccessoryGeoModel.createTextureResource(id)));
@@ -110,6 +93,13 @@ public class NormalBalloonGeoRenderer extends AccessoryGeoRenderer {
         super(model);
         this.seed = RandomSupport.generateUniqueSeed();
         this.random = RandomSource.create(seed);
+    }
+
+    public NormalBalloonGeoRenderer setHorseshoe(ResourceLocation horseshoeTextureId) {
+        ResourceLocation texture = AccessoryGeoModel.createTextureResource(horseshoeTextureId);
+        this.horseshoeModel = new AccessoryGeoModel(HORSESHOE_MODEL_PATH, texture);
+        this.horseshoeRenderType = RenderType.armorCutoutNoCull(texture);
+        return this;
     }
 
     @Override
@@ -165,19 +155,10 @@ public class NormalBalloonGeoRenderer extends AccessoryGeoRenderer {
             poseStack.translate(-xDif, -yDif + ropeYOffset, -zDif);
 
             int subFlag = subFlags[si];
-            RenderType subType = SUB_RENDER_TYPES.computeIfAbsent(subFlag,
-                    f -> RenderType.armorCutoutNoCull(SUB_TEXTURES.get(f)));
+            RenderType subType = SUB_RENDER_TYPES.computeIfAbsent(subFlag, f -> RenderType.armorCutoutNoCull(SUB_TEXTURES.get(f)));
             VertexConsumer buffer = bufferSource.getBuffer(subType);
             for (var bone : geoModel.getBakedModel().topLevelBones()) {
                 renderRecursively(poseStack, bone, buffer, packedLight);
-            }
-
-            // Render horseshoe overlay
-            if (isHorseshoe) {
-                VertexConsumer hsBuffer = bufferSource.getBuffer(getHorseshoeRenderType());
-                for (var bone : getHorseshoeModel().getBakedModel().topLevelBones()) {
-                    renderRecursively(poseStack, bone, hsBuffer, packedLight);
-                }
             }
 
             // Render leash for this sub-balloon
@@ -200,6 +181,14 @@ public class NormalBalloonGeoRenderer extends AccessoryGeoRenderer {
             poseStack.popPose();
 
             poseStack.popPose();
+
+            // Render horseshoe overlay
+            if (isHorseshoe) {
+                VertexConsumer hsBuffer = bufferSource.getBuffer(horseshoeRenderType);
+                for (var bone : horseshoeModel.getBakedModel().topLevelBones()) {
+                    renderRecursively(poseStack, bone, hsBuffer, packedLight);
+                }
+            }
         }
     }
 

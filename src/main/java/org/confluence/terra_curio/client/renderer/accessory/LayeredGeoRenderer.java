@@ -117,6 +117,11 @@ public class LayeredGeoRenderer extends AccessoryGeoRenderer {
             public void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
                 head(baseModel, bakedModel);
             }
+
+            @Override
+            public Layer[] occupied() {
+                return new Layer[]{this, HEAD_TOP};
+            }
         },
         HEAD_TOP {
             @Override
@@ -129,6 +134,11 @@ public class LayeredGeoRenderer extends AccessoryGeoRenderer {
             public void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
                 rightArm(baseModel, bakedModel);
                 leftArm(baseModel, bakedModel);
+            }
+
+            @Override
+            public Layer[] occupied() {
+                return new Layer[]{this, RIGHT_HAND};
             }
         },
         RIGHT_HAND {
@@ -148,7 +158,104 @@ public class LayeredGeoRenderer extends AccessoryGeoRenderer {
             public void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
                 leftArm(baseModel, bakedModel);
             }
+        },
+        BOTTOM {
+            @Override
+            public void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
+                body(baseModel, bakedModel);
+            }
+        },
+        SHOE {
+            @Override
+            public void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
+                rightBoot(baseModel, bakedModel);
+                leftBoot(baseModel, bakedModel);
+            }
+        },
+        CLOAK {
+            @Override
+            public void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
+                body(baseModel, bakedModel);
+            }
+
+            @Override
+            public Layer[] occupied() {
+                return new Layer[]{this, BACK};
+            }
+        },
+        BACK {
+            @Override
+            public void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
+                body(baseModel, bakedModel);
+            }
+        },
+        BELT {
+            @Override
+            public void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
+                body(baseModel, bakedModel);
+            }
+        },
+        SCARF {
+            @Override
+            public void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
+                body(baseModel, bakedModel);
+            }
+        },
+        BOTTLE {
+            @Override
+            public void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
+                body(baseModel, bakedModel);
+            }
+        },
+        HORSESHOE {
+            @Override
+            public void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
+                body(baseModel, bakedModel);
+            }
+        },
+        BACK_AND_DOUBLE_HAND {
+            @Override
+            public void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
+                body(baseModel, bakedModel);
+                rightArm(baseModel, bakedModel);
+                leftArm(baseModel, bakedModel);
+            }
+
+            @Override
+            public Layer[] occupied() {
+                return new Layer[]{this, BACK, DOUBLE_HAND};
+            }
+        },
+        NECKLACE {
+            @Override
+            public void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
+                body(baseModel, bakedModel);
+            }
         };
+
+        private static void body(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
+            bakedModel.getBone("armorBody").ifPresent(body -> {
+                ModelPart bodyPart = baseModel.body;
+                RenderUtil.matchModelPartRot(bodyPart, body);
+                body.updatePosition(bodyPart.x, -bodyPart.y, bodyPart.z);
+            });
+        }
+
+        private static void leftBoot(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
+            bakedModel.getBone("armorLeftBoot").ifPresent(leftBoot -> {
+                ModelPart leftLegPart = baseModel.rightLeg;
+                RenderUtil.matchModelPartRot(leftLegPart, leftBoot);
+                leftBoot.updatePosition(leftLegPart.x - 2, 12 - leftLegPart.y, leftLegPart.z);
+            });
+        }
+
+        private static void rightBoot(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
+            bakedModel.getBone("armorRightBoot").ifPresent(rightBoot -> {
+                ModelPart rightLegPart = baseModel.rightLeg;
+                RenderUtil.matchModelPartRot(rightLegPart, rightBoot);
+                rightBoot.updatePosition(rightLegPart.x + 2, 12 - rightLegPart.y, rightLegPart.z);
+            });
+        }
 
         private static void head(HumanoidModel<?> baseModel, BakedGeoModel bakedModel) {
             bakedModel.getBone("armorHead").ifPresent(head -> {
@@ -175,6 +282,10 @@ public class LayeredGeoRenderer extends AccessoryGeoRenderer {
         }
 
         public abstract void transform(HumanoidModel<?> baseModel, BakedGeoModel bakedModel);
+
+        public Layer[] occupied() {
+            return new Layer[]{this};
+        }
     }
 
     @Override
@@ -225,10 +336,11 @@ public class LayeredGeoRenderer extends AccessoryGeoRenderer {
                 Item item = stack.getItem();
                 ObjectIntPair<Layer> current = RENDER_LAYERS.get(item);
                 if (current == null) continue;
-                Layer layer = current.left();
-                ObjectIntPair<Layer> previous = RENDER_LAYERS.get(layers.get(layer));
-                if (previous == null || current.rightInt() >= previous.rightInt()) {
-                    layers.put(layer, item);
+                for (Layer layer : current.left().occupied()) {
+                    ObjectIntPair<Layer> previous = RENDER_LAYERS.get(layers.get(layer));
+                    if (previous == null || current.rightInt() >= previous.rightInt()) {
+                        layers.put(layer, item);
+                    }
                 }
             }
         }
