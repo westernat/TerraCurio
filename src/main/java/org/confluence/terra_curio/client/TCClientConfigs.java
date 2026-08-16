@@ -3,6 +3,7 @@ package org.confluence.terra_curio.client;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.confluence.lib.ConfluenceMagicLib;
 
 public final class TCClientConfigs {
     private static ForgeConfigSpec.BooleanValue PLAY_SHOES_SOUND;
@@ -29,7 +30,7 @@ public final class TCClientConfigs {
     public static float informationHudTop = 0.5F;
     public static boolean informationIsLeft = false;
 
-    public static boolean displayInfoTooltip = true;
+    public static boolean displayInfoTooltip = !ConfluenceMagicLib.IS_CONFLUENCE_LOAD;
 
     public static void onLoad() {
         playShoesSound = PLAY_SHOES_SOUND.get();
@@ -42,7 +43,7 @@ public final class TCClientConfigs {
 
         informationHudTop = INFORMATION_HUD_TOP.get().floatValue();
         informationIsLeft = INFORMATION_HUD_LEFT.get();
-        displayInfoTooltip = DISPLAY_INFO_TOOLTIP.get();
+        displayInfoTooltip = !ConfluenceMagicLib.IS_CONFLUENCE_LOAD && DISPLAY_INFO_TOOLTIP.get();
     }
 
     public static void register(FMLJavaModLoadingContext context) {
@@ -58,7 +59,9 @@ public final class TCClientConfigs {
         INFORMATION_HUD_TOP = builder.pop().push("Information HUD").comment("finalTop = screenHeight * top").defineInRange("top", 0.5, 0.0, 1.0);
         INFORMATION_HUD_LEFT = builder.comment("left or right").define("isLeft", false);
 
-        DISPLAY_INFO_TOOLTIP = builder.comment("display the green tooltip").define("displayInfoTooltip", true);
+        if (!ConfluenceMagicLib.IS_CONFLUENCE_LOAD) {
+            DISPLAY_INFO_TOOLTIP = builder.comment("display the green tooltip").define("displayInfoTooltip", true);
+        }
         context.registerConfig(ModConfig.Type.CLIENT, builder.build());
     }
 }

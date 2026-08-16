@@ -157,11 +157,6 @@ public class BaseCurioItem extends Item implements ICurioItem {
         return new Builder(name, new Properties());
     }
 
-//    @Override
-//    public boolean supportsEnchantment(ItemStack stack, Holder<Enchantment> enchantment) {
-//        return enchantment.is(EnchantmentTags.CURSE) || stack.is(enchantment.value().definition().supportedItems());
-//    }
-
     @Override
     public boolean canApplyAtEnchantingTable(ItemStack stack, Enchantment enchantment) {
         return enchantment.isCurse() || enchantment.category.canEnchant(stack.getItem());

@@ -948,19 +948,6 @@ public class TCLanguageProvider extends LanguageProvider {
         add("terra_curio.configuration.attributeReplacements.button", "Allows you to replace some attributes", "允许部分属性的替换");
         add("terra_curio.configuration.shoesExtraStepHeight", "Shoes Extra Step Height", "靴类额外最大行走高度");
         add("terra_curio.configuration.shoesExtraStepHeight.button", "When enabled, players will be able to walk over blocks half a meter higher.", "开启时玩家将能多走上半米高度");
-        //add("terra_curio.configuration.enable.tooltip", "When enabled, it will random get value through followed Min and Max multiplier", "启用后，将以以下最大、最小乘算进行随机取值");
-        //add("terra_curio.configuration.max.tooltip", "", "");
-        //add("terra_curio.configuration.rareCreatures.button", "", "");
-        //add("terra_curio.configuration.rareCreatures.tooltip", "", "");
-        //add("terra_curio.configuration.min.tooltip", "", "");
-        //add("terra_curio.configuration.rareBlocks.tooltip", "", "");
-        //add("terra_curio.configuration.Random Attack Damage.button", "", "");
-        //add("terra_curio.configuration.Information HUD.button", "", "");
-        //add("terra_curio.configuration.Functional.button", "", "");
-        //add("terra_curio.configuration.Random Attack Damage.tooltip", "", "");
-        //add("terra_curio.configuration.Information HUD.tooltip", "", "");
-        //add("terra_curio.configuration.Max Accessory Amount.tooltip", "", "");
-        //add("terra_curio.configuration.Speed Shoes.button", "", "");
         add("terra_curio.configuration.top", "Relative to the top of the screen as a percentage of distance", "相对屏幕顶部距离百分比");
         add("terra_curio.configuration.isLeft", "Whether it is placed on the left", "是否置于左边");
         add("terra_curio.configuration.rightClickDelay", "Right Click Delay Decrease", "右击延迟降低");
@@ -971,13 +958,6 @@ public class TCLanguageProvider extends LanguageProvider {
         add("terra_curio.configuration.shoesSoundVolume", "Shoes Sound Volume", "靴子音效音量");
         add("terra_curio.configuration.autoAttack", "Auto Attack", "自动攻击");
         add("terra_curio.configuration.autoAttack.tooltip", "Auto Attack", "启用近战武器自动挥动");
-    }
-
-    private void tooltipsAndInfos(Supplier<? extends Item> item, String zhName, String[] enTooltip, String[] zhTooltip, String[] enInfo, String[] zhInfo) {
-        String key = item.get().getDescriptionId();
-        if (!isEn) add(key, zhName);
-        addTooltips(key, enTooltip, zhTooltip);
-        addInfos(key, enInfo, zhInfo);
     }
 
     private void tooltipsAndInfo(Supplier<? extends Item> item, String zhName, String[] enTooltip, String[] zhTooltip, String enInfo, String zhInfo) {
@@ -1005,12 +985,6 @@ public class TCLanguageProvider extends LanguageProvider {
         String key = item.get().getDescriptionId();
         if (!isEn) add(key, zhName);
         addTooltips(key, enTooltip, zhTooltip);
-    }
-
-    private void onlyInfos(Supplier<? extends Item> item, String zhName, String[] enInfo, String[] zhInfo) {
-        String key = item.get().getDescriptionId();
-        if (!isEn) add(key, zhName);
-        addInfos(key, enInfo, zhInfo);
     }
 
     private void onlyZhName(Supplier<? extends Item> item, String zhName) {
