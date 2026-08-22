@@ -6,7 +6,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import org.confluence.terra_curio.TerraCurio;
-import org.confluence.terra_curio.mixed.ILivingEntity;
+import org.confluence.terra_curio.mixed.ITCLivingEntity;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 import org.mesdag.portlib.diff.Diff;
 import org.mesdag.portlib.network.IPortPacket;
@@ -22,7 +22,7 @@ public record RemoveCurioParticleEmitterPacketS2C(
 
     @Override
     public void work(Player player) {
-        ParticleEmitter emitter = ILivingEntity.of(player).terra_curio$getOrCreateParticleEmitters().remove(particleId);
+        ParticleEmitter emitter = ITCLivingEntity.of(player).terra_curio$getOrCreateParticleEmitters().remove(particleId);
         if (emitter != null) {
             emitter.remove();
         }

@@ -18,15 +18,12 @@
         "accessor.SmithingTransformRecipeAccessor"
     ],
     "client": [
+        "client.ClientLivingEntityMixin",
         "client.ClientPacketListenerMixin",
-        "client.EntityClientMixin",
         "client.KeyboardInputMixin",
-        "client.LivingEntityClientMixin",
         "client.LivingEntityRendererMixin",
         "client.LocalPlayerMixin",
         "client.MouseHandlerMixin",
-        "client.PlayerClientMixin",
-        "client.accessor.LocalPlayerAccessor",
         "client.accessor.MinecraftAccessor",
         "integration.curios.CuriosClientPacketsMixin"
     ],

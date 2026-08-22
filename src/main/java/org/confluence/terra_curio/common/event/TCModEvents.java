@@ -30,7 +30,6 @@ public final class TCModEvents {
 
     private static void registerPayloadHandlers() {
         PortNetworkHandler handler = TerraCurio.NETWORK_HANDLER;
-        handler.registerInGameC2S(GravitationPacketC2S.class, GravitationPacketC2S.ID, GravitationPacketC2S.STREAM_CODEC);
         handler.registerInGameC2S(StepStoolSteppingPacketC2S.class, StepStoolSteppingPacketC2S.ID, StepStoolSteppingPacketC2S.STREAM_CODEC);
         handler.registerInGameC2S(PlayerJumpPacketC2S.class, PlayerJumpPacketC2S.ID, PlayerJumpPacketC2S.STREAM_CODEC);
         handler.registerInGameC2S(SpeedBootsNBTPacketC2S.class, SpeedBootsNBTPacketC2S.ID, SpeedBootsNBTPacketC2S.STREAM_CODEC);
@@ -38,7 +37,6 @@ public final class TCModEvents {
         handler.registerInGameC2S(ShootXBonePacketC2S.class, ShootXBonePacketC2S.ID, ShootXBonePacketC2S.STREAM_CODEC);
         handler.registerInGameC2S(RamRuneFallPacketC2S.class, RamRuneFallPacketC2S.ID, RamRuneFallPacketC2S.STREAM_CODEC);
 
-        handler.registerInGameS2C(BroadcastGravitationRotPacketS2C.class, BroadcastGravitationRotPacketS2C.ID, BroadcastGravitationRotPacketS2C.STREAM_CODEC);
         handler.registerInGameS2C(CurioExistsPacketS2C.class, CurioExistsPacketS2C.ID, CurioExistsPacketS2C.STREAM_CODEC);
         handler.registerInGameS2C(EntityKilledPacketS2C.class, EntityKilledPacketS2C.ID, EntityKilledPacketS2C.STREAM_CODEC);
         handler.registerInGameS2C(InfoCurioCheckPacketS2C.class, InfoCurioCheckPacketS2C.ID, InfoCurioCheckPacketS2C.STREAM_CODEC);

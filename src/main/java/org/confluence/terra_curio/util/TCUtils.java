@@ -32,6 +32,7 @@ import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
+import org.confluence.lib.common.LibEffects;
 import org.confluence.lib.common.LibTags;
 import org.confluence.lib.util.LibEntityUtils;
 import org.confluence.terra_curio.api.primitive.PrimitiveValue;
@@ -42,9 +43,12 @@ import org.confluence.terra_curio.common.attachment.AccessoriesAttachment;
 import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
 import org.confluence.terra_curio.common.entity.BeeProjectile;
 import org.confluence.terra_curio.common.entity.StarCloakEntity;
-import org.confluence.terra_curio.common.init.*;
-import org.confluence.terra_curio.mixed.IEntity;
-import org.confluence.terra_curio.mixed.ILivingEntity;
+import org.confluence.terra_curio.common.init.TCDataComponentTypes;
+import org.confluence.terra_curio.common.init.TCDataMaps;
+import org.confluence.terra_curio.common.init.TCItems;
+import org.confluence.terra_curio.common.init.TCTags;
+import org.confluence.terra_curio.mixed.ITCEntity;
+import org.confluence.terra_curio.mixed.ITCLivingEntity;
 import org.confluence.terra_curio.network.InfoDisablePacket;
 import org.confluence.terra_curio.network.c2s.PlayerSprintPacketC2S;
 import org.confluence.terra_curio.network.s2c.*;
@@ -84,7 +88,7 @@ public final class TCUtils {
         if (attacker != null && attacker.getType().is(attachment.getValue(TCItems.MOB$IGNORE))) {
             return true;
         }
-        if (IEntity.of(living).terra_curio$getCthulhuSprintingTime() > 10 && attachment.contains(TCItems.SHIELD$OF$CTHULHU)) {
+        if (ITCEntity.of(living).terra_curio$getCthulhuSprintingTime() > 10 && attachment.contains(TCItems.SHIELD$OF$CTHULHU)) {
             return true;
         }
         if (attachment.contains(TCItems.FIRE$IMMUNE) && isFire(damageSource)) {
@@ -138,7 +142,7 @@ public final class TCUtils {
                 projectile.setPos(living.position().add(random.nextInt(3) - 1.0, 2.0, random.nextInt(3) - 1.0));
                 living.level().addFreshEntity(projectile);
             }
-            living.addEffect(new MobEffectInstance(TCEffects.HONEY.get(), 100));
+            living.addEffect(new MobEffectInstance(LibEffects.HONEY.get(), 100));
         }
     }
 
@@ -176,12 +180,12 @@ public final class TCUtils {
             int duration = randomSource.nextInt((int) (90 + amount / 3), (int) (300 + amount / 2));
             living.level().getEntities(living, new AABB(living.blockPosition()).inflate(range), entity -> entity instanceof Enemy).forEach(enemy -> {
                 if (enemy instanceof LivingEntity living1) {
-                    living1.addEffect(new MobEffectInstance(TCEffects.CONFUSED.get(), duration));
+                    living1.addEffect(new MobEffectInstance(LibEffects.CONFUSED.get(), duration));
                 }
             });
         }
-        if (randomSource.nextFloat() < 0.1667F && !living.hasEffect(TCEffects.CEREBRAL_MINDTRICK.get())) {
-            living.addEffect(new MobEffectInstance(TCEffects.CEREBRAL_MINDTRICK.get(), 80));
+        if (randomSource.nextFloat() < 0.1667F && !living.hasEffect(LibEffects.CEREBRAL_MINDTRICK.get())) {
+            living.addEffect(new MobEffectInstance(LibEffects.CEREBRAL_MINDTRICK.get(), 80));
             return 0.0F;
         }
         return amount;
@@ -262,7 +266,7 @@ public final class TCUtils {
                 walkableFluidStates.add(state);
             }
         });
-        ILivingEntity.of(player).terra_curio$resetLastWalkedFluidState(walkableFluidStates);
+        ITCLivingEntity.of(player).terra_curio$resetLastWalkedFluidState(walkableFluidStates);
     }
 
     public static void applyFluidWalk(Player player) {
@@ -287,10 +291,10 @@ public final class TCUtils {
     }
 
     public static boolean isFluidWalkable(LivingEntity living, FluidState fluidState) {
-        if (fluidState.isEmpty() || living.isCrouching() || !IEntity.of(living).terra_curio$isPlayer()) {
+        if (fluidState.isEmpty() || living.isCrouching() || !(living instanceof Player)) {
             return false;
         }
-        ILivingEntity iLiving = ILivingEntity.of(living);
+        ITCLivingEntity iLiving = ITCLivingEntity.of(living);
         if (iLiving.terra_curio$getLastWalkedFluidState() == fluidState) {
             return true;
         } else if (iLiving.terra_curio$isFluidWalkable(fluidState)) {
@@ -301,7 +305,7 @@ public final class TCUtils {
     }
 
     public static boolean applyTotemAbility(LivingEntity living) {
-        ILivingEntity iLiving = ILivingEntity.of(living);
+        ITCLivingEntity iLiving = ITCLivingEntity.of(living);
         if (iLiving.terra_curio$getTotemCooldown() == 0) {
             int cooldown = getValue(living, TCItems.TOTEM$WITH$COOLDOWN);
             if (cooldown > 0) {
@@ -321,21 +325,21 @@ public final class TCUtils {
     }
 
     public static void applyCthulhuTouch(Player player, Entity touched) {
-        if (player == touched || IEntity.of(player).terra_curio$getCthulhuSprintingTime() <= 20)
+        if (player == touched || ITCEntity.of(player).terra_curio$getCthulhuSprintingTime() <= 20)
             return;
         if (LibEntityUtils.getOwner(touched) instanceof LivingEntity target && player != target) {
             Vec3 vector = player.getDeltaMovement();
             LibEntityUtils.knockBack(player, touched, new Vec3(vector.x * 1.2, 0.2, vector.z * 1.2));
             touched.hurt(player.damageSources().playerAttack(player), 7.8F);
             player.setDeltaMovement(vector.scale(-0.9));
-            IEntity.of(player).terra_curio$setCthulhuSprintingTime(20);
+            ITCEntity.of(player).terra_curio$setCthulhuSprintingTime(20);
         }
     }
 
     private static boolean sprintKeyDown = false;
 
     public static void applyCthulhuSprinting(boolean down, Player player) {
-        if (IEntity.of(player).terra_curio$getCthulhuSprintingTime() > 0 || player.isFallFlying()) {
+        if (ITCEntity.of(player).terra_curio$getCthulhuSprintingTime() > 0 || player.isFallFlying()) {
             return;
         }
         boolean sprint = false;
@@ -356,7 +360,7 @@ public final class TCUtils {
             float f = player.getYRot() * Mth.DEG_TO_RAD;
             double factor = player.onGround() ? 1.6 : 1.2;
             player.setDeltaMovement(player.getDeltaMovement().add(-Mth.sin(f) * factor, 0.0D, Mth.cos(f) * factor));
-            IEntity.of(player).terra_curio$setCthulhuSprintingTime(32);
+            ITCEntity.of(player).terra_curio$setCthulhuSprintingTime(32);
         }
     }
 
@@ -394,7 +398,7 @@ public final class TCUtils {
     }
 
     public static boolean isIceSafe(LivingEntity self) {
-        if (IEntity.of(self).terra_curio$isPlayer() && ((Player) self).isLocalPlayer()) {
+        if (self instanceof Player player && player.isLocalPlayer()) {
             return TCClientPacketHandler.isIceSafe();
         }
         return TCUtils.hasType(self, TCItems.ICE$SAFE);

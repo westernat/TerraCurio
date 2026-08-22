@@ -10,6 +10,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.mutable.MutableBoolean;
 import org.apache.commons.lang3.mutable.MutableFloat;
+import org.confluence.lib.client.handler.GravitationHandler;
 import org.confluence.terra_curio.api.primitive.MayFlyAbilityValue;
 import org.confluence.terra_curio.client.sound.RocketBootsBoostSoundInstance;
 import org.confluence.terra_curio.client.sound.RocketBootsStopSoundInstance;

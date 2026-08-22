@@ -2,6 +2,7 @@ package org.confluence.terra_curio.client.handler;
 
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.Vec3;
+import org.confluence.lib.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.TCKeyBindings;
 import org.confluence.terra_curio.network.c2s.StepStoolSteppingPacketC2S;
 import org.confluence.terra_curio.network.s2c.StepStoolSteppingPacketS2C;
@@ -16,12 +17,12 @@ public final class StepStoolHandler {
     private static int slot = StepStoolSteppingPacketS2C.NO_CURIO;
 
     public static void handle(LocalPlayer player) {
-        if (slot == StepStoolSteppingPacketS2C.NO_CURIO || (actualStep == 0 && !player.onGround())) {
-            actualStep = 0;
+        if (slot == StepStoolSteppingPacketS2C.NO_CURIO || (getActualStep() == 0 && !player.onGround())) {
+            setActualStep((byte) 0);
             return;
         }
 
-        if (actualStep > 0) {
+        if (getActualStep() > 0) {
             if (player.input.jumping) {
                 player.jumpFromGround();
                 setStep((byte) 0, false);
@@ -33,8 +34,8 @@ public final class StepStoolHandler {
         }
 
         if (TCKeyBindings.STEP_STOOL.get().isDown()) {
-            if (!upKeyDown && actualStep < maxStep) {
-                setStep((byte) (actualStep + 1), true);
+            if (!upKeyDown && getActualStep() < maxStep) {
+                setStep((byte) (getActualStep() + 1), true);
                 upKeyDown = true;
             }
         } else {
@@ -42,27 +43,27 @@ public final class StepStoolHandler {
         }
 
         if (!upKeyDown && player.isShiftKeyDown()) {
-            if (!shiftKeyDown && actualStep > 0) {
-                setStep((byte) (actualStep - 1), false);
+            if (!shiftKeyDown && getActualStep() > 0) {
+                setStep((byte) (getActualStep() - 1), false);
                 shiftKeyDown = true;
             }
         } else {
             shiftKeyDown = false;
         }
 
-        if (actualStep > 0) {
+        if (getActualStep() > 0) {
             player.setDeltaMovement(new Vec3(0.0, player.getDeltaMovement().y, 0.0));
         }
     }
 
     public static void reset() {
-        actualStep = 0;
+        setActualStep((byte) 0);
         maxStep = 0;
         slot = StepStoolSteppingPacketS2C.NO_CURIO;
     }
 
     public static void setStep(byte actualStep, boolean increase) {
-        StepStoolHandler.actualStep = actualStep;
+        setActualStep(actualStep);
         byte step = actualStep;
         if (increase) step = (byte) (actualStep | INCREASE);
         StepStoolSteppingPacketC2S.sendToServer(slot, step);
@@ -73,12 +74,17 @@ public final class StepStoolHandler {
     }
 
     public static boolean onStool() {
-        return actualStep > 0;
+        return getActualStep() > 0;
+    }
+
+    private static void setActualStep(byte step) {
+        actualStep = step;
+        GravitationHandler.setForceCancel(onStool());
     }
 
     public static void handlePacket(int slot, int maxStep) {
         if (slot == StepStoolSteppingPacketS2C.RESET_STEP) {
-            StepStoolHandler.actualStep = 0;
+            setActualStep((byte) 0);
             StepStoolHandler.maxStep = maxStep;
         } else {
             StepStoolHandler.maxStep = maxStep;

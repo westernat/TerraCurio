@@ -8,8 +8,8 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.world.entity.LivingEntity;
-import org.confluence.terra_curio.mixed.IClientLivingEntity;
-import org.confluence.terra_curio.mixed.IEntity;
+import org.confluence.terra_curio.mixed.ITCClientLivingEntity;
+import org.confluence.terra_curio.mixed.ITCEntity;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
@@ -17,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
     @ModifyReturnValue(method = "isEntityUpsideDown", at = @At(value = "RETURN", ordinal = 1))
     private static boolean upsideDown(boolean original, @Local(argsOnly = true) LivingEntity living) {
-        if (!original && IEntity.of(living).terra_curio$isShouldRot()) {
+        if (!original && ITCEntity.of(living).terra_curio$isShouldRot()) {
             return true;
         }
         return original;
@@ -25,8 +25,8 @@ public abstract class LivingEntityRendererMixin<T extends LivingEntity> {
 
     @WrapWithCondition(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/model/EntityModel;renderToBuffer(Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;IIFFFF)V"))
     private boolean couldRender(EntityModel<T> instance, PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha, @Local(argsOnly = true) T living) {
-        boolean b = IClientLivingEntity.of(living).terra_curio$isShowingCosmetic();
-        IClientLivingEntity.of(living).terra_curio$setShowingCosmetic(false);
+        boolean b = ITCClientLivingEntity.of(living).terra_curio$isShowingCosmetic();
+        ITCClientLivingEntity.of(living).terra_curio$setShowingCosmetic(false);
         return !b;
     }
 }

@@ -10,25 +10,19 @@ import com.llamalad7.mixinextras.sugar.ref.LocalBooleanRef;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.confluence.lib.mixed.SelfGetter;
-import org.confluence.terra_curio.common.init.TCEffects;
-import org.confluence.terra_curio.mixed.IEntity;
-import org.confluence.terra_curio.mixed.ILivingEntity;
+import org.confluence.terra_curio.mixed.ITCLivingEntity;
 import org.confluence.terra_curio.util.TCUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -37,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<LivingEntity> {
+public abstract class LivingEntityMixin implements ITCLivingEntity, SelfGetter<LivingEntity> {
     @Unique
     private int terra_curio$totem_cooldown = -1;
     @Unique
@@ -91,32 +85,9 @@ public abstract class LivingEntityMixin implements ILivingEntity, SelfGetter<Liv
         return terra_curio$emitters;
     }
 
-    @Shadow
-    public abstract boolean hasEffect(MobEffect effect);
-
-    @ModifyArg(method = "checkFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/level/ServerLevel;sendParticles(Lnet/minecraft/core/particles/ParticleOptions;DDDIDDDD)I"), index = 2)
-    private double modifyParticlePosY(double posY) {
-        IEntity self = IEntity.of(confluence$self());
-        if (self.terra_curio$isShouldRot()) {
-            return posY + self.terra_curio$getDimensionHeight() - 0.15;
-        }
-        return posY;
-    }
-
     @ModifyReturnValue(method = "canFreeze", at = @At(value = "RETURN", ordinal = 1))
     private boolean checkFreeze(boolean original) {
         return TCUtils.applyFrozenImmune(confluence$self(), original);
-    }
-
-    @ModifyVariable(method = "travel", at = @At("HEAD"), argsOnly = true)
-    private Vec3 confused(Vec3 vec3) {
-        if (hasEffect(TCEffects.CONFUSED.get())) {
-            vec3 = vec3.reverse();
-        }
-        if (IEntity.of(confluence$self()).terra_curio$isShouldRot()) {
-            vec3 = new Vec3(-vec3.x, vec3.y, vec3.z);
-        }
-        return vec3;
     }
 
     @Inject(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z", ordinal = 0))

@@ -42,7 +42,6 @@ public class TerraCurio {
         TCDataComponentTypes.init();
         TCArmorMaterials.init();
         TCSoundEvents.SOUNDS.register(eventBus);
-        TCEffects.EFFECTS.register(eventBus);
         TCEntities.ENTITIES.register(eventBus);
         TCItems.init();
         TCTabs.TABS.register(eventBus);

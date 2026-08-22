@@ -31,7 +31,7 @@ import org.confluence.terra_curio.common.component.PrimitiveValueComponent;
 import org.confluence.terra_curio.common.init.TCDataComponentTypes;
 import org.confluence.terra_curio.common.init.TCDataMaps;
 import org.confluence.terra_curio.common.init.TCItems;
-import org.confluence.terra_curio.mixed.ILivingEntity;
+import org.confluence.terra_curio.mixed.ITCLivingEntity;
 import org.confluence.terra_curio.network.s2c.RemoveCurioParticleEmitterPacketS2C;
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.ApiStatus;
@@ -76,7 +76,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
         if (builder == null || builder.particle == null) return;
         LivingEntity living = slotContext.entity();
         if (living.level().isClientSide) {
-            Map<ResourceLocation, ParticleEmitter> emitters = ILivingEntity.of(living).terra_curio$getOrCreateParticleEmitters();
+            Map<ResourceLocation, ParticleEmitter> emitters = ITCLivingEntity.of(living).terra_curio$getOrCreateParticleEmitters();
             ParticleEmitter emitter = emitters.get(builder.particle);
             if (emitter == null || emitter.isRemoved()) {
                 emitter = new ParticleEmitter(living.level(), living.position(), builder.particle);
@@ -92,7 +92,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
         if (emitter.isRemoved()) {
-            ILivingEntity.of(living).terra_curio$getOrCreateParticleEmitters().remove(particle);
+            ITCLivingEntity.of(living).terra_curio$getOrCreateParticleEmitters().remove(particle);
         }
     }
 

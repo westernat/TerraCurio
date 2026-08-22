@@ -6,7 +6,6 @@ import net.minecraftforge.common.data.LanguageProvider;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCBlocks;
-import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.common.init.TCEntities;
 import org.confluence.terra_curio.common.init.TCItems;
 
@@ -108,7 +107,6 @@ public class TCLanguageProvider extends LanguageProvider {
         add("key.terra_curio.gameplay", "Terra Curio", "泰拉饰品");
         add("key.terra_curio.metal_detector", "Detect Metal", "检测矿物");
         add("key.terra_curio.step_stool", "Step Stool", "上梯凳");
-        add("key.terra_curio.flip_gravitation", "Flip Gravitation", "反转重力");
         add("key.terra_curio.cthulhu_sprinting", "Cthulhu Sprinting", "克苏鲁冲刺");
 
         add("curios.identifier.accessory", "Accessory", "配饰");
@@ -741,7 +739,8 @@ public class TCLanguageProvider extends LanguageProvider {
         onlyTooltip(TCItems.SEARCHLIGHT, "探照灯", "Immunity to Blindness and Darkness", "对失明和黑暗免疫");
         tooltipAndInfo(TCItems.SEXTANT, "六分仪", "Displays the phase of the moon", "显示月相", "This item can be located in the chests found within Fisherman Villagers' houses.", "这件物品可以在渔夫村民家中的箱子中找到。");
         onlyInfo(TCItems.SHACKLE, "镣铐", "It can be found in Chests in the Dungeon.", "它可以在地牢中的宝箱中找到。");
-        /*tooltipsAndInfo*/onlyTooltips(TCItems.RAM_RUNE, "牧羊符文",
+        /*tooltipsAndInfo*/
+        onlyTooltips(TCItems.RAM_RUNE, "牧羊符文",
                 new String[]{
                         "Jump while holding crouch to slam downward",
                         "Slamming into the ground will deal damage to nearby enemies"
@@ -918,13 +917,7 @@ public class TCLanguageProvider extends LanguageProvider {
                 add(item1.getDescriptionId(), LibUtils.toTitleCase(item.getId().getPath()));
             });
             TCEntities.ENTITIES.getEntries().forEach(entity -> add(entity.get().getDescriptionId(), LibUtils.toTitleCase(entity.getId().getPath())));
-            TCEffects.EFFECTS.getEntries().forEach(effect -> add(effect.get().getDescriptionId(), LibUtils.toTitleCase(effect.getId().getPath())));
         } else {
-            add(TCEffects.CONFUSED.get().getDescriptionId(), "困惑");
-            add(TCEffects.CEREBRAL_MINDTRICK.get().getDescriptionId(), "控脑术");
-            add(TCEffects.HONEY.get().getDescriptionId(), "蜂蜜");
-            add(TCEffects.PALADINS_SHIELD.get().getDescriptionId(), "圣骑士护盾");
-            add(TCEffects.GRAVITATION.get().getDescriptionId(), "重力");
             add(TCEntities.BEE_PROJECTILE.get().getDescriptionId(), "蜜蜂射弹");
             add(TCEntities.STAR_CLOAK.get().getDescriptionId(), "星星斗篷");
             add(TCEntities.STEP_STOOL.get().getDescriptionId(), "梯凳");

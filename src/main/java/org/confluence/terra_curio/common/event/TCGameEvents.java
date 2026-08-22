@@ -16,9 +16,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.event.RegisterCommandsEvent;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.entity.EntityJoinLevelEvent;
+import net.minecraftforge.event.entity.item.ItemTossEvent;
+import net.minecraftforge.event.entity.living.LivingBreatheEvent;
+import net.minecraftforge.event.entity.living.LivingDeathEvent;
+import net.minecraftforge.event.entity.living.LivingFallEvent;
+import net.minecraftforge.event.entity.living.MobSpawnEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 import org.confluence.lib.api.event.ArmorPenetrationEvent;
 import org.confluence.lib.common.LibDamageTypes;
-import org.confluence.terra_curio.client.handler.GravitationHandler;
 import org.confluence.terra_curio.client.handler.TCClientPacketHandler;
 import org.confluence.terra_curio.common.TCCommonConfigs;
 import org.confluence.terra_curio.common.advancement.CuriosEquippedTrigger;
@@ -38,11 +45,9 @@ import org.confluence.terra_curio.util.TCUtils;
 import org.mesdag.portlib.event.PortEventHandler;
 import org.mesdag.portlib.event.PortEventPriority;
 import org.mesdag.portlib.event.entity.PortEntityInvulnerabilityCheckEvent;
-import org.mesdag.portlib.event.entity.PortEntityJoinLevelEvent;
-import org.mesdag.portlib.event.entity.item.PortItemTossEvent;
-import org.mesdag.portlib.event.entity.living.*;
-import org.mesdag.portlib.event.entity.player.PortPlayerEvent;
-import org.mesdag.portlib.event.tick.PortPlayerTickEvent;
+import org.mesdag.portlib.event.entity.living.PortLivingDamageEvent;
+import org.mesdag.portlib.event.entity.living.PortLivingIncomingDamageEvent;
+import org.mesdag.portlib.event.entity.living.PortMobEffectEvent;
 import org.mesdag.portlib.wrapper.common.damagesource.PortDamageContainer;
 import top.theillusivec4.curios.api.event.CurioChangeEvent;
 
@@ -58,7 +63,6 @@ public final class TCGameEvents {
         PortEventHandler.addListener(TCGameEvents::entityJoinLevel);
         PortEventHandler.addListener(TCGameEvents::playerLogin);
         PortEventHandler.addListener(TCGameEvents::playerLogout);
-        PortEventHandler.addListener(TCGameEvents::playerTick$Pre);
         PortEventHandler.addListener(TCGameEvents::playerTick$Post);
         PortEventHandler.addListener(TCGameEvents::itemToss);
         PortEventHandler.addListener(TCGameEvents::livingBreathe);
@@ -135,7 +139,7 @@ public final class TCGameEvents {
         event.setNewDamage(amount);
     }
 
-    private static void livingFall(PortLivingFallEvent event) {
+    private static void livingFall(LivingFallEvent event) {
         LivingEntity living = event.getEntity();
         if (living instanceof ServerPlayer serverPlayer) {
             if (RamRune.isFalling(serverPlayer)) {
@@ -145,7 +149,7 @@ public final class TCGameEvents {
         }
     }
 
-    private static void livingDeath(PortLivingDeathEvent event) {
+    private static void livingDeath(LivingDeathEvent event) {
         DamageSource damageSource = event.getSource();
         if (damageSource.getEntity() instanceof ServerPlayer serverPlayer) {
             EntityType<?> entityType = event.getEntity().getType();
@@ -153,7 +157,7 @@ public final class TCGameEvents {
         }
     }
 
-    private static void entityJoinLevel(PortEntityJoinLevelEvent event) {
+    private static void entityJoinLevel(EntityJoinLevelEvent event) {
         if (event.loadedFromDisk() || event.getLevel().isClientSide) {
             if (event.getEntity() instanceof LivingEntity living) {
                 AccessoriesAttachment.of(living).flushAbility(living);
@@ -165,7 +169,7 @@ public final class TCGameEvents {
         }
     }
 
-    private static void playerLogin(PortPlayerEvent.PlayerLoggedInEvent event) {
+    private static void playerLogin(PlayerEvent.PlayerLoggedInEvent event) {
         Player player = event.getEntity();
         AccessoriesAttachment.of(player).flushAbility(player);
         ServerPlayer serverPlayer = (ServerPlayer) player;
@@ -173,18 +177,13 @@ public final class TCGameEvents {
         InfoCurioCheckPacketS2C.sendToClient(serverPlayer, serverPlayer.getInventory());
     }
 
-    private static void playerLogout(PortPlayerEvent.PlayerLoggedOutEvent event) {
+    private static void playerLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         RamRune.cancel(event.getEntity());
     }
 
-    private static void playerTick$Pre(PortPlayerTickEvent.Pre event) {
-        if (event.getEntity().isLocalPlayer()) {
-            GravitationHandler.unCrouching(event.getEntity());
-        }
-    }
-
-    private static void playerTick$Post(PortPlayerTickEvent.Post event) {
-        Player player = event.getEntity();
+    private static void playerTick$Post(TickEvent.PlayerTickEvent event) {
+        if (event.phase != TickEvent.Phase.END) return;
+        Player player = event.player;
         if (!player.isPassenger()) {
             TCUtils.applyFluidWalk(player);
         }
@@ -195,12 +194,12 @@ public final class TCGameEvents {
         }
     }
 
-    private static void itemToss(PortItemTossEvent event) {
+    private static void itemToss(ItemTossEvent event) {
         ItemEntity itemEntity = event.getEntity();
         SetItemEntityPickupDelayPacketS2C.sendToAll(itemEntity.getId(), ((ItemEntityAccessor) itemEntity).getPickupDelay());
     }
 
-    private static void livingBreathe(PortLivingBreatheEvent event) {
+    private static void livingBreathe(LivingBreatheEvent event) {
         LivingEntity living = event.getEntity();
         if (event.canBreathe()) return;
         if (living.level().isClientSide) {
@@ -220,7 +219,7 @@ public final class TCGameEvents {
         }
     }
 
-    private static void finalizeSpawn(PortFinalizeSpawnEvent event) {
+    private static void finalizeSpawn(MobSpawnEvent.FinalizeSpawn event) {
         if (event.isSpawnCancelled()) return;
         if (event.getEntity() instanceof Drowned drowned && drowned.getItemBySlot(EquipmentSlot.HEAD).isEmpty() && drowned.getRandom().nextFloat() < 0.05F) {
             drowned.setItemSlot(EquipmentSlot.HEAD, TCItems.DIVING_HELMET.get().getDefaultInstance());

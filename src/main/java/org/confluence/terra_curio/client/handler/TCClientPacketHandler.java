@@ -23,6 +23,7 @@ import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.common.ForgeMod;
+import org.confluence.lib.client.handler.GravitationHandler;
 import org.confluence.terra_curio.api.event.PlayerAboutToAutoAttackEvent;
 import org.confluence.terra_curio.api.event.PlayerEmptyAutoAttackEvent;
 import org.confluence.terra_curio.client.TCClientConfigs;
@@ -115,7 +116,7 @@ public final class TCClientPacketHandler {
         hasCthulhu = isCuriosExists(SHIELD_OF_CTHULHU);
         hasTabi = isCuriosExists(TABI);
         ScopeFovHandler.hasScope = isCuriosExists(SCOPE);
-        GravitationHandler.hasGlobe = isCuriosExists(GRAVITY_GLOBE);
+        GravitationHandler.setForceEnable(isCuriosExists(GRAVITY_GLOBE));
         hasMagiluminescence = isCuriosExists(MAGILUMINESCENCE);
         canFloating = isCuriosExists(FLOAT_ON_LIQUID_SURFACE);
         iceSafe = isCuriosExists(ICE_SAFE);

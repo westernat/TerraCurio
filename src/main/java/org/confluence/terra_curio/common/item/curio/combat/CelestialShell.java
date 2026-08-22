@@ -10,8 +10,8 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.lib.common.LibAttributes;
+import org.confluence.lib.common.LibEffects;
 import org.confluence.lib.util.LibDateUtils;
-import org.confluence.terra_curio.common.init.TCEffects;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.util.CuriosUtils;
@@ -56,6 +56,6 @@ public class CelestialShell extends BaseCurioItem implements ICosmetic {
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
         boolean isNight = LibDateUtils.isNight(slotContext.entity().level());
-        TCEffects.healPerSecond(slotContext.entity(), isNight ? 0.3F : 0.2F);
+        LibEffects.healPerSecond(slotContext.entity(), isNight ? 0.3F : 0.2F);
     }
 }
