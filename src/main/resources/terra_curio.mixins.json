@@ -10,7 +10,6 @@
         "EntityMixin",
         "InventoryChangeTriggerMixin",
         "LivingEntityMixin",
-        "ServerGamePacketListenerImplMixin",
         "SlimeBlockMixin",
         "TargetingConditionsMixin",
         "accessor.ItemEntityAccessor",

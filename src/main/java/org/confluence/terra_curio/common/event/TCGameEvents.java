@@ -34,7 +34,6 @@ import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.init.TCTags;
 import org.confluence.terra_curio.common.item.DivingHelmet;
-import org.confluence.terra_curio.common.item.curio.combat.PaladinsShield;
 import org.confluence.terra_curio.common.item.curio.combat.PanicNecklace;
 import org.confluence.terra_curio.common.item.curio.combat.RamRune;
 import org.confluence.terra_curio.mixin.accessor.ItemEntityAccessor;
@@ -107,28 +106,27 @@ public final class TCGameEvents {
     private static void livingDamage$Pre(PortLivingDamageEvent.Pre event) {
         float amount = event.getNewDamage();
         if (amount <= 0.0F) return;
-        LivingEntity living = event.getEntity();
-        if (living.level().isClientSide) return;
+        LivingEntity victim = event.getEntity();
+        if (victim.level().isClientSide) return;
         DamageSource damageSource = event.getSource();
         if (!damageSource.is(DamageTypes.MAGIC)) {
-            RamRune.cancel(living);
+            RamRune.cancel(victim);
         }
         if (damageSource.is(DamageTypeTags.BYPASSES_INVULNERABILITY)) return;
-        RandomSource random = living.level().random;
+        RandomSource random = victim.level().random;
 
-        TCUtils.applyFireAttack(damageSource, living);
+        TCUtils.applyFireAttack(damageSource, victim);
         if (damageSource.getEntity() != null) {
-            TCUtils.applyHoneyComb(living, random);
+            TCUtils.applyHoneyComb(victim, random);
         }
-        TCUtils.applyStarClock(living, random);
-        PanicNecklace.apply(living);
+        TCUtils.applyStarClock(victim, random);
+        PanicNecklace.apply(victim);
 
-        amount = DivingHelmet.apply(living, damageSource, amount);
-        amount = PaladinsShield.apply(living, damageSource, amount);
-        amount = TCUtils.applyFrozenTurtleShell(living, amount);
-        amount = TCUtils.applyLavaHurtReduce(living, damageSource, amount);
-        amount = TCUtils.applyInjuryFree(living, amount);
-        amount = TCUtils.applyBrainOfConfusion(living, random, damageSource, amount);
+        amount = DivingHelmet.apply(victim, damageSource, amount);
+        amount = TCUtils.applyFrozenTurtleShell(victim, amount);
+        amount = TCUtils.applyLavaHurtReduce(victim, damageSource, amount);
+        amount = TCUtils.applyInjuryFree(victim, amount);
+        amount = TCUtils.applyBrainOfConfusion(victim, random, damageSource, amount);
 
         if (TCCommonConfigs.RANDOM_ATTACK_DAMAGE.get()) {
             amount *= Mth.nextFloat(random,
