@@ -65,10 +65,10 @@ public class BeeProjectile extends Projectile {
             }
         }
 
-        checkInsideBlocks();
         updateRotation();
         Vec3 vec3 = getDeltaMovement();
         move(MoverType.SELF, vec3);
+        checkInsideBlocks();
         Vec3 motion = getDeltaMovement();
         if (motion.x != vec3.x || motion.y != vec3.y || motion.z != vec3.z) {
             if (motion.x != vec3.x) motion = new Vec3(-vec3.x, vec3.y, vec3.z);
@@ -77,14 +77,15 @@ public class BeeProjectile extends Projectile {
             setDeltaMovement(motion);
             blockHitCount++;
         }
-        if (getInBlockState().liquid()) discard();
-        else if (blockHitCount > (isGiant() ? 2 : 1) || tickCount > (isGiant() ? 220 : 200))
+        if (!getInBlockState().getFluidState().isEmpty() ||
+                blockHitCount > (isGiant() ? 2 : 1) ||
+                tickCount > (isGiant() ? 220 : 200)
+        ) {
             discard();
+        }
 
         HitResult hitresult = ProjectileUtil.getHitResultOnMoveVector(this, this::canHitEntity);
-        checkInsideBlocks();
-        HitResult.Type hitresult$type = hitresult.getType();
-        if (hitresult$type == HitResult.Type.BLOCK) {
+        if (hitresult.getType() == HitResult.Type.BLOCK) {
             onHitBlock((BlockHitResult) hitresult);
         }
     }

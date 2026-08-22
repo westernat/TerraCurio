@@ -10,8 +10,10 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.common.LibAttributes;
 import org.confluence.terra_curio.TerraCurio;
+import org.jetbrains.annotations.ApiStatus;
 
-@Deprecated
+@Deprecated(since = "1.3.0", forRemoval = true)
+@ApiStatus.ScheduledForRemoval(inVersion = "1.4.0")
 public final class TCAttributes {
     public static final DeferredRegister<Attribute> ATTRIBUTES = DeferredRegister.create(BuiltInRegistries.ATTRIBUTE, TerraCurio.MODID);
 
