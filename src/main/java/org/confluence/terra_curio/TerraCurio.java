@@ -1,5 +1,6 @@
 package org.confluence.terra_curio;
 
+import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
@@ -9,6 +10,7 @@ import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.event.TCGameClientEvents;
 import org.confluence.terra_curio.client.event.TCModClientEvent;
 import org.confluence.terra_curio.common.TCCommonConfigs;
+import org.confluence.terra_curio.common.advancement.CuriosEquippedTrigger;
 import org.confluence.terra_curio.common.attachment.AccessoriesValueCommand;
 import org.confluence.terra_curio.common.event.TCGameEvents;
 import org.confluence.terra_curio.common.event.TCModEvents;
@@ -50,6 +52,7 @@ public class TerraCurio {
         TCMenus.TYPES.register(eventBus);
         AccessoriesValueCommand.INFOS.register(eventBus);
         eventBus.addListener(TCDataMaps::registerDataMapTypes);
+        CriteriaTriggers.register(CuriosEquippedTrigger.INSTANCE);
     }
 
     public static ResourceLocation asResource(String path) {

@@ -15,8 +15,10 @@ public class CuriosEquippedTrigger extends SimpleCriterionTrigger<CuriosEquipped
     @Diff
     public static final CuriosEquippedTrigger INSTANCE = new CuriosEquippedTrigger();
 
-    public void trigger(ServerPlayer pPlayer, ItemStack itemStack) {
-        trigger(pPlayer, instance -> instance.matches(itemStack));
+    private CuriosEquippedTrigger() {}
+
+    public void trigger(ServerPlayer player, ItemStack stack) {
+        trigger(player, instance -> instance.matches(stack));
     }
 
     @Diff
