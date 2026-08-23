@@ -9,10 +9,6 @@ plugins {
 version = mod_version + "+" + minecraft_version
 group = mod_group_id
 
-repositories {
-    mavenLocal()
-}
-
 base {
     archivesName = "TerraCurio-forge"
 }
@@ -46,7 +42,10 @@ legacyForge {
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
         configureEach {
-            systemProperty 'forge.logging.markers', 'REGISTRIES'
+            systemProperties.putAll([
+                    'forge.logging.markers'    : 'REGISTRIES',
+                    'geckolib.disable_examples': 'true'
+            ])
             logLevel = org.slf4j.event.Level.DEBUG
             jvmArguments.addAll([
                     // 忽略无效指令，避免有的人没安装 JetBrain Runtime 无法启动游戏
@@ -77,6 +76,7 @@ obfuscation {
 }
 
 repositories {
+    mavenLocal()
     flatDir {
         dir 'libs'
     }
@@ -84,6 +84,9 @@ repositories {
         // location of the maven that hosts JEI files before January 2023
         name = "Progwml6's maven"
         url = "https://dvs1.progwml6.com/files/maven/"
+        content {
+            excludeGroupByRegex "software\\.bernie.*" // 该仓库宕机(523)会使 Gradle 直接失败
+        }
     }
     maven {
         // location of the maven that hosts JEI files since January 2023
@@ -105,8 +108,14 @@ repositories {
         name = "Curios"
         url = uri("https://maven.theillusivec4.top/")
     }
+    maven {
+        name = 'GeckoLib'
+        url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/'
+    }
     exclusiveContent {
-        // 强制 ParticleStorm 只从 Confluence 仓库解析，避免 dvs1.progwml6.com 返回 523 时 Gradle 直接失败而不再尝试后续仓库
+        forRepository {
+            mavenLocal()
+        }
         forRepository {
             maven {
                 name "org.confluenceReleases"
@@ -123,6 +132,7 @@ boolean slim = false
 
 dependencies {
     modImplementation "top.theillusivec4.curios:curios-forge:${curios_version}"
+    modImplementation("software.bernie.geckolib:geckolib-forge-${minecraft_version}:${geckolib_version}")
     modImplementation project(":PortLib")
     interfaceInjectionData("org.mesdag:PortLib:${portlib_version}")
 

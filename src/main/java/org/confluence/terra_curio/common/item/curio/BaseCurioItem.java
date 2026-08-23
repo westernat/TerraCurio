@@ -19,6 +19,7 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.Level;
 import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.common.component.ModRarity;
+import org.confluence.lib.mixed.ILibEntity;
 import org.confluence.terra_curio.TCStartupConfigs;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.api.primitive.AttributeModifiersValue;
@@ -35,6 +36,7 @@ import org.confluence.terra_curio.network.s2c.RemoveCurioParticleEmitterPacketS2
 import org.confluence.terra_curio.util.CuriosUtils;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4x3f;
 import org.mesdag.particlestorm.particle.MolangParticleEngine;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 import org.mesdag.portlib.component.PortDataComponentType;
@@ -46,6 +48,7 @@ import top.theillusivec4.curios.api.type.capability.ICurioItem;
 
 import javax.annotation.OverridingMethodsMustInvokeSuper;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 public class BaseCurioItem extends Item implements ICurioItem {
     protected static final Multimap<Attribute, AttributeModifier> EMPTY_ATTRIBUTE = ImmutableMultimap.of();
@@ -64,34 +67,58 @@ public class BaseCurioItem extends Item implements ICurioItem {
     @OverridingMethodsMustInvokeSuper
     @Override
     public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
-        if (builder.particle == null || ItemStack.isSameItem(newStack, stack)) return;
+        if (builder == null || builder.particleTriggers.isEmpty() || ItemStack.isSameItem(newStack, stack)) return;
         if (slotContext.entity() instanceof ServerPlayer player) {
-            RemoveCurioParticleEmitterPacketS2C.sendToClient(player, builder.particle);
+            for (ResourceLocation particle : builder.particleTriggers.keySet()) {
+                RemoveCurioParticleEmitterPacketS2C.sendToClient(player, particle);
+            }
         }
     }
 
     @Override
     public void curioTick(SlotContext slotContext, ItemStack stack) {
-        if (builder == null || builder.particle == null) return;
+        if (builder == null || builder.particleTriggers.isEmpty()) return;
         LivingEntity living = slotContext.entity();
         if (living.level().isClientSide) {
             Map<ResourceLocation, ParticleEmitter> emitters = ITCLivingEntity.of(living).terra_curio$getOrCreateParticleEmitters();
-            ParticleEmitter emitter = emitters.get(builder.particle);
-            if (emitter == null || emitter.isRemoved()) {
-                emitter = new ParticleEmitter(living.level(), living.position(), builder.particle);
-                emitter.attachEntity(living);
-                emitter.hideOutline = true;
-                MolangParticleEngine.INSTANCE.addEmitter(emitter);
-                emitters.put(builder.particle, emitter);
+            for (Map.Entry<ResourceLocation, Builder.ParticleData> entry : builder.particleTriggers.entrySet()) {
+                ResourceLocation particle = entry.getKey();
+                Builder.ParticleData data = entry.getValue();
+                ParticleEmitter emitter = emitters.get(particle);
+                if (emitter == null || emitter.isRemoved()) {
+                    if (emitter != null) {
+                        emitters.remove(particle);
+                    }
+                    emitter = new ParticleEmitter(living.level(), living.position(), particle);
+                    emitter.attachEntity(living);
+                    emitter.hideOutline = true;
+                    MolangParticleEngine.INSTANCE.addEmitter(emitter);
+                    emitters.put(particle, emitter);
+                }
+                boolean active = data.trigger().shouldActivate(living);
+                emitter.active = active && slotContext.visible();
+                if (active && builder.positionParticle) {
+                    positionEmitter(living, emitter, data.placement());
+                }
             }
-            particleTick(living, emitter, builder.particle);
-            emitter.active &= slotContext.visible();
         }
     }
 
-    protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
-        if (emitter.isRemoved()) {
-            ITCLivingEntity.of(living).terra_curio$getOrCreateParticleEmitters().remove(particle);
+    /// 把 emitter 放到实体本地空间的目标位置。
+    ///
+    /// @param placement 自定义的本地空间矩阵变换；为 null 时使用默认行为（shouldRot 时抬到 (0, bbHeight, 0)，否则留在 (0,0,0)）。
+    ///
+    /// 自定义实现直接操作矩阵（旋转 + 平移），如嘴部气泡用[ParticlePlacements#MOUTH] 那样随头部朝向旋转。
+    private void positionEmitter(LivingEntity living, ParticleEmitter emitter, @Nullable BiConsumer<LivingEntity, Matrix4x3f> placement) {
+        if (!emitter.isLocalSpace()) {
+            emitter.setLocalSpace(new Matrix4x3f(), false);
+        }
+        Matrix4x3f space = emitter.getLocalSpace();
+        if (placement == null) {
+            float baseY = ILibEntity.of(living).confluence$isShouldRot() ? living.getBbHeight() : 0.0F;
+            space.identity().translate(0, baseY, 0);
+        } else {
+            placement.accept(living, space);
         }
     }
 
@@ -176,7 +203,8 @@ public class BaseCurioItem extends Item implements ICurioItem {
         private boolean makePiglinsNeutral = false;
         private EquipmentSlot equipmentSlot = null;
 
-        private ResourceLocation particle = null;
+        private final LinkedHashMap<ResourceLocation, ParticleData> particleTriggers = new LinkedHashMap<>();
+        private boolean positionParticle = true;
 
         Builder(String name, Properties properties) {
             this.name = name;
@@ -185,8 +213,28 @@ public class BaseCurioItem extends Item implements ICurioItem {
             this.id = UUID.nameUUIDFromBytes(name.getBytes());
         }
 
-        public Builder particle(ResourceLocation particle) {
-            this.particle = particle;
+        /// 声明一个粒子及其激活条件。可声明多个（多能力合一饰品按各自条件分段播放）。
+        public Builder particle(ResourceLocation particle, ParticleTrigger trigger) {
+            return particle(particle, trigger, null);
+        }
+
+        /// 声明粒子，并指定 emitter 本地空间矩阵的变换（旋转 + 平移，随实体状态逐 tick 应用）。
+        /// 嘴部等跟随朝向的发射点用 {@link ParticlePlacements#MOUTH}。
+        public Builder particle(ResourceLocation particle, ParticleTrigger trigger, @Nullable BiConsumer<LivingEntity, Matrix4x3f> placement) {
+            this.particleTriggers.put(particle, new ParticleData(trigger, placement));
+            return this;
+        }
+
+        /// 一个粒子的声明数据：激活条件 + 可选的本地空间矩阵变换
+        public record ParticleData(ParticleTrigger trigger, @Nullable BiConsumer<LivingEntity, Matrix4x3f> placement) {
+            public ParticleData(ParticleTrigger trigger) {
+                this(trigger, null);
+            }
+        }
+
+        /// 不随实体高度/朝向定位 emitter（保持世界空间，如冰冻海龟壳）
+        public Builder noParticlePosition() {
+            this.positionParticle = false;
             return this;
         }
 
@@ -308,8 +356,8 @@ public class BaseCurioItem extends Item implements ICurioItem {
         }
 
         @ApiStatus.Internal
-        public @Nullable ResourceLocation getParticle() {
-            return particle;
+        public Map<ResourceLocation, ParticleData> getParticleTriggers() {
+            return particleTriggers;
         }
 
         public BaseCurioItem build() {

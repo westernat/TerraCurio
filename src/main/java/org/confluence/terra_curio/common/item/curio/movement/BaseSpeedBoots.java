@@ -2,14 +2,11 @@ package org.confluence.terra_curio.common.item.curio.movement;
 
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import org.confluence.lib.mixed.ILibEntity;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.client.TCClientConfigs;
@@ -19,8 +16,6 @@ import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
 import org.confluence.terra_curio.util.CuriosUtils;
-import org.joml.Matrix4x3f;
-import org.mesdag.particlestorm.particle.ParticleEmitter;
 import top.theillusivec4.curios.api.SlotContext;
 
 import java.util.UUID;
@@ -42,22 +37,6 @@ public class BaseSpeedBoots extends BaseCurioItem {
     public void curioTick(SlotContext slotContext, ItemStack stack) {
         super.curioTick(slotContext, stack);
         speedUp(slotContext, stack, acceleration, maxSpeed);
-    }
-
-    @Override
-    protected void particleTick(LivingEntity living, ParticleEmitter emitter, ResourceLocation particle) {
-        emitter.active = living.zza > 0.0F && !living.horizontalCollision;
-
-        if (emitter.active) {
-            if (!emitter.isLocalSpace()) {
-                emitter.setLocalSpace(new Matrix4x3f(), false);
-            }
-            if (ILibEntity.of(living).confluence$isShouldRot()) {
-                emitter.getLocalSpace().setTranslation(0, living.getBbHeight(), 0);
-            } else {
-                emitter.getLocalSpace().setTranslation(0, 0, 0);
-            }
-        }
     }
 
     @Override

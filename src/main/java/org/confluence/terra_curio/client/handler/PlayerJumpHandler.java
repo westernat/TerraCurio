@@ -6,6 +6,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.phys.Vec3;
 import org.apache.commons.lang3.mutable.MutableBoolean;
@@ -17,18 +19,19 @@ import org.confluence.terra_curio.client.sound.RocketBootsStopSoundInstance;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.common.item.curio.combat.RamRune;
+import org.confluence.terra_curio.mixed.ITCLivingEntity;
 import org.confluence.terra_curio.mixin.accessor.LivingEntityAccessor;
 import org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S;
 import org.confluence.terra_curio.network.c2s.RamRuneFallPacketC2S;
 import org.confluence.terra_curio.util.CuriosUtils;
+import org.confluence.terra_curio.util.JumpParticleState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S.JUMP_BY_SELF;
-import static org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S.RESET_FALL_DISTANCE;
+import static org.confluence.terra_curio.network.c2s.PlayerJumpPacketC2S.*;
 
 public final class PlayerJumpHandler {
     private static boolean jumpKeyDown = true;
@@ -40,32 +43,28 @@ public final class PlayerJumpHandler {
     private static int maxSandstormTicks = 0;
     private static int remainSandstormTicks = 0;
     private static boolean sandstormFinished = false;
-    public static boolean isOnSandstormJump = false;
 
     private static float blizzardSpeed = 0.0F;
     private static int maxBlizzardTicks = 0;
     private static int remainBlizzardTicks = 0;
     private static boolean blizzardFinished = false;
-    public static boolean isOnBlizzardJump = false;
 
     private static float tsunamiSpeed = 0.0F;
     private static boolean tsunamiFinished = false;
-    public static boolean isOnTsunamiJump = false;
 
     private static float cloudSpeed = 0.0F;
     private static boolean cloudFinished = false;
-    public static boolean isOnCloudJump = false;
 
     private static Map<ResourceKey<Item>, ObjectIntPair<MayFlyAbilityValue.FlyStack>> wingsFlyStacks = Map.of();
     private static Map<ResourceKey<Item>, ObjectIntPair<MayFlyAbilityValue.FlyStack>> otherFlyStacks = Map.of();
-    private static boolean onWings = false;
+    private static boolean onFlight = false;
     private static boolean horizontalFlight = false;
     private static boolean infiniteFlight = false;
     private static float infiniteFlightSpeed = 0.0F;
 
     private static ResourceKey<Item> currentFlight;
     private static ResourceKey<Item> lastFlight;
-    private static boolean onFlight = false;
+    private static boolean onGlide = false;
 
     public static void handle(LocalPlayer localPlayer, boolean jumping) {
         if (StepStoolHandler.onStool()) return;
@@ -73,6 +72,7 @@ public final class PlayerJumpHandler {
         if (lastFlight != currentFlight) {
             if (TCItems.ROCKET_BOOTS.getKey().equals(currentFlight)) {
                 Minecraft.getInstance().getSoundManager().play(new RocketBootsBoostSoundInstance(localPlayer));
+                ITCLivingEntity.of(localPlayer).terra_curio$getJumpParticleState().rocketBoostPending = true;
             } else if (TCItems.ROCKET_BOOTS.getKey().equals(lastFlight)) {
                 Minecraft.getInstance().getSoundManager().play(new RocketBootsStopSoundInstance(localPlayer));
             }
@@ -81,6 +81,7 @@ public final class PlayerJumpHandler {
 
         if (localPlayer.onGround()) {
             reset(true);
+            ITCLivingEntity.of(localPlayer).terra_curio$getJumpParticleState().clear();
         } else if (jumping) {
             if (!jumpKeyDown && !localPlayer.getAbilities().flying && localPlayer.isShiftKeyDown() && CuriosUtils.hasCurio(localPlayer, RamRune.class)) {
                 Vec3 vec3 = localPlayer.getDeltaMovement();
@@ -94,9 +95,10 @@ public final class PlayerJumpHandler {
                 ObjectIntPair<MayFlyAbilityValue.FlyStack> pair = entry.getValue();
                 int i = pair.rightInt();
                 if (infiniteFlight || i > 0) {
-                    onWings = true;
                     float flySpeed = infiniteFlight ? infiniteFlightSpeed : pair.key().flySpeed();
                     boolean horizontal = pair.left().horizontalFlight();
+                    onFlight = true;
+                    onGlide = false;
                     fly(horizontal && localPlayer.isShiftKeyDown(), localPlayer, flySpeed);
                     if (!infiniteFlight) currentFlight = entry.getKey();
                     if (!horizontal || localPlayer.level().getGameTime() % 2 == 0) {
@@ -104,8 +106,8 @@ public final class PlayerJumpHandler {
                     }
                     if (infiniteFlight || i > 0) return;
                 } else if (!localPlayer.getAbilities().flying && localPlayer.getDeltaMovement().y < -0.15) {
-                    onWings = false;
                     onFlight = false;
+                    onGlide = true;
                     glide(localPlayer);
                 }
             }
@@ -114,38 +116,41 @@ public final class PlayerJumpHandler {
 
             if (!fartFinished && fartSpeed > 0.0) {
                 fartFinished = true;
+                ITCLivingEntity.of(localPlayer).terra_curio$getJumpParticleState().fartPending = true;
                 jumpKeyDown = true;
-                multiJump(localPlayer, fartSpeed);
+                multiJump(localPlayer, fartSpeed, PlayerJumpPacketC2S.JUMP_FART);
                 localPlayer.playSound(TCSoundEvents.FART_SOUND.get());
             } else if (!sandstormFinished && sandstormSpeed > 0.0) {
+                JumpParticleState jumpState = ITCLivingEntity.of(localPlayer).terra_curio$getJumpParticleState();
                 if (remainSandstormTicks-- > 0) {
-                    oneTimeJump(localPlayer, sandstormSpeed);
-                    isOnSandstormJump = true;
+                    oneTimeJump(localPlayer, sandstormSpeed, PlayerJumpPacketC2S.JUMP_SANDSTORM);
+                    jumpState.sandstormTicks = 1;
                 } else {
                     jumpKeyDown = true;
-                    isOnSandstormJump = false;
+                    jumpState.sandstormTicks = 0;
                 }
             } else if (!blizzardFinished && blizzardSpeed > 0.0) {
+                JumpParticleState jumpState = ITCLivingEntity.of(localPlayer).terra_curio$getJumpParticleState();
                 if (remainBlizzardTicks-- > 0) {
-                    oneTimeJump(localPlayer, blizzardSpeed);
-                    isOnBlizzardJump = true;
+                    oneTimeJump(localPlayer, blizzardSpeed, PlayerJumpPacketC2S.JUMP_BLIZZARD);
+                    jumpState.blizzardTicks = 1;
                 } else {
                     jumpKeyDown = true;
-                    isOnBlizzardJump = false;
+                    jumpState.blizzardTicks = 0;
                 }
             } else if (!tsunamiFinished && tsunamiSpeed > 0.0) {
                 tsunamiFinished = true;
-                isOnTsunamiJump = true;
+                ITCLivingEntity.of(localPlayer).terra_curio$getJumpParticleState().tsunamiPending = true;
                 jumpKeyDown = true;
-                multiJump(localPlayer, tsunamiSpeed);
+                multiJump(localPlayer, tsunamiSpeed, PlayerJumpPacketC2S.JUMP_TSUNAMI);
                 localPlayer.playSound(TCSoundEvents.DOUBLE_JUMP.get());
             } else if (!cloudFinished && cloudSpeed > 0.0) {
                 cloudFinished = true;
-                isOnCloudJump = true;
+                ITCLivingEntity.of(localPlayer).terra_curio$getJumpParticleState().cloudPending = true;
                 jumpKeyDown = true;
-                multiJump(localPlayer, cloudSpeed);
+                multiJump(localPlayer, cloudSpeed, PlayerJumpPacketC2S.JUMP_CLOUD);
                 localPlayer.playSound(TCSoundEvents.DOUBLE_JUMP.get());
-            } else if (!onWings) {
+            } else if (!onFlight) {
                 for (Map.Entry<ResourceKey<Item>, ObjectIntPair<MayFlyAbilityValue.FlyStack>> entry : otherFlyStacks.entrySet()) {
                     ObjectIntPair<MayFlyAbilityValue.FlyStack> pair = entry.getValue();
                     int i = pair.rightInt();
@@ -164,10 +169,37 @@ public final class PlayerJumpHandler {
             jumpKeyDown = false;
             sandstormFinished = remainSandstormTicks < maxSandstormTicks;
             blizzardFinished = remainBlizzardTicks < maxBlizzardTicks;
-            isOnSandstormJump = false;
-            isOnBlizzardJump = false;
+            JumpParticleState jumpState = ITCLivingEntity.of(localPlayer).terra_curio$getJumpParticleState();
+            jumpState.sandstormTicks = 0;
+            jumpState.blizzardTicks = 0;
             onFlight = false;
+            onGlide = false;
             currentFlight = null;
+        }
+    }
+
+    /// 服务端广播"某玩家触发了跳跃"后，在客户端为对应的远程实体写入粒子状态。
+    /// 本地玩家由 [#handle] 直接驱动，无需此路径。
+    public static void handleJumpTriggered(int entityId, byte jumpType) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (minecraft.level == null) return;
+        Entity entity = minecraft.level.getEntity(entityId);
+        if (!(entity instanceof LivingEntity living) || entity == minecraft.player) return;
+        JumpParticleState jumpState = ITCLivingEntity.of(living).terra_curio$getJumpParticleState();
+        if ((jumpType & PlayerJumpPacketC2S.JUMP_SANDSTORM) != 0) {
+            jumpState.sandstormTicks = 3;
+        }
+        if ((jumpType & PlayerJumpPacketC2S.JUMP_BLIZZARD) != 0) {
+            jumpState.blizzardTicks = 3;
+        }
+        if ((jumpType & PlayerJumpPacketC2S.JUMP_TSUNAMI) != 0) {
+            jumpState.tsunamiPending = true;
+        }
+        if ((jumpType & PlayerJumpPacketC2S.JUMP_CLOUD) != 0) {
+            jumpState.cloudPending = true;
+        }
+        if ((jumpType & PlayerJumpPacketC2S.JUMP_FART) != 0) {
+            jumpState.fartPending = true;
         }
     }
 
@@ -176,7 +208,6 @@ public final class PlayerJumpHandler {
     }
 
     private static void fly(boolean horizontalFlight, LocalPlayer localPlayer, float flySpeed) {
-        onFlight = true;
         if (horizontalFlight) {
             horizontalFlight(localPlayer, flySpeed);
         } else {
@@ -196,10 +227,11 @@ public final class PlayerJumpHandler {
         setupRemainFlyTicks();
         currentFlight = null;
         lastFlight = null;
-        onWings = false;
+        onFlight = false;
+        onGlide = false;
     }
 
-    public static void multiJump(LocalPlayer localPlayer, float speed) {
+    public static void multiJump(LocalPlayer localPlayer, float speed, byte jumpType) {
         Vec3 vec3 = localPlayer.getDeltaMovement();
         double motionY = ((LivingEntityAccessor) localPlayer).callGetJumpPower() * GravitationHandler.getJumpDir() * speed;
         localPlayer.setDeltaMovement(vec3.x, motionY, vec3.z);
@@ -209,16 +241,16 @@ public final class PlayerJumpHandler {
         }
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
-        PlayerJumpPacketC2S.sendToServer((byte) (JUMP_BY_SELF | RESET_FALL_DISTANCE), speed);
+        PlayerJumpPacketC2S.sendToServer((byte) (JUMP_BY_SELF | RESET_FALL_DISTANCE), speed, jumpType);
     }
 
-    private static void oneTimeJump(LocalPlayer localPlayer, float speed) {
+    private static void oneTimeJump(LocalPlayer localPlayer, float speed, byte jumpType) {
         speed *= GravitationHandler.getJumpDir();
         Vec3 vec3 = localPlayer.getDeltaMovement();
         localPlayer.setDeltaMovement(vec3.x, speed, vec3.z);
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
-        PlayerJumpPacketC2S.sendToServer(RESET_FALL_DISTANCE, speed);
+        PlayerJumpPacketC2S.sendToServer(RESET_FALL_DISTANCE, speed, jumpType);
     }
 
     private static void fly(LocalPlayer localPlayer, float speed) {
@@ -255,7 +287,7 @@ public final class PlayerJumpHandler {
         localPlayer.setDeltaMovement(motion.x + mx, y, motion.z + mz);
         localPlayer.hasImpulse = true;
         localPlayer.resetFallDistance();
-        PlayerJumpPacketC2S.sendToServer(RESET_FALL_DISTANCE, y);
+        PlayerJumpPacketC2S.sendToServer(RESET_FALL_DISTANCE, y, JUMP_NONE);
     }
 
     public static void handleJumpPacket(
@@ -313,12 +345,12 @@ public final class PlayerJumpHandler {
         infiniteFlight = enable;
     }
 
-    public static boolean isOnFlight() {
-        return onFlight;
+    public static boolean isOnGlide() {
+        return onGlide;
     }
 
-    public static boolean isOnWings() {
-        return onWings;
+    public static boolean isOnFlight() {
+        return onFlight;
     }
 
     public static boolean isOnHorizontalFlight() {

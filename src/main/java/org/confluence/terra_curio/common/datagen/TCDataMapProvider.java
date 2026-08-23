@@ -633,6 +633,44 @@ public class TCDataMapProvider extends PortDataMapProvider {
             helper.of(TCItems.MAY$FLY, MayFlyAbilityValue.of(helper.asKey(), 1100, 1.0F, 60, true, true));
             helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.fallDamageMultiplier().value(), helper.asId(), -100.0, PortAttributeModifier.Operation.ADD_VALUE));
         }); // 天界星盘
+
+        // 翅膀
+        add(TCItems.FLEDGLING_WINGS, wings(0.3F, 28, false)); // 飞行高度：12
+        add(TCItems.ANGEL_WINGS, wings(0.6F, 50, false)); // 飞行高度：34
+        add(TCItems.DEMON_WINGS, wings(0.6F, 50, false)); // 飞行高度：34
+        add(TCItems.FAIRY_WINGS, wings(0.65F, 56, false)); // 飞行高度：44
+        add(TCItems.FIN_WINGS, wings(0.65F, 56, false)); // 飞行高度：44
+        add(TCItems.FROZEN_WINGS, wings(0.65F, 56, false)); // 飞行高度：44
+        add(TCItems.HARPY_WINGS, wings(0.65F, 56, false)); // 飞行高度：44
+        add(TCItems.JETPACK, wings(0.65F, 63, false)); // 飞行高度：51
+        add(TCItems.LEAF_WINGS, wings(0.6F, 50, false)); // 飞行高度：34
+        add(TCItems.BAT_WINGS, wings(0.68F, 62, false)); // 飞行高度：54
+        add(TCItems.BEE_WINGS, wings(0.68F, 62, false)); // 飞行高度：54
+        add(TCItems.BUTTERFLY_WINGS, wings(0.68F, 62, false)); // 飞行高度：54
+        add(TCItems.FLAME_WINGS, wings(0.68F, 62, false)); // 飞行高度：54
+        add(TCItems.HOVERBOARD, wings(0.68F, 74, true)); // 飞行高度：62
+        add(TCItems.BONE_WINGS, wings(0.68F, 74, false)); // 飞行高度：62
+        add(TCItems.MOTHRON_WINGS, wings(0.68F, 74, false)); // 飞行高度：62
+        add(TCItems.SPECTRE_WINGS, wings(0.68F, 74, false)); // 飞行高度：62
+        add(TCItems.BEETLE_WINGS, wings(0.68F, 74, false)); // 飞行高度：62
+        add(TCItems.FESTIVE_WINGS, wings(0.7F, 84, false)); // 飞行高度：71
+        add(TCItems.SPOOKY_WINGS, wings(0.7F, 84, false)); // 飞行高度：71
+        add(TCItems.TATTERED_WINGS, wings(0.7F, 84, false)); // 飞行高度：71
+        add(TCItems.STEAMPUNK_WINGS, wings(0.7F, 84, false)); // 飞行高度：71
+        add(TCItems.BETSYS_WINGS, wings(0.72F, 84, true)); // 飞行高度：79
+        add(TCItems.EMPRESS_WINGS, wings(0.85F, 86, false)); // 飞行高度：85
+        add(TCItems.FISHRON_WINGS, wings(0.85F, 92, false)); // 飞行高度：95
+        add(TCItems.NEBULA_WINGS, wings(0.85F, 92, true)); // 飞行高度：95
+        add(TCItems.VORTEX_BOOSTER, wings(0.85F, 92, true)); // 飞行高度：95
+        add(TCItems.SOLAR_WINGS, wings(0.85F, 92, false)); // 飞行高度：95
+        add(TCItems.STARDUST_WINGS, wings(0.85F, 92, false)); // 飞行高度：95
+    }
+
+    private static Consumer<Helper> wings(float flySpeed, int flyTicks, boolean horizontalFlight) {
+        return helper -> {
+            helper.of(TCItems.MAY$FLY, MayFlyAbilityValue.of(helper.asKey(), 1100, flySpeed, flyTicks, true, horizontalFlight));
+            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.fallDamageMultiplier().value(), helper.asId(), -100, PortAttributeModifier.Operation.ADD_VALUE));
+        };
     }
 
     private static AttributeModifiersValue celestial(ResourceLocation id, double armor) {

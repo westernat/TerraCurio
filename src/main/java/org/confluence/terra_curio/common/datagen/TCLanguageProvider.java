@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.datagen;
 
+import com.google.common.collect.Iterables;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.common.data.LanguageProvider;
@@ -901,6 +902,36 @@ public class TCLanguageProvider extends LanguageProvider {
         onlyTooltip(TCItems.MOON_SHELL, "月亮贝壳", "Turns the holder into a werewolf at night and a merfolk when entering water", "在晚上将持有者变成狼人，入水时将持有者变成人鱼");
         onlyTooltip(TCItems.CELESTIAL_SHELL, "天界壳", "Turns the holder into a werewolf at night and a merfolk when entering water", "在晚上将持有者变成狼人，入水时将持有者变成人鱼");
 
+        onlyTooltip(TCItems.FLEDGLING_WINGS, "雏翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.ANGEL_WINGS, "天使之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.DEMON_WINGS, "恶魔之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.FAIRY_WINGS, "仙灵之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.FIN_WINGS, "鳍翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.FROZEN_WINGS, "冰冻之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.HARPY_WINGS, "女妖之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.JETPACK, "喷气背包", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.LEAF_WINGS, "叶之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.BAT_WINGS, "蝙蝠之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.BEE_WINGS, "蜜蜂之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.BUTTERFLY_WINGS, "蝴蝶之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.FLAME_WINGS, "烈焰之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.HOVERBOARD, "悬浮板", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.BONE_WINGS, "骨之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.MOTHRON_WINGS, "蛾怪之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.SPECTRE_WINGS, "幽灵之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.BEETLE_WINGS, "甲虫之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.FESTIVE_WINGS, "喜庆之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.SPOOKY_WINGS, "阴森之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.TATTERED_WINGS, "褴褛仙灵之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.STEAMPUNK_WINGS, "蒸汽朋克之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.BETSYS_WINGS, "双足翼龙之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.EMPRESS_WINGS, "女皇之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.FISHRON_WINGS, "猪鱼龙之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.NEBULA_WINGS, "星云斗篷", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.VORTEX_BOOSTER, "星旋强化翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.SOLAR_WINGS, "日耀之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+        onlyTooltip(TCItems.STARDUST_WINGS, "星尘之翼", "Allows flight and slow fall", "可飞行和缓慢坠落");
+
         if (isEn) {
             add(TCItems.EXPLORERS_EQUIPMENT.get().getDescriptionId(), "Explorer's Equipment");
             add(TCItems.PALADINS_SHIELD.get().getDescriptionId(), "Paladin's Shield");
@@ -912,9 +943,9 @@ public class TCLanguageProvider extends LanguageProvider {
             add(TCItems.REK_3000.get().getDescriptionId(), "R.E.K.3000");
             add(TCItems.NEPTUNES_SHELL.get().getDescriptionId(), "Neptune's Shell");
             add(TCItems.DIVING_HELMET.get().getDescriptionId(), "Diving Helmet");
-            TCItems.CURIOS.getEntries().forEach(item -> {
-                Item item1 = item.get();
-                add(item1.getDescriptionId(), LibUtils.toTitleCase(item.getId().getPath()));
+            Iterables.concat(TCItems.CURIOS.getEntries(), TCItems.OTHERS.getEntries(), TCItems.WINGS.getEntries()).forEach(holder -> {
+                assert holder != null;
+                add(holder.get().getDescriptionId(), LibUtils.toTitleCase(holder.getId().getPath()));
             });
             TCEntities.ENTITIES.getEntries().forEach(entity -> add(entity.get().getDescriptionId(), LibUtils.toTitleCase(entity.getId().getPath())));
         } else {
@@ -923,6 +954,7 @@ public class TCLanguageProvider extends LanguageProvider {
             add(TCEntities.STEP_STOOL.get().getDescriptionId(), "梯凳");
         }
         add(TCBlocks.WORKSHOP.get().getDescriptionId(), "Workshop", "工匠作坊");
+        add("tag.item.terra_curio.wings", "Wings", "翅膀");
 
         add("terra_curio.configuration.Speed Shoes", "Speed Shoes", "加速靴");
         add("terra_curio.configuration.rareBlocks", "Rare Blocks", "稀有方块");

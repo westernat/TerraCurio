@@ -23,9 +23,7 @@ import org.confluence.terra_curio.common.item.CellPhone;
 import org.confluence.terra_curio.common.item.DemonHeart;
 import org.confluence.terra_curio.common.item.DivingHelmet;
 import org.confluence.terra_curio.common.item.MagicMirror;
-import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
-import org.confluence.terra_curio.common.item.curio.NightBonusCurioItem;
-import org.confluence.terra_curio.common.item.curio.RequiresModLoadedCurioItem;
+import org.confluence.terra_curio.common.item.curio.*;
 import org.confluence.terra_curio.common.item.curio.combat.*;
 import org.confluence.terra_curio.common.item.curio.expert.GravityGlobe;
 import org.confluence.terra_curio.common.item.curio.expert.ShieldOfCthulhu;
@@ -34,7 +32,9 @@ import org.confluence.terra_curio.common.item.curio.health.BandOfRegeneration;
 import org.confluence.terra_curio.common.item.curio.information.MetalDetector;
 import org.confluence.terra_curio.common.item.curio.information.MultiInfoCurioItem;
 import org.confluence.terra_curio.common.item.curio.master.BasePoint;
-import org.confluence.terra_curio.common.item.curio.movement.*;
+import org.confluence.terra_curio.common.item.curio.movement.BaseSpeedBoots;
+import org.confluence.terra_curio.common.item.curio.movement.DuneriderBoots;
+import org.confluence.terra_curio.common.item.curio.movement.StepStool;
 import org.mesdag.portlib.registries.PortDeferredItem;
 import org.mesdag.portlib.registries.PortItemRegistration;
 import org.mesdag.portlib.registries.PortRegisterHandler;
@@ -57,6 +57,7 @@ public final class TCItems {
 
     public static final PortItemRegistration OTHERS = PortRegisterHandler.item(TerraCurio.MODID);
     public static final PortItemRegistration CURIOS = PortRegisterHandler.item(TerraCurio.MODID);
+    public static final PortItemRegistration WINGS = PortRegisterHandler.item(TerraCurio.MODID);
 
     // client side info_check
     public static final ValueType<List<TooltipComponentsValue.Storage>, TooltipComponentsValue> INFORMATION = create("information", TooltipComponentsValue.EXPANSION, TooltipComponentsValue.CODEC, List.of(), TooltipComponentsValue::new);
@@ -201,7 +202,7 @@ public final class TCItems {
             BERSERKERS_GLOVE = registerCurio("berserkers_glove", builder -> builder.infos(0).noTooltip().rarity(PINK)), // 狂战士手套
             PALADINS_SHIELD = registerDirectly("paladins_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).rarity(YELLOW))), // 圣骑士护盾
             HERO_SHIELD = registerDirectly("hero_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).infos(0).rarity(PINK))), // 英雄护盾
-            FROZEN_TURTLE_SHELL = registerDirectly("frozen_turtle_shell", name -> new FrozenTurtleShell(BaseCurioItem.builder(name).rarity(PINK).particle(TerraCurio.asResource("frozen_turtle_shell")))), // 冰冻海龟壳
+            FROZEN_TURTLE_SHELL = registerCurio("frozen_turtle_shell", builder -> builder.rarity(PINK).noParticlePosition().particle(TerraCurio.asResource("frozen_turtle_shell"), ParticleTriggers.LOW_HEALTH)), // 冰冻海龟壳
             FROZEN_SHIELD = registerDirectly("frozen_shield", name -> new PaladinsShield(BaseCurioItem.builder(name).infos(0).rarity(PINK).tooltips(1))), // 冰冻护盾
             HONEY_COMB = registerCurio("honey_comb", builder -> builder.rarity(GREEN)), // 蜂窝
             SHARK_TOOTH_NECKLACE = registerCurio("shark_tooth_necklace", builder -> builder.noTooltip()), // 鲨牙项链
@@ -260,75 +261,81 @@ public final class TCItems {
             PDA = registerDirectly("pda", (name, builder) -> new MultiInfoCurioItem(builder.rarity(PINK).infos(0).tooltips(11))); // 个人数字助手
 
     public static final PortDeferredItem<BaseCurioItem> STEP_STOOL = registerDirectly("step_stool", name -> new StepStool(BaseCurioItem.builder(name))), // 梯凳
-            FLYING_CARPET = registerCurio("flying_carpet", builder -> builder.rarity(GREEN)), // 飞毯
+            FLYING_CARPET = registerCurio("flying_carpet", builder -> builder.rarity(GREEN).particle(TerraCurio.asResource("carpet_dust"), ParticleTriggers.CARPET_FLYING)), // 飞毯
             AGLET = registerCurio("aglet", builder -> builder.noTooltip()), // 金属带扣
             ANKLET_OF_THE_WIND = registerCurio("anklet_of_the_wind", builder -> builder.infos(0).noTooltip()), // 疾风脚镯
             MAGILUMINESCENCE = registerDirectly("magiluminescence", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).tooltips(1), "sodiumdynamiclights")), // 魔光护符
             LAVA_CHARM = registerCurio("lava_charm", builder -> builder.rarity(ORANGE)), // 熔岩护身符
-            MAGMA_SKULL = registerCurio("magma_skull", builder -> builder.infos(0).tooltips(1).rarity(PINK)), // 岩浆骷髅头
-            MOLTEN_CHARM = registerCurio("molten_charm", builder -> builder.tooltips(1).infos(0).rarity(PINK)), // 熔火护身符
-            CLIMBING_CLAWS = registerCurio("climbing_claws", builder -> builder.tooltips(1)), // 攀爬爪
-            SHOE_SPIKES = registerCurio("shoe_spikes", builder -> builder.tooltips(1)), // 鞋钉
-            TIGER_CLIMBING_GEAR = registerCurio("tiger_climbing_gear", builder -> builder.infos(0).rarity(GREEN)), // 猛虎攀爬装备
-            TABI = registerCurio("tabi", builder -> builder.rarity(LIME)), // 分趾厚底袜
-            MASTER_NINJA_GEAR = registerCurio("master_ninja_gear", builder -> builder.tooltips(2).infos(0).rarity(YELLOW)), // 忍者大师装备
-            ICE_SKATES = registerCurio("ice_skates", BLUE), // 溜冰鞋
+            MAGMA_SKULL = registerCurio("magma_skull", builder -> builder.infos(0).tooltips(1).rarity(PINK).particle(TerraCurio.asResource("magma_ember"), ParticleTriggers.ALWAYS)), // 岩浆骷髅头
+            MOLTEN_CHARM = registerCurio("molten_charm", builder -> builder.tooltips(1).infos(0).rarity(PINK).particle(TerraCurio.asResource("magma_ember"), ParticleTriggers.ALWAYS)), // 熔火护身符
+            CLIMBING_CLAWS = registerCurio("climbing_claws", builder -> builder.tooltips(1).particle(TerraCurio.asResource("wall_dust"), ParticleTriggers.WALL_CLIMBING)), // 攀爬爪
+            SHOE_SPIKES = registerCurio("shoe_spikes", builder -> builder.tooltips(1).particle(TerraCurio.asResource("wall_dust"), ParticleTriggers.WALL_CLIMBING)), // 鞋钉
+            TIGER_CLIMBING_GEAR = registerCurio("tiger_climbing_gear", builder -> builder.infos(0).rarity(GREEN).particle(TerraCurio.asResource("wall_dust"), ParticleTriggers.WALL_CLIMBING)), // 猛虎攀爬装备
+            TABI = registerCurio("tabi", builder -> builder.rarity(LIME).particle(TerraCurio.asResource("sprint_dash"), ParticleTriggers.SPRINT_DASH)), // 分趾厚底袜
+            MASTER_NINJA_GEAR = registerCurio("master_ninja_gear", builder -> builder.tooltips(2).infos(0).rarity(YELLOW).particle(TerraCurio.asResource("wall_dust"), ParticleTriggers.WALL_CLIMBING).particle(TerraCurio.asResource("sprint_dash"), ParticleTriggers.SPRINT_DASH)), // 忍者大师装备
+            ICE_SKATES = registerCurio("ice_skates", builder -> builder.rarity(BLUE).particle(TerraCurio.asResource("ice_shards"), ParticleTriggers.ON_ICE)), // 溜冰鞋
             HERMES_BOOTS = registerDirectly("hermes_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).stepHeight())), // 赫尔墨斯靴
             FLURRY_BOOTS = registerDirectly("flurry_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).infos(1).stepHeight())), // 疾风雪靴
             SAILFISH_BOOTS = registerDirectly("sailfish_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).stepHeight())), // 旗鱼靴
             DUNERIDER_BOOTS = registerDirectly("dunerider_boots", DuneriderBoots::new), // 沙丘行者靴
-            ROCKET_BOOTS = registerCurio("rocket_boots", builder -> builder.infos(0)), // 火箭靴
-            SPECTRE_BOOTS = registerDirectly("spectre_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIGHT_RED).infos(0).stepHeight())), // 幽灵靴
-            FAIRY_BOOTS = registerDirectly("fairy_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).infos(0).tooltips(1).rarity(PINK).stepHeight())), // 仙灵靴
-            LIGHTNING_BOOTS = registerDirectly("lightning_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).infos(0).rarity(PINK).stepHeight())), // 闪电靴
-            FROSTSPARK_BOOTS = registerDirectly("frostspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).infos(0).rarity(LIME).stepHeight())), // 霜花靴
-            WATER_WALKING_BOOTS = registerCurio("water_walking_boots", builder -> builder.rarity(LIGHT_RED)), // 水上漂靴
-            OBSIDIAN_WATER_WALKING_BOOTS = registerCurio("obsidian_water_walking_boots", builder -> builder.infos(0).rarity(LIGHT_RED).tooltips(1)), // 黑曜石水上漂靴
-            LAVA_WADERS = registerCurio("lava_waders", builder -> builder.rarity(LIME).tooltips(1).infos(0)), // 熔岩靴
-            TERRASPARK_BOOTS = registerDirectly("terraspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIME).tooltips(3).infos(0).particle(TerraCurio.asResource("terraspark")).stepHeight())), // 泰拉闪耀靴
-            CLOUD_IN_A_BOTTLE = registerDirectly("cloud_in_a_bottle", (name, builder) -> new CloudInABottle(builder.particle(TerraCurio.asResource("cloud")))), // 云朵瓶
-            BLIZZARD_IN_A_BOTTLE = registerDirectly("blizzard_in_a_bottle", (name, builder) -> new BlizzardInABottle(builder.infos(0).particle(TerraCurio.asResource("blizzard")))), // 暴雪瓶
-            SANDSTORM_IN_A_BOTTLE = registerDirectly("sandstorm_in_a_bottle", (name, builder) -> new SandstormInABottle(builder.rarity(GREEN).particle(TerraCurio.asResource("sandstorm")))), // 沙暴瓶
-            FART_IN_A_JAR = registerCurio("fart_in_a_jar", builder -> builder.rarity(GREEN)), // 罐中臭屁
-            TSUNAMI_IN_A_BOTTLE = registerDirectly("tsunami_in_a_bottle", (name, builder) -> new TsunamiInABottle(builder.particle(TerraCurio.asResource("tsunami")))), // 海啸瓶
+            ROCKET_BOOTS = registerCurio("rocket_boots", builder -> builder.infos(0).particle(TerraCurio.asResource("rocket_flame"), ParticleTriggers.ROCKET_FLYING).particle(TerraCurio.asResource("rocket_boost_burst"), ParticleTriggers.ROCKET_BOOST)), // 火箭靴
+            SPECTRE_BOOTS = registerDirectly("spectre_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIGHT_RED).infos(0).stepHeight().particle(TerraCurio.asResource("spectre_flight"), ParticleTriggers.SPECTRE_FLYING))), // 幽灵靴
+            FAIRY_BOOTS = registerDirectly("fairy_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).infos(0).tooltips(1).rarity(PINK).stepHeight().particle(TerraCurio.asResource("flower_growth"), ParticleTriggers.WALKING_ON_GRASS, ParticlePlacements.FEET).particle(TerraCurio.asResource("fairy_flight"), ParticleTriggers.FAIRY_FLYING))), // 仙灵靴
+            LIGHTNING_BOOTS = registerDirectly("lightning_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).infos(0).rarity(PINK).stepHeight().particle(TerraCurio.asResource("lightning_flight"), ParticleTriggers.LIGHTNING_FLYING))), // 闪电靴
+            FROSTSPARK_BOOTS = registerDirectly("frostspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).infos(0).rarity(LIME).stepHeight().particle(TerraCurio.asResource("frostspark_flight"), ParticleTriggers.FROSTSPARK_FLYING).particle(TerraCurio.asResource("ice_shards"), ParticleTriggers.ON_ICE))), // 霜花靴
+            WATER_WALKING_BOOTS = registerCurio("water_walking_boots", builder -> builder.rarity(LIGHT_RED).particle(TerraCurio.asResource("water_ripple"), ParticleTriggers.WATER_WALKING, ParticlePlacements.FEET)), // 水上漂靴
+            OBSIDIAN_WATER_WALKING_BOOTS = registerCurio("obsidian_water_walking_boots", builder -> builder.infos(0).rarity(LIGHT_RED).tooltips(1).particle(TerraCurio.asResource("lava_fizz"), ParticleTriggers.IN_LAVA).particle(TerraCurio.asResource("water_ripple"), ParticleTriggers.WATER_WALKING, ParticlePlacements.FEET)), // 黑曜石水上漂靴
+            LAVA_WADERS = registerCurio("lava_waders", builder -> builder.rarity(LIME).tooltips(1).infos(0).particle(TerraCurio.asResource("lava_fizz"), ParticleTriggers.IN_LAVA)), // 熔岩靴
+            TERRASPARK_BOOTS = registerDirectly("terraspark_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).rarity(LIME).tooltips(3).infos(0).particle(TerraCurio.asResource("terraspark"), ParticleTriggers.RUNNING).particle(TerraCurio.asResource("terraspark_flight"), ParticleTriggers.TERRASPARK_FLYING).particle(TerraCurio.asResource("ice_shards"), ParticleTriggers.ON_ICE).stepHeight())), // 泰拉闪耀靴
+            CLOUD_IN_A_BOTTLE = registerCurio("cloud_in_a_bottle", builder -> builder.particle(TerraCurio.asResource("cloud"), ParticleTriggers.CLOUD_JUMP)), // 云朵瓶
+            BLIZZARD_IN_A_BOTTLE = registerCurio("blizzard_in_a_bottle", builder -> builder.infos(0).particle(TerraCurio.asResource("blizzard"), ParticleTriggers.BLIZZARD_JUMP)), // 暴雪瓶
+            SANDSTORM_IN_A_BOTTLE = registerCurio("sandstorm_in_a_bottle", builder -> builder.rarity(GREEN).particle(TerraCurio.asResource("sandstorm"), ParticleTriggers.SANDSTORM_JUMP)), // 沙暴瓶
+            FART_IN_A_JAR = registerCurio("fart_in_a_jar", builder -> builder.rarity(GREEN).particle(TerraCurio.asResource("fart_cloud"), ParticleTriggers.FART_JUMP)), // 罐中臭屁
+            TSUNAMI_IN_A_BOTTLE = registerCurio("tsunami_in_a_bottle", builder -> builder.particle(TerraCurio.asResource("tsunami"), ParticleTriggers.TSUNAMI_JUMP)), // 海啸瓶
             SHINY_RED_BALLOON = registerCurio("shiny_red_balloon", builder -> {}), // 闪亮红气球
             BALLOON_PUFFERFISH = registerCurio("balloon_pufferfish", builder -> builder.infos(0)), // 气球河豚鱼
-            CLOUD_IN_A_BALLOON = registerCurio("cloud_in_a_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(1).infos(0)), // 云朵气球
-            BLIZZARD_IN_A_BALLOON = registerCurio("blizzard_in_a_balloon", builder -> builder.infos(0).rarity(LIGHT_RED).tooltips(1).infos(0)), // 暴雪气球
-            SANDSTORM_IN_A_BALLOON = registerCurio("sandstorm_in_a_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(1).infos(0)), // 沙暴气球
-            FART_IN_A_BALLOON = registerCurio("fart_in_a_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(1).infos(0)), // 臭屁气球
-            SHARKRON_BALLOON = registerCurio("sharkron_balloon", builder -> builder.infos(0)), // 鲨鱼龙气球
+            CLOUD_IN_A_BALLOON = registerCurio("cloud_in_a_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(1).infos(0).particle(TerraCurio.asResource("cloud"), ParticleTriggers.CLOUD_JUMP)), // 云朵气球
+            BLIZZARD_IN_A_BALLOON = registerCurio("blizzard_in_a_balloon", builder -> builder.infos(0).rarity(LIGHT_RED).tooltips(1).infos(0).particle(TerraCurio.asResource("blizzard"), ParticleTriggers.BLIZZARD_JUMP)), // 暴雪气球
+            SANDSTORM_IN_A_BALLOON = registerCurio("sandstorm_in_a_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(1).infos(0).particle(TerraCurio.asResource("sandstorm"), ParticleTriggers.SANDSTORM_JUMP)), // 沙暴气球
+            FART_IN_A_BALLOON = registerCurio("fart_in_a_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(1).infos(0).particle(TerraCurio.asResource("fart_cloud"), ParticleTriggers.FART_JUMP)), // 臭屁气球
+            SHARKRON_BALLOON = registerCurio("sharkron_balloon", builder -> builder.infos(0).particle(TerraCurio.asResource("tsunami"), ParticleTriggers.TSUNAMI_JUMP)), // 鲨鱼龙气球
             HONEY_BALLOON = registerCurio("honey_balloon", builder -> builder.rarity(GREEN).tooltips(1).infos(0)), // 蜂蜜气球
-            BUNDLE_OF_BALLOONS = registerCurio("bundle_of_balloons", builder -> builder.rarity(YELLOW).tooltips(1).infos(0)), // 气球束
+            BUNDLE_OF_BALLOONS = registerCurio("bundle_of_balloons", builder -> builder.rarity(YELLOW).tooltips(1).infos(0)
+                    .particle(TerraCurio.asResource("cloud"), ParticleTriggers.CLOUD_JUMP)
+                    .particle(TerraCurio.asResource("sandstorm"), ParticleTriggers.SANDSTORM_JUMP)
+                    .particle(TerraCurio.asResource("blizzard"), ParticleTriggers.BLIZZARD_JUMP)), // 气球束（按跳跃能力分段播放）
             LUCKY_HORSESHOE = registerCurio("lucky_horseshoe", builder -> builder.tooltips(1)), // 幸运马掌
             OBSIDIAN_HORSESHOE = registerCurio("obsidian_horseshoe", builder -> builder.infos(0).rarity(LIGHT_RED).tooltips(1)), // 黑曜石马掌
-            BLUE_HORSESHOE_BALLOON = registerCurio("blue_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(2).infos(0)), // 蓝马掌气球
-            WHITE_HORSESHOE_BALLOON = registerCurio("white_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(2).infos(0)), // 白马掌气球
-            YELLOW_HORSESHOE_BALLOON = registerCurio("yellow_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(2).infos(0)), // 黄马掌气球
-            GREEN_HORSESHOE_BALLOON = registerCurio("green_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(2).infos(0)), // 绿马掌气球
+            BLUE_HORSESHOE_BALLOON = registerCurio("blue_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(2).infos(0).particle(TerraCurio.asResource("cloud"), ParticleTriggers.CLOUD_JUMP)), // 蓝马掌气球
+            WHITE_HORSESHOE_BALLOON = registerCurio("white_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(2).infos(0).particle(TerraCurio.asResource("blizzard"), ParticleTriggers.BLIZZARD_JUMP)), // 白马掌气球
+            YELLOW_HORSESHOE_BALLOON = registerCurio("yellow_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(2).infos(0).particle(TerraCurio.asResource("sandstorm"), ParticleTriggers.SANDSTORM_JUMP)), // 黄马掌气球
+            GREEN_HORSESHOE_BALLOON = registerCurio("green_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(2).infos(0).particle(TerraCurio.asResource("fart_cloud"), ParticleTriggers.FART_JUMP)), // 绿马掌气球
             PINK_HORSESHOE_BALLOON = registerCurio("pink_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(2).infos(0)), // 粉马掌气球
             AMBER_HORSESHOE_BALLOON = registerCurio("amber_horseshoe_balloon", builder -> builder.rarity(LIGHT_RED).tooltips(2).infos(0)), // 琥珀马掌气球
-            BUNDLE_OF_HORSESHOE_BALLOONS = registerCurio("bundle_of_horseshoe_balloons", builder -> builder.rarity(YELLOW).tooltips(2).infos(0)), // 马掌气球束
-            INNER_TUBE = registerCurio("inner_tube", builder -> builder.rarity(WHITE)), // 游泳圈
-            FLIPPER = registerCurio("flipper", builder -> builder.noTooltip()), // 脚蹼
-            DIVING_GEAR = registerCurio("diving_gear", builder -> builder.infos(0).rarity(LIGHT_RED).equipable(EquipmentSlot.HEAD)), // 潜水装备
-            JELLYFISH_NECKLACE = registerDirectly("jellyfish_necklace", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(GREEN), "sodiumdynamiclights")), // 水母项链
-            JELLYFISH_DIVING_GEAR = registerDirectly("jellyfish_diving_gear", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(PINK).tooltips(1).infos(0), "sodiumdynamiclights")), // 水母潜水装备
-            ARCTIC_DIVING_GEAR = registerDirectly("arctic_diving_gear", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(LIGHT_PURPLE).tooltips(2), "sodiumdynamiclights")), // 北极潜水装备
+            BUNDLE_OF_HORSESHOE_BALLOONS = registerCurio("bundle_of_horseshoe_balloons", builder -> builder.rarity(YELLOW).tooltips(2).infos(0)
+                    .particle(TerraCurio.asResource("cloud"), ParticleTriggers.CLOUD_JUMP)
+                    .particle(TerraCurio.asResource("sandstorm"), ParticleTriggers.SANDSTORM_JUMP)
+                    .particle(TerraCurio.asResource("blizzard"), ParticleTriggers.BLIZZARD_JUMP)), // 马掌气球束（按跳跃能力分段播放）
+            INNER_TUBE = registerCurio("inner_tube", builder -> builder.rarity(WHITE).particle(TerraCurio.asResource("water_ripple"), ParticleTriggers.FLOATING_ON_WATER, ParticlePlacements.WATER_SURFACE)), // 游泳圈
+            FLIPPER = registerCurio("flipper", builder -> builder.noTooltip().particle(TerraCurio.asResource("swim_foam"), ParticleTriggers.SWIMMING)), // 脚蹼
+            DIVING_GEAR = registerCurio("diving_gear", builder -> builder.infos(0).rarity(LIGHT_RED).equipable(EquipmentSlot.HEAD).particle(TerraCurio.asResource("bubble"), ParticleTriggers.UNDERWATER, ParticlePlacements.MOUTH)), // 潜水装备
+            JELLYFISH_NECKLACE = registerDirectly("jellyfish_necklace", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(GREEN).particle(TerraCurio.asResource("bubble"), ParticleTriggers.UNDERWATER, ParticlePlacements.MOUTH), "sodiumdynamiclights")), // 水母项链
+            JELLYFISH_DIVING_GEAR = registerDirectly("jellyfish_diving_gear", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(PINK).tooltips(1).infos(0).particle(TerraCurio.asResource("bubble"), ParticleTriggers.UNDERWATER, ParticlePlacements.MOUTH), "sodiumdynamiclights")), // 水母潜水装备
+            ARCTIC_DIVING_GEAR = registerDirectly("arctic_diving_gear", name -> new RequiresModLoadedCurioItem(BaseCurioItem.builder(name).rarity(LIGHT_PURPLE).tooltips(2).particle(TerraCurio.asResource("bubble"), ParticleTriggers.UNDERWATER, ParticlePlacements.MOUTH), "sodiumdynamiclights")), // 北极潜水装备
             FROG_LEG = registerCurio("frog_leg", builder -> builder.tooltips(1)), // 蛙腿
-            FROG_FLIPPER = registerCurio("frog_flipper", builder -> builder.tooltips(1).infos(0)), // 青蛙脚蹼
-            FROG_WEBBING = registerCurio("frog_webbing", builder -> builder.rarity(PINK).tooltips(2).infos(0)), // 青蛙蹼
-            FROG_GEAR = registerCurio("frog_gear", builder -> builder.rarity(PINK).tooltips(3).infos(0)), // 青蛙装备
+            FROG_FLIPPER = registerCurio("frog_flipper", builder -> builder.tooltips(1).infos(0).particle(TerraCurio.asResource("swim_foam"), ParticleTriggers.SWIMMING)), // 青蛙脚蹼
+            FROG_WEBBING = registerCurio("frog_webbing", builder -> builder.rarity(PINK).tooltips(2).infos(0).particle(TerraCurio.asResource("wall_dust"), ParticleTriggers.WALL_CLIMBING)), // 青蛙蹼
+            FROG_GEAR = registerCurio("frog_gear", builder -> builder.rarity(PINK).tooltips(3).infos(0).particle(TerraCurio.asResource("wall_dust"), ParticleTriggers.WALL_CLIMBING).particle(TerraCurio.asResource("swim_foam"), ParticleTriggers.SWIMMING)), // 青蛙装备
             AMBHIPIAN_BOOTS = registerDirectly("ambhipian_boots", name -> new BaseSpeedBoots(1, 40, BaseCurioItem.builder(name).infos(0).stepHeight())); // 水陆两用靴
 
     public static final PortDeferredItem<BaseCurioItem> TREASURE_MAGNET = registerCurio("treasure_magnet", builder -> {}), // 宝藏磁石
-            FLOWER_BOOTS = registerCurio("flower_boots", builder -> builder.rarity(LIME)); // 花靴
+            FLOWER_BOOTS = registerCurio("flower_boots", builder -> builder.rarity(LIME).particle(TerraCurio.asResource("flower_growth"), ParticleTriggers.WALKING_ON_GRASS, ParticlePlacements.FEET)); // 花靴
 
     public static final PortDeferredItem<BaseCurioItem> ANGLER_EARRING = registerCurio("angler_earring", builder -> builder.noTooltip()); // 渔夫耳环
 
     public static final PortDeferredItem<BaseCurioItem> ROYAL_GEL = registerCurio("royal_gel", builder -> builder.rarity(EXPERT)), // 皇家凝胶
-            SHIELD_OF_CTHULHU = registerDirectly("shield_of_cthulhu", (name, builder) -> new ShieldOfCthulhu(builder.rarity(EXPERT).noTooltip())), // 克苏鲁护盾
-            WORM_SCARF = registerCurio("worm_scarf", builder -> builder.rarity(EXPERT)), // 蠕虫围巾
+            SHIELD_OF_CTHULHU = registerDirectly("shield_of_cthulhu", (name, builder) -> new ShieldOfCthulhu(builder.rarity(EXPERT).noTooltip().particle(TerraCurio.asResource("cthulhu_dash"), ParticleTriggers.DASHING))), // 克苏鲁护盾
+            WORM_SCARF = registerCurio("worm_scarf", builder -> builder.rarity(EXPERT).particle(TerraCurio.asResource("scarf_mist"), ParticleTriggers.ALWAYS)), // 蠕虫围巾
             BRAIN_OF_CONFUSION = registerCurio("brain_of_confusion", builder -> builder.rarity(EXPERT).tooltips(2)), // 混乱之脑
             HIVE_PACK = registerCurio("hive_pack", builder -> builder.rarity(EXPERT)), // 蜂巢背包
             BONE_GLOVE = registerCurio("bone_glove", builder -> builder.rarity(EXPERT)), // 骨头手套
@@ -336,9 +343,47 @@ public final class TCItems {
     /* 挥发明胶 */
     /* 孢子囊 */
     SHINY_STONE = registerDirectly("shiny_stone", name -> new ShinnyStone(BaseCurioItem.builder(name).rarity(EXPERT))), // 闪亮石
-            SOARING_INSIGNIA = registerCurio("soaring_insignia", builder -> builder.rarity(EXPERT)), // 翱翔徽章
+            SOARING_INSIGNIA = registerCurio("soaring_insignia", builder -> builder.rarity(EXPERT).particle(TerraCurio.asResource("infinite_glow"), ParticleTriggers.INFINITE_FLYING)), // 翱翔徽章
             GRAVITY_GLOBE = registerDirectly("gravity_globe", (name, builder) -> new GravityGlobe(builder.rarity(EXPERT))), // 重力球
-            CELESTIAL_STARBOARD = registerCurio("celestial_starboard", builder -> builder.rarity(EXPERT).tooltips(2)); // 天界星盘
+            CELESTIAL_STARBOARD = registerCurio("celestial_starboard", builder -> builder.rarity(EXPERT).tooltips(2).particle(TerraCurio.asResource("flying_sparkle"), ParticleTriggers.FLYING)); // 天界星盘
+
+    public static final PortDeferredItem<BaseCurioItem> FLEDGLING_WINGS = registerWings("fledgling_wings", WHITE),  // 飞行高度：12
+            ANGEL_WINGS = registerWings("angel_wings", PINK),  // 飞行高度：34
+            DEMON_WINGS = registerWings("demon_wings", PINK), // 飞行高度：34
+            FAIRY_WINGS = registerWings("fairy_wings", PINK), // 飞行高度：44
+            FIN_WINGS = registerWings("fin_wings", LIGHT_RED), // 飞行高度：44
+            FROZEN_WINGS = registerWings("frozen_wings", PINK),  // 飞行高度：44
+            HARPY_WINGS = registerWings("harpy_wings", PINK), // 飞行高度：44
+            JETPACK = registerWings("jetpack", PINK),  // 飞行高度：51
+            LEAF_WINGS = registerWings("leaf_wings", PINK),  // 飞行高度：34
+            BAT_WINGS = registerWings("bat_wings", PINK), // 飞行高度：54
+            BEE_WINGS = registerWings("bee_wings", PINK), // 飞行高度：54
+            BUTTERFLY_WINGS = registerWings("butterfly_wings", PINK), // 飞行高度：54
+            FLAME_WINGS = registerWings("flame_wings", PINK), // 飞行高度：54
+            HOVERBOARD = registerWings("hoverboard", PINK), // 飞行高度：62
+            BONE_WINGS = registerWings("bone_wings", PINK), // 飞行高度：62
+            MOTHRON_WINGS = registerWings("mothron_wings", YELLOW), // 飞行高度：62
+            SPECTRE_WINGS = registerWings("spectre_wings", YELLOW), // 飞行高度：62
+            BEETLE_WINGS = registerWings("beetle_wings", LIME), // 飞行高度：62
+            FESTIVE_WINGS = registerWings("festive_wings", PINK), // 飞行高度：71
+            SPOOKY_WINGS = registerWings("spooky_wings", LIME), // 飞行高度：71
+            TATTERED_WINGS = registerWings("tattered_wings", LIME), // 飞行高度：71
+            STEAMPUNK_WINGS = registerWings("steampunk_wings", YELLOW), // 飞行高度：71
+            BETSYS_WINGS = registerWings("betsys_wings", YELLOW), // 飞行高度：79
+            EMPRESS_WINGS = registerWings("empress_wings", CYAN),  // 飞行高度：85
+            FISHRON_WINGS = registerWings("fishron_wings", YELLOW),  // 飞行高度：95
+            NEBULA_WINGS = registerWings("nebula_wings", RED), // 飞行高度：95
+            VORTEX_BOOSTER = registerWings("vortex_booster", RED), // 飞行高度：95
+            SOLAR_WINGS = registerWings("solar_wings", RED), // 飞行高度：95
+            STARDUST_WINGS = registerWings("stardust", RED); // 飞行高度：95
+
+    private static PortDeferredItem<BaseCurioItem> registerWings(String name, ModRarity rarity) {
+        return WINGS.register(name, () -> {
+            BaseCurioItem.Builder builder = BaseCurioItem.builder(name);
+            builder.rarity(rarity).particle(TerraCurio.asResource("flying_sparkle"), ParticleTriggers.FLYING);
+            return builder.build();
+        });
+    }
 
     public static PortDeferredItem<BaseCurioItem> registerCurio(String name, Consumer<BaseCurioItem.Builder> consumer) {
         return CURIOS.register(name, () -> {

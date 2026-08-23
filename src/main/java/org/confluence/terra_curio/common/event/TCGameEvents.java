@@ -210,7 +210,7 @@ public final class TCGameEvents {
                 event.setCanBreathe(true);
                 event.setRefillAirAmount(4);
             } else if (living.getAirSupply() > 0 && living.level().getGameTime() % 8 != 0) {
-                if (living.getItemBySlot(EquipmentSlot.HEAD).is(TCTags.DIVING) || TCUtils.hasType(living, TCItems.DIVING)) {
+                if (living.getItemBySlot(EquipmentSlot.HEAD).is(TCTags.Items.DIVING) || TCUtils.hasType(living, TCItems.DIVING)) {
                     event.setConsumeAirAmount(0);
                 }
             }

@@ -1,5 +1,6 @@
 package org.confluence.terra_curio.common.init;
 
+import com.google.common.collect.Iterables;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -26,7 +27,7 @@ public final class TCTabs {
                         output.accept(TCItems.CELL_PHONE.get());
                         output.accept(TCItems.DIVING_HELMET.get());
                         CreativeModeTab.Output finalOutput = output;
-                        TCItems.CURIOS.getEntries().forEach(entry -> finalOutput.accept(entry.get()));
+                        Iterables.concat(TCItems.CURIOS.getEntries(), TCItems.WINGS.getEntries()).forEach(holder -> finalOutput.accept(holder.get()));
                     })
                     .withTabsAfter(ResourceKey.create(Registries.CREATIVE_MODE_TAB, ResourceLocation.fromNamespaceAndPath(ConfluenceMagicLib.CONFLUENCE_ID, "armors")))
                     .withTabsBefore(

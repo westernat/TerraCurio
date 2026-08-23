@@ -32,6 +32,7 @@ public final class CuriosClient {
         CuriosRendererRegistry.register(TCItems.MOON_CHARM.get(), () -> new WerewolfRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.MOON_SHELL.get(), () -> new MoonShellRenderer(entityModels));
         CuriosRendererRegistry.register(TCItems.CELESTIAL_SHELL.get(), () -> new MoonShellRenderer(entityModels));
+        CuriosRendererRegistry.register(TCItems.FLEDGLING_WINGS.get(), () -> new WingsGeoRenderer(new NormalWingsGeoModel(TCItems.FLEDGLING_WINGS.getId())));
     }
 
     public static void registerLayers(BiConsumer<ModelLayerLocation, Supplier<LayerDefinition>> layerDefinition) {

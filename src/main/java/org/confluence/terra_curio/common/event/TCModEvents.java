@@ -48,6 +48,7 @@ public final class TCModEvents {
         handler.registerInGameS2C(SetItemEntityPickupDelayPacketS2C.class, SetItemEntityPickupDelayPacketS2C.ID, SetItemEntityPickupDelayPacketS2C.STREAM_CODEC);
         handler.registerInGameS2C(BroadcastRenderPacketS2C.class, BroadcastRenderPacketS2C.ID, BroadcastRenderPacketS2C.STREAM_CODEC);
         handler.registerInGameS2C(InfiniteFlightPacketS2C.class, InfiniteFlightPacketS2C.ID, InfiniteFlightPacketS2C.STREAM_CODEC);
+        handler.registerInGameS2C(PlayerJumpTriggeredPacketS2C.class, PlayerJumpTriggeredPacketS2C.ID, PlayerJumpTriggeredPacketS2C.STREAM_CODEC);
         handler.registerInGameS2C(FluidWalkUpdatePacketS2C.class, FluidWalkUpdatePacketS2C.ID, FluidWalkUpdatePacketS2C.STREAM_CODEC);
         handler.registerInGameS2C(RemoveCurioParticleEmitterPacketS2C.class, RemoveCurioParticleEmitterPacketS2C.ID, RemoveCurioParticleEmitterPacketS2C.STREAM_CODEC);
 
