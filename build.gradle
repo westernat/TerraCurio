@@ -105,13 +105,17 @@ repositories {
         name = "Curios"
         url = uri("https://maven.theillusivec4.top/")
     }
-    maven {
-        name "org.confluenceReleases"
-        url "https://maven.confluence.ink/releases"
-    }
-    maven {
-        name "org.confluenceSnapshots"
-        url "https://maven.confluence.ink/snapshots"
+    exclusiveContent {
+        // 强制 ParticleStorm 只从 Confluence 仓库解析，避免 dvs1.progwml6.com 返回 523 时 Gradle 直接失败而不再尝试后续仓库
+        forRepository {
+            maven {
+                name "org.confluenceReleases"
+                url "https://maven.confluence.ink/releases"
+            }
+        }
+        filter {
+            includeModuleByRegex "org\\.mesdag", "ParticleStorm.*"
+        }
     }
 }
 
@@ -126,12 +130,12 @@ dependencies {
 
     compileOnly(annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.3"))
     if (slim) {
-        modImplementation("org.mesdag:ParticleStorm:${particle_storm_version}-forge")
+        modImplementation("org.mesdag:ParticleStorm-forge-${minecraft_version}:${particlestorm_version}")
         modImplementation project(":Confluence-Magic-Lib")
         implementation("io.github.llamalad7:mixinextras-forge:0.5.3")
     } else {
-        modImplementation("org.mesdag:ParticleStorm:${particle_storm_version}-forge")
-        jarJar("org.mesdag:ParticleStorm:${particle_storm_version}-forge")
+        modImplementation("org.mesdag:ParticleStorm-forge-${minecraft_version}:${particlestorm_version}")
+        jarJar("org.mesdag:ParticleStorm-forge-${minecraft_version}:${particlestorm_version}")
         modImplementation(project(":Confluence-Magic-Lib"))
         jarJar(project(":Confluence-Magic-Lib"))
         jarJar(implementation("io.github.llamalad7:mixinextras-forge:0.5.3"))

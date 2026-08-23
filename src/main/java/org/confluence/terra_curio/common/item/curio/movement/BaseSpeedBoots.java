@@ -19,7 +19,7 @@ import org.confluence.terra_curio.common.init.TCSoundEvents;
 import org.confluence.terra_curio.common.item.curio.BaseCurioItem;
 import org.confluence.terra_curio.network.c2s.SpeedBootsNBTPacketC2S;
 import org.confluence.terra_curio.util.CuriosUtils;
-import org.joml.Matrix4f;
+import org.joml.Matrix4x3f;
 import org.mesdag.particlestorm.particle.ParticleEmitter;
 import top.theillusivec4.curios.api.SlotContext;
 
@@ -50,12 +50,12 @@ public class BaseSpeedBoots extends BaseCurioItem {
 
         if (emitter.active) {
             if (!emitter.isLocalSpace()) {
-                emitter.parentSpace = new Matrix4f();
+                emitter.setLocalSpace(new Matrix4x3f(), false);
             }
             if (ILibEntity.of(living).confluence$isShouldRot()) {
-                emitter.parentSpace.setTranslation(0, living.getBbHeight(), 0);
+                emitter.getLocalSpace().setTranslation(0, living.getBbHeight(), 0);
             } else {
-                emitter.parentSpace.setTranslation(0, 0, 0);
+                emitter.getLocalSpace().setTranslation(0, 0, 0);
             }
         }
     }
