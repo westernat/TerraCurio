@@ -51,7 +51,8 @@ public record InfoCurioCheckPacketS2C(int playerId, byte[] enabled) implements I
                 return f.isEnabled(itemStack) ? target : original;
             }
         }
-        return original;
+        // 没有开关能力的物品视为始终启用，否则铜表这类普通饰品永远无法显示信息
+        return target;
     }
 
     public static void sendToClient(ServerPlayer serverPlayer, Inventory inventory) {

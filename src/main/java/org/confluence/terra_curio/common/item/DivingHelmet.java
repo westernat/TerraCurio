@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.common.item;
 
-import PortLib.extensions.net.minecraft.world.item.Item.PortItemExtension;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -19,8 +18,9 @@ public class DivingHelmet extends ArmorItem {
     private static final float DIVISION = 1.0F / 6.0F;
 
     public DivingHelmet() {
-        super(TCArmorMaterials.DIVING.get(), Type.HELMET, PortItemExtension.Properties.component(new Properties().fireResistant()
-                .durability(PortArmorItem.PortType.HELMET.getDurability(15)), ConfluenceMagicLib.MOD_RARITY, ModRarity.GREEN)
+        super(TCArmorMaterials.DIVING.get(), Type.HELMET, new Properties().fireResistant()
+                .durability(PortArmorItem.PortType.HELMET.getDurability(15))
+                .component(ConfluenceMagicLib.MOD_RARITY, ModRarity.GREEN)
         );
     }
 

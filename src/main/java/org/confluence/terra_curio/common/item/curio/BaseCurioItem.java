@@ -1,7 +1,6 @@
 package org.confluence.terra_curio.common.item.curio;
 
 import PortLib.extensions.net.minecraft.world.entity.ai.attributes.Attributes.PortAttributesExtension;
-import PortLib.extensions.net.minecraft.world.item.Item.PortItemExtension;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
@@ -297,7 +296,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         @ApiStatus.Internal
         public Builder initialize() {
-            PortItemExtension.Properties.component(properties.stacksTo(1), ConfluenceMagicLib.MOD_RARITY, rarity);
+            properties.stacksTo(1).component(ConfluenceMagicLib.MOD_RARITY, rarity);
             this.attributes = attributesBuilder.build();
             this.attributesBuilder = null;
             return this;

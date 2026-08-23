@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.common.item;
 
-import PortLib.extensions.net.minecraft.world.item.Item.PortItemExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
@@ -23,11 +22,7 @@ import java.util.Set;
 
 public class MagicMirror extends Item {
     public MagicMirror(ModRarity rarity) {
-        super(PortItemExtension.Properties.component(new Properties().fireResistant().stacksTo(1), ConfluenceMagicLib.MOD_RARITY, rarity));
-    }
-
-    public MagicMirror(Properties properties) {
-        super(properties);
+        super(new Properties().fireResistant().stacksTo(1).component(ConfluenceMagicLib.MOD_RARITY, rarity));
     }
 
     @Override

@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.common.item;
 
-import PortLib.extensions.net.minecraft.world.item.Item.PortItemExtension;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
@@ -30,7 +29,7 @@ public class DemonHeart extends Item {
     public static final UUID ID = UUID.nameUUIDFromBytes("demon_heart".getBytes());
 
     public DemonHeart() {
-        super(PortItemExtension.Properties.component(new Properties().stacksTo(1).fireResistant(), ConfluenceMagicLib.MOD_RARITY, ModRarity.EXPERT));
+        super(new Properties().stacksTo(1).fireResistant().component(ConfluenceMagicLib.MOD_RARITY, ModRarity.EXPERT));
     }
 
     @Override
