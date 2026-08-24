@@ -10,8 +10,8 @@
 		},
 		"components": {
 			"minecraft:emitter_rate_steady": {
-				"spawn_rate": 6,
-				"max_particles": 16
+				"spawn_rate": 8,
+				"max_particles": 20
 			},
 			"minecraft:emitter_lifetime_expression": {},
 			"minecraft:emitter_shape_point": {
@@ -41,7 +41,15 @@
 				}
 			},
 			"minecraft:particle_appearance_tinting": {
-				"color": ["math.random(0.55, 0.7)", "math.random(0.5, 0.65)", "math.random(0.45, 0.6)", 0.8]
+				"color": {
+					"interpolant": "v.particle_age / v.particle_lifetime",
+					"gradient": {
+						"0.0": "#009E9485",
+						"0.15": "#CC9E9485",
+						"0.75": "#CC9E9485",
+						"1.0": "#009E9485"
+					}
+				}
 			},
 			"minecraft:particle_appearance_lighting": {}
 		}

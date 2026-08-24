@@ -50,7 +50,15 @@
 				}
 			},
 			"minecraft:particle_appearance_tinting": {
-				"color": ["math.random(0.55, 0.75)", "math.random(0.8, 0.95)", "math.random(0.4, 0.6)", 0.8]
+				"color": {
+					"interpolant": "v.particle_age / v.particle_lifetime",
+					"gradient": {
+						"0.0": "#00A6E080",
+						"0.15": "#E6A6E080",
+						"0.75": "#E6A6E080",
+						"1.0": "#00A6E080"
+					}
+				}
 			},
 			"minecraft:particle_motion_collision": {
 				"collision_radius": 0.2

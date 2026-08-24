@@ -4,7 +4,7 @@
 		"description": {
 			"identifier": "terra_curio:water_ripple",
 			"basic_render_parameters": {
-				"material": "particles_alpha",
+				"material": "particles_blend",
 				"texture": "terra_curio:ripple"
 			}
 		},
@@ -39,7 +39,15 @@
 				}
 			},
 			"minecraft:particle_appearance_tinting": {
-				"color": ["math.random(0.5, 0.7)", "math.random(0.85, 1.0)", 1.0, 0.75]
+				"color": {
+					"interpolant": "v.particle_age / v.particle_lifetime",
+					"gradient": {
+						"0.0": "#0099EBFF",
+						"0.12": "#BF99EBFF",
+						"0.6": "#BF99EBFF",
+						"1.0": "#0099EBFF"
+					}
+				}
 			},
 			"minecraft:particle_appearance_lighting": {}
 		}

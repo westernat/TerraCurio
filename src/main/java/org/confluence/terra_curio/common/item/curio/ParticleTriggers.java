@@ -91,8 +91,13 @@ public final class ParticleTriggers {
     public static final ParticleTrigger WALKING_ON_GRASS = living -> living.onGround() &&
             living.level().getBlockState(living.getOnPos()).is(TCTags.FLOWER_BOOTS_AVAILABLE);
 
-    /// 熔岩靴：实体处于熔岩中时激活（远程玩家同样生效）
-    public static final ParticleTrigger IN_LAVA = Entity::isInLava;
+    /// 熔岩靴：站在可走熔岩面上且正在移动，或浸入熔岩中时激活（远程玩家同样生效）。
+    /// 与水上漂同理：熔岩靴行走时玩家踩在熔岩上方（AABB 不浸入，isInLava 不触发），
+    /// 正确信号是"眼睛未浸入液体 + 脚下方块为熔岩"；完全入熔岩时仍走 isInLava。
+    public static final ParticleTrigger IN_LAVA = living -> living.isInLava() ||
+            (living.getEyeInFluidType() == ForgeMod.EMPTY_TYPE.get() &&
+             living.getBlockStateOn().getFluidState().is(FluidTags.LAVA) &&
+             living.getDeltaMovement().horizontalDistanceSqr() > 0.01);
 
     /// 幽灵靴：本地玩家正以幽灵靴飞行时激活（仅本地玩家可见）
     public static final ParticleTrigger SPECTRE_FLYING = flyingBoot(TCItems.SPECTRE_BOOTS.getKey());

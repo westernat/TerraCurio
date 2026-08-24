@@ -42,7 +42,15 @@
 				}
 			},
 			"minecraft:particle_appearance_tinting": {
-				"color": ["math.random(0.68, 0.8)", "math.random(0.85, 0.95)", 1.0, 0.9]
+				"color": {
+					"interpolant": "v.particle_age / v.particle_lifetime",
+					"gradient": {
+						"0.0": "#00BFE6FF",
+						"0.15": "#E6BFE6FF",
+						"0.75": "#E6BFE6FF",
+						"1.0": "#00BFE6FF"
+					}
+				}
 			},
 			"minecraft:particle_appearance_lighting": {}
 		}
