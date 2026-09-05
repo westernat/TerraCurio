@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.api.primitive;
 
-import PortLib.extensions.net.minecraft.resources.ResourceLocation.PortResourceLocationExtension;
 import com.mojang.serialization.Codec;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.resources.ResourceLocation;
@@ -17,7 +16,7 @@ public class ValueType<T, V extends PrimitiveValue<T>> {
     public static final Map<ValueType<?, ? extends PrimitiveValue<?>>, Codec<PrimitiveValue<?>>> VALUE_CODECS = new Hashtable<>();
     public static final Map<ResourceLocation, ValueType<?, ? extends PrimitiveValue<?>>> TYPES = new Hashtable<>();
     public static final Codec<ValueType<?, ? extends PrimitiveValue<?>>> CODEC = ResourceLocation.CODEC.xmap(TYPES::get, ValueType::key);
-    public static final PortStreamCodec<ByteBuf, ValueType<?, ?>> STREAM_CODEC = PortResourceLocationExtension.streamCodec().map(TYPES::get, ValueType::key);
+    public static final PortStreamCodec<ByteBuf, ValueType<?, ?>> STREAM_CODEC = ResourceLocation.STREAM_CODEC.map(TYPES::get, ValueType::key);
 
     private final ResourceLocation key;
     private final CombineRule<T, V> combineRule;

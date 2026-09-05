@@ -1,6 +1,6 @@
 package org.confluence.terra_curio.network.s2c;
 
-import PortLib.extensions.net.minecraft.resources.ResourceLocation.PortResourceLocationExtension;
+import org.mesdag.portlib.wrapper.common.extensions.IPortResourceLocationExtension;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -17,7 +17,7 @@ public record RemoveCurioParticleEmitterPacketS2C(
         ResourceLocation particleId
 ) implements IPortPacket.S2C {
     public static final ResourceLocation ID = TerraCurio.asResource("remove_emitter");
-    public static final PortStreamCodec<ByteBuf, RemoveCurioParticleEmitterPacketS2C> STREAM_CODEC = PortResourceLocationExtension.streamCodec()
+    public static final PortStreamCodec<ByteBuf, RemoveCurioParticleEmitterPacketS2C> STREAM_CODEC = ResourceLocation.STREAM_CODEC
             .map(RemoveCurioParticleEmitterPacketS2C::new, RemoveCurioParticleEmitterPacketS2C::particleId);
 
     @Override

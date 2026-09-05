@@ -1,7 +1,7 @@
 package org.confluence.terra_curio.api.primitive;
 
-import PortLib.extensions.net.minecraft.world.entity.ai.attributes.Attribute.PortAttributeExtension;
-import PortLib.extensions.net.minecraft.world.entity.ai.attributes.AttributeModifier.PortAttributeModifierExtension;
+import org.mesdag.portlib.wrapper.common.extensions.IPortAttributeExtension;
+import org.mesdag.portlib.wrapper.common.extensions.IPortAttributeModifierExtension;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.serialization.Codec;
@@ -21,7 +21,7 @@ public record AttributeModifiersValue(
 ) implements PrimitiveValue<ImmutableListMultimap<Attribute, AttributeModifier>> {
     public static final AttributeModifiersValue EMPTY = new AttributeModifiersValue(ImmutableListMultimap.of());
     public static final Codec<AttributeModifiersValue> CODEC = LibCodecUtils
-            .multimap(PortAttributeExtension.directCodec(), PortAttributeModifierExtension.codec())
+            .multimap(Attribute.DIRECT_CODEC, AttributeModifier.CODEC)
             .xmap(AttributeModifiersValue::new, AttributeModifiersValue::get);
     public static final PortStreamCodec<PortRegistryFriendlyByteBuf, AttributeModifiersValue> STREAM_CODEC = new PortStreamCodec<>() {
         @Override
@@ -29,10 +29,10 @@ public record AttributeModifiersValue(
             int size = buffer.readInt();
             ImmutableListMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableListMultimap.builder();
             for (int i = 0; i < size; i++) {
-                Attribute holder = PortAttributeExtension.directStreamCodec().decode(buffer);
+                Attribute holder = Attribute.DIRECT_STREAM_CODEC.decode(buffer);
                 int amount = buffer.readInt();
                 for (int j = 0; j < amount; j++) {
-                    builder.put(holder, PortAttributeModifierExtension.streamCodec().decode(buffer));
+                    builder.put(holder, AttributeModifier.STREAM_CODEC.decode(buffer));
                 }
             }
             return new AttributeModifiersValue(builder.build());
@@ -42,10 +42,10 @@ public record AttributeModifiersValue(
         public void encode(PortRegistryFriendlyByteBuf buffer, AttributeModifiersValue value) {
             buffer.writeInt(value.value.keySet().size());
             for (Map.Entry<Attribute, Collection<AttributeModifier>> entry : value.value.asMap().entrySet()) {
-                PortAttributeExtension.directStreamCodec().encode(buffer, entry.getKey());
+                Attribute.DIRECT_STREAM_CODEC.encode(buffer, entry.getKey());
                 buffer.writeInt(entry.getValue().size());
                 for (AttributeModifier modifier : entry.getValue()) {
-                    PortAttributeModifierExtension.streamCodec().encode(buffer, modifier);
+                    AttributeModifier.STREAM_CODEC.encode(buffer, modifier);
                 }
             }
         }

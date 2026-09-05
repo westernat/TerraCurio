@@ -1,6 +1,6 @@
 package org.confluence.terra_curio.common.datagen;
 
-import PortLib.extensions.net.minecraft.world.entity.ai.attributes.Attributes.PortAttributesExtension;
+import org.mesdag.portlib.wrapper.common.extensions.IPortAttributesExtension;
 import it.unimi.dsi.fastutil.objects.Reference2ObjectOpenHashMap;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -58,9 +58,9 @@ public class TCDataMapProvider extends PortDataMapProvider {
             ResourceLocation id = helper.asId();
             helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.builder()
                     .add(Attributes.MOVEMENT_SPEED, id, 0.16, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-                    .add(PortAttributesExtension.fallDamageMultiplier().value(), id, -100, PortAttributeModifier.Operation.ADD_VALUE)
-                    .add(PortAttributesExtension.jumpStrength().value(), id, 1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-                    .add(PortAttributesExtension.stepHeight().value(), id, 0.5, PortAttributeModifier.Operation.ADD_VALUE)
+                    .add(IPortAttributesExtension.fallDamageMultiplier().value(), id, -100, PortAttributeModifier.Operation.ADD_VALUE)
+                    .add(IPortAttributesExtension.jumpStrength().value(), id, 1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(IPortAttributesExtension.stepHeight().value(), id, 0.5, PortAttributeModifier.Operation.ADD_VALUE)
                     .build());
         });
         add(TCItems.EVERLASTING, helper -> {
@@ -139,12 +139,12 @@ public class TCDataMapProvider extends PortDataMapProvider {
                     .add(Attributes.ATTACK_SPEED, id, 0.051, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.MOVEMENT_SPEED, id, 0.05, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.ARMOR, id, 3.0, PortAttributeModifier.Operation.ADD_VALUE)
-                    .add(PortAttributesExtension.jumpStrength().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(IPortAttributesExtension.jumpStrength().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .build());
         }); // 月光护身符
         add(TCItems.NEPTUNES_SHELL, helper -> {
             helper.unit(TCItems.NEPTUNES$SHELL);
-            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.submergedMiningSpeed().value(), helper.asId(), 0.8, PortAttributeModifier.Operation.ADD_VALUE));
+            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.submergedMiningSpeed().value(), helper.asId(), 0.8, PortAttributeModifier.Operation.ADD_VALUE));
         }); // 海神贝壳
         add(TCItems.MOON_SHELL, helper -> {
             helper.unit(TCItems.NEPTUNES$SHELL);
@@ -155,18 +155,18 @@ public class TCDataMapProvider extends PortDataMapProvider {
                     .add(Attributes.ATTACK_SPEED, id, 0.051, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.MOVEMENT_SPEED, id, 0.05, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.ARMOR, id, 3.0, PortAttributeModifier.Operation.ADD_VALUE)
-                    .add(PortAttributesExtension.jumpStrength().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(IPortAttributesExtension.jumpStrength().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .build());
         }); // 月亮贝壳
         add(TCItems.CELESTIAL_SHELL, helper -> {
             helper.unit(TCItems.NEPTUNES$SHELL);
             ResourceLocation id = helper.asId();
             helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.builder()
-                    .add(PortAttributesExtension.submergedMiningSpeed().value(), id, 0.8, PortAttributeModifier.Operation.ADD_VALUE)
+                    .add(IPortAttributesExtension.submergedMiningSpeed().value(), id, 0.8, PortAttributeModifier.Operation.ADD_VALUE)
                     .add(Attributes.ATTACK_SPEED, id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(LibAttributes.getAttackDamage().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.ARMOR, id, 2.0, PortAttributeModifier.Operation.ADD_VALUE)
-                    .add(PortAttributesExtension.blockBreakSpeed().value(), id, 0.15, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(IPortAttributesExtension.blockBreakSpeed().value(), id, 0.15, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(LibAttributes.getCriticalChance().value(), id, 0.02, PortAttributeModifier.Operation.ADD_VALUE)
                     .add(LibAttributes.getRangedDamage().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(LibAttributes.getMagicDamage().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
@@ -193,7 +193,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
             ResourceLocation id = helper.asId();
             helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.builder()
                     .add(Attributes.ATTACK_KNOCKBACK, id, 1.0, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-                    .add(PortAttributesExtension.entityInteractionRange().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(IPortAttributesExtension.entityInteractionRange().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .build());
         }); // 泰坦手套
         add(TCItems.POWER_GLOVE, helper -> {
@@ -202,7 +202,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
             helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.builder()
                     .add(Attributes.ATTACK_SPEED, id, 0.12, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.ATTACK_KNOCKBACK, id, 1.0, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-                    .add(PortAttributesExtension.entityInteractionRange().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(IPortAttributesExtension.entityInteractionRange().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .build());
         }); // 强力手套
         add(TCItems.MECHANICAL_GLOVE, helper -> {
@@ -212,7 +212,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
                     .add(LibAttributes.getAttackDamage().value(), id, 0.12, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.ATTACK_SPEED, id, 0.12, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.ATTACK_KNOCKBACK, id, 1.0, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-                    .add(PortAttributesExtension.entityInteractionRange().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(IPortAttributesExtension.entityInteractionRange().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .build());
         }); // 机械手套
         add(TCItems.FIRE_GAUNTLET, helper -> {
@@ -223,7 +223,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
                     .add(LibAttributes.getAttackDamage().value(), id, 0.12, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.ATTACK_SPEED, id, 0.12, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.ATTACK_KNOCKBACK, id, 1.0, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-                    .add(PortAttributesExtension.entityInteractionRange().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(IPortAttributesExtension.entityInteractionRange().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .build());
         }); // 烈火手套
         add(TCItems.FLESH_KNUCKLES, helper -> {
@@ -240,7 +240,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
                     .add(Attributes.ARMOR, id, 4.0, PortAttributeModifier.Operation.ADD_VALUE)
                     .add(Attributes.ATTACK_SPEED, id, 0.12, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.ATTACK_KNOCKBACK, id, 1.0, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-                    .add(PortAttributesExtension.entityInteractionRange().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(IPortAttributesExtension.entityInteractionRange().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(ConfluenceMagicLib.AGGRO, id, 400, PortAttributeModifier.Operation.ADD_VALUE)
                     .build());
         }); // 狂战士手套
@@ -356,22 +356,22 @@ public class TCDataMapProvider extends PortDataMapProvider {
         }); // 腐香囊
 
         // 建筑
-        add(TCItems.TOOLBELT, helper -> helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.blockInteractionRange().value(), helper.asId(), 1.0, PortAttributeModifier.Operation.ADD_VALUE))); // 工具腰带
-        add(TCItems.TOOLBOX, helper -> helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.blockInteractionRange().value(), helper.asId(), 1.0, PortAttributeModifier.Operation.ADD_VALUE))); // 工具箱
-        add(TCItems.EXTENDO_GRIP, helper -> helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.blockInteractionRange().value(), helper.asId(), 3.0, PortAttributeModifier.Operation.ADD_VALUE))); // 加长握爪
+        add(TCItems.TOOLBELT, helper -> helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.blockInteractionRange().value(), helper.asId(), 1.0, PortAttributeModifier.Operation.ADD_VALUE))); // 工具腰带
+        add(TCItems.TOOLBOX, helper -> helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.blockInteractionRange().value(), helper.asId(), 1.0, PortAttributeModifier.Operation.ADD_VALUE))); // 工具箱
+        add(TCItems.EXTENDO_GRIP, helper -> helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.blockInteractionRange().value(), helper.asId(), 3.0, PortAttributeModifier.Operation.ADD_VALUE))); // 加长握爪
         add(TCItems.PORTABLE_CEMENT_MIXER, helper -> helper.of(TCItems.RIGHT$CLICK$DELAY$SUBSTRACTOR, (byte) 1)); // 便携式水泥搅拌机
         add(TCItems.BRICK_LAYER, helper -> helper.of(TCItems.RIGHT$CLICK$DELAY$SUBSTRACTOR, (byte) 1)); // 砌砖刀
         add(TCItems.ARCHITECT_GIZMO_PACK, helper -> {
             helper.of(TCItems.RIGHT$CLICK$DELAY$SUBSTRACTOR, (byte) 2);
-            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.blockInteractionRange().value(), helper.asId(), 3.0, PortAttributeModifier.Operation.ADD_VALUE));
+            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.blockInteractionRange().value(), helper.asId(), 3.0, PortAttributeModifier.Operation.ADD_VALUE));
         }); // 建筑师发明背包
-        add(TCItems.ANCIENT_CHISEL, helper -> helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.blockBreakSpeed().value(), helper.asId(), 0.25, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))); // 远古凿子
+        add(TCItems.ANCIENT_CHISEL, helper -> helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.blockBreakSpeed().value(), helper.asId(), 0.25, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL))); // 远古凿子
         add(TCItems.HAND_OF_CREATION, helper -> {
             helper.of(TCItems.RIGHT$CLICK$DELAY$SUBSTRACTOR, (byte) 3);
             ResourceLocation id = helper.asId();
             helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.builder()
-                    .add(PortAttributesExtension.blockInteractionRange().value(), id, 3.0, PortAttributeModifier.Operation.ADD_VALUE)
-                    .add(PortAttributesExtension.blockBreakSpeed().value(), id, 0.25, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(IPortAttributesExtension.blockInteractionRange().value(), id, 3.0, PortAttributeModifier.Operation.ADD_VALUE)
+                    .add(IPortAttributesExtension.blockBreakSpeed().value(), id, 0.25, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(ConfluenceMagicLib.PICKUP_RANGE, id, 6.25, PortAttributeModifier.Operation.ADD_VALUE)
                     .build());
         }); // 创造之手
@@ -428,7 +428,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
             helper.of(TCItems.WALL$CLIMB, (byte) 2);
             helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(LibAttributes.getDodgeChance().value(), helper.asId(), 0.1, PortAttributeModifier.Operation.ADD_VALUE));
         }); // 忍者大师装备
-        add(TCItems.DUNERIDER_BOOTS, helper -> helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.stepHeight().value(), helper.asId(), 0.5, PortAttributeModifier.Operation.ADD_VALUE))); // 沙丘行者靴
+        add(TCItems.DUNERIDER_BOOTS, helper -> helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.stepHeight().value(), helper.asId(), 0.5, PortAttributeModifier.Operation.ADD_VALUE))); // 沙丘行者靴
         add(TCItems.ROCKET_BOOTS, helper -> helper.of(TCItems.MAY$FLY, MayFlyAbilityValue.of(helper.asKey(), 0.3F, 36, false, false))); // 火箭靴
         add(TCItems.SPECTRE_BOOTS, helper -> helper.of(TCItems.MAY$FLY, MayFlyAbilityValue.of(helper.asKey(), 0.3F, 36, false, false))); // 幽灵靴
         add(TCItems.FAIRY_BOOTS, helper -> {
@@ -470,23 +470,23 @@ public class TCDataMapProvider extends PortDataMapProvider {
         // 瓶
         add(TCItems.CLOUD_IN_A_BOTTLE, helper -> {
             helper.of(TCItems.CLOUD, 1.3F);
-            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.safeFallDistance().value(), helper.asId(), 3, PortAttributeModifier.Operation.ADD_VALUE));
+            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.safeFallDistance().value(), helper.asId(), 3, PortAttributeModifier.Operation.ADD_VALUE));
         }); // 云朵瓶
         add(TCItems.BLIZZARD_IN_A_BOTTLE, helper -> {
             helper.of(TCItems.BLIZZARD, new Tuple<>(0.4F, 14));
-            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.safeFallDistance().value(), helper.asId(), 3, PortAttributeModifier.Operation.ADD_VALUE));
+            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.safeFallDistance().value(), helper.asId(), 3, PortAttributeModifier.Operation.ADD_VALUE));
         }); // 暴雪瓶
         add(TCItems.SANDSTORM_IN_A_BOTTLE, helper -> {
             helper.of(TCItems.SAND$STORM, new Tuple<>(0.45F, 17));
-            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.safeFallDistance().value(), helper.asId(), 3, PortAttributeModifier.Operation.ADD_VALUE));
+            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.safeFallDistance().value(), helper.asId(), 3, PortAttributeModifier.Operation.ADD_VALUE));
         }); // 沙暴瓶
         add(TCItems.FART_IN_A_JAR, helper -> {
             helper.of(TCItems.FART, 1.7F);
-            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.safeFallDistance().value(), helper.asId(), 3, PortAttributeModifier.Operation.ADD_VALUE));
+            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.safeFallDistance().value(), helper.asId(), 3, PortAttributeModifier.Operation.ADD_VALUE));
         }); // 罐中臭屁
         add(TCItems.TSUNAMI_IN_A_BOTTLE, helper -> {
             helper.of(TCItems.TSUNAMI, 1.5F);
-            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.safeFallDistance().value(), helper.asId(), 3, PortAttributeModifier.Operation.ADD_VALUE));
+            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.safeFallDistance().value(), helper.asId(), 3, PortAttributeModifier.Operation.ADD_VALUE));
         }); // 海啸瓶
 
         // 气球
@@ -565,24 +565,24 @@ public class TCDataMapProvider extends PortDataMapProvider {
 
         // 游泳
         add(TCItems.INNER_TUBE, helper -> helper.unit(TCItems.FLOAT$ON$LIQUID$SURFACE)); // 游泳圈
-        add(TCItems.FLIPPER, helper -> helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.swimSpeed().value(), helper.asId(), 0.5, PortAttributeModifier.Operation.ADD_VALUE))); // 脚蹼
+        add(TCItems.FLIPPER, helper -> helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.swimSpeed().value(), helper.asId(), 0.5, PortAttributeModifier.Operation.ADD_VALUE))); // 脚蹼
         add(TCItems.DIVING_GEAR, helper -> {
             helper.unit(TCItems.DIVING);
-            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.swimSpeed().value(), helper.asId(), 0.5, PortAttributeModifier.Operation.ADD_VALUE));
+            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.swimSpeed().value(), helper.asId(), 0.5, PortAttributeModifier.Operation.ADD_VALUE));
         }); // 潜水装备
         add(TCItems.JELLYFISH_NECKLACE, helper -> helper.of(TCItems.LUMINANCE, -12)); // 水母项链
         add(TCItems.JELLYFISH_DIVING_GEAR, helper -> {
             helper.unit(TCItems.DIVING);
             helper.of(TCItems.LUMINANCE, -12);
             helper.of(TCItems.EFFECT$IMMUNITIES, Set.of());
-            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.swimSpeed().value(), helper.asId(), 0.5, PortAttributeModifier.Operation.ADD_VALUE));
+            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.swimSpeed().value(), helper.asId(), 0.5, PortAttributeModifier.Operation.ADD_VALUE));
         }); // 水母潜水装备
         add(TCItems.ARCTIC_DIVING_GEAR, helper -> {
             helper.unit(TCItems.DIVING);
             helper.unit(TCItems.ICE$SPEED);
             helper.unit(TCItems.FROZEN$IMMUNE);
             helper.of(TCItems.LUMINANCE, -12);
-            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.swimSpeed().value(), helper.asId(), 0.5, PortAttributeModifier.Operation.ADD_VALUE));
+            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.swimSpeed().value(), helper.asId(), 0.5, PortAttributeModifier.Operation.ADD_VALUE));
         }); // 北极潜水装备
 
         // 青蛙
@@ -590,7 +590,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
         add(TCItems.FROG_FLIPPER, helper -> {
             ResourceLocation id = helper.asId();
             helper.entry(TCItems.ATTRIBUTES, frogAttributesBuilder(id)
-                    .add(PortAttributesExtension.swimSpeed().value(), id, 0.5, PortAttributeModifier.Operation.ADD_VALUE)
+                    .add(IPortAttributesExtension.swimSpeed().value(), id, 0.5, PortAttributeModifier.Operation.ADD_VALUE)
                     .build());
         }); // 青蛙脚蹼
         add(TCItems.FROG_WEBBING, helper -> {
@@ -601,7 +601,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
             helper.of(TCItems.WALL$CLIMB, (byte) 2);
             ResourceLocation id = helper.asId();
             helper.entry(TCItems.ATTRIBUTES, frogAttributesBuilder(id)
-                    .add(PortAttributesExtension.swimSpeed().value(), id, 0.5, PortAttributeModifier.Operation.ADD_VALUE)
+                    .add(IPortAttributesExtension.swimSpeed().value(), id, 0.5, PortAttributeModifier.Operation.ADD_VALUE)
                     .build());
         }); // 青蛙装备
         add(TCItems.AMBHIPIAN_BOOTS, helper -> helper.entry(TCItems.ATTRIBUTES, frogAttributes(helper.asId()))); // 水陆两用靴
@@ -625,13 +625,13 @@ public class TCDataMapProvider extends PortDataMapProvider {
             ResourceLocation id = helper.asId();
             helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.builder()
                     .add(Attributes.MOVEMENT_SPEED, id, 0.075, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-                    .add(PortAttributesExtension.jumpStrength().value(), id, 0.8, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(IPortAttributesExtension.jumpStrength().value(), id, 0.8, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .build());
         }); // 翱翔徽章
         add(TCItems.GRAVITY_GLOBE, helper -> helper.unit(TCItems.GRAVITY$GLOBE)); // 重力球
         add(TCItems.CELESTIAL_STARBOARD, helper -> {
             helper.of(TCItems.MAY$FLY, MayFlyAbilityValue.of(helper.asKey(), 1100, 1.0F, 60, true, true));
-            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.fallDamageMultiplier().value(), helper.asId(), -100.0, PortAttributeModifier.Operation.ADD_VALUE));
+            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.fallDamageMultiplier().value(), helper.asId(), -100.0, PortAttributeModifier.Operation.ADD_VALUE));
         }); // 天界星盘
 
         // 翅膀
@@ -669,7 +669,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
     private static Consumer<Helper> wings(float flySpeed, int flyTicks, boolean horizontalFlight) {
         return helper -> {
             helper.of(TCItems.MAY$FLY, MayFlyAbilityValue.of(helper.asKey(), 1100, flySpeed, flyTicks, true, horizontalFlight));
-            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(PortAttributesExtension.fallDamageMultiplier().value(), helper.asId(), -100, PortAttributeModifier.Operation.ADD_VALUE));
+            helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.simple(IPortAttributesExtension.fallDamageMultiplier().value(), helper.asId(), -100, PortAttributeModifier.Operation.ADD_VALUE));
         };
     }
 
@@ -678,7 +678,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
                 .add(Attributes.ATTACK_SPEED, id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 .add(LibAttributes.getAttackDamage().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 .add(Attributes.ARMOR, id, armor, PortAttributeModifier.Operation.ADD_VALUE)
-                .add(PortAttributesExtension.blockBreakSpeed().value(), id, 0.15, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                .add(IPortAttributesExtension.blockBreakSpeed().value(), id, 0.15, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 .add(LibAttributes.getCriticalChance().value(), id, 0.02, PortAttributeModifier.Operation.ADD_VALUE)
                 .add(LibAttributes.getRangedDamage().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 .add(LibAttributes.getMagicDamage().value(), id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
@@ -698,23 +698,23 @@ public class TCDataMapProvider extends PortDataMapProvider {
 
     private static AttributeModifiersValue balloonAttributes(ResourceLocation id, double safeFallDistance) {
         return AttributeModifiersValue.builder()
-                .add(PortAttributesExtension.jumpStrength().value(), id, 0.43, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-                .add(PortAttributesExtension.safeFallDistance().value(), id, safeFallDistance, PortAttributeModifier.Operation.ADD_VALUE)
+                .add(IPortAttributesExtension.jumpStrength().value(), id, 0.43, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                .add(IPortAttributesExtension.safeFallDistance().value(), id, safeFallDistance, PortAttributeModifier.Operation.ADD_VALUE)
                 .build();
     }
 
     private static AttributeModifiersValue horseshoeAttributes(ResourceLocation id) {
         return AttributeModifiersValue.builder()
                 .add(Attributes.LUCK, id, 0.05, PortAttributeModifier.Operation.ADD_VALUE)
-                .add(PortAttributesExtension.fallDamageMultiplier().value(), id, -100.0, PortAttributeModifier.Operation.ADD_VALUE)
+                .add(IPortAttributesExtension.fallDamageMultiplier().value(), id, -100.0, PortAttributeModifier.Operation.ADD_VALUE)
                 .build();
     }
 
     private static AttributeModifiersValue horseshoeBalloonAttributes(ResourceLocation id, double jumpStrength) {
         return AttributeModifiersValue.builder()
-                .add(PortAttributesExtension.jumpStrength().value(), id, jumpStrength, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                .add(IPortAttributesExtension.jumpStrength().value(), id, jumpStrength, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 .add(Attributes.LUCK, id, 0.05, PortAttributeModifier.Operation.ADD_VALUE)
-                .add(PortAttributesExtension.fallDamageMultiplier().value(), id, -100.0, PortAttributeModifier.Operation.ADD_VALUE)
+                .add(IPortAttributesExtension.fallDamageMultiplier().value(), id, -100.0, PortAttributeModifier.Operation.ADD_VALUE)
                 .build();
     }
 
@@ -724,8 +724,8 @@ public class TCDataMapProvider extends PortDataMapProvider {
 
     private static AttributeModifiersValue.Builder frogAttributesBuilder(ResourceLocation id) {
         return AttributeModifiersValue.builder()
-                .add(PortAttributesExtension.safeFallDistance().value(), id, 7.0, PortAttributeModifier.Operation.ADD_VALUE)
-                .add(PortAttributesExtension.jumpStrength().value(), id, 0.6, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+                .add(IPortAttributesExtension.safeFallDistance().value(), id, 7.0, PortAttributeModifier.Operation.ADD_VALUE)
+                .add(IPortAttributesExtension.jumpStrength().value(), id, 0.6, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
     protected void add(ItemLike item, Consumer<Helper> consumer) {

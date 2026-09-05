@@ -1,6 +1,6 @@
 package org.confluence.terra_curio.common.item.curio;
 
-import PortLib.extensions.net.minecraft.world.entity.ai.attributes.Attributes.PortAttributesExtension;
+import org.mesdag.portlib.wrapper.common.extensions.IPortAttributesExtension;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
@@ -277,7 +277,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         public Builder stepHeight() {
             if (TCStartupConfigs.shoesExtraStepHeight()) {
-                return attribute(PortAttributesExtension.stepHeight().value(), 0.5, PortAttributeModifier.Operation.ADD_VALUE);
+                return attribute(IPortAttributesExtension.stepHeight().value(), 0.5, PortAttributeModifier.Operation.ADD_VALUE);
             }
             return this;
         }

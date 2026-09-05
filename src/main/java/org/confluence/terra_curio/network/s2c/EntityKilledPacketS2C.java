@@ -1,6 +1,6 @@
 package org.confluence.terra_curio.network.s2c;
 
-import PortLib.extensions.net.minecraft.resources.ResourceLocation.PortResourceLocationExtension;
+import org.mesdag.portlib.wrapper.common.extensions.IPortResourceLocationExtension;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +18,7 @@ public record EntityKilledPacketS2C(int amount, ResourceLocation entityType) imp
     public static final ResourceLocation ID = TerraCurio.asResource("entity_killed");
     public static final PortStreamCodec<ByteBuf, EntityKilledPacketS2C> STREAM_CODEC = PortStreamCodec.composite(
             PortByteBufCodecs.VAR_INT, EntityKilledPacketS2C::amount,
-            PortResourceLocationExtension.streamCodec(), EntityKilledPacketS2C::entityType,
+            ResourceLocation.STREAM_CODEC, EntityKilledPacketS2C::entityType,
             EntityKilledPacketS2C::new
     );
 
