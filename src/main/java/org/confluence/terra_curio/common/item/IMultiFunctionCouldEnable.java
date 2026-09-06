@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import net.minecraft.Util;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
+import org.confluence.lib.ConfluenceMagicLib;
 import org.confluence.lib.common.item.IFunctionCouldEnable;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
@@ -46,6 +47,7 @@ public interface IMultiFunctionCouldEnable extends IFunctionCouldEnable {
 
     @Override
     default @Nullable TooltipComponent getTooltipComponent(ItemStack itemStack) {
+        if (ConfluenceMagicLib.IS_CONFLUENCE_LOAD) return null;
         PrimitiveValueComponent component = TCUtils.getAccessoriesComponent(itemStack);
         if (component == null) return null;
         TooltipComponentsValue value = component.get(TCItems.INFORMATION);

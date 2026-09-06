@@ -5,6 +5,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import org.confluence.lib.util.LibClientUtils;
 import org.confluence.lib.util.LibUtils;
 import org.confluence.terra_curio.client.TCClientConfigs;
 import org.confluence.terra_curio.client.event.TCGameClientEvents;
@@ -38,7 +39,7 @@ public class TerraCurio {
             TCModClientEvent.init();
             TCGameClientEvents.init();
             TCClientConfigs.register(context);
-//            container.registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class, ConfigurationScreen::new);
+            LibClientUtils.registerConfigScreen(context);
         }
         TCAttachments.init();
         TCDataComponentTypes.init();
