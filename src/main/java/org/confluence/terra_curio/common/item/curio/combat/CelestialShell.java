@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.common.item.curio.combat;
 
-import org.mesdag.portlib.wrapper.common.extensions.IPortAttributesExtension;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.Util;
@@ -28,7 +27,7 @@ public class CelestialShell extends BaseCurioItem implements ICosmetic {
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(ID, "celestial_shell_night", 0.051, AttributeModifier.Operation.MULTIPLY_TOTAL));
         builder.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(ID, "celestial_shell_night", 0.05, AttributeModifier.Operation.MULTIPLY_TOTAL));
         builder.put(Attributes.ARMOR, new AttributeModifier(ID, "celestial_shell_night", 3.0, AttributeModifier.Operation.ADDITION));
-        builder.put(IPortAttributesExtension.jumpStrength().value(), new AttributeModifier(ID, "celestial_shell_night", 0.1, AttributeModifier.Operation.MULTIPLY_TOTAL));
+        builder.put(Attributes.JUMP_STRENGTH, new AttributeModifier(ID, "celestial_shell_night", 0.1, AttributeModifier.Operation.MULTIPLY_TOTAL));
     }).build();
 
     public CelestialShell(Builder builder) {

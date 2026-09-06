@@ -1,7 +1,5 @@
 package org.confluence.terra_curio.api.primitive;
 
-import org.mesdag.portlib.wrapper.common.extensions.IPortAttributeExtension;
-import org.mesdag.portlib.wrapper.common.extensions.IPortAttributeModifierExtension;
 import com.google.common.collect.ImmutableListMultimap;
 import com.google.common.collect.Multimap;
 import com.mojang.serialization.Codec;

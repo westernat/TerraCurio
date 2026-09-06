@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.network.s2c;
 
-import org.mesdag.portlib.wrapper.common.extensions.IPortResourceKeyExtension;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -16,6 +15,7 @@ import org.mesdag.portlib.network.IPortPacket;
 import org.mesdag.portlib.network.PortRegistryFriendlyByteBuf;
 import org.mesdag.portlib.network.codec.PortByteBufCodecs;
 import org.mesdag.portlib.network.codec.PortStreamCodec;
+import org.mesdag.portlib.wrapper.common.extensions.IPortResourceKeyExtension;
 
 import java.util.IdentityHashMap;
 import java.util.Map;

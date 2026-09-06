@@ -1,11 +1,11 @@
 package org.confluence.terra_curio.common.item.curio.combat;
 
-import org.mesdag.portlib.wrapper.common.extensions.IPortAttributesExtension;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
 import org.confluence.terra_curio.common.item.curio.NightBonusCurioItem;
 import org.confluence.terra_curio.util.CuriosUtils;
@@ -16,7 +16,7 @@ import java.util.UUID;
 public class MoonShell extends NightBonusCurioItem implements ICosmetic {
     public static final UUID ID = UUID.nameUUIDFromBytes("moon_shell".getBytes());
     private static final Multimap<Attribute, AttributeModifier> UNDER_WATER = ImmutableMultimap.of(
-            IPortAttributesExtension.submergedMiningSpeed().value(), new AttributeModifier(ID, "moon_shell", 0.8, AttributeModifier.Operation.ADDITION)
+            Attributes.SUBMERGED_MINING_SPEED.value(), new AttributeModifier(ID, "moon_shell", 0.8, AttributeModifier.Operation.ADDITION)
     );
 
     public MoonShell(Builder builder) {

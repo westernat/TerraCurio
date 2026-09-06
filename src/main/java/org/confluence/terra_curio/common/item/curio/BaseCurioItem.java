@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.common.item.curio;
 
-import org.mesdag.portlib.wrapper.common.extensions.IPortAttributesExtension;
 import com.google.common.collect.ImmutableMultimap;
 import com.google.common.collect.Multimap;
 import net.minecraft.ChatFormatting;
@@ -12,6 +11,7 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -67,7 +67,8 @@ public class BaseCurioItem extends Item implements ICurioItem {
     @OverridingMethodsMustInvokeSuper
     @Override
     public void onUnequip(SlotContext slotContext, ItemStack newStack, ItemStack stack) {
-        if (builder == null || builder.particleTriggers.isEmpty() || ItemStack.isSameItem(newStack, stack)) return;
+        if (builder == null || builder.particleTriggers.isEmpty() || ItemStack.isSameItem(newStack, stack))
+            return;
         if (slotContext.entity() instanceof ServerPlayer player) {
             for (ResourceLocation particle : builder.particleTriggers.keySet()) {
                 RemoveCurioParticleEmitterPacketS2C.sendToClient(player, particle);
@@ -106,9 +107,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
     /// 把 emitter 放到实体本地空间的目标位置。
     ///
-    /// @param placement 自定义的本地空间矩阵变换；为 null 时使用默认行为（shouldRot 时抬到 (0, bbHeight, 0)，否则留在 (0,0,0)）。
-    ///
-    /// 自定义实现直接操作矩阵（旋转 + 平移），如嘴部气泡用[ParticlePlacements#MOUTH] 那样随头部朝向旋转。
+    /// @param placement 自定义的本地空间矩阵变换；为 null 时使用默认行为（shouldRot 时抬到 (0, bbHeight, 0)，否则留在 (0,0,0)）。自定义实现直接操作矩阵（旋转 + 平移），如嘴部气泡用[ParticlePlacements#MOUTH] 那样随头部朝向旋转。
     private void positionEmitter(LivingEntity living, ParticleEmitter emitter, @Nullable BiConsumer<LivingEntity, Matrix4x3f> placement) {
         if (!emitter.isLocalSpace()) {
             emitter.setLocalSpace(new Matrix4x3f(), false);
@@ -226,7 +225,8 @@ public class BaseCurioItem extends Item implements ICurioItem {
         }
 
         /// 一个粒子的声明数据：激活条件 + 可选的本地空间矩阵变换
-        public record ParticleData(ParticleTrigger trigger, @Nullable BiConsumer<LivingEntity, Matrix4x3f> placement) {
+        public record ParticleData(ParticleTrigger trigger,
+                                   @Nullable BiConsumer<LivingEntity, Matrix4x3f> placement) {
             public ParticleData(ParticleTrigger trigger) {
                 this(trigger, null);
             }
@@ -277,7 +277,7 @@ public class BaseCurioItem extends Item implements ICurioItem {
 
         public Builder stepHeight() {
             if (TCStartupConfigs.shoesExtraStepHeight()) {
-                return attribute(IPortAttributesExtension.stepHeight().value(), 0.5, PortAttributeModifier.Operation.ADD_VALUE);
+                return attribute(Attributes.STEP_HEIGHT.value(), 0.5, PortAttributeModifier.Operation.ADD_VALUE);
             }
             return this;
         }

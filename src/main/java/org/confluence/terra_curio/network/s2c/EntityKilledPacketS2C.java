@@ -1,6 +1,5 @@
 package org.confluence.terra_curio.network.s2c;
 
-import org.mesdag.portlib.wrapper.common.extensions.IPortResourceLocationExtension;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
