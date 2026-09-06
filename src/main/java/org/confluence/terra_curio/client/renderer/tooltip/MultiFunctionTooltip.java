@@ -15,7 +15,6 @@ import org.confluence.terra_curio.api.primitive.TooltipComponentsValue;
 import org.confluence.terra_curio.client.handler.InformationHandler;
 import org.confluence.terra_curio.common.item.IMultiFunctionCouldEnable;
 import org.confluence.terra_curio.network.InfoDisablePacket;
-import org.jetbrains.annotations.NotNull;
 import org.joml.Matrix4f;
 
 import java.util.List;
@@ -41,7 +40,7 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
     }
 
     @Override
-    public int getWidth(@NotNull Font font) {
+    public int getWidth(Font font) {
         if (isShiftKeyDown()) {
             isShowing = true;
             for (TooltipComponentsValue.Storage storage : storages) {
@@ -57,7 +56,7 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderText(@NotNull Font font, int mouseX, int mouseY, @NotNull Matrix4f matrix, MultiBufferSource.@NotNull BufferSource bufferSource) {
+    public void renderText(Font font, int mouseX, int mouseY, Matrix4f matrix, MultiBufferSource.BufferSource bufferSource) {
         if (isShowing) {
             int size = storages.size();
             for (int i = 0; i < size; i++) {
@@ -70,7 +69,7 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
     }
 
     @Override
-    public void renderImage(@NotNull Font font, int x, int y, @NotNull GuiGraphics guiGraphics) {
+    public void renderImage(Font font, int x, int y, GuiGraphics guiGraphics) {
         int size = storages.size();
         if (mouseScrollY > size) {
             mouseScrollY = 0;
@@ -81,13 +80,13 @@ public class MultiFunctionTooltip implements ClientTooltipComponent {
             for (int i = 0; i < size; i++) {
                 PoseStack pose = guiGraphics.pose();
                 pose.pushPose();
-                pose.translate(x - 2.0F, y - 1.0F + i * 10.0F,0.0F);
+                pose.translate(x - 2.0F, y - 1.0F + i * 10.0F, 0.0F);
                 pose.scale(SCALE, SCALE, SCALE);
                 TooltipComponentsValue.Storage storage = storages.get(i);
                 guiGraphics.blit(storage.texture(), 1, 1, 0, 0, 7, 7, 7, 7);
                 int index = IMultiFunctionCouldEnable.INDEX_MAP.getOrDefault(storage, -1);
                 if (index != -1 && !InformationHandler.DISABLE[index]) {
-                    guiGraphics.blit(HIGHLIGHT, 0, 0, 0,0 , 9, 9, 9, 9);
+                    guiGraphics.blit(HIGHLIGHT, 0, 0, 0, 0, 9, 9, 9, 9);
                 }
                 pose.popPose();
             }
