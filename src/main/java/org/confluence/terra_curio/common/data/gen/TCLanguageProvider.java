@@ -34,7 +34,7 @@ public class TCLanguageProvider extends LanguageProvider {
             "显示月相",
             "显示钓鱼信息",
             "显示你周围最贵重的矿石",
-            "显示您周围稀有生物的名称",
+            "显示你周围稀有生物的名称",
             "探测你周围的敌人",
             "显示怪物击杀数量",
             "显示你的每秒伤害",
@@ -526,7 +526,7 @@ public class TCLanguageProvider extends LanguageProvider {
                         "对火块免疫、对熔岩免疫7秒"
                 }
         );
-        tooltipAndInfo(TCItems.LIFE_FORM_ANALYZER, "生命体分析机", "Displays the name of rare creatures around you", "显示您周围稀有生物的名称", "The Lifeform Analyzer has a Chance to be dropped from Glow Squid.", "它有几率从发光鱿鱼身上掉落。");
+        tooltipAndInfo(TCItems.LIFE_FORM_ANALYZER, "生命体分析机", "Displays the name of rare creatures around you", "显示你周围稀有生物的名称", "The Lifeform Analyzer has a Chance to be dropped from Glow Squid.", "它有几率从发光鱿鱼身上掉落。");
         onlyTooltip(TCItems.LIGHTNING_BOOTS, "闪电靴", "Allows flight, super fast running", "可飞行、可飞速奔跑");
         tooltipsAndInfo(TCItems.LUCKY_HORSESHOE, "幸运马掌",
                 new String[]{
@@ -701,7 +701,7 @@ public class TCLanguageProvider extends LanguageProvider {
                 },
                 new String[]{
                         "探测你周围的敌人",
-                        "显示您周围稀有生物的名称",
+                        "显示你周围稀有生物的名称",
                         "显示怪物击杀数量"
                 });
         onlyTooltips(TCItems.SNIPER_SCOPE, "狙击镜",
