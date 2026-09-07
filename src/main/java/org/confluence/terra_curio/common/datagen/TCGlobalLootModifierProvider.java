@@ -3,8 +3,12 @@ package org.confluence.terra_curio.common.datagen;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.storage.loot.predicates.LootItemCondition;
+import net.minecraftforge.common.crafting.conditions.ModLoadedCondition;
+import net.minecraftforge.common.crafting.conditions.NotCondition;
 import net.minecraftforge.common.data.GlobalLootModifierProvider;
 import net.minecraftforge.common.loot.LootTableIdCondition;
+import org.confluence.lib.ConfluenceMagicLib;
+import org.confluence.lib.common.loot.CraftingLootItemCondition;
 import org.confluence.terra_curio.TerraCurio;
 import org.mesdag.portlib.loot.PortAddTableLootModifier;
 
@@ -88,9 +92,14 @@ public class TCGlobalLootModifierProvider extends GlobalLootModifierProvider {
         lootTableId("gameplay", "cat_morning_gift");
     }
 
+    private static final CraftingLootItemCondition CONFLUENCE_NOT_LOADED = new CraftingLootItemCondition(new NotCondition(new ModLoadedCondition(ConfluenceMagicLib.CONFLUENCE_ID)));
+
     private void lootTableId(String group, String condition, String table) {
         String modifier = group + "/" + condition;
-        LootItemCondition[] conditions = {LootTableIdCondition.builder(ResourceLocation.withDefaultNamespace(modifier)).build()};
+        LootItemCondition[] conditions = {
+                CONFLUENCE_NOT_LOADED,
+                LootTableIdCondition.builder(ResourceLocation.withDefaultNamespace(modifier)).build()
+        };
         add(modifier, new PortAddTableLootModifier(conditions, TerraCurio.asResource("with/" + group + "/" + table)));
     }
 
