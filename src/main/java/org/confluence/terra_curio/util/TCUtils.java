@@ -68,7 +68,7 @@ public final class TCUtils {
                 damageSource.is(LibTags.DamageTypes.AS_MELEE_ATTACK) &&
                 hasType(living, TCItems.FIRE$ATTACK)
         ) {
-            float f = living.getRandom().nextFloat();
+            float f = living.getRandom1211().nextFloat();
             int time;
             if (f < 0.25F) {
                 time = 120;

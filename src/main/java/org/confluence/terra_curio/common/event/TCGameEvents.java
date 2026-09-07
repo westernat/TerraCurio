@@ -219,7 +219,7 @@ public final class TCGameEvents {
 
     private static void finalizeSpawn(MobSpawnEvent.FinalizeSpawn event) {
         if (event.isSpawnCancelled()) return;
-        if (event.getEntity() instanceof Drowned drowned && drowned.getItemBySlot(EquipmentSlot.HEAD).isEmpty() && drowned.getRandom().nextFloat() < 0.05F) {
+        if (event.getEntity() instanceof Drowned drowned && drowned.getItemBySlot(EquipmentSlot.HEAD).isEmpty() && drowned.getRandom1211().nextFloat() < 0.05F) {
             drowned.setItemSlot(EquipmentSlot.HEAD, TCItems.DIVING_HELMET.get().getDefaultInstance());
             drowned.setDropChance(EquipmentSlot.HEAD, 1.0F);
         }
