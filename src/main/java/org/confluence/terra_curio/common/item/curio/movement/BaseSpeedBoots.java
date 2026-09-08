@@ -82,6 +82,7 @@ public class BaseSpeedBoots extends BaseCurioItem {
     public Multimap<Attribute, AttributeModifier> getAttributeModifiers(SlotContext slotContext, UUID id, ItemStack stack) {
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder1 = ImmutableMultimap.builder();
         builder1.putAll(super.getAttributeModifiers(slotContext, id, stack));
+        builder1.putAll(builder == null ? EMPTY_ATTRIBUTE : builder.getAttributes()); // 一般是step_height
         double speed = LibUtils.getItemStackNbtNoCopy(stack).getInt(KEY) * 0.01;
         if (speed > 0.0) {
             builder1.put(Attributes.MOVEMENT_SPEED, new AttributeModifier(ID, "base_speed_boots", speed, AttributeModifier.Operation.MULTIPLY_TOTAL));
