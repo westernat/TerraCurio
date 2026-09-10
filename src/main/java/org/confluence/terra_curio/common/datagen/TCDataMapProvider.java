@@ -58,7 +58,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
             helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.builder()
                     .add(Attributes.MOVEMENT_SPEED, id, 0.16, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.FALL_DAMAGE_MULTIPLIER.value(), id, -100, PortAttributeModifier.Operation.ADD_VALUE)
-                    .add(Attributes.JUMP_STRENGTH, id, 1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(Attributes.JUMP_STRENGTH_1211, id, 1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.STEP_HEIGHT.value(), id, 0.5, PortAttributeModifier.Operation.ADD_VALUE)
                     .build());
         });
@@ -138,7 +138,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
                     .add(Attributes.ATTACK_SPEED, id, 0.051, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.MOVEMENT_SPEED, id, 0.05, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.ARMOR, id, 3.0, PortAttributeModifier.Operation.ADD_VALUE)
-                    .add(Attributes.JUMP_STRENGTH, id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(Attributes.JUMP_STRENGTH_1211, id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .build());
         }); // 月光护身符
         add(TCItems.NEPTUNES_SHELL, helper -> {
@@ -154,7 +154,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
                     .add(Attributes.ATTACK_SPEED, id, 0.051, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.MOVEMENT_SPEED, id, 0.05, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .add(Attributes.ARMOR, id, 3.0, PortAttributeModifier.Operation.ADD_VALUE)
-                    .add(Attributes.JUMP_STRENGTH, id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(Attributes.JUMP_STRENGTH_1211, id, 0.1, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .build());
         }); // 月亮贝壳
         add(TCItems.CELESTIAL_SHELL, helper -> {
@@ -624,7 +624,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
             ResourceLocation id = helper.asId();
             helper.entry(TCItems.ATTRIBUTES, AttributeModifiersValue.builder()
                     .add(Attributes.MOVEMENT_SPEED, id, 0.075, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
-                    .add(Attributes.JUMP_STRENGTH, id, 0.8, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                    .add(Attributes.JUMP_STRENGTH_1211, id, 0.8, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                     .build());
         }); // 翱翔徽章
         add(TCItems.GRAVITY_GLOBE, helper -> helper.unit(TCItems.GRAVITY$GLOBE)); // 重力球
@@ -697,7 +697,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
 
     private static AttributeModifiersValue balloonAttributes(ResourceLocation id, double safeFallDistance) {
         return AttributeModifiersValue.builder()
-                .add(Attributes.JUMP_STRENGTH, id, 0.43, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                .add(Attributes.JUMP_STRENGTH_1211, id, 0.43, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 .add(Attributes.SAFE_FALL_DISTANCE.value(), id, safeFallDistance, PortAttributeModifier.Operation.ADD_VALUE)
                 .build();
     }
@@ -711,7 +711,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
 
     private static AttributeModifiersValue horseshoeBalloonAttributes(ResourceLocation id, double jumpStrength) {
         return AttributeModifiersValue.builder()
-                .add(Attributes.JUMP_STRENGTH, id, jumpStrength, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
+                .add(Attributes.JUMP_STRENGTH_1211, id, jumpStrength, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL)
                 .add(Attributes.LUCK, id, 0.05, PortAttributeModifier.Operation.ADD_VALUE)
                 .add(Attributes.FALL_DAMAGE_MULTIPLIER.value(), id, -100.0, PortAttributeModifier.Operation.ADD_VALUE)
                 .build();
@@ -724,7 +724,7 @@ public class TCDataMapProvider extends PortDataMapProvider {
     private static AttributeModifiersValue.Builder frogAttributesBuilder(ResourceLocation id) {
         return AttributeModifiersValue.builder()
                 .add(Attributes.SAFE_FALL_DISTANCE.value(), id, 7.0, PortAttributeModifier.Operation.ADD_VALUE)
-                .add(Attributes.JUMP_STRENGTH, id, 0.6, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
+                .add(Attributes.JUMP_STRENGTH_1211, id, 0.6, PortAttributeModifier.Operation.ADD_MULTIPLIED_TOTAL);
     }
 
     protected void add(ItemLike item, Consumer<Helper> consumer) {

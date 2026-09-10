@@ -33,7 +33,14 @@ side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "portlib"
-mandatory=true
-versionRange = "[1.0.0,)"
-ordering = "NONE"
+mandatory = true
+versionRange = "[${portlib_version},)"
+ordering = "AFTER"
+side = "BOTH"
+
+[[dependencies.${mod_id}]]
+modId = "geckolib"
+mandatory = true
+versionRange = "[${geckolib_version},)"
+ordering = "AFTER"
 side = "BOTH"
