@@ -129,6 +129,7 @@ repositories {
 }
 
 boolean slim = true
+boolean jijMixinExtras = false
 
 dependencies {
     modImplementation "top.theillusivec4.curios:curios-forge:${curios_version}"
@@ -149,7 +150,9 @@ dependencies {
     if (!slim) {
         jarJar("org.mesdag:ParticleStorm-forge-${minecraft_version}:${particlestorm_version}")
         jarJar(project(":Confluence-Magic-Lib"))
-        jarJar("io.github.llamalad7:mixinextras-forge:0.5.3")
+        if (jijMixinExtras) {
+            jarJar("io.github.llamalad7:mixinextras-forge:0.5.3")
+        }
     }
 }
 
