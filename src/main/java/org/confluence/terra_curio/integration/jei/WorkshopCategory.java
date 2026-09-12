@@ -20,7 +20,6 @@ import org.confluence.lib.common.recipe.AmountIngredient;
 import org.confluence.terra_curio.TerraCurio;
 import org.confluence.terra_curio.common.init.TCItems;
 import org.confluence.terra_curio.common.recipe.WorkshopRecipe;
-import org.mesdag.portlib.wrapper.PortEnvironment;
 
 import java.util.Arrays;
 
@@ -84,7 +83,7 @@ public record WorkshopCategory(IDrawable getIcon) implements IRecipeCategory<Wor
             }
         }
         // output
-        builder.addSlot(RecipeIngredientRole.OUTPUT, 96, 24).addItemStack(recipe.getResultItem(PortEnvironment.registryAccess()));
+        builder.addSlot(RecipeIngredientRole.OUTPUT, 96, 24).addItemStack(recipe.getResult());
     }
 
     @Override
@@ -99,6 +98,6 @@ public record WorkshopCategory(IDrawable getIcon) implements IRecipeCategory<Wor
 
     @Override
     public ResourceLocation getRegistryName(WorkshopRecipe recipe) {
-        return TerraCurio.asResource(recipe.getGroup() + "/" + ForgeRegistries.ITEMS.getKey(recipe.getResultItem(PortEnvironment.registryAccess()).getItem()).getPath());
+        return TerraCurio.asResource(recipe.getGroup() + "/" + ForgeRegistries.ITEMS.getKey(recipe.getResult().getItem()).getPath());
     }
 }
